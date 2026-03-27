@@ -6,8 +6,9 @@ const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const router = require('express').Router({ mergeParams: true });
 const { assetsDir, ensureDirs } = require('../lib/paths');
+const { requireValidSiteId, requireSiteExists, isSafeFilename, assertWithinDir, safeError } = require('../lib/validate');
 
-const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.avif']);
+const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif']);
 
 const MAX_FILE_SIZE = 8 * 1024 * 1024; // 8 MB
 
@@ -48,16 +49,12 @@ function validateMagicBytes(filePath, ext) {
       // ISO Base Media File Format: bytes 4-7 are 'ftyp'
       return buf[4] === 0x66 && buf[5] === 0x74 && buf[6] === 0x79 && buf[7] === 0x70;
 
-    case '.svg': {
-      // SVG is XML text — check for expected opening tags
-      const text = buf.toString('utf8').trimStart();
-      return text.startsWith('<svg') || text.startsWith('<?xml') || text.startsWith('<!DOCTYPE');
-    }
-
     default:
       return false;
   }
 }
+
+router.use(requireValidSiteId, requireSiteExists);
 
 router.get('/', (req, res) => {
   const dir = assetsDir(req.params.siteId);
@@ -72,14 +69,19 @@ router.get('/', (req, res) => {
       })
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     res.json(files);
-  } catch (err) { res.status(500).json({ error: err.message }); }
+  } catch (err) { res.status(500).json({ error: safeError(err) }); }
 });
 
 router.delete('/:filename', (req, res) => {
-  const fp = path.join(assetsDir(req.params.siteId), req.params.filename);
-  if (!fs.existsSync(fp)) return res.status(404).json({ error: 'Not found' });
+  if (!isSafeFilename(req.params.filename)) {
+    return res.status(400).json({ error: 'Invalid filename.' });
+  }
+  const dir = assetsDir(req.params.siteId);
+  const fp  = path.join(dir, req.params.filename);
+  if (!assertWithinDir(fp, dir)) return res.status(400).json({ error: 'Invalid filename.' });
+  if (!fs.existsSync(fp)) return res.status(404).json({ error: 'Not found.' });
   try { fs.unlinkSync(fp); res.json({ success: true }); }
-  catch (err) { res.status(500).json({ error: err.message }); }
+  catch (err) { res.status(500).json({ error: safeError(err) }); }
 });
 
 router.post('/upload', (req, res) => {

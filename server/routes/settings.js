@@ -3,8 +3,11 @@
 const fs     = require('fs');
 const router = require('express').Router({ mergeParams: true });
 const { settingsFile, ensureDirs } = require('../lib/paths');
+const { requireValidSiteId, requireSiteExists, sanitiseSettings, safeError } = require('../lib/validate');
 
 const DEFAULT_SETTINGS = { title: 'My Site', navPages: [], sections: [], theme: {} };
+
+router.use(requireValidSiteId, requireSiteExists);
 
 router.get('/', (req, res) => {
   const fp = settingsFile(req.params.siteId);
@@ -15,10 +18,11 @@ router.get('/', (req, res) => {
 
 router.put('/', (req, res) => {
   ensureDirs(req.params.siteId);
+  const body = sanitiseSettings(req.body);
   try {
-    fs.writeFileSync(settingsFile(req.params.siteId), JSON.stringify(req.body, null, 2));
-    res.json(req.body);
-  } catch (err) { res.status(500).json({ error: err.message }); }
+    fs.writeFileSync(settingsFile(req.params.siteId), JSON.stringify(body, null, 2));
+    res.json(body);
+  } catch (err) { res.status(500).json({ error: safeError(err) }); }
 });
 
 module.exports = router;
