@@ -11,6 +11,7 @@ export default function MediaManager({ siteId, mode = 'full', onSelect, onClose,
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null); // filename to confirm delete
   const fileRef = useRef();
 
   const loadAssets = async () => {
@@ -42,8 +43,9 @@ export default function MediaManager({ siteId, mode = 'full', onSelect, onClose,
     }
   };
 
-  const handleDelete = async (filename) => {
-    if (!window.confirm(`Delete "${filename}"?`)) return;
+  const confirmDelete = async () => {
+    const filename = deleteTarget;
+    setDeleteTarget(null);
     try {
       await deleteAsset(siteId, filename);
       await loadAssets();
@@ -85,7 +87,7 @@ export default function MediaManager({ siteId, mode = 'full', onSelect, onClose,
                   >Copy URL</button>
                   <button
                     className="btn btn-danger btn-sm"
-                    onClick={() => handleDelete(asset.filename)}
+                    onClick={() => setDeleteTarget(asset.filename)}
                     title="Delete"
                   >✕</button>
                 </div>
@@ -97,53 +99,74 @@ export default function MediaManager({ siteId, mode = 'full', onSelect, onClose,
     </div>
   );
 
-  if (mode === 'picker') {
-    return (
-      <div className="media-picker-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-        <div className="media-picker-dialog">
-          <div className="media-toolbar">
-            <span style={{ fontWeight: 700, fontSize: 16 }}>Select Image</span>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-              <button
-                className="btn btn-secondary btn-sm"
-                onClick={() => fileRef.current.click()}
-                disabled={uploading}
-              >
-                {uploading ? 'Uploading…' : '+ Upload'}
-              </button>
-              <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleUpload} />
-              <button className="btn btn-secondary btn-sm" onClick={onClose}>✕ Close</button>
-            </div>
-          </div>
-          <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '4px 0 12px' }}>
-            {assets.length} image{assets.length !== 1 ? 's' : ''}
-          </p>
-          {grid}
+  const deleteDialog = deleteTarget && (
+    <div className="modal-overlay" onClick={() => setDeleteTarget(null)}>
+      <div className="modal-box" onClick={e => e.stopPropagation()}>
+        <h3 style={{ marginBottom: 8 }}>Delete image?</h3>
+        <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 20, wordBreak: 'break-all' }}>
+          <strong>{deleteTarget}</strong> will be permanently deleted.
+        </p>
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+          <button className="btn btn-secondary" onClick={() => setDeleteTarget(null)}>Cancel</button>
+          <button className="btn btn-danger" onClick={confirmDelete}>Delete</button>
         </div>
       </div>
+    </div>
+  );
+
+  if (mode === 'picker') {
+    return (
+      <>
+        <div className="media-picker-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+          <div className="media-picker-dialog">
+            <div className="media-toolbar">
+              <span style={{ fontWeight: 700, fontSize: 16 }}>Select Image</span>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <button
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => fileRef.current.click()}
+                  disabled={uploading}
+                >
+                  {uploading ? 'Uploading…' : '+ Upload'}
+                </button>
+                <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleUpload} />
+                <button className="btn btn-secondary btn-sm" onClick={onClose}>✕ Close</button>
+              </div>
+            </div>
+            <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '4px 0 12px' }}>
+              {assets.length} image{assets.length !== 1 ? 's' : ''}
+            </p>
+            {grid}
+          </div>
+        </div>
+        {deleteDialog}
+      </>
     );
   }
 
   // full mode
   return (
-    <div className="media-manager">
-      <div className="media-toolbar">
-        <span style={{ fontWeight: 700, fontSize: 18 }}>Media</span>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-            {assets.length} image{assets.length !== 1 ? 's' : ''}
-          </span>
-          <button
-            className="btn btn-primary btn-sm"
-            onClick={() => fileRef.current.click()}
-            disabled={uploading}
-          >
-            {uploading ? 'Uploading…' : '+ Upload Image'}
-          </button>
-          <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleUpload} />
+    <>
+      <div className="media-manager">
+        <div className="media-toolbar">
+          <span style={{ fontWeight: 700, fontSize: 18 }}>Media</span>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+              {assets.length} image{assets.length !== 1 ? 's' : ''}
+            </span>
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={() => fileRef.current.click()}
+              disabled={uploading}
+            >
+              {uploading ? 'Uploading…' : '+ Upload Image'}
+            </button>
+            <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleUpload} />
+          </div>
         </div>
+        {grid}
       </div>
-      {grid}
-    </div>
+      {deleteDialog}
+    </>
   );
 }

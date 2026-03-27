@@ -5,6 +5,10 @@
     {
       "id": "b1ccb32e-0f0a-48fd-81a8-0ef717a6537c",
       "name": "git"
+    },
+    {
+      "id": "0ef2d866-cab8-4d0e-b8c3-61ad04a74292",
+      "name": "New Section"
     }
   ],
   "theme": {
@@ -16,6 +20,11 @@
     "contentWidth": 800,
     "sidebarWidth": 240,
     "showBreadcrumbs": true,
-    "showReadingTime": true
+    "showReadingTime": true,
+    "showDarkModeToggle": false,
+    "darkText": "#a26767",
+    "darkBorder": "#bb1616",
+    "darkSurface": "#d72828",
+    "darkBg": "#c31313"
   }
 }

@@ -2,14 +2,54 @@ import { useState, useEffect, useRef } from 'react';
 import SitePreview from './SitePreview.jsx';
 
 const PRESETS = [
-  { name: 'Default',  primary: '#6c63ff', sidebarBg: '#1e293b', radius: 8,  font: 'inter',       fontSize: 16, contentWidth: 800 },
-  { name: 'Ocean',    primary: '#0ea5e9', sidebarBg: '#0c1a2e', radius: 8,  font: 'inter',       fontSize: 16, contentWidth: 800 },
-  { name: 'Forest',   primary: '#22c55e', sidebarBg: '#0f2617', radius: 8,  font: 'open-sans',   fontSize: 16, contentWidth: 860 },
-  { name: 'Sunset',   primary: '#f97316', sidebarBg: '#1c100a', radius: 8,  font: 'lato',        fontSize: 16, contentWidth: 800 },
-  { name: 'Rose',     primary: '#f43f5e', sidebarBg: '#1c0a0f', radius: 8,  font: 'inter',       fontSize: 15, contentWidth: 760 },
-  { name: 'Purple',   primary: '#a855f7', sidebarBg: '#160d25', radius: 8,  font: 'inter',       fontSize: 16, contentWidth: 800 },
-  { name: 'Sharp',    primary: '#334155', sidebarBg: '#0f172a', radius: 0,  font: 'source-sans', fontSize: 15, contentWidth: 900 },
-  { name: 'Rounded',  primary: '#6c63ff', sidebarBg: '#1e293b', radius: 16, font: 'inter',       fontSize: 16, contentWidth: 780 },
+  {
+    name: 'Default',
+    primary: '#6c63ff', sidebarBg: '#1e293b', contentBg: '#ffffff', textColor: '#1e293b',
+    darkPrimary: '#7c74ff', darkSidebarBg: '#131925', darkContentBg: '#0f172a', darkTextColor: '#e2e8f0',
+    radius: 8, font: 'inter', fontSize: 16, contentWidth: 800,
+  },
+  {
+    name: 'Ocean',
+    primary: '#0ea5e9', sidebarBg: '#0c1a2e', contentBg: '#ffffff', textColor: '#0c1a2e',
+    darkPrimary: '#38bdf8', darkSidebarBg: '#061018', darkContentBg: '#0a1628', darkTextColor: '#e0f2fe',
+    radius: 8, font: 'inter', fontSize: 16, contentWidth: 800,
+  },
+  {
+    name: 'Forest',
+    primary: '#22c55e', sidebarBg: '#0f2617', contentBg: '#f7fdf8', textColor: '#0f2617',
+    darkPrimary: '#4ade80', darkSidebarBg: '#071610', darkContentBg: '#0d1f12', darkTextColor: '#dcfce7',
+    radius: 8, font: 'open-sans', fontSize: 16, contentWidth: 860,
+  },
+  {
+    name: 'Sunset',
+    primary: '#f97316', sidebarBg: '#1c100a', contentBg: '#fffaf7', textColor: '#1c0f0a',
+    darkPrimary: '#fb923c', darkSidebarBg: '#140c06', darkContentBg: '#1a0e06', darkTextColor: '#fed7aa',
+    radius: 8, font: 'lato', fontSize: 16, contentWidth: 800,
+  },
+  {
+    name: 'Rose',
+    primary: '#f43f5e', sidebarBg: '#1c0a0f', contentBg: '#fff7f9', textColor: '#1c0a0f',
+    darkPrimary: '#fb7185', darkSidebarBg: '#14060a', darkContentBg: '#1a0a0f', darkTextColor: '#fce7f3',
+    radius: 8, font: 'inter', fontSize: 15, contentWidth: 760,
+  },
+  {
+    name: 'Purple',
+    primary: '#a855f7', sidebarBg: '#160d25', contentBg: '#fdfaff', textColor: '#160d25',
+    darkPrimary: '#c084fc', darkSidebarBg: '#0e0818', darkContentBg: '#0f0a1e', darkTextColor: '#f3e8ff',
+    radius: 8, font: 'inter', fontSize: 16, contentWidth: 800,
+  },
+  {
+    name: 'Sharp',
+    primary: '#334155', sidebarBg: '#0f172a', contentBg: '#ffffff', textColor: '#0f172a',
+    darkPrimary: '#64748b', darkSidebarBg: '#07090e', darkContentBg: '#0a0d12', darkTextColor: '#cbd5e1',
+    radius: 0, font: 'source-sans', fontSize: 15, contentWidth: 900,
+  },
+  {
+    name: 'Rounded',
+    primary: '#6c63ff', sidebarBg: '#1e293b', contentBg: '#ffffff', textColor: '#1e293b',
+    darkPrimary: '#7c74ff', darkSidebarBg: '#131925', darkContentBg: '#0f172a', darkTextColor: '#e2e8f0',
+    radius: 16, font: 'inter', fontSize: 16, contentWidth: 780,
+  },
 ];
 
 const FONTS = [
@@ -22,21 +62,33 @@ const FONTS = [
 ];
 
 const FONT_URLS = {
-  inter:       'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
-  roboto:      'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap',
-  lato:        'https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap',
+  inter:         'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
+  roboto:        'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap',
+  lato:          'https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap',
   'source-sans': 'https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap',
-  'open-sans': 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap',
+  'open-sans':   'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap',
 };
 
 function isValidHex(hex) {
   return /^#[0-9a-fA-F]{6}$/.test(hex);
 }
 
+const COLOR_FIELDS = [
+  { label: 'Primary',            lightKey: 'primary',    darkKey: 'darkPrimary'    },
+  { label: 'Sidebar background', lightKey: 'sidebarBg',  darkKey: 'darkSidebarBg'  },
+  { label: 'Content background', lightKey: 'contentBg',  darkKey: 'darkContentBg'  },
+  { label: 'Text',               lightKey: 'textColor',  darkKey: 'darkTextColor'  },
+];
+
 export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug }) {
-  const defaultTheme = { primary: '#6c63ff', sidebarBg: '#1e293b', radius: 8, font: 'inter', fontSize: 16, contentWidth: 800, sidebarWidth: 240, showBreadcrumbs: true, showReadingTime: true };
+  const defaultTheme = {
+    primary: '#6c63ff', sidebarBg: '#1e293b', contentBg: '#ffffff', textColor: '#1e293b',
+    darkPrimary: '#7c74ff', darkSidebarBg: '#131925', darkContentBg: '#0f172a', darkTextColor: '#e2e8f0',
+    radius: 8, font: 'inter', fontSize: 16, contentWidth: 800, sidebarWidth: 240,
+    showBreadcrumbs: true, showReadingTime: true, showDarkModeToggle: false,
+  };
   const [theme, setTheme] = useState(() => ({ ...defaultTheme, ...(settings.theme || {}) }));
-  const [saveStatus, setSaveStatus] = useState('saved'); // 'saved' | 'unsaved' | 'saving'
+  const [saveStatus, setSaveStatus] = useState('saved');
   const [previewKey, setPreviewKey] = useState(0);
 
   const saveTimer = useRef(null);
@@ -61,20 +113,19 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
     }
   }, [theme.font]);
 
-  // Auto-save on theme change (1s debounce), then regenerate preview
+  // Auto-save on theme change (1s debounce) — show "Saving…" immediately
   useEffect(() => {
     if (isFirstLoad.current) { isFirstLoad.current = false; return; }
-    setSaveStatus('unsaved');
+    setSaveStatus('saving');
     clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(async () => {
-      setSaveStatus('saving');
       try {
         await onSaveRef.current({ ...settingsRef.current, theme: latestThemeRef.current });
         setSaveStatus('saved');
         setPreviewKey(k => k + 1);
       } catch {
         addToast('Failed to save theme', 'error');
-        setSaveStatus('unsaved');
+        setSaveStatus('saved');
       }
     }, 1000);
     return () => clearTimeout(saveTimer.current);
@@ -87,27 +138,26 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
 
   const set = (key, val) => setTheme(t => ({ ...t, [key]: val }));
 
-  const statusLabel = { saved: '✓ Saved', unsaved: '● Unsaved', saving: '⟳ Saving…' };
-  const statusColor = { saved: 'var(--success)', unsaved: 'var(--warning)', saving: 'var(--text-muted)' };
+  const statusLabel = { saved: '✓ Saved', saving: '⟳ Saving…' };
+  const statusColor = { saved: 'var(--success)', saving: 'var(--text-muted)' };
 
-  const ColorField = ({ label, themeKey }) => (
-    <div className="field">
-      <label>{label}</label>
-      <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-        <input
-          type="color"
-          value={isValidHex(theme[themeKey] || '') ? theme[themeKey] : '#000000'}
-          onChange={e => set(themeKey, e.target.value)}
-          style={{ width: 38, height: 30, padding: 2, cursor: 'pointer', borderRadius: 4, border: '1px solid var(--border)', flexShrink: 0 }}
-        />
-        <input
-          type="text"
-          value={theme[themeKey] || ''}
-          onChange={e => /^#[0-9a-fA-F]{0,6}$/.test(e.target.value) && set(themeKey, e.target.value)}
-          style={{ flex: 1, fontFamily: 'monospace', fontSize: 12 }}
-          maxLength={7}
-        />
-      </div>
+  const ColorPicker = ({ themeKey, disabled }) => (
+    <div style={{ display: 'flex', gap: 5, alignItems: 'center', opacity: disabled ? 0.35 : 1 }}>
+      <input
+        type="color"
+        value={isValidHex(theme[themeKey] || '') ? theme[themeKey] : '#000000'}
+        onChange={e => !disabled && set(themeKey, e.target.value)}
+        disabled={disabled}
+        style={{ width: 34, height: 28, padding: 2, cursor: disabled ? 'not-allowed' : 'pointer', borderRadius: 4, border: '1px solid var(--border)', flexShrink: 0 }}
+      />
+      <input
+        type="text"
+        value={theme[themeKey] || ''}
+        onChange={e => !disabled && /^#[0-9a-fA-F]{0,6}$/.test(e.target.value) && set(themeKey, e.target.value)}
+        disabled={disabled}
+        style={{ width: 72, fontFamily: 'monospace', fontSize: 11, padding: '3px 6px', cursor: disabled ? 'not-allowed' : 'text' }}
+        maxLength={7}
+      />
     </div>
   );
 
@@ -137,7 +187,7 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
             </div>
           </div>
 
-          {/* Colors */}
+          {/* Colors — mirrored light / dark */}
           <div className="settings-section">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
               <h3 style={{ margin: 0 }}>Colors</h3>
@@ -150,17 +200,20 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
                 <span style={{ fontSize: 12 }}>Dark mode</span>
               </label>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-              <ColorField label="Primary color" themeKey="primary" />
-              <ColorField label="Sidebar background" themeKey="sidebarBg" />
-              {theme.showDarkModeToggle && (
-                <>
-                  <ColorField label="Dark background" themeKey="darkBg" />
-                  <ColorField label="Dark text" themeKey="darkText" />
-                  <ColorField label="Dark surface" themeKey="darkSurface" />
-                  <ColorField label="Dark border" themeKey="darkBorder" />
-                </>
-              )}
+
+            <div className="theme-color-table">
+              <div className="theme-color-header">
+                <span />
+                <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Light</span>
+                <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', opacity: theme.showDarkModeToggle ? 1 : 0.4 }}>Dark</span>
+              </div>
+              {COLOR_FIELDS.map(({ label, lightKey, darkKey }) => (
+                <div key={lightKey} className="theme-color-row">
+                  <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{label}</span>
+                  <ColorPicker themeKey={lightKey} disabled={false} />
+                  <ColorPicker themeKey={darkKey} disabled={!theme.showDarkModeToggle} />
+                </div>
+              ))}
             </div>
           </div>
 

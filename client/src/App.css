@@ -1,3 +1,17 @@
+/* ── Animations ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInFast {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 /* ── Reset & Base ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1305,3 +1319,70 @@ code {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ── View-level fade-in animations ── */
+.editor          { animation: fadeIn 0.18s ease both; }
+.empty-state     { animation: fadeIn 0.22s ease both; }
+.settings-view   { animation: fadeIn 0.18s ease both; }
+.theme-view-layout { animation: fadeIn 0.18s ease both; }
+.settings-split-layout { animation: fadeIn 0.18s ease both; }
+.media-manager   { animation: fadeIn 0.18s ease both; }
+.site-preview-view { animation: fadeIn 0.18s ease both; }
+
+.block-card      { animation: fadeIn 0.15s ease both; }
+.page-list-item  { animation: fadeIn 0.12s ease both; }
+.add-block-panel { animation: fadeIn 0.15s ease both; }
+.sidebar-section { animation: fadeIn 0.14s ease both; }
+.nav-page-item   { animation: fadeIn 0.12s ease both; }
+
+.modal-overlay   { animation: fadeInFast 0.15s ease both; }
+.modal-box       { animation: fadeInUp 0.2s ease both; }
+.media-picker-overlay { animation: fadeInFast 0.15s ease both; }
+.media-picker-dialog  { animation: fadeInUp 0.18s ease both; }
+
+/* ── Settings split layout (mirrors theme-view-layout) ── */
+.settings-split-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.settings-controls-pane {
+  width: 380px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+}
+
+.settings-controls-inner {
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Theme color table ── */
+.theme-color-table {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.theme-color-header {
+  display: grid;
+  grid-template-columns: 110px 1fr 1fr;
+  gap: 8px;
+  align-items: center;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+
+.theme-color-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.theme-color-row .field { margin: 0; }

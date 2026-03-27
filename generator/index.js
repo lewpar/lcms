@@ -288,8 +288,13 @@ function buildCss(theme) {
 
   const darkModeVars = theme.showDarkModeToggle ? `
 :root[data-theme="dark"]{
-  --text:${theme.darkText || '#e2e8f0'};--text-muted:#94a3b8;
-  --bg:${theme.darkBg || '#0f172a'};--surface:${theme.darkSurface || '#1e293b'};--border:${theme.darkBorder || '#334155'};
+  --text:${theme.darkTextColor || theme.darkText || '#e2e8f0'};--text-muted:#94a3b8;
+  --bg:${theme.darkContentBg || theme.darkBg || '#0f172a'};
+  --surface:${theme.darkSurface || '#1e293b'};--border:${theme.darkBorder || '#334155'};
+  --primary:${theme.darkPrimary || primary};
+  --primary-rgb:${hexToRgb(theme.darkPrimary || primary).join(',')};
+  --primary-light:rgba(${hexToRgb(theme.darkPrimary || primary).join(',')},0.12);
+  --sidebar-bg:${theme.darkSidebarBg || darken(sidebarBg, 0.35)};
 }` : '';
 
   return `
@@ -303,8 +308,8 @@ function buildCss(theme) {
   --sidebar-bg:${sidebarBg};--sidebar-border:color-mix(in srgb,${sidebarBg} 70%,#fff 30%);
   --sidebar-text:rgba(255,255,255,0.55);--sidebar-text-active:rgba(255,255,255,0.95);
   --radius:${radius}px;
-  --text:#1e293b;--text-muted:#64748b;
-  --bg:#fff;--surface:#f8fafc;--border:#e2e8f0;
+  --text:${theme.textColor || '#1e293b'};--text-muted:#64748b;
+  --bg:${theme.contentBg || '#fff'};--surface:#f8fafc;--border:#e2e8f0;
   --max-w:${contentWidth}px;
   --sidebar-w:${sidebarWidth}px;
 }

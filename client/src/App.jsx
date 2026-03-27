@@ -531,7 +531,7 @@ export default function App() {
 
       <main className="main">
         {view === 'settings' ? (
-          <SettingsView settings={{ ...settings, _pages: pages }} onSave={saveSettings} addToast={addToast} />
+          <SettingsView settings={{ ...settings, _pages: pages }} onSave={saveSettings} addToast={addToast} siteId={siteId} siteSlug={selectedSite.slug} />
         ) : view === 'theme' ? (
           <ThemeView settings={settings} onSave={saveSettings} addToast={addToast} siteId={siteId} siteSlug={selectedSite.slug} />
         ) : view === 'media' ? (
