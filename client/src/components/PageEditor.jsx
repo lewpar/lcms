@@ -39,6 +39,13 @@ function defaultBlock(type) {
 const slugify = (text) =>
   text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
+const RESERVED_SLUGS = new Set([
+  'assets', 'api', 'admin', 'static', 'public', 'media', 'upload', 'uploads',
+  'files', 'images', 'img', 'js', 'css', 'fonts', 'favicon', 'robots',
+  'sitemap', 'feed', 'rss', 'atom', 'auth', 'login', 'logout', 'signup',
+  'register', 'dashboard', 'settings', 'profile', 'account',
+]);
+
 export default function PageEditor({ siteId, pageId, onSaved, addToast, pages = [] }) {
   const [page, setPage] = useState(null);
   const [saveStatus, setSaveStatus] = useState('saved'); // 'saved' | 'unsaved' | 'saving'
@@ -55,6 +62,11 @@ export default function PageEditor({ siteId, pageId, onSaved, addToast, pages = 
 
   const doSave = useCallback(async (p, silent = false) => {
     if (!p) return;
+    if (RESERVED_SLUGS.has(p.slug)) {
+      addToast(`"${p.slug}" is a reserved slug and cannot be used.`, 'error');
+      setSaveStatus('unsaved');
+      return;
+    }
     setSaveStatus('saving');
     try {
       await updatePage(siteId, p.id, p);
@@ -188,7 +200,13 @@ export default function PageEditor({ siteId, pageId, onSaved, addToast, pages = 
                 value={page.slug}
                 onChange={e => updateMeta('slug', slugify(e.target.value))}
                 placeholder="page-slug"
+                style={RESERVED_SLUGS.has(page.slug) ? { borderColor: 'var(--danger)' } : undefined}
               />
+              {RESERVED_SLUGS.has(page.slug) && (
+                <span style={{ fontSize: 11, color: 'var(--danger)', marginTop: 3 }}>
+                  "{page.slug}" is a reserved keyword and cannot be used as a slug.
+                </span>
+              )}
             </div>
             <div className="field">
               <label>Description (meta)</label>
