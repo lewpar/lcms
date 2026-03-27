@@ -218,8 +218,6 @@ export default function SettingsView({ settings, onSave, addToast, siteId, siteS
             </div>
           </div>
         </div>
-      </div>
-
       </div>}
       right={<div className="theme-preview-pane">
         <SitePreview key={previewKey} siteId={siteId} siteSlug={siteSlug} addToast={addToast} initialSlug="" />
