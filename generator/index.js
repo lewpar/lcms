@@ -286,7 +286,7 @@ function buildCss(theme) {
   const [pr, pg, pb] = hexToRgb(primary);
   const primaryDark = darken(primary, 0.18);
 
-  const darkModeVars = theme.showDarkModeToggle ? `
+  const darkModeVars = `
 :root[data-theme="dark"]{
   --text:${theme.darkTextColor || theme.darkText || '#e2e8f0'};--text-muted:#94a3b8;
   --bg:${theme.darkContentBg || theme.darkBg || '#0f172a'};
@@ -295,7 +295,7 @@ function buildCss(theme) {
   --primary-rgb:${hexToRgb(theme.darkPrimary || primary).join(',')};
   --primary-light:rgba(${hexToRgb(theme.darkPrimary || primary).join(',')},0.12);
   --sidebar-bg:${theme.darkSidebarBg || darken(sidebarBg, 0.35)};
-}` : '';
+}`;
 
   return `
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -682,9 +682,7 @@ const DARK_MODE_JS = `(function(){
 function sidebarHtml(settings, navItems, currentSlug, toc) {
   const siteName = settings.title || 'Learning Site';
   const base = currentSlug ? '../' : './';
-  const darkBtn = (settings.theme && settings.theme.showDarkModeToggle)
-    ? `<button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>`
-    : '';
+  const darkBtn = `<button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>`;
   return `<aside class="site-sidebar" id="sidebar">
   <div class="sidebar-top">
     <a class="site-logo" href="${base}">${esc(siteName)}</a>
@@ -734,7 +732,7 @@ function pageTemplate({ page, blocksHtml, settings, navItems }) {
   const showBreadcrumbs = (settings.theme || {}).showBreadcrumbs !== false;
   const showReadingTime = (settings.theme || {}).showReadingTime !== false;
 
-  const showDarkMode = !!(settings.theme && settings.theme.showDarkModeToggle);
+  const showDarkMode = true;
   const customHeader = settings.header
     ? `<div class="custom-site-header">${settings.header}</div>` : '';
   const footerContent = settings.footer
@@ -818,7 +816,7 @@ function indexTemplate({ pages, settings, navItems }) {
     gridHtml += `<div class="section-group"><div class="section-group-title">${esc(sec)}</div><div class="page-grid">${sectionMap[sec].map(renderCard).join('')}</div></div>`;
   }
 
-  const showDarkModeIdx = !!(settings.theme && settings.theme.showDarkModeToggle);
+  const showDarkModeIdx = true;
   const customHeaderIdx = settings.header
     ? `<div class="custom-site-header">${settings.header}</div>` : '';
   const footerContentIdx = settings.footer

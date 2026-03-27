@@ -86,11 +86,12 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
     primary: '#6c63ff', sidebarBg: '#1e293b', contentBg: '#ffffff', textColor: '#1e293b',
     darkPrimary: '#7c74ff', darkSidebarBg: '#131925', darkContentBg: '#0f172a', darkTextColor: '#e2e8f0',
     radius: 8, font: 'inter', fontSize: 16, contentWidth: 800, sidebarWidth: 240,
-    showBreadcrumbs: true, showReadingTime: true, showDarkModeToggle: false,
+    showBreadcrumbs: true, showReadingTime: true,
   };
   const [theme, setTheme] = useState(() => ({ ...defaultTheme, ...(settings.theme || {}) }));
   const [saveStatus, setSaveStatus] = useState('saved');
   const [previewKey, setPreviewKey] = useState(0);
+  const [colorTab, setColorTab] = useState('light'); // 'light' | 'dark'
 
   const saveTimer = useRef(null);
   const isFirstLoad = useRef(true);
@@ -142,23 +143,24 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
   const statusLabel = { saved: '✓ Saved', saving: '⟳ Saving…' };
   const statusColor = { saved: 'var(--success)', saving: 'var(--text-muted)' };
 
-  const ColorPicker = ({ themeKey, disabled }) => (
-    <div style={{ display: 'flex', gap: 5, alignItems: 'center', opacity: disabled ? 0.35 : 1 }}>
-      <input
-        type="color"
-        value={isValidHex(theme[themeKey] || '') ? theme[themeKey] : '#000000'}
-        onChange={e => !disabled && set(themeKey, e.target.value)}
-        disabled={disabled}
-        style={{ width: 34, height: 28, padding: 2, cursor: disabled ? 'not-allowed' : 'pointer', borderRadius: 4, border: '1px solid var(--border)', flexShrink: 0 }}
-      />
-      <input
-        type="text"
-        value={theme[themeKey] || ''}
-        onChange={e => !disabled && /^#[0-9a-fA-F]{0,6}$/.test(e.target.value) && set(themeKey, e.target.value)}
-        disabled={disabled}
-        style={{ width: 72, fontFamily: 'monospace', fontSize: 11, padding: '3px 6px', cursor: disabled ? 'not-allowed' : 'text' }}
-        maxLength={7}
-      />
+  const ColorPickerRow = ({ label, themeKey }) => (
+    <div className="field" style={{ margin: 0 }}>
+      <label>{label}</label>
+      <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+        <input
+          type="color"
+          value={isValidHex(theme[themeKey] || '') ? theme[themeKey] : '#000000'}
+          onChange={e => set(themeKey, e.target.value)}
+          style={{ width: 38, height: 30, padding: 2, cursor: 'pointer', borderRadius: 4, border: '1px solid var(--border)', flexShrink: 0 }}
+        />
+        <input
+          type="text"
+          value={theme[themeKey] || ''}
+          onChange={e => /^#[0-9a-fA-F]{0,6}$/.test(e.target.value) && set(themeKey, e.target.value)}
+          style={{ flex: 1, fontFamily: 'monospace', fontSize: 12 }}
+          maxLength={7}
+        />
+      </div>
     </div>
   );
 
@@ -192,32 +194,29 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
             </div>
           </div>
 
-          {/* Colors — mirrored light / dark */}
+          {/* Colors — tabbed light / dark */}
           <div className="settings-section">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
               <h3 style={{ margin: 0 }}>Colors</h3>
-              <label className="theme-toggle-row" style={{ margin: 0 }}>
-                <input
-                  type="checkbox"
-                  checked={theme.showDarkModeToggle || false}
-                  onChange={e => set('showDarkModeToggle', e.target.checked)}
-                />
-                <span style={{ fontSize: 12 }}>Dark mode</span>
-              </label>
+              <div className="color-tab-bar">
+                <button
+                  className={`color-tab-btn${colorTab === 'light' ? ' active' : ''}`}
+                  onClick={() => setColorTab('light')}
+                >☀ Light</button>
+                <button
+                  className={`color-tab-btn${colorTab === 'dark' ? ' active' : ''}`}
+                  onClick={() => setColorTab('dark')}
+                >☽ Dark</button>
+              </div>
             </div>
 
-            <div className="theme-color-table">
-              <div className="theme-color-header">
-                <span />
-                <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Light</span>
-                <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', opacity: theme.showDarkModeToggle ? 1 : 0.4 }}>Dark</span>
-              </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {COLOR_FIELDS.map(({ label, lightKey, darkKey }) => (
-                <div key={lightKey} className="theme-color-row">
-                  <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{label}</span>
-                  <ColorPicker themeKey={lightKey} disabled={false} />
-                  <ColorPicker themeKey={darkKey} disabled={!theme.showDarkModeToggle} />
-                </div>
+                <ColorPickerRow
+                  key={lightKey}
+                  label={label}
+                  themeKey={colorTab === 'light' ? lightKey : darkKey}
+                />
               ))}
             </div>
           </div>

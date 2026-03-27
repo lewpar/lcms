@@ -8,12 +8,19 @@ export default function SitePreview({ siteId, siteSlug, addToast, initialSlug })
   const [generated, setGenerated] = useState(false);
   const [iframeKey, setIframeKey] = useState(0);
   const [iframeSrc, setIframeSrc] = useState(initialSlug ? `${base}/${initialSlug}/` : `${base}/`);
+  const [themeMode, setThemeMode] = useState('light');
   const iframeRef = useRef(null);
 
   useEffect(() => {
     getPages(siteId).then(setPages).catch(() => {});
     handleGenerate();
   }, [siteId]);
+
+  const applyThemeToIframe = (mode) => {
+    try {
+      iframeRef.current?.contentDocument?.documentElement?.setAttribute('data-theme', mode);
+    } catch {}
+  };
 
   const handleGenerate = async () => {
     setGenerating(true);
@@ -34,6 +41,12 @@ export default function SitePreview({ siteId, siteSlug, addToast, initialSlug })
     setIframeKey(k => k + 1);
   };
 
+  const toggleTheme = () => {
+    const next = themeMode === 'light' ? 'dark' : 'light';
+    setThemeMode(next);
+    applyThemeToIframe(next);
+  };
+
   return (
     <div className="site-preview-view">
       <div className="site-preview-toolbar">
@@ -51,14 +64,22 @@ export default function SitePreview({ siteId, siteSlug, addToast, initialSlug })
             </button>
           ))}
         </div>
-        <button
-          className="btn btn-secondary btn-sm"
-          onClick={handleGenerate}
-          disabled={generating}
-          style={{ flexShrink: 0 }}
-        >
-          {generating ? '⟳ Generating…' : '↺ Regenerate'}
-        </button>
+        <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+          <button
+            className="site-preview-theme-btn"
+            onClick={toggleTheme}
+            title={themeMode === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+          >
+            {themeMode === 'light' ? '☽ Dark' : '☀ Light'}
+          </button>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={handleGenerate}
+            disabled={generating}
+          >
+            {generating ? '⟳ Generating…' : '↺ Regenerate'}
+          </button>
+        </div>
       </div>
 
       {generating ? (
@@ -78,6 +99,7 @@ export default function SitePreview({ siteId, siteSlug, addToast, initialSlug })
           src={iframeSrc}
           className="site-preview-iframe"
           title="Site Preview"
+          onLoad={() => applyThemeToIframe(themeMode)}
         />
       )}
     </div>

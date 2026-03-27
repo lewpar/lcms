@@ -1373,6 +1373,58 @@ code {
 
 .theme-color-row .field { margin: 0; }
 
+/* ── Color tab bar (Light / Dark switch in theme editor) ── */
+.color-tab-bar {
+  display: flex;
+  background: var(--surface2);
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.color-tab-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.color-tab-btn.active {
+  background: var(--surface3);
+  color: var(--text);
+}
+
+.color-tab-btn:hover:not(.active) {
+  color: var(--text);
+}
+
+/* ── Site preview light/dark toggle button ── */
+.site-preview-theme-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.site-preview-theme-btn:hover {
+  background: var(--surface3);
+  color: var(--text);
+  border-color: var(--accent);
+}
+
 /* ── Resizable split pane ── */
 .split-pane {
   display: flex;
