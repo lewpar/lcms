@@ -818,6 +818,26 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   margin-top: 4px;
 }
 
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  width: 380px;
+  max-width: 90vw;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
 .site-new-form {
   display: flex;
   flex-direction: column;
@@ -920,20 +940,20 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 }
 
 .sidebar-section-add-page {
-  background: none;
-  border: none;
+  background: var(--surface3);
+  border: 1px solid var(--border);
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 10px;
+  font-weight: 600;
   cursor: pointer;
-  padding: 1px 5px;
-  border-radius: 3px;
-  opacity: 0;
-  transition: opacity 0.15s, background 0.15s, color 0.15s;
-  line-height: 1;
+  padding: 2px 7px;
+  border-radius: 10px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  line-height: 1.4;
   flex-shrink: 0;
+  white-space: nowrap;
 }
-.sidebar-section-header:hover .sidebar-section-add-page { opacity: 1; }
-.sidebar-section-add-page:hover { background: var(--primary); color: #fff; }
+.sidebar-section-add-page:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
 
 .sidebar-section-delete {
   background: none;

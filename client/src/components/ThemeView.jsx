@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import SitePreview from './SitePreview.jsx';
 
 const PRESETS = [
@@ -36,7 +36,18 @@ function isValidHex(hex) {
 export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug }) {
   const defaultTheme = { primary: '#6c63ff', sidebarBg: '#1e293b', radius: 8, font: 'inter', fontSize: 16, contentWidth: 800, sidebarWidth: 240, showBreadcrumbs: true, showReadingTime: true };
   const [theme, setTheme] = useState(() => ({ ...defaultTheme, ...(settings.theme || {}) }));
-  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState('saved'); // 'saved' | 'unsaved' | 'saving'
+  const [previewKey, setPreviewKey] = useState(0);
+
+  const saveTimer = useRef(null);
+  const isFirstLoad = useRef(true);
+  const onSaveRef = useRef(onSave);
+  const settingsRef = useRef(settings);
+  const latestThemeRef = useRef(theme);
+
+  useEffect(() => { onSaveRef.current = onSave; }, [onSave]);
+  useEffect(() => { settingsRef.current = settings; }, [settings]);
+  useEffect(() => { latestThemeRef.current = theme; }, [theme]);
 
   useEffect(() => {
     const existing = document.getElementById('theme-preview-font');
@@ -50,6 +61,25 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
     }
   }, [theme.font]);
 
+  // Auto-save on theme change (1s debounce), then regenerate preview
+  useEffect(() => {
+    if (isFirstLoad.current) { isFirstLoad.current = false; return; }
+    setSaveStatus('unsaved');
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(async () => {
+      setSaveStatus('saving');
+      try {
+        await onSaveRef.current({ ...settingsRef.current, theme: latestThemeRef.current });
+        setSaveStatus('saved');
+        setPreviewKey(k => k + 1);
+      } catch {
+        addToast('Failed to save theme', 'error');
+        setSaveStatus('unsaved');
+      }
+    }, 1000);
+    return () => clearTimeout(saveTimer.current);
+  }, [theme]);
+
   const applyPreset = (preset) => {
     const { name: _n, ...t } = preset;
     setTheme(prev => ({ ...defaultTheme, ...prev, ...t }));
@@ -57,17 +87,8 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
 
   const set = (key, val) => setTheme(t => ({ ...t, [key]: val }));
 
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      await onSave({ ...settings, theme });
-      addToast('Theme saved', 'success');
-    } catch {
-      addToast('Failed to save theme', 'error');
-    } finally {
-      setSaving(false);
-    }
-  };
+  const statusLabel = { saved: '✓ Saved', unsaved: '● Unsaved', saving: '⟳ Saving…' };
+  const statusColor = { saved: 'var(--success)', unsaved: 'var(--warning)', saving: 'var(--text-muted)' };
 
   const ColorField = ({ label, themeKey }) => (
     <div className="field">
@@ -95,7 +116,10 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
       {/* ── Left: controls ── */}
       <div className="theme-controls-pane">
         <div className="theme-controls-inner">
-          <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>Theme</h2>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 700 }}>Theme</h2>
+            <span style={{ fontSize: 11, color: statusColor[saveStatus] }}>{statusLabel[saveStatus]}</span>
+          </div>
 
           {/* Presets */}
           <div className="settings-section">
@@ -115,7 +139,17 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
 
           {/* Colors */}
           <div className="settings-section">
-            <h3>Colors</h3>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+              <h3 style={{ margin: 0 }}>Colors</h3>
+              <label className="theme-toggle-row" style={{ margin: 0 }}>
+                <input
+                  type="checkbox"
+                  checked={theme.showDarkModeToggle || false}
+                  onChange={e => set('showDarkModeToggle', e.target.checked)}
+                />
+                <span style={{ fontSize: 12 }}>Dark mode</span>
+              </label>
+            </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <ColorField label="Primary color" themeKey="primary" />
               <ColorField label="Sidebar background" themeKey="sidebarBg" />
@@ -188,29 +222,12 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
               </label>
             </div>
           </div>
-
-          {/* Dark Mode */}
-          <div className="settings-section">
-            <h3>Dark Mode</h3>
-            <label className="theme-toggle-row">
-              <input
-                type="checkbox"
-                checked={theme.showDarkModeToggle || false}
-                onChange={e => set('showDarkModeToggle', e.target.checked)}
-              />
-              <span>Show dark mode toggle button in exported site</span>
-            </label>
-          </div>
-
-          <button className="btn btn-primary" onClick={handleSave} disabled={saving} style={{ width: '100%' }}>
-            {saving ? 'Saving…' : 'Save Theme'}
-          </button>
         </div>
       </div>
 
       {/* ── Right: real site preview ── */}
       <div className="theme-preview-pane">
-        <SitePreview siteId={siteId} siteSlug={siteSlug} addToast={addToast} initialSlug="" />
+        <SitePreview key={previewKey} siteId={siteId} siteSlug={siteSlug} addToast={addToast} initialSlug="" />
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { getPage, updatePage } from '../api.js';
+
+// Keep stable refs so the unmount cleanup can fire without stale closures
 import BlockEditor from './BlockEditor.jsx';
 import Preview from './Preview.jsx';
 import { v4 as uuidv4 } from '../uuid.js';
@@ -62,6 +64,12 @@ export default function PageEditor({ siteId, pageId, onSaved, addToast, pages = 
   const autoSaveTimer = useRef(null);
   const isFirstLoad = useRef(true);
 
+  // Refs for unmount-save (avoids stale closure issues)
+  const latestPageRef = useRef(null);
+  const latestSaveStatus = useRef('saved');
+  useEffect(() => { latestPageRef.current = page; }, [page]);
+  useEffect(() => { latestSaveStatus.current = saveStatus; }, [saveStatus]);
+
   const doSave = useCallback(async (p, silent = false) => {
     if (!p) return;
     if (RESERVED_SLUGS.has(p.slug)) {
@@ -95,6 +103,16 @@ export default function PageEditor({ siteId, pageId, onSaved, addToast, pages = 
     autoSaveTimer.current = setTimeout(() => doSave(page, true), 2000);
     return () => clearTimeout(autoSaveTimer.current);
   }, [page]);
+
+  // Save immediately on unmount if there are unsaved changes
+  useEffect(() => {
+    return () => {
+      if (latestSaveStatus.current === 'unsaved' && latestPageRef.current) {
+        clearTimeout(autoSaveTimer.current);
+        updatePage(siteId, latestPageRef.current.id, latestPageRef.current).catch(() => {});
+      }
+    };
+  }, [siteId]);
 
   // Ctrl+S to save
   useEffect(() => {

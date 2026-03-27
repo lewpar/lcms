@@ -37,6 +37,7 @@ export default function App() {
   const [view, setView] = useState('pages');
   const [toasts, setToasts] = useState([]);
   const [generating, setGenerating] = useState(false);
+  const [showDeployDialog, setShowDeployDialog] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [search, setSearch] = useState('');
   const [collapsedSections, setCollapsedSections] = useState({});
@@ -210,10 +211,11 @@ export default function App() {
   };
 
   const handleGenerate = async () => {
+    setShowDeployDialog(false);
     setGenerating(true);
     try {
       const result = await generateSite(siteId);
-      addToast(result.message || 'Site generated!', 'success');
+      addToast(result.message || 'Site deployed!', 'success');
     } catch (err) {
       addToast(err.message, 'error');
     } finally { setGenerating(false); }
@@ -380,7 +382,7 @@ export default function App() {
               className={`btn btn-secondary btn-sm btn-icon${view === 'settings' ? ' active-view' : ''}`}
               onClick={() => setView(v => v === 'settings' ? 'pages' : 'settings')}
               title="Site settings"
-              style={{ flexShrink: 0 }}
+              style={{ flexShrink: 0, fontSize: 18, lineHeight: 1, padding: '3px 7px' }}
             >⚙</button>
           </div>
         </div>
@@ -447,7 +449,7 @@ export default function App() {
                     className="sidebar-section-add-page"
                     onClick={() => handleNewPage(section.id)}
                     title="Add page to this section"
-                  >+</button>
+                  >+ Page</button>
                   <button
                     className="sidebar-section-delete"
                     onClick={() => {
@@ -518,10 +520,10 @@ export default function App() {
             </button>
             <button
               className="btn btn-success btn-sm"
-              onClick={handleGenerate}
+              onClick={() => setShowDeployDialog(true)}
               disabled={generating}
             >
-              {generating ? 'Generating…' : '⬡ Export'}
+              {generating ? 'Deploying…' : '⬡ Deploy'}
             </button>
           </div>
         </div>
@@ -558,6 +560,21 @@ export default function App() {
           </div>
         )}
       </main>
+
+      {showDeployDialog && (
+        <div className="modal-overlay" onClick={() => setShowDeployDialog(false)}>
+          <div className="modal-box" onClick={e => e.stopPropagation()}>
+            <h3 style={{ marginBottom: 8 }}>Deploy site?</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 20 }}>
+              This will generate and publish a static build of <strong>{selectedSite.name}</strong>.
+            </p>
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+              <button className="btn btn-secondary" onClick={() => setShowDeployDialog(false)}>Cancel</button>
+              <button className="btn btn-success" onClick={handleGenerate}>Deploy</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Toast toasts={toasts} />
     </div>
