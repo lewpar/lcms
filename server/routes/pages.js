@@ -102,7 +102,7 @@ router.post('/', (req, res) => {
   if (isReservedSlug(slug)) return res.status(400).json({ error: `"${slug}" is a reserved slug and cannot be used.` });
   if (slugExists(req.params.siteId, slug)) return res.status(409).json({ error: `A page with slug "${slug}" already exists.` });
 
-  const page = { id, title: body.title || 'Untitled', slug, description: '', blocks: [], createdAt: now, updatedAt: now };
+  const page = { id, title: body.title || 'Untitled', slug, section: body.section || '', description: '', blocks: [], createdAt: now, updatedAt: now };
   try {
     fs.writeFileSync(path.join(pagesDir(req.params.siteId), `${id}.json`), JSON.stringify(page, null, 2));
     res.json(page);

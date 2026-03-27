@@ -178,9 +178,9 @@ export default function App() {
     p.slug.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleNewPage = async () => {
+  const handleNewPage = async (sectionId = '') => {
     try {
-      const page = await createPage(siteId, { title: 'Untitled Page', slug: `page-${Date.now()}` });
+      const page = await createPage(siteId, { title: 'Untitled Page', slug: `page-${Date.now()}`, section: sectionId });
       await loadPages();
       setSelectedId(page.id);
       setView('pages');
@@ -372,10 +372,16 @@ export default function App() {
               title="Back to sites"
               style={{ flexShrink: 0 }}
             >←</button>
-            <div>
+            <div style={{ flex: 1, minWidth: 0 }}>
               <h1 style={{ fontSize: 14, lineHeight: 1.2 }}>{selectedSite.name}</h1>
               <p style={{ fontSize: 10 }}>/{selectedSite.slug}</p>
             </div>
+            <button
+              className={`btn btn-secondary btn-sm btn-icon${view === 'settings' ? ' active-view' : ''}`}
+              onClick={() => setView(v => v === 'settings' ? 'pages' : 'settings')}
+              title="Site settings"
+              style={{ flexShrink: 0 }}
+            >⚙</button>
           </div>
         </div>
 
@@ -438,6 +444,11 @@ export default function App() {
                   )}
                   <span className="sidebar-section-count">{sectionPages.length}</span>
                   <button
+                    className="sidebar-section-add-page"
+                    onClick={() => handleNewPage(section.id)}
+                    title="Add page to this section"
+                  >+</button>
+                  <button
                     className="sidebar-section-delete"
                     onClick={() => {
                       if (sectionPages.length > 0 && !confirm(`Delete "${section.name}"? Pages will be moved to no section.`)) return;
@@ -481,19 +492,10 @@ export default function App() {
           <button className="btn btn-secondary btn-sm sidebar-add-section-btn" onClick={addSection}>
             + Add Section
           </button>
-          <button className="btn btn-primary btn-sm sidebar-add-section-btn" onClick={handleNewPage}>
-            + Add Page
-          </button>
         </div>
 
         <div className="sidebar-footer">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 4, marginBottom: 6 }}>
-            <button
-              className={`btn btn-secondary btn-sm${view === 'settings' ? ' active-view' : ''}`}
-              onClick={() => setView(v => v === 'settings' ? 'pages' : 'settings')}
-            >
-              ⚙ Settings
-            </button>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, marginBottom: 6 }}>
             <button
               className={`btn btn-secondary btn-sm${view === 'theme' ? ' active-view' : ''}`}
               onClick={() => setView(v => v === 'theme' ? 'pages' : 'theme')}
@@ -507,21 +509,21 @@ export default function App() {
               🖼 Media
             </button>
           </div>
-          <button
-            className={`btn btn-secondary btn-sm${view === 'preview' ? ' active-view' : ''}`}
-            style={{ width: '100%', marginBottom: 6 }}
-            onClick={() => setView(v => v === 'preview' ? 'pages' : 'preview')}
-          >
-            ◉ Site Preview
-          </button>
-          <button
-            className="btn btn-success"
-            style={{ width: '100%' }}
-            onClick={handleGenerate}
-            disabled={generating}
-          >
-            {generating ? 'Generating…' : '⬡ Export Static Site'}
-          </button>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4 }}>
+            <button
+              className={`btn btn-secondary btn-sm${view === 'preview' ? ' active-view' : ''}`}
+              onClick={() => setView(v => v === 'preview' ? 'pages' : 'preview')}
+            >
+              ◉ Preview
+            </button>
+            <button
+              className="btn btn-success btn-sm"
+              onClick={handleGenerate}
+              disabled={generating}
+            >
+              {generating ? 'Generating…' : '⬡ Export'}
+            </button>
+          </div>
         </div>
       </aside>
 
@@ -529,7 +531,7 @@ export default function App() {
         {view === 'settings' ? (
           <SettingsView settings={{ ...settings, _pages: pages }} onSave={saveSettings} addToast={addToast} />
         ) : view === 'theme' ? (
-          <ThemeView settings={settings} onSave={saveSettings} addToast={addToast} />
+          <ThemeView settings={settings} onSave={saveSettings} addToast={addToast} siteId={siteId} siteSlug={selectedSite.slug} />
         ) : view === 'media' ? (
           <MediaManager siteId={siteId} addToast={addToast} />
         ) : view === 'preview' ? (
@@ -552,8 +554,7 @@ export default function App() {
           <div className="empty-state">
             <div style={{ fontSize: 48 }}>📄</div>
             <h2>No page selected</h2>
-            <p>Select a page from the sidebar or create a new one.</p>
-            <button className="btn btn-primary" onClick={handleNewPage}>+ New Page</button>
+            <p>Select a page from the sidebar, or create a section and add pages to it.</p>
           </div>
         )}
       </main>

@@ -1,0 +1,21 @@
+{
+  "title": "test-site",
+  "navPages": [],
+  "sections": [
+    {
+      "id": "b1ccb32e-0f0a-48fd-81a8-0ef717a6537c",
+      "name": "git"
+    }
+  ],
+  "theme": {
+    "primary": "#f97316",
+    "sidebarBg": "#1c100a",
+    "radius": 8,
+    "font": "lato",
+    "fontSize": 16,
+    "contentWidth": 800,
+    "sidebarWidth": 240,
+    "showBreadcrumbs": true,
+    "showReadingTime": true
+  }
+}

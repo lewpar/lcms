@@ -919,6 +919,22 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   flex-shrink: 0;
 }
 
+.sidebar-section-add-page {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 1px 5px;
+  border-radius: 3px;
+  opacity: 0;
+  transition: opacity 0.15s, background 0.15s, color 0.15s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.sidebar-section-header:hover .sidebar-section-add-page { opacity: 1; }
+.sidebar-section-add-page:hover { background: var(--primary); color: #fff; }
+
 .sidebar-section-delete {
   background: none;
   border: none;
@@ -1040,8 +1056,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding: 28px 24px;
-  gap: 10px;
+  border-left: 1px solid var(--border);
 }
 
 .theme-preview-label {

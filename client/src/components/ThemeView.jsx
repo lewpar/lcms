@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import SitePreview from './SitePreview.jsx';
 
 const PRESETS = [
   { name: 'Default',  primary: '#6c63ff', sidebarBg: '#1e293b', radius: 8,  font: 'inter',       fontSize: 16, contentWidth: 800 },
@@ -20,15 +21,6 @@ const FONTS = [
   { value: 'open-sans',   label: 'Open Sans' },
 ];
 
-const FONT_FAMILY = {
-  system:      '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-  inter:       '"Inter", sans-serif',
-  roboto:      '"Roboto", sans-serif',
-  lato:        '"Lato", sans-serif',
-  'source-sans': '"Source Sans 3", sans-serif',
-  'open-sans': '"Open Sans", sans-serif',
-};
-
 const FONT_URLS = {
   inter:       'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
   roboto:      'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap',
@@ -37,132 +29,15 @@ const FONT_URLS = {
   'open-sans': 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap',
 };
 
-function hexToRgbStr(hex) {
-  try {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `${r},${g},${b}`;
-  } catch { return '108,99,255'; }
-}
-
 function isValidHex(hex) {
   return /^#[0-9a-fA-F]{6}$/.test(hex);
 }
 
-// ── Full site layout preview ───────────────────────────
-
-function SiteLayoutPreview({ theme }) {
-  const primary = isValidHex(theme.primary || '') ? theme.primary : '#6c63ff';
-  const sidebarBg = isValidHex(theme.sidebarBg || '') ? theme.sidebarBg : '#1e293b';
-  const r = (theme.radius ?? 8) + 'px';
-  const fontFamily = FONT_FAMILY[theme.font || 'inter'] || FONT_FAMILY.inter;
-  const fs = Math.max(12, Math.min(22, theme.fontSize || 16));
-  const maxW = Math.max(600, Math.min(1300, theme.contentWidth || 800));
-  const rgb = hexToRgbStr(primary);
-  const showBreadcrumbs = theme.showBreadcrumbs !== false;
-  const showReadingTime = theme.showReadingTime !== false;
-
-  const navLink = (active, label) => (
-    <div style={{
-      padding: '6px 14px', fontSize: 12, fontWeight: active ? 600 : 400,
-      color: active ? 'rgba(255,255,255,.95)' : 'rgba(255,255,255,.5)',
-      background: active ? `rgba(${rgb},.2)` : 'transparent',
-      borderLeft: `2px solid ${active ? primary : 'transparent'}`,
-      cursor: 'default',
-    }}>{label}</div>
-  );
-
-  const sidebarW = theme.sidebarWidth || 240;
-
-  return (
-    <div style={{ display: 'flex', height: '100%', fontFamily, fontSize: fs * 0.82, overflow: 'hidden', background: '#fff' }}>
-      {/* Sidebar */}
-      <div style={{ width: sidebarW * 0.55, flexShrink: 0, background: sidebarBg, display: 'flex', flexDirection: 'column' }}>
-        <div style={{ padding: '12px 10px 10px', borderBottom: '1px solid rgba(255,255,255,.08)', flexShrink: 0 }}>
-          <div style={{ fontWeight: 800, color: '#fff', fontSize: 13, lineHeight: 1.3 }}>My Learning Site</div>
-        </div>
-        <div style={{ flex: 1, paddingTop: 8 }}>
-          {navLink(false, 'Introduction')}
-          {navLink(true, 'Chapter 1')}
-          {navLink(false, 'Chapter 2')}
-          <div style={{ padding: '10px 14px 3px', fontSize: 8, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,.25)' }}>Advanced</div>
-          {navLink(false, 'Deep Dive')}
-          {navLink(false, 'References')}
-        </div>
-      </div>
-
-      {/* Content */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        {/* Top bar */}
-        <div style={{ height: 40, borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', padding: '0 16px', background: '#fff', flexShrink: 0, gap: 8 }}>
-          {showBreadcrumbs && (
-            <div style={{ fontSize: 10, color: '#94a3b8', display: 'flex', gap: 4, alignItems: 'center' }}>
-              <span style={{ color: primary }}>Home</span>
-              <span style={{ color: '#cbd5e1' }}>›</span>
-              <span>Chapter 1</span>
-              <span style={{ color: '#cbd5e1' }}>›</span>
-              <span>Getting Started</span>
-            </div>
-          )}
-        </div>
-
-        {/* Page content */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', background: '#fff' }}>
-          <div style={{ maxWidth: maxW * 0.48, margin: '0 auto' }}>
-            <h1 style={{ fontSize: '1.7em', fontWeight: 800, lineHeight: 1.2, color: '#0f172a', marginBottom: 4 }}>Getting Started</h1>
-            {showReadingTime && <div style={{ fontSize: '0.78em', color: '#94a3b8', marginBottom: 14 }}>⏱ 5 min read</div>}
-            <p style={{ color: '#475569', lineHeight: 1.65, marginBottom: 12, fontSize: '0.95em' }}>
-              This is sample body text showing how your content looks with the selected theme. The font, size, and spacing all update as you adjust settings.
-            </p>
-
-            {/* Buttons */}
-            <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
-              <span style={{ background: primary, color: '#fff', padding: '6px 14px', borderRadius: r, fontSize: '0.82em', fontWeight: 700, cursor: 'default' }}>Primary</span>
-              <span style={{ border: `1.5px solid ${primary}`, color: primary, padding: '6px 14px', borderRadius: r, fontSize: '0.82em', fontWeight: 700, cursor: 'default' }}>Secondary</span>
-            </div>
-
-            {/* Alert */}
-            <div style={{ background: '#eff6ff', border: '1px solid #93c5fd', borderRadius: r, padding: '10px 12px', marginBottom: 10 }}>
-              <div style={{ fontWeight: 700, color: '#1d4ed8', fontSize: '0.82em', marginBottom: 3 }}>Important Note</div>
-              <div style={{ color: '#374151', fontSize: '0.8em' }}>This is an alert block that draws the reader's attention.</div>
-            </div>
-
-            {/* Callout */}
-            <div style={{ background: `rgba(${rgb},.07)`, borderLeft: `3px solid ${primary}`, borderRadius: `0 ${r} ${r} 0`, padding: '10px 12px', marginBottom: 10 }}>
-              <div style={{ fontWeight: 700, color: primary, fontSize: '0.82em', marginBottom: 3 }}>💡 Callout</div>
-              <div style={{ color: '#374151', fontSize: '0.8em' }}>A highlighted tip for the reader.</div>
-            </div>
-
-            {/* Code */}
-            <div style={{ borderRadius: r, overflow: 'hidden', border: '1px solid #e2e8f0', marginBottom: 10 }}>
-              <div style={{ background: '#1e293b', color: '#94a3b8', padding: '3px 10px', fontSize: 9, fontFamily: 'monospace' }}>javascript</div>
-              <pre style={{ background: '#0f172a', color: '#e2e8f0', padding: '8px 10px', margin: 0, fontSize: 10, fontFamily: 'monospace', lineHeight: 1.5, overflowX: 'hidden' }}>{`function greet(name) {\n  return \`Hello, \${name}!\`;\n}`}</pre>
-            </div>
-
-            {/* Quiz start */}
-            <div style={{ border: '1px solid #e2e8f0', borderRadius: r, overflow: 'hidden' }}>
-              <div style={{ background: '#f8fafc', padding: '14px 16px', textAlign: 'center' }}>
-                <div style={{ background: primary, color: '#fff', fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '2px 10px', borderRadius: 20, display: 'inline-block', marginBottom: 6 }}>Quiz</div>
-                <div style={{ fontWeight: 700, fontSize: '0.92em', color: '#0f172a', marginBottom: 8 }}>Chapter 1 Review</div>
-                <span style={{ background: primary, color: '#fff', padding: '6px 14px', borderRadius: r, fontSize: '0.8em', fontWeight: 700, cursor: 'default' }}>Start Quiz →</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── Main ThemeView ─────────────────────────────────────
-
-export default function ThemeView({ settings, onSave, addToast }) {
+export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug }) {
   const defaultTheme = { primary: '#6c63ff', sidebarBg: '#1e293b', radius: 8, font: 'inter', fontSize: 16, contentWidth: 800, sidebarWidth: 240, showBreadcrumbs: true, showReadingTime: true };
   const [theme, setTheme] = useState(() => ({ ...defaultTheme, ...(settings.theme || {}) }));
   const [saving, setSaving] = useState(false);
 
-  // Load Google Font into document when font selection changes
   useEffect(() => {
     const existing = document.getElementById('theme-preview-font');
     if (existing) existing.remove();
@@ -244,6 +119,14 @@ export default function ThemeView({ settings, onSave, addToast }) {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <ColorField label="Primary color" themeKey="primary" />
               <ColorField label="Sidebar background" themeKey="sidebarBg" />
+              {theme.showDarkModeToggle && (
+                <>
+                  <ColorField label="Dark background" themeKey="darkBg" />
+                  <ColorField label="Dark text" themeKey="darkText" />
+                  <ColorField label="Dark surface" themeKey="darkSurface" />
+                  <ColorField label="Dark border" themeKey="darkBorder" />
+                </>
+              )}
             </div>
           </div>
 
@@ -317,14 +200,6 @@ export default function ThemeView({ settings, onSave, addToast }) {
               />
               <span>Show dark mode toggle button in exported site</span>
             </label>
-            {theme.showDarkModeToggle && (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 8 }}>
-                <ColorField label="Dark bg" themeKey="darkBg" />
-                <ColorField label="Dark text" themeKey="darkText" />
-                <ColorField label="Dark surface" themeKey="darkSurface" />
-                <ColorField label="Dark border" themeKey="darkBorder" />
-              </div>
-            )}
           </div>
 
           <button className="btn btn-primary" onClick={handleSave} disabled={saving} style={{ width: '100%' }}>
@@ -333,12 +208,9 @@ export default function ThemeView({ settings, onSave, addToast }) {
         </div>
       </div>
 
-      {/* ── Right: preview ── */}
+      {/* ── Right: real site preview ── */}
       <div className="theme-preview-pane">
-        <div className="theme-preview-label">Live Preview</div>
-        <div className="theme-preview-frame">
-          <SiteLayoutPreview theme={theme} />
-        </div>
+        <SitePreview siteId={siteId} siteSlug={siteSlug} addToast={addToast} initialSlug="" />
       </div>
     </div>
   );
