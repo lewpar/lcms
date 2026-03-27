@@ -6,7 +6,6 @@ function blockSummary(block) {
   switch (block.type) {
     case 'markdown': return block.content?.slice(0, 60) || '(empty)';
     case 'heading':  return `H${block.level}: ${block.text || '(empty)'}`;
-    case 'alert':    return `[${block.variant}] ${block.title || block.content?.slice(0, 40) || '(empty)'}`;
     case 'callout':  return block.title || block.content?.slice(0, 40) || '(empty)';
     case 'quiz': {
       const n = block.questions?.length ?? 0;
@@ -14,9 +13,10 @@ function blockSummary(block) {
     }
     case 'code':       return `${block.language || 'code'}: ${block.content?.slice(0, 40) || '(empty)'}`;
     case 'image':      return block.src || '(no image)';
-    case 'case-study': return block.title || '(untitled case study)';
-    case 'divider':  return '──────────';
-    default:         return block.type;
+    case 'case-study': return block.title || '(no title)';
+    case 'page-link': return block.pageTitle || '(no page selected)';
+    case 'divider':   return '──────────';
+    default:          return block.type;
   }
 }
 
@@ -60,40 +60,10 @@ function HeadingEditor({ block, onChange }) {
   );
 }
 
-function AlertEditor({ block, onChange }) {
-  return (
-    <>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 10 }}>
-        <div className="field">
-          <label>Variant</label>
-          <select value={block.variant || 'info'} onChange={e => onChange({ variant: e.target.value })}>
-            <option value="info">Info</option>
-            <option value="success">Success</option>
-            <option value="warning">Warning</option>
-            <option value="error">Error</option>
-          </select>
-        </div>
-        <div className="field">
-          <label>Title (optional)</label>
-          <input type="text" value={block.title || ''} onChange={e => onChange({ title: e.target.value })} placeholder="Alert title" />
-        </div>
-      </div>
-      <div className="field">
-        <label>Content (markdown supported)</label>
-        <textarea rows={3} value={block.content || ''} onChange={e => onChange({ content: e.target.value })} placeholder="Alert message" />
-      </div>
-    </>
-  );
-}
-
 function CalloutEditor({ block, onChange }) {
   return (
     <>
-      <div style={{ display: 'grid', gridTemplateColumns: '70px 1fr 110px', gap: 10 }}>
-        <div className="field">
-          <label>Icon</label>
-          <input type="text" value={block.icon || '💡'} onChange={e => onChange({ icon: e.target.value })} placeholder="💡" />
-        </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 110px', gap: 10 }}>
         <div className="field">
           <label>Title</label>
           <input type="text" value={block.title || ''} onChange={e => onChange({ title: e.target.value })} placeholder="Callout title" />
@@ -254,13 +224,7 @@ function QuizEditor({ block, onChange }) {
   );
 }
 
-const CODE_LANGUAGES = [
-  'plaintext', 'javascript', 'typescript', 'jsx', 'tsx',
-  'python', 'java', 'csharp', 'cpp', 'c', 'go', 'rust',
-  'ruby', 'php', 'swift', 'kotlin', 'r', 'scala', 'dart',
-  'html', 'css', 'scss', 'sql', 'bash', 'powershell',
-  'yaml', 'json', 'xml', 'markdown', 'dockerfile', 'graphql',
-];
+const CODE_LANGUAGES = ['plaintext', 'python', 'javascript', 'html', 'css', 'json'];
 
 function CodeEditor({ block, onChange }) {
   return (
@@ -306,46 +270,32 @@ function CaseStudyEditor({ block, onChange }) {
     <>
       <div className="field">
         <label>Title</label>
-        <input type="text" value={block.title || ''} onChange={e => onChange({ title: e.target.value })} placeholder="Case Study: Company Name" />
+        <input type="text" value={block.title || ''} onChange={e => onChange({ title: e.target.value })} placeholder="Case Study: Scenario Title" />
       </div>
       <div className="field">
-        <label>Summary (one-liner)</label>
-        <input type="text" value={block.summary || ''} onChange={e => onChange({ summary: e.target.value })} placeholder="Brief overview" />
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-        <div className="field">
-          <label>Background</label>
-          <textarea rows={4} value={block.background || ''} onChange={e => onChange({ background: e.target.value })} placeholder="Context and background…" />
-        </div>
-        <div className="field">
-          <label>Challenge</label>
-          <textarea rows={4} value={block.challenge || ''} onChange={e => onChange({ challenge: e.target.value })} placeholder="The problem or challenge faced…" />
-        </div>
-        <div className="field">
-          <label>Solution</label>
-          <textarea rows={4} value={block.solution || ''} onChange={e => onChange({ solution: e.target.value })} placeholder="How it was approached and solved…" />
-        </div>
-        <div className="field">
-          <label>Outcome</label>
-          <textarea rows={4} value={block.outcome || ''} onChange={e => onChange({ outcome: e.target.value })} placeholder="Results, impact, and lessons…" />
-        </div>
+        <label>Summary</label>
+        <input type="text" value={block.summary || ''} onChange={e => onChange({ summary: e.target.value })} placeholder="One-line overview of the case study" />
       </div>
       <div className="field">
-        <label>Tags (comma-separated)</label>
-        <input type="text" value={block.tags || ''} onChange={e => onChange({ tags: e.target.value })} placeholder="strategy, growth, technology" />
+        <label>Background</label>
+        <textarea rows={5} value={block.background || ''} onChange={e => onChange({ background: e.target.value })} placeholder="Context, setting, and relevant background information…" />
+      </div>
+      <div className="field">
+        <label>Instructions</label>
+        <textarea rows={5} value={block.instructions || ''} onChange={e => onChange({ instructions: e.target.value })} placeholder="What the learner should do, analyse, or consider…" />
       </div>
     </>
   );
 }
 
-function ImageEditor({ block, onChange, addToast }) {
+function ImageEditor({ block, onChange, addToast, siteId }) {
   const fileRef = useRef();
 
   const handleFile = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     try {
-      const { url } = await uploadAsset(file);
+      const { url } = await uploadAsset(siteId, file);
       onChange({ src: url });
     } catch {
       addToast('Upload failed', 'error');
@@ -379,15 +329,50 @@ function ImageEditor({ block, onChange, addToast }) {
   );
 }
 
+function PageLinkEditor({ block, onChange, pages = [] }) {
+  const handlePageSelect = (e) => {
+    const page = pages.find(p => p.id === e.target.value);
+    if (page) {
+      onChange({ pageId: page.id, pageSlug: page.slug, pageTitle: page.title });
+    } else {
+      onChange({ pageId: '', pageSlug: '', pageTitle: '' });
+    }
+  };
+
+  return (
+    <>
+      <div className="field">
+        <label>Link to page</label>
+        <select value={block.pageId || ''} onChange={handlePageSelect}>
+          <option value="">— select a page —</option>
+          {pages.map(p => (
+            <option key={p.id} value={p.id}>{p.title} (/{p.slug})</option>
+          ))}
+        </select>
+      </div>
+      <div className="field">
+        <label>Description (optional)</label>
+        <input
+          type="text"
+          value={block.description || ''}
+          onChange={e => onChange({ description: e.target.value })}
+          placeholder="Short description shown on the link card"
+        />
+      </div>
+    </>
+  );
+}
+
 /* ── Main BlockEditor ── */
 
 export default function BlockEditor({
-  block, index, total, expanded, onToggle, onChange, onRemove, addToast,
+  block, index, total, expanded, onToggle, onChange, onRemove, addToast, pages, siteId,
   isDragging, dragOverClass, onDragStart, onDragOver, onDrop, onDragEnd,
 }) {
   return (
     <div
       className={`block-card${expanded ? ' expanded' : ''}${isDragging ? ' dragging' : ''}${dragOverClass ? ` ${dragOverClass}` : ''}`}
+      data-block-id={block.id}
       onDragOver={onDragOver}
       onDrop={onDrop}
       onDragEnd={onDragEnd}
@@ -418,15 +403,15 @@ export default function BlockEditor({
 
       {expanded && (
         <div className="block-body">
-          {block.type === 'markdown' && <MarkdownEditor block={block} onChange={onChange} />}
-          {block.type === 'heading'  && <HeadingEditor  block={block} onChange={onChange} />}
-          {block.type === 'alert'    && <AlertEditor    block={block} onChange={onChange} />}
-          {block.type === 'callout'  && <CalloutEditor  block={block} onChange={onChange} />}
-          {block.type === 'quiz'     && <QuizEditor     block={block} onChange={onChange} />}
-          {block.type === 'code'     && <CodeEditor     block={block} onChange={onChange} />}
-          {block.type === 'image'      && <ImageEditor      block={block} onChange={onChange} addToast={addToast} />}
+          {block.type === 'markdown'  && <MarkdownEditor   block={block} onChange={onChange} />}
+          {block.type === 'heading'   && <HeadingEditor    block={block} onChange={onChange} />}
+          {block.type === 'callout'   && <CalloutEditor    block={block} onChange={onChange} />}
+          {block.type === 'quiz'      && <QuizEditor       block={block} onChange={onChange} />}
+          {block.type === 'code'      && <CodeEditor       block={block} onChange={onChange} />}
+          {block.type === 'image'     && <ImageEditor      block={block} onChange={onChange} addToast={addToast} siteId={siteId} />}
           {block.type === 'case-study' && <CaseStudyEditor block={block} onChange={onChange} />}
-          {block.type === 'divider'  && (
+          {block.type === 'page-link' && <PageLinkEditor   block={block} onChange={onChange} pages={pages} />}
+          {block.type === 'divider'   && (
             <p style={{ color: 'var(--text-muted)', fontSize: 12 }}>Horizontal divider — no configuration needed.</p>
           )}
         </div>

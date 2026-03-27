@@ -1,19 +1,55 @@
 const BASE = '/api';
 
-export async function getPages() {
-  const res = await fetch(`${BASE}/pages`);
+// ── Sites ────────────────────────────────────────────────
+
+export async function getSites() {
+  const res = await fetch(`${BASE}/sites`);
+  if (!res.ok) throw new Error('Failed to fetch sites');
+  return res.json();
+}
+
+export async function createSite(name) {
+  const res = await fetch(`${BASE}/sites`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name }),
+  });
+  if (!res.ok) throw new Error('Failed to create site');
+  return res.json();
+}
+
+export async function renameSite(siteId, name) {
+  const res = await fetch(`${BASE}/sites/${siteId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name }),
+  });
+  if (!res.ok) throw new Error('Failed to rename site');
+  return res.json();
+}
+
+export async function deleteSite(siteId) {
+  const res = await fetch(`${BASE}/sites/${siteId}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Failed to delete site');
+  return res.json();
+}
+
+// ── Pages ────────────────────────────────────────────────
+
+export async function getPages(siteId) {
+  const res = await fetch(`${BASE}/sites/${siteId}/pages`);
   if (!res.ok) throw new Error('Failed to fetch pages');
   return res.json();
 }
 
-export async function getPage(id) {
-  const res = await fetch(`${BASE}/pages/${id}`);
+export async function getPage(siteId, id) {
+  const res = await fetch(`${BASE}/sites/${siteId}/pages/${id}`);
   if (!res.ok) throw new Error('Failed to fetch page');
   return res.json();
 }
 
-export async function createPage(data) {
-  const res = await fetch(`${BASE}/pages`, {
+export async function createPage(siteId, data) {
+  const res = await fetch(`${BASE}/sites/${siteId}/pages`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
@@ -22,8 +58,8 @@ export async function createPage(data) {
   return res.json();
 }
 
-export async function updatePage(id, data) {
-  const res = await fetch(`${BASE}/pages/${id}`, {
+export async function updatePage(siteId, id, data) {
+  const res = await fetch(`${BASE}/sites/${siteId}/pages/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
@@ -32,8 +68,8 @@ export async function updatePage(id, data) {
   return res.json();
 }
 
-export async function patchPage(id, changes) {
-  const res = await fetch(`${BASE}/pages/${id}`, {
+export async function patchPage(siteId, id, changes) {
+  const res = await fetch(`${BASE}/sites/${siteId}/pages/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(changes),
@@ -42,28 +78,28 @@ export async function patchPage(id, changes) {
   return res.json();
 }
 
-export async function duplicatePage(id) {
-  const res = await fetch(`${BASE}/pages/${id}/duplicate`, { method: 'POST' });
+export async function duplicatePage(siteId, id) {
+  const res = await fetch(`${BASE}/sites/${siteId}/pages/${id}/duplicate`, { method: 'POST' });
   if (!res.ok) throw new Error('Duplicate failed');
   return res.json();
 }
 
-export async function deletePage(id) {
-  const res = await fetch(`${BASE}/pages/${id}`, { method: 'DELETE' });
+export async function deletePage(siteId, id) {
+  const res = await fetch(`${BASE}/sites/${siteId}/pages/${id}`, { method: 'DELETE' });
   if (!res.ok) throw new Error('Failed to delete page');
   return res.json();
 }
 
-export async function uploadAsset(file) {
+export async function uploadAsset(siteId, file) {
   const form = new FormData();
   form.append('file', file);
-  const res = await fetch(`${BASE}/upload`, { method: 'POST', body: form });
+  const res = await fetch(`${BASE}/sites/${siteId}/upload`, { method: 'POST', body: form });
   if (!res.ok) throw new Error('Upload failed');
   return res.json();
 }
 
-export async function generateSite() {
-  const res = await fetch(`${BASE}/generate`, { method: 'POST' });
+export async function generateSite(siteId) {
+  const res = await fetch(`${BASE}/sites/${siteId}/generate`, { method: 'POST' });
   if (!res.ok) {
     const err = await res.json();
     throw new Error(err.error || 'Generation failed');
@@ -71,14 +107,14 @@ export async function generateSite() {
   return res.json();
 }
 
-export async function getSiteSettings() {
-  const res = await fetch(`${BASE}/settings`);
+export async function getSiteSettings(siteId) {
+  const res = await fetch(`${BASE}/sites/${siteId}/settings`);
   if (!res.ok) throw new Error('Failed to fetch settings');
   return res.json();
 }
 
-export async function updateSiteSettings(data) {
-  const res = await fetch(`${BASE}/settings`, {
+export async function updateSiteSettings(siteId, data) {
+  const res = await fetch(`${BASE}/sites/${siteId}/settings`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),

@@ -7,5 +7,39 @@
       "name": "Git"
     }
   ],
-  "theme": {}
+  "theme": {
+    "primary": "#f97316",
+    "sidebarBg": "#1c100a",
+    "radius": 8,
+    "font": "lato",
+    "fontSize": 16,
+    "contentWidth": 800,
+    "sidebarWidth": 240,
+    "showBreadcrumbs": true,
+    "showReadingTime": true
+  },
+  "_pages": [
+    {
+      "id": "4702dce3-ea6e-44d1-9490-098ac875db48",
+      "title": "Chapter 1: Basics",
+      "slug": "ch1-basics",
+      "section": "ee58ab7b-830a-479a-bed9-4384c61bbaf5",
+      "updatedAt": "2026-03-27T05:59:27.258Z"
+    },
+    {
+      "id": "1ba4f896-7ec6-44d2-b0b6-93b147203de1",
+      "title": "Welcome",
+      "slug": "welcome",
+      "section": "ee58ab7b-830a-479a-bed9-4384c61bbaf5",
+      "updatedAt": "2026-03-27T05:55:08.230Z"
+    },
+    {
+      "id": "757660f3-37f7-4b26-bd7c-83eaa99f0ff8",
+      "title": "Chapter 1: Advanced",
+      "slug": "ch1-advanced",
+      "section": "ee58ab7b-830a-479a-bed9-4384c61bbaf5",
+      "updatedAt": "2026-03-27T05:55:06.486Z"
+    }
+  ],
+  "description": "test123"
 }

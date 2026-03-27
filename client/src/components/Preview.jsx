@@ -1,6 +1,31 @@
 import { useState, useEffect } from 'react';
 import { marked } from 'marked';
 import { PREVIEW_STYLES } from '../previewStyles.js';
+import hljs from 'highlight.js/lib/core';
+import javascript from 'highlight.js/lib/languages/javascript';
+import python from 'highlight.js/lib/languages/python';
+import xml from 'highlight.js/lib/languages/xml'; // html
+import css from 'highlight.js/lib/languages/css';
+import json from 'highlight.js/lib/languages/json';
+import plaintext from 'highlight.js/lib/languages/plaintext';
+import 'highlight.js/styles/atom-one-dark.css';
+
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('python', python);
+hljs.registerLanguage('html', xml);
+hljs.registerLanguage('css', css);
+hljs.registerLanguage('json', json);
+hljs.registerLanguage('plaintext', plaintext);
+
+function highlight(code, language) {
+  try {
+    const lang = language === 'html' ? 'xml' : language;
+    if (lang && hljs.getLanguage(lang)) {
+      return hljs.highlight(code, { language: lang }).value;
+    }
+  } catch {}
+  return code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
 
 marked.setOptions({ gfm: true, breaks: true });
 
@@ -31,12 +56,6 @@ function calcReadingTime(blocks) {
   return Math.max(1, Math.ceil(words / 200));
 }
 
-const ALERT_CONFIG = {
-  info:    { bg: '#eff6ff', border: '#93c5fd', titleColor: '#1d4ed8' },
-  success: { bg: '#f0fdf4', border: '#86efac', titleColor: '#15803d' },
-  warning: { bg: '#fffbeb', border: '#fcd34d', titleColor: '#b45309' },
-  error:   { bg: '#fef2f2', border: '#fca5a5', titleColor: '#b91c1c' },
-};
 const CALLOUT_CONFIG = {
   blue:   { bg: '#eff6ff', border: '#3b82f6', text: '#1e40af' },
   green:  { bg: '#f0fdf4', border: '#22c55e', text: '#15803d' },
@@ -242,41 +261,34 @@ function QuizPreview({ block }) {
 // ── Case study ─────────────────────────────────────────
 
 function CaseStudyPreview({ block }) {
-  const sections = [
-    { key: 'background', label: 'Background', color: '#0ea5e9' },
-    { key: 'challenge',  label: 'Challenge',  color: '#f59e0b' },
-    { key: 'solution',   label: 'Solution',   color: '#22c55e' },
-    { key: 'outcome',    label: 'Outcome',    color: '#6c63ff' },
-  ];
-  const tags = block.tags ? block.tags.split(',').map(t => t.trim()).filter(Boolean) : [];
-  const activeSections = sections.filter(s => block[s.key]);
+  const hasContent = block.background || block.instructions;
 
   return (
     <div style={{ border: '1px solid #e2e8f0', borderRadius: 10, overflow: 'hidden' }}>
-      <div style={{ background: '#f8fafc', padding: '16px 20px', borderBottom: '1px solid #e2e8f0' }}>
-        {block.title && <div style={{ fontWeight: 700, fontSize: '1.1em', color: '#0f172a', marginBottom: 4 }}>{block.title}</div>}
-        {block.summary && <div style={{ color: '#64748b', fontSize: '0.9em' }}>{block.summary}</div>}
-        {tags.length > 0 && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 10 }}>
-            {tags.map((tag, i) => (
-              <span key={i} style={{ background: '#eff6ff', color: '#6c63ff', fontSize: '0.7em', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', padding: '2px 8px', borderRadius: 20 }}>{tag}</span>
-            ))}
-          </div>
-        )}
+      {/* Header */}
+      <div style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #f0f4ff 100%)', padding: '18px 22px', borderBottom: '1px solid #e2e8f0' }}>
+        <div style={{ fontSize: '0.72em', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#6c63ff', marginBottom: 6 }}>Case Study</div>
+        {block.title && <div style={{ fontWeight: 800, fontSize: '1.15em', color: '#0f172a', marginBottom: 6, lineHeight: 1.3 }}>{block.title}</div>}
+        {block.summary && <div style={{ color: '#64748b', fontSize: '0.92em', lineHeight: 1.5 }}>{block.summary}</div>}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: activeSections.length === 1 ? '1fr' : '1fr 1fr' }}>
-        {activeSections.map(({ key, label, color }, i) => (
-          <div key={key} style={{
-            padding: '14px 20px',
-            borderBottom: activeSections.length > 2 && i < activeSections.length - 2 ? '1px solid #e2e8f0' : undefined,
-            borderRight: activeSections.length > 1 && i % 2 === 0 ? '1px solid #e2e8f0' : undefined,
-          }}>
-            <div style={{ fontSize: '0.68em', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color, marginBottom: 8 }}>{label}</div>
-            <div className="prose" style={{ fontSize: '0.9em' }} dangerouslySetInnerHTML={{ __html: md(block[key]) }} />
-          </div>
-        ))}
-      </div>
-      {activeSections.length === 0 && (
+
+      {/* Body sections */}
+      {hasContent ? (
+        <div>
+          {block.background && (
+            <div style={{ padding: '16px 22px', borderBottom: block.instructions ? '1px solid #e2e8f0' : undefined }}>
+              <div style={{ fontSize: '0.68em', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#0ea5e9', marginBottom: 8 }}>Background</div>
+              <div className="prose" style={{ fontSize: '0.92em' }} dangerouslySetInnerHTML={{ __html: md(block.background) }} />
+            </div>
+          )}
+          {block.instructions && (
+            <div style={{ padding: '16px 22px', background: '#fafbff' }}>
+              <div style={{ fontSize: '0.68em', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#6c63ff', marginBottom: 8 }}>Instructions</div>
+              <div className="prose" style={{ fontSize: '0.92em' }} dangerouslySetInnerHTML={{ __html: md(block.instructions) }} />
+            </div>
+          )}
+        </div>
+      ) : (
         <div style={{ padding: 16, color: '#94a3b8', fontSize: 13, textAlign: 'center' }}>No content added yet.</div>
       )}
     </div>
@@ -300,21 +312,11 @@ function BlockPreview({ block }) {
       );
     }
 
-    case 'alert': {
-      const cfg = ALERT_CONFIG[block.variant] || ALERT_CONFIG.info;
-      return (
-        <div style={{ background: cfg.bg, border: `1px solid ${cfg.border}`, borderRadius: 8, padding: '12px 16px' }}>
-          {block.title && <div style={{ fontWeight: 700, color: cfg.titleColor, marginBottom: 4, fontSize: '0.92em' }}>{block.title}</div>}
-          <div style={{ color: '#374151', fontSize: '0.92em' }} dangerouslySetInnerHTML={{ __html: md(block.content) }} />
-        </div>
-      );
-    }
-
     case 'callout': {
       const cfg = CALLOUT_CONFIG[block.color] || CALLOUT_CONFIG.blue;
       return (
         <div style={{ background: cfg.bg, borderLeft: `4px solid ${cfg.border}`, borderRadius: '0 8px 8px 0', padding: '12px 16px' }}>
-          {block.title && <div style={{ fontWeight: 700, color: cfg.text, marginBottom: 4 }}>{block.icon || '💡'} {block.title}</div>}
+          {block.title && <div style={{ fontWeight: 700, color: cfg.text, marginBottom: 4 }}>{block.title}</div>}
           <div style={{ color: '#374151', fontSize: '0.92em' }} dangerouslySetInnerHTML={{ __html: md(block.content) }} />
         </div>
       );
@@ -326,14 +328,21 @@ function BlockPreview({ block }) {
     case 'case-study':
       return <CaseStudyPreview block={block} />;
 
-    case 'code':
+    case 'code': {
+      const highlighted = highlight(block.content || '', block.language || 'plaintext');
       return (
         <div style={{ borderRadius: 8, overflow: 'hidden', border: '1px solid #e2e8f0' }}>
-          {block.language && <div style={{ background: '#1e293b', color: '#94a3b8', padding: '5px 14px', fontSize: '11px', fontFamily: 'monospace' }}>{block.language}</div>}
-          <pre style={{ background: '#0f172a', color: '#e2e8f0', padding: '14px', margin: 0, overflowX: 'auto', fontSize: '12px', lineHeight: 1.6, fontFamily: 'monospace' }}><code>{block.content}</code></pre>
+          {block.language && block.language !== 'plaintext' && (
+            <div style={{ background: '#1e293b', color: '#94a3b8', padding: '5px 14px', fontSize: '11px', fontFamily: 'monospace' }}>{block.language}</div>
+          )}
+          <pre style={{ margin: 0, overflowX: 'auto', fontSize: '12px', lineHeight: 1.65, fontFamily: 'monospace' }}
+               className="hljs">
+            <code dangerouslySetInnerHTML={{ __html: highlighted }} />
+          </pre>
           {block.caption && <div style={{ background: '#f8fafc', borderTop: '1px solid #e2e8f0', padding: '5px 14px', fontSize: '12px', color: '#64748b', textAlign: 'center' }}>{block.caption}</div>}
         </div>
       );
+    }
 
     case 'image':
       return (
@@ -346,6 +355,19 @@ function BlockPreview({ block }) {
         </figure>
       );
 
+    case 'page-link': {
+      const hasPage = block.pageTitle || block.pageSlug;
+      return (
+        <div style={{ border: '1.5px solid #e2e8f0', borderRadius: 10, padding: '14px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, background: '#fafbff', cursor: hasPage ? 'pointer' : 'default', opacity: hasPage ? 1 : 0.5 }}>
+          <div>
+            <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.95em' }}>{block.pageTitle || '(no page selected)'}</div>
+            {block.description && <div style={{ color: '#64748b', fontSize: '0.85em', marginTop: 3 }}>{block.description}</div>}
+          </div>
+          <span style={{ color: '#6c63ff', fontSize: '1.2em', flexShrink: 0 }}>→</span>
+        </div>
+      );
+    }
+
     case 'divider':
       return <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '4px 0' }} />;
 
@@ -356,7 +378,7 @@ function BlockPreview({ block }) {
 
 // ── Preview panel ──────────────────────────────────────
 
-export default function Preview({ page }) {
+export default function Preview({ page, pages = [] }) {
   const readTime = calcReadingTime(page.blocks || []);
 
   return (

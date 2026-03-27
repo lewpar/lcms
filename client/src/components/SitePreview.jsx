@@ -1,23 +1,24 @@
 import { useState, useEffect, useRef } from 'react';
 import { getPages, generateSite } from '../api.js';
 
-export default function SitePreview({ addToast }) {
+export default function SitePreview({ siteId, siteSlug, addToast, initialSlug }) {
+  const base = `/site-preview/${siteSlug}`;
   const [pages, setPages] = useState([]);
   const [generating, setGenerating] = useState(true);
   const [generated, setGenerated] = useState(false);
   const [iframeKey, setIframeKey] = useState(0);
-  const [iframeSrc, setIframeSrc] = useState('/site-preview/');
+  const [iframeSrc, setIframeSrc] = useState(initialSlug ? `${base}/${initialSlug}/` : `${base}/`);
   const iframeRef = useRef(null);
 
   useEffect(() => {
-    getPages().then(setPages).catch(() => {});
+    getPages(siteId).then(setPages).catch(() => {});
     handleGenerate();
-  }, []);
+  }, [siteId]);
 
   const handleGenerate = async () => {
     setGenerating(true);
     try {
-      await generateSite();
+      await generateSite(siteId);
       setGenerated(true);
       setIframeKey(k => k + 1);
     } catch (err) {
@@ -28,7 +29,7 @@ export default function SitePreview({ addToast }) {
   };
 
   const navigate = (slug) => {
-    const src = slug ? `/site-preview/${slug}/` : '/site-preview/';
+    const src = slug ? `${base}/${slug}/` : `${base}/`;
     setIframeSrc(src);
     setIframeKey(k => k + 1);
   };
@@ -36,14 +37,9 @@ export default function SitePreview({ addToast }) {
   return (
     <div className="site-preview-view">
       <div className="site-preview-toolbar">
-        <span className="site-preview-title">Site Preview</span>
+        <span className="site-preview-title">Preview — {siteSlug}</span>
         <div className="site-preview-nav">
-          <button
-            className="site-preview-nav-btn"
-            onClick={() => navigate('')}
-          >
-            Home
-          </button>
+          <button className="site-preview-nav-btn" onClick={() => navigate('')}>Home</button>
           {pages.map(p => (
             <button
               key={p.id}

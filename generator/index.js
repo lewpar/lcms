@@ -5,13 +5,29 @@ const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
 
+const mdRenderer = new marked.Renderer();
+const _origHeading = mdRenderer.heading.bind(mdRenderer);
+mdRenderer.heading = function({ text, depth }) {
+  const plain = String(text || '').replace(/<[^>]*>/g, '');
+  const id = slugify(plain);
+  return `<h${depth}${id ? ` id="${id}"` : ''}>${text || ''}</h${depth}>\n`;
+};
 marked.setOptions({ gfm: true, breaks: true });
 
+const siteId   = process.argv[2];
+const siteSlug = process.argv[3];
+
+if (!siteId || !siteSlug) {
+  console.error('Usage: node generator/index.js <siteId> <siteSlug>');
+  process.exit(1);
+}
+
 const ROOT          = path.join(__dirname, '..');
-const PAGES_DIR     = path.join(ROOT, 'content', 'pages');
-const ASSETS_DIR    = path.join(ROOT, 'content', 'assets');
-const SETTINGS_FILE = path.join(ROOT, 'content', 'site.json');
-const OUTPUT_DIR    = path.join(ROOT, 'output');
+const PAGES_DIR     = path.join(ROOT, 'content', 'sites', siteId, 'pages');
+const ASSETS_DIR    = path.join(ROOT, 'content', 'sites', siteId, 'assets');
+const SETTINGS_FILE = path.join(ROOT, 'content', 'sites', siteId, 'site.json');
+const OUTPUT_DIR    = path.join(ROOT, 'output', siteSlug);
+const ASSETS_URL_PREFIX = `/assets/${siteId}/`;
 
 // ── Color helpers ──────────────────────────────────────
 
@@ -30,7 +46,28 @@ function darken(hex, pct = 0.2) {
 function esc(str) {
   return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#x27;');
 }
-function md(text) { return text ? marked.parse(text) : ''; }
+function slugify(text) {
+  return String(text||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+}
+function md(text) { return text ? marked.parse(text, { renderer: mdRenderer }) : ''; }
+
+function extractToc(blocks) {
+  const items = [];
+  for (const b of (blocks || [])) {
+    if (b.type === 'heading' && b.level <= 3 && b.text) {
+      items.push({ text: b.text, level: b.level, id: b.id_attr || slugify(b.text) });
+    } else if (b.type === 'markdown' && b.content) {
+      for (const line of b.content.split('\n')) {
+        const m = line.match(/^(#{1,3})\s+(.+)/);
+        if (m) {
+          const text = m[2].trim();
+          items.push({ text, level: m[1].length, id: slugify(text) });
+        }
+      }
+    }
+  }
+  return items;
+}
 
 function normalizeQuiz(block) {
   if (Array.isArray(block.questions)) return block;
@@ -49,12 +86,6 @@ function calcReadingTime(blocks) {
 
 // ── Block renderers ────────────────────────────────────
 
-const ALERT_CFG = {
-  info:    { bg:'#eff6ff', border:'#93c5fd', titleColor:'#1d4ed8', textColor:'#1e40af' },
-  success: { bg:'#f0fdf4', border:'#86efac', titleColor:'#15803d', textColor:'#166534' },
-  warning: { bg:'#fffbeb', border:'#fcd34d', titleColor:'#b45309', textColor:'#92400e' },
-  error:   { bg:'#fef2f2', border:'#fca5a5', titleColor:'#b91c1c', textColor:'#991b1b' },
-};
 const CALLOUT_CFG = {
   blue:  { bg:'#eff6ff', border:'#3b82f6', text:'#1e40af' },
   green: { bg:'#f0fdf4', border:'#22c55e', text:'#15803d' },
@@ -71,20 +102,13 @@ function renderBlock(block) {
 
     case 'heading': {
       const l = block.level || 2;
-      const id = block.id_attr ? ` id="${esc(block.id_attr)}"` : '';
-      return `<h${l}${id} class="block-heading">${esc(block.text)}</h${l}>`;
-    }
-
-    case 'alert': {
-      const c = ALERT_CFG[block.variant] || ALERT_CFG.info;
-      const t = block.title ? `<div class="alert-title" style="color:${c.titleColor}">${esc(block.title)}</div>` : '';
-      return `<div class="alert" style="background:${c.bg};border:1px solid ${c.border};">${t}<div class="alert-body" style="color:${c.textColor}">${md(block.content)}</div></div>`;
+      const id = block.id_attr || slugify(block.text);
+      return `<h${l} id="${esc(id)}" class="block-heading">${esc(block.text)}</h${l}>`;
     }
 
     case 'callout': {
       const c = CALLOUT_CFG[block.color] || CALLOUT_CFG.blue;
-      const icon = block.icon || '💡';
-      const t = block.title ? `<div class="callout-title" style="color:${c.text}">${icon} ${esc(block.title)}</div>` : '';
+      const t = block.title ? `<div class="callout-title" style="color:${c.text}">${esc(block.title)}</div>` : '';
       return `<div class="callout" style="background:${c.bg};border-left:4px solid ${c.border};">${t}<div class="callout-body">${md(block.content)}</div></div>`;
     }
 
@@ -100,6 +124,13 @@ function renderBlock(block) {
     <h3 class="qs-title">${esc(b.title||'Quiz')}</h3>
     ${desc}<p class="qs-count">${n} question${n!==1?'s':''}</p>
     <button class="qs-start-btn quiz-btn" type="button">Start Quiz →</button>
+    <div class="qs-resume" hidden>
+      <p class="qs-resume-status"></p>
+      <div class="qs-resume-actions">
+        <button class="qs-continue-btn quiz-btn" type="button">Continue →</button>
+        <button class="qs-restart-btn quiz-btn quiz-btn-outline" type="button">↺ Start Over</button>
+      </div>
+    </div>
   </div>
   <div class="qs-question" hidden>
     <div class="qs-progress-wrap">
@@ -132,37 +163,44 @@ function renderBlock(block) {
     case 'code': {
       const lang = block.language ? `<div class="code-lang">${esc(block.language)}</div>` : '';
       const cap = block.caption ? `<figcaption class="code-cap">${esc(block.caption)}</figcaption>` : '';
-      return `<figure class="code-block">${lang}<pre><code>${esc(block.content||'')}</code></pre>${cap}</figure>`;
+      const langClass = block.language ? ` class="language-${esc(block.language)}"` : '';
+      return `<figure class="code-block">${lang}<pre><code${langClass}>${esc(block.content||'')}</code></pre>${cap}</figure>`;
     }
 
     case 'image': {
       if (!block.src) return '';
-      const src = block.src.startsWith('/assets/') ? `../assets/${block.src.slice(8)}` : esc(block.src);
+      const src = block.src.startsWith(ASSETS_URL_PREFIX)
+        ? `../assets/${block.src.slice(ASSETS_URL_PREFIX.length)}`
+        : block.src.startsWith('/assets/') ? `../assets/${block.src.split('/').pop()}` : esc(block.src);
       const cap = block.caption ? `<figcaption>${esc(block.caption)}</figcaption>` : '';
       return `<figure class="image-block"><img src="${src}" alt="${esc(block.alt||'')}" loading="lazy" />${cap}</figure>`;
     }
 
     case 'case-study': {
-      const SECTION_COLORS = { background: '#0ea5e9', challenge: '#f59e0b', solution: '#22c55e', outcome: 'var(--primary)' };
-      const SECTION_LABELS = { background: 'Background', challenge: 'Challenge', solution: 'Solution', outcome: 'Outcome' };
-      const tags = block.tags ? block.tags.split(',').map(t => t.trim()).filter(Boolean) : [];
-      const tagHtml = tags.length > 0
-        ? `<div class="cs-tags">${tags.map(t => `<span class="cs-tag">${esc(t)}</span>`).join('')}</div>` : '';
-      const activeSections = ['background', 'challenge', 'solution', 'outcome'].filter(k => block[k]);
-      const sectionsHtml = activeSections.map(key =>
-        `<div class="cs-section cs-section-${key}">
-          <div class="cs-section-label" style="color:${SECTION_COLORS[key]}">${SECTION_LABELS[key]}</div>
-          <div class="cs-section-body">${md(block[key])}</div>
-        </div>`
-      ).join('');
+      const backgroundHtml = block.background
+        ? `<div class="cs-section"><div class="cs-section-label" style="color:#0ea5e9">Background</div><div class="cs-section-body">${md(block.background)}</div></div>` : '';
+      const instructionsHtml = block.instructions
+        ? `<div class="cs-section"><div class="cs-section-label" style="color:#8b5cf6">Instructions</div><div class="cs-section-body">${md(block.instructions)}</div></div>` : '';
       return `<div class="case-study">
   <div class="cs-header">
     ${block.title ? `<div class="cs-title">${esc(block.title)}</div>` : ''}
     ${block.summary ? `<div class="cs-summary">${esc(block.summary)}</div>` : ''}
-    ${tagHtml}
   </div>
-  <div class="cs-body">${sectionsHtml}</div>
+  <div class="cs-body">${backgroundHtml}${instructionsHtml}</div>
 </div>`;
+    }
+
+    case 'page-link': {
+      if (!block.pageSlug) return '';
+      const href = `../${esc(block.pageSlug)}/`;
+      const desc = block.description ? `<div class="pl-desc">${esc(block.description)}</div>` : '';
+      return `<a class="page-link-card" href="${href}">
+  <div class="pl-content">
+    <div class="pl-title">${esc(block.pageTitle || block.pageSlug)}</div>
+    ${desc}
+  </div>
+  <span class="pl-arrow">→</span>
+</a>`;
     }
 
     case 'divider': return `<hr class="block-divider" />`;
@@ -172,7 +210,7 @@ function renderBlock(block) {
 
 // ── Nav builder ────────────────────────────────────────
 
-function buildNavHtml(navItems, currentSlug) {
+function buildNavHtml(navItems, currentSlug, toc) {
   const sectionOrder = [], sectionMap = {}, unsectioned = [];
   for (const p of navItems) {
     if (p.section) {
@@ -180,10 +218,16 @@ function buildNavHtml(navItems, currentSlug) {
       sectionMap[p.section].push(p);
     } else { unsectioned.push(p); }
   }
+  const tocHtml = (toc && toc.length > 0)
+    ? `<div class="nav-toc">${toc.map(h =>
+        `<a class="nav-toc-link nav-toc-level-${h.level}" href="#${esc(h.id)}">${esc(h.text)}</a>`
+      ).join('')}</div>`
+    : '';
   const link = p => {
-    const active = p.slug === currentSlug ? ' class="nav-link active"' : ' class="nav-link"';
+    const isActive = p.slug === currentSlug;
     const href = currentSlug ? `../${esc(p.slug)}/` : `${esc(p.slug)}/`;
-    return `<a href="${href}"${active}>${esc(p.title)}</a>`;
+    return `<a href="${href}" class="nav-link${isActive ? ' active' : ''}">${esc(p.title)}</a>`
+      + (isActive ? tocHtml : '');
   };
   let html = '';
   for (const p of unsectioned) html += link(p);
@@ -219,6 +263,7 @@ function buildCss(theme) {
 
   return `
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
 :root{
   --primary:${primary};--primary-dark:${primaryDark};
   --primary-rgb:${pr},${pg},${pb};
@@ -251,6 +296,12 @@ img{max-width:100%;height:auto;display:block}
 .nav-section{margin-top:20px}
 .nav-section-title{font-size:.68em;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3);padding:0 18px 6px}
 .sidebar-footer-note{padding:14px 18px;font-size:.72em;color:rgba(255,255,255,.2);border-top:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.nav-toc{display:flex;flex-direction:column;margin:2px 0 4px;border-left:2px solid rgba(255,255,255,.12);margin-left:18px}
+.nav-toc-link{display:block;font-size:.78em;color:rgba(255,255,255,.5);padding:3px 10px;text-decoration:none;line-height:1.4;transition:color .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-toc-link:hover{color:#fff}
+.nav-toc-level-1{padding-left:10px;font-weight:600}
+.nav-toc-level-2{padding-left:18px}
+.nav-toc-level-3{padding-left:26px;font-size:.73em}
 
 .content-area{margin-left:var(--sidebar-w);flex:1;min-height:100vh;display:flex;flex-direction:column}
 .top-bar{height:52px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;position:sticky;top:0;background:#fff;z-index:50;box-shadow:0 1px 3px rgba(0,0,0,.04)}
@@ -298,8 +349,6 @@ img{max-width:100%;height:auto;display:block}
 .prose strong{font-weight:700}.prose a{color:var(--primary)}
 
 .block-heading{font-weight:700;line-height:1.3;color:#0f172a}
-.alert{padding:14px 16px;border-radius:var(--radius)}.alert-title{font-weight:700;margin-bottom:6px;font-size:.92em}
-.alert-body p:first-child{margin-top:0}.alert-body p:last-child{margin-bottom:0}
 .callout{padding:14px 16px;border-radius:0 var(--radius) var(--radius) 0}.callout-title{font-weight:700;margin-bottom:6px}
 .callout-body p:first-child{margin-top:0}.callout-body p:last-child{margin-bottom:0}
 .code-block{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
@@ -308,6 +357,14 @@ img{max-width:100%;height:auto;display:block}
 .code-cap{background:var(--surface);border-top:1px solid var(--border);padding:5px 14px;font-size:.78em;color:var(--text-muted);text-align:center}
 .image-block{text-align:center}.image-block img{margin:0 auto;border-radius:var(--radius)}.image-block figcaption{margin-top:8px;font-size:.83em;color:var(--text-muted);font-style:italic}
 .block-divider{border:none;border-top:1px solid var(--border)}
+.page-link-card{display:flex;align-items:center;justify-content:space-between;gap:16px;border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 18px;background:var(--surface);text-decoration:none;color:inherit;transition:border-color .15s,background .15s}
+.page-link-card:hover{border-color:var(--primary);background:var(--surface2)}
+.pl-title{font-weight:700;color:#0f172a;font-size:.95em}.pl-desc{color:var(--text-muted);font-size:.85em;margin-top:3px}
+.pl-arrow{color:var(--primary);font-size:1.2em;flex-shrink:0}
+.page-prev-next{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:24px 0 8px;border-top:1px solid var(--border);margin-top:32px}
+.pn-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border:1.5px solid var(--border);border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:.88em;font-weight:600;transition:border-color .15s,color .15s,background .15s}
+.pn-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--surface2)}
+.pn-prev{margin-right:auto}.pn-next{margin-left:auto}
 
 .case-study{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
 .cs-header{background:var(--surface);padding:20px 24px;border-bottom:1px solid var(--border)}
@@ -328,6 +385,9 @@ img{max-width:100%;height:auto;display:block}
 .quiz-btn-outline{background:transparent;color:var(--primary);border:1.5px solid var(--primary)}
 .quiz-btn-outline:hover{background:var(--primary-light)}
 .qs-start{padding:32px 28px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;background:linear-gradient(135deg,var(--surface) 0%,#f0f4ff 100%)}
+.qs-resume{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;border-top:1px solid rgba(0,0,0,.08);padding-top:14px;margin-top:4px}
+.qs-resume-status{font-size:.88em;color:var(--text-muted);max-width:320px;line-height:1.5}
+.qs-resume-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .qs-badge{background:var(--primary);color:#fff;font-size:.66em;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:3px 12px;border-radius:20px}
 .qs-title{font-size:1.3em;font-weight:800;color:#0f172a}.qs-desc{color:var(--text-muted);font-size:.92em}.qs-count{color:var(--text-muted);font-size:.82em}
 .qs-question{padding:22px}
@@ -489,9 +549,35 @@ const QUIZ_JS = `
       show(questionScreen);renderQ(0);
     }
 
+    var resumeEl=el.querySelector('.qs-resume');
+    var resumeStatus=el.querySelector('.qs-resume-status');
+    var startBtn=el.querySelector('.qs-start-btn');
+
+    function showResume(savedPhase){
+      startBtn.hidden=true;
+      resumeEl.hidden=false;
+      if(savedPhase==='results'){
+        var ok=answers.filter(function(a,i){return a===questions[i].correctIndex}).length;
+        resumeStatus.textContent='You completed this quiz — '+ok+'/'+n+' correct. Continue to review your results.';
+      } else {
+        resumeStatus.textContent='You left off at question '+(current+1)+' of '+n+'. Pick up where you left off.';
+      }
+    }
+
     // Event listeners
-    el.querySelector('.qs-start-btn').addEventListener('click',function(){
+    startBtn.addEventListener('click',function(){
       show(questionScreen);renderQ(0);saveState('question');
+    });
+    el.querySelector('.qs-continue-btn').addEventListener('click',function(){
+      var s=JSON.parse(localStorage.getItem(storageKey)||'null');
+      var phase=s&&s.phase;
+      if(phase==='results')showResults();
+      else{show(questionScreen);renderQ(current);}
+    });
+    el.querySelector('.qs-restart-btn').addEventListener('click',function(){
+      current=0;answers=new Array(n).fill(-1);answered=false;selectedOption=-1;
+      clearState();
+      resumeEl.hidden=true;startBtn.hidden=false;
     });
     optsList.addEventListener('click',function(e){
       var btn=e.target.closest('.qs-option');
@@ -506,22 +592,12 @@ const QUIZ_JS = `
     finishBtn.addEventListener('click',showResults);
     el.querySelector('.qs-retry-btn').addEventListener('click',reset);
 
-    // Restore saved state
+    // Restore saved state — show resume prompt instead of auto-jumping
     var savedPhase=loadState();
-    if(savedPhase==='results'&&answers.every(function(a){return a!==-1})){
-      show(questionScreen);renderQ(current);
-      // replay up to saved state
-      answers.forEach(function(ans,i){
-        if(ans===-1)return;
-        // fast-forward through answered questions
-      });
-      // For simplicity, just show results if all questions were answered
-      var allAnswered=answers.every(function(a){return a!==-1});
-      if(allAnswered){show(questionScreen);renderQ(0);/* let user resume from start of session */}
-    } else if(savedPhase==='question'&&current<n){
-      show(questionScreen);renderQ(current);
+    if(savedPhase==='results'||savedPhase==='question'){
+      showResume(savedPhase);
     }
-    // else stay on start screen
+    // else stay on fresh start screen
   }
   document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('.quiz-block').forEach(initQuiz)});
 })();
@@ -542,7 +618,7 @@ const NAV_JS = `
 
 // ── HTML templates ─────────────────────────────────────
 
-function sidebarHtml(settings, navItems, currentSlug) {
+function sidebarHtml(settings, navItems, currentSlug, toc) {
   const siteName = settings.title || 'Learning Site';
   const base = currentSlug ? '../' : './';
   return `<aside class="site-sidebar" id="sidebar">
@@ -551,7 +627,7 @@ function sidebarHtml(settings, navItems, currentSlug) {
     <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
   </div>
   <nav class="sidebar-nav" aria-label="Site navigation">
-    ${buildNavHtml(navItems, currentSlug)}
+    ${buildNavHtml(navItems, currentSlug, toc)}
   </nav>
   <div class="sidebar-footer-note">Learning Content Management System</div>
 </aside>`;
@@ -575,6 +651,19 @@ function getFontLink(fontKey) {
 function pageTemplate({ page, blocksHtml, settings, navItems }) {
   const { title, description, slug, section } = page;
   const hasQuiz = blocksHtml.includes('quiz-block');
+  const hasCode = (page.blocks || []).some(b => b.type === 'code');
+  const toc = extractToc(page.blocks || []);
+
+  // Build flat ordered nav list for prev/next (unsectioned first, then sectioned in order)
+  const flatNav = navItems;
+  const currentIdx = flatNav.findIndex(p => p.slug === slug);
+  const prevPage = currentIdx > 0 ? flatNav[currentIdx - 1] : null;
+  const nextPage = currentIdx >= 0 && currentIdx < flatNav.length - 1 ? flatNav[currentIdx + 1] : null;
+  const prevNextHtml = (prevPage || nextPage) ? `
+<nav class="page-prev-next">
+  ${prevPage ? `<a class="pn-btn pn-prev" href="../${esc(prevPage.slug)}/">← ${esc(prevPage.title)}</a>` : '<span></span>'}
+  ${nextPage ? `<a class="pn-btn pn-next" href="../${esc(nextPage.slug)}/">${esc(nextPage.title)} →</a>` : ''}
+</nav>` : '';
   const readTime = calcReadingTime(page.blocks || []);
   const fontLink = getFontLink((settings.theme || {}).font);
   const showBreadcrumbs = (settings.theme || {}).showBreadcrumbs !== false;
@@ -589,10 +678,11 @@ function pageTemplate({ page, blocksHtml, settings, navItems }) {
   ${description ? `<meta name="description" content="${esc(description)}" />` : ''}
   ${fontLink}
   <link rel="stylesheet" href="../styles.css" />
+  ${hasCode ? `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />` : ''}
 </head>
 <body>
 <div class="app-layout">
-  ${sidebarHtml(settings, navItems, slug)}
+  ${sidebarHtml(settings, navItems, slug, toc)}
   <div class="sidebar-overlay" id="overlay"></div>
   <div class="content-area">
     <header class="top-bar">
@@ -614,6 +704,7 @@ function pageTemplate({ page, blocksHtml, settings, navItems }) {
           </div>
         </div>
         <div class="blocks">${blocksHtml}</div>
+        ${prevNextHtml}
       </article>
     </main>
     <footer class="site-footer">
@@ -624,6 +715,7 @@ function pageTemplate({ page, blocksHtml, settings, navItems }) {
 </div>
 <script src="../nav.js"></script>
 ${hasQuiz ? `<script src="../quiz.js"></script>` : ''}
+${hasCode ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>` : ''}
 </body>
 </html>`;
 }
@@ -742,7 +834,7 @@ function generate() {
 
   fs.writeFileSync(path.join(OUTPUT_DIR, 'index.html'), indexTemplate({ pages: allSummaries, settings, navItems }));
 
-  const msg = `Generated ${pages.length} page(s) → output/`;
+  const msg = `Generated ${pages.length} page(s) → output/${siteSlug}/`;
   console.log(msg);
   return msg;
 }

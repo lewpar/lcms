@@ -5,15 +5,15 @@ import Preview from './Preview.jsx';
 import { v4 as uuidv4 } from '../uuid.js';
 
 const BLOCK_TYPES = [
-  { type: 'markdown', icon: '✏️', label: 'Markdown' },
-  { type: 'heading',  icon: '𝐇',  label: 'Heading' },
-  { type: 'alert',   icon: '⚠️', label: 'Alert' },
-  { type: 'callout', icon: '💡', label: 'Callout' },
-  { type: 'quiz',    icon: '❓', label: 'Quiz' },
-  { type: 'code',    icon: '⌨️', label: 'Code' },
-  { type: 'image',   icon: '🖼️', label: 'Image' },
-  { type: 'divider',     icon: '─',  label: 'Divider' },
-  { type: 'case-study',  icon: '📋', label: 'Case Study' },
+  { type: 'markdown',  icon: '✏️', label: 'Markdown' },
+  { type: 'heading',   icon: '𝐇',  label: 'Heading' },
+  { type: 'callout',   icon: '💡', label: 'Callout' },
+  { type: 'quiz',      icon: '❓', label: 'Quiz' },
+  { type: 'code',      icon: '⌨️', label: 'Code' },
+  { type: 'image',     icon: '🖼️', label: 'Image' },
+  { type: 'divider',   icon: '─',  label: 'Divider' },
+  { type: 'case-study', icon: '📋', label: 'Case Study' },
+  { type: 'page-link', icon: '→',  label: 'Page Link' },
 ];
 
 function defaultQuestion() {
@@ -23,23 +23,23 @@ function defaultQuestion() {
 function defaultBlock(type) {
   const id = uuidv4();
   switch (type) {
-    case 'markdown': return { id, type, content: '' };
-    case 'heading':  return { id, type, level: 2, text: '' };
-    case 'alert':    return { id, type, variant: 'info', title: '', content: '' };
-    case 'callout':  return { id, type, icon: '💡', title: '', content: '', color: 'blue' };
-    case 'quiz':     return { id, type, title: '', description: '', questions: [defaultQuestion()] };
-    case 'code':     return { id, type, language: 'plaintext', content: '', caption: '' };
-    case 'image':    return { id, type, src: '', alt: '', caption: '' };
-    case 'divider':     return { id, type };
-    case 'case-study':  return { id, type, title: '', summary: '', background: '', challenge: '', solution: '', outcome: '', tags: '' };
-    default:            return { id, type };
+    case 'markdown':   return { id, type, content: '' };
+    case 'heading':    return { id, type, level: 2, text: '' };
+    case 'callout':    return { id, type, title: '', content: '', color: 'blue' };
+    case 'quiz':       return { id, type, title: '', description: '', questions: [defaultQuestion()] };
+    case 'code':       return { id, type, language: 'plaintext', content: '', caption: '' };
+    case 'image':      return { id, type, src: '', alt: '', caption: '' };
+    case 'divider':    return { id, type };
+    case 'case-study': return { id, type, title: '', summary: '', background: '', instructions: '' };
+    case 'page-link':  return { id, type, pageId: '', pageSlug: '', pageTitle: '', description: '' };
+    default:           return { id, type };
   }
 }
 
 const slugify = (text) =>
   text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
-export default function PageEditor({ pageId, onSaved, addToast }) {
+export default function PageEditor({ siteId, pageId, onSaved, addToast, pages = [] }) {
   const [page, setPage] = useState(null);
   const [saveStatus, setSaveStatus] = useState('saved'); // 'saved' | 'unsaved' | 'saving'
   const [showAddBlock, setShowAddBlock] = useState(false);
@@ -57,7 +57,7 @@ export default function PageEditor({ pageId, onSaved, addToast }) {
     if (!p) return;
     setSaveStatus('saving');
     try {
-      await updatePage(p.id, p);
+      await updatePage(siteId, p.id, p);
       setSaveStatus('saved');
       onSaved(silent);
     } catch {
@@ -67,7 +67,7 @@ export default function PageEditor({ pageId, onSaved, addToast }) {
   }, [onSaved, addToast]);
 
   useEffect(() => {
-    getPage(pageId)
+    getPage(siteId, pageId)
       .then(p => { setPage(p); isFirstLoad.current = true; })
       .catch(() => addToast('Failed to load page', 'error'));
   }, [pageId]);
@@ -218,6 +218,8 @@ export default function PageEditor({ pageId, onSaved, addToast }) {
                 onChange={changes => updateBlock(block.id, changes)}
                 onRemove={() => removeBlock(block.id)}
                 addToast={addToast}
+                pages={pages}
+                siteId={siteId}
                 isDragging={dragIndex.current === idx}
                 dragOverClass={
                   dragOver?.index === idx
@@ -256,7 +258,7 @@ export default function PageEditor({ pageId, onSaved, addToast }) {
 
         {/* ── Right: live preview ── */}
         <div className="editor-preview">
-          <Preview page={page} />
+          <Preview page={page} pages={pages} />
         </div>
       </div>
     </div>
