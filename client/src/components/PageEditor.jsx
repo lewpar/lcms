@@ -296,8 +296,6 @@ export default function PageEditor({ siteId, pageId, onSaved, addToast, pages = 
               </button>
             )}
           </div>
-        </div>
-
         </div>}
         right={<div className="editor-preview">
           <Preview page={page} pages={pages} />
