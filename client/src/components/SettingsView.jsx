@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import SitePreview from './SitePreview.jsx';
+import SplitPane from './SplitPane.jsx';
 
 export default function SettingsView({ settings, onSave, addToast, siteId, siteSlug }) {
   const [local, setLocal] = useState(() => ({ title: '', navPages: [], ...settings }));
@@ -78,9 +79,13 @@ export default function SettingsView({ settings, onSave, addToast, siteId, siteS
   const statusColor = { saved: 'var(--success)', saving: 'var(--text-muted)' };
 
   return (
-    <div className="settings-split-layout">
-      {/* ── Left: controls ── */}
-      <div className="settings-controls-pane">
+    <SplitPane
+      storageKey="settings-editor"
+      defaultLeftPct={36}
+      minLeftPct={22}
+      maxLeftPct={65}
+      className="settings-split-layout"
+      left={<div className="settings-controls-pane">
         <div className="settings-controls-inner">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
             <h2 style={{ fontSize: 18, fontWeight: 700 }}>Site Settings</h2>
@@ -215,10 +220,10 @@ export default function SettingsView({ settings, onSave, addToast, siteId, siteS
         </div>
       </div>
 
-      {/* ── Right: live preview ── */}
-      <div className="theme-preview-pane">
+      </div>}
+      right={<div className="theme-preview-pane">
         <SitePreview key={previewKey} siteId={siteId} siteSlug={siteSlug} addToast={addToast} initialSlug="" />
-      </div>
-    </div>
+      </div>}
+    />
   );
 }

@@ -293,28 +293,21 @@ body {
 }
 
 /* ── Split layout ── */
-.editor-split {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-}
-
 .editor-pane {
-  width: 460px;
-  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
   overflow-y: auto;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  border-right: 1px solid var(--border);
 }
 
 .editor-preview {
-  flex: 1;
+  width: 100%;
+  height: 100%;
   overflow-y: auto;
   background: #f1f5f9;
-  min-width: 0;
 }
 
 /* ── Preview panel ── */
@@ -1066,16 +1059,13 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* ── Theme view layout (split) ── */
 .theme-view-layout {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
+  /* layout provided by SplitPane */
 }
 
 .theme-controls-pane {
-  width: 340px;
-  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
   overflow-y: auto;
-  border-right: 1px solid var(--border);
 }
 
 .theme-controls-inner {
@@ -1086,11 +1076,11 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 }
 
 .theme-preview-pane {
-  flex: 1;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-left: 1px solid var(--border);
 }
 
 .theme-preview-label {
@@ -1324,8 +1314,7 @@ code {
 .editor          { animation: fadeIn 0.18s ease both; }
 .empty-state     { animation: fadeIn 0.22s ease both; }
 .settings-view   { animation: fadeIn 0.18s ease both; }
-.theme-view-layout { animation: fadeIn 0.18s ease both; }
-.settings-split-layout { animation: fadeIn 0.18s ease both; }
+.split-pane      { animation: fadeIn 0.18s ease both; }
 .media-manager   { animation: fadeIn 0.18s ease both; }
 .site-preview-view { animation: fadeIn 0.18s ease both; }
 
@@ -1340,18 +1329,15 @@ code {
 .media-picker-overlay { animation: fadeInFast 0.15s ease both; }
 .media-picker-dialog  { animation: fadeInUp 0.18s ease both; }
 
-/* ── Settings split layout (mirrors theme-view-layout) ── */
+/* ── Settings split layout ── */
 .settings-split-layout {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
+  /* layout provided by SplitPane */
 }
 
 .settings-controls-pane {
-  width: 380px;
-  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
   overflow-y: auto;
-  border-right: 1px solid var(--border);
 }
 
 .settings-controls-inner {
@@ -1386,3 +1372,63 @@ code {
 }
 
 .theme-color-row .field { margin: 0; }
+
+/* ── Resizable split pane ── */
+.split-pane {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.split-pane--dragging { cursor: col-resize !important; }
+.split-pane--dragging * { user-select: none; pointer-events: none; }
+.split-pane--dragging .split-pane__divider { pointer-events: auto; }
+
+.split-pane__left {
+  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 0;
+}
+
+.split-pane__right {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.split-pane__divider {
+  width: 6px;
+  flex-shrink: 0;
+  background: var(--border);
+  cursor: col-resize;
+  position: relative;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.split-pane__divider:hover,
+.split-pane__divider--active {
+  background: var(--accent);
+}
+
+/* Three-dot grip indicator */
+.split-pane__handle {
+  width: 3px;
+  height: 28px;
+  border-radius: 2px;
+  background: var(--text-muted);
+  opacity: 0.5;
+  pointer-events: none;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.split-pane__divider:hover .split-pane__handle,
+.split-pane__divider--active .split-pane__handle {
+  opacity: 1;
+  background: #fff;
+}

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import SitePreview from './SitePreview.jsx';
+import SplitPane from './SplitPane.jsx';
 
 const PRESETS = [
   {
@@ -162,9 +163,13 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
   );
 
   return (
-    <div className="theme-view-layout">
-      {/* ── Left: controls ── */}
-      <div className="theme-controls-pane">
+    <SplitPane
+      storageKey="theme-editor"
+      defaultLeftPct={36}
+      minLeftPct={22}
+      maxLeftPct={65}
+      className="theme-view-layout"
+      left={<div className="theme-controls-pane">
         <div className="theme-controls-inner">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
             <h2 style={{ fontSize: 18, fontWeight: 700 }}>Theme</h2>
@@ -278,10 +283,10 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
         </div>
       </div>
 
-      {/* ── Right: real site preview ── */}
-      <div className="theme-preview-pane">
+      </div>}
+      right={<div className="theme-preview-pane">
         <SitePreview key={previewKey} siteId={siteId} siteSlug={siteSlug} addToast={addToast} initialSlug="" />
-      </div>
-    </div>
+      </div>}
+    />
   );
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { getPage, updatePage } from '../api.js';
+import SplitPane from './SplitPane.jsx';
 
 // Keep stable refs so the unmount cleanup can fire without stale closures
 import BlockEditor from './BlockEditor.jsx';
@@ -193,9 +194,12 @@ export default function PageEditor({ siteId, pageId, onSaved, addToast, pages = 
         </button>
       </div>
 
-      <div className="editor-split">
-        {/* ── Left: editor ── */}
-        <div className="editor-pane">
+      <SplitPane
+        storageKey="page-editor"
+        defaultLeftPct={44}
+        minLeftPct={25}
+        maxLeftPct={72}
+        left={<div className="editor-pane">
           {/* Metadata */}
           <div className="meta-card">
             <div className="field">
@@ -294,11 +298,11 @@ export default function PageEditor({ siteId, pageId, onSaved, addToast, pages = 
           </div>
         </div>
 
-        {/* ── Right: live preview ── */}
-        <div className="editor-preview">
+        </div>}
+        right={<div className="editor-preview">
           <Preview page={page} pages={pages} />
-        </div>
-      </div>
+        </div>}
+      />
     </div>
   );
 }
