@@ -280,8 +280,6 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
             </div>
           </div>
         </div>
-      </div>
-
       </div>}
       right={<div className="theme-preview-pane">
         <SitePreview key={previewKey} siteId={siteId} siteSlug={siteSlug} addToast={addToast} initialSlug="" />
