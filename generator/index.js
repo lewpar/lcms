@@ -84,6 +84,21 @@ function calcReadingTime(blocks) {
   return Math.max(1, Math.ceil(words / 200));
 }
 
+// ── YouTube helper ─────────────────────────────────────
+
+function extractYouTubeId(url) {
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    if (u.hostname === 'youtu.be') return u.pathname.slice(1) || null;
+    if (u.hostname === 'www.youtube.com' || u.hostname === 'youtube.com') {
+      if (u.pathname.startsWith('/embed/')) return u.pathname.slice(7) || null;
+      return u.searchParams.get('v') || null;
+    }
+  } catch {}
+  return null;
+}
+
 // ── Block renderers ────────────────────────────────────
 
 const CALLOUT_CFG = {
@@ -203,6 +218,16 @@ function renderBlock(block) {
 </a>`;
     }
 
+    case 'video': {
+      const id = extractYouTubeId(block.url);
+      if (!id) return '';
+      const cap = block.caption ? `<figcaption>${esc(block.caption)}</figcaption>` : '';
+      return `<figure class="video-block">
+  <div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/${esc(id)}" frameborder="0" allowfullscreen loading="lazy" title="${esc(block.caption || 'Video')}"></iframe></div>
+  ${cap}
+</figure>`;
+    }
+
     case 'divider': return `<hr class="block-divider" />`;
     default:        return '';
   }
@@ -260,6 +285,12 @@ function buildCss(theme) {
 
   const [pr, pg, pb] = hexToRgb(primary);
   const primaryDark = darken(primary, 0.18);
+
+  const darkModeVars = theme.showDarkModeToggle ? `
+:root[data-theme="dark"]{
+  --text:${theme.darkText || '#e2e8f0'};--text-muted:#94a3b8;
+  --bg:${theme.darkBg || '#0f172a'};--surface:${theme.darkSurface || '#1e293b'};--border:${theme.darkBorder || '#334155'};
+}` : '';
 
   return `
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -423,6 +454,13 @@ img{max-width:100%;height:auto;display:block}
 .qs-review-item.correct{background:#f0fdf4;color:#15803d}.qs-review-item.incorrect{background:#fef2f2;color:#b91c1c}
 .qs-review-marker{font-weight:800;flex-shrink:0;margin-top:1px}
 
+.video-block{margin:0}.video-embed{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--radius)}.video-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}.video-block figcaption{margin-top:8px;font-size:.83em;color:var(--text-muted);text-align:center;font-style:italic}
+
+.custom-site-header{padding:12px 40px;border-bottom:1px solid var(--border);background:var(--surface)}
+.custom-footer-html{width:100%}
+
+.dark-mode-btn{background:none;border:1px solid rgba(255,255,255,.25);color:#fff;cursor:pointer;border-radius:6px;padding:4px 8px;font-size:14px;line-height:1;transition:background .15s}.dark-mode-btn:hover{background:rgba(255,255,255,.12)}
+
 @media(max-width:768px){
   .site-sidebar{transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
   .site-sidebar.open{transform:translateX(0);box-shadow:4px 0 20px rgba(0,0,0,.3)}
@@ -432,7 +470,7 @@ img{max-width:100%;height:auto;display:block}
   .page-grid{grid-template-columns:1fr}
 }
 @media(max-width:900px){.page-main{padding:32px 24px}}
-`;
+${darkModeVars}`;
 }
 
 // ── Quiz JS ─────────────────────────────────────────────
@@ -616,14 +654,36 @@ const NAV_JS = `
 })();
 `;
 
+// ── Dark mode JS ───────────────────────────────────────
+
+const DARK_MODE_JS = `(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();`;
+
 // ── HTML templates ─────────────────────────────────────
 
 function sidebarHtml(settings, navItems, currentSlug, toc) {
   const siteName = settings.title || 'Learning Site';
   const base = currentSlug ? '../' : './';
+  const darkBtn = (settings.theme && settings.theme.showDarkModeToggle)
+    ? `<button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>`
+    : '';
   return `<aside class="site-sidebar" id="sidebar">
   <div class="sidebar-top">
     <a class="site-logo" href="${base}">${esc(siteName)}</a>
+    ${darkBtn}
     <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
   </div>
   <nav class="sidebar-nav" aria-label="Site navigation">
@@ -669,6 +729,13 @@ function pageTemplate({ page, blocksHtml, settings, navItems }) {
   const showBreadcrumbs = (settings.theme || {}).showBreadcrumbs !== false;
   const showReadingTime = (settings.theme || {}).showReadingTime !== false;
 
+  const showDarkMode = !!(settings.theme && settings.theme.showDarkModeToggle);
+  const customHeader = settings.header
+    ? `<div class="custom-site-header">${settings.header}</div>` : '';
+  const footerContent = settings.footer
+    ? `<div class="custom-footer-html">${settings.footer}</div>`
+    : `<span>Generated by LCMS</span><span>${new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })}</span>`;
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -681,6 +748,7 @@ function pageTemplate({ page, blocksHtml, settings, navItems }) {
   ${hasCode ? `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />` : ''}
 </head>
 <body>
+${showDarkMode ? `<script>${DARK_MODE_JS}</script>` : ''}
 <div class="app-layout">
   ${sidebarHtml(settings, navItems, slug, toc)}
   <div class="sidebar-overlay" id="overlay"></div>
@@ -695,6 +763,7 @@ function pageTemplate({ page, blocksHtml, settings, navItems }) {
       </nav>` : ''}
     </header>
     <main class="page-main">
+      ${customHeader}
       <article class="page-article">
         <div class="page-header">
           <h1 class="page-title">${esc(title)}</h1>
@@ -708,8 +777,7 @@ function pageTemplate({ page, blocksHtml, settings, navItems }) {
       </article>
     </main>
     <footer class="site-footer">
-      <span>Generated by LCMS</span>
-      <span>${new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })}</span>
+      ${footerContent}
     </footer>
   </div>
 </div>
@@ -745,6 +813,13 @@ function indexTemplate({ pages, settings, navItems }) {
     gridHtml += `<div class="section-group"><div class="section-group-title">${esc(sec)}</div><div class="page-grid">${sectionMap[sec].map(renderCard).join('')}</div></div>`;
   }
 
+  const showDarkModeIdx = !!(settings.theme && settings.theme.showDarkModeToggle);
+  const customHeaderIdx = settings.header
+    ? `<div class="custom-site-header">${settings.header}</div>` : '';
+  const footerContentIdx = settings.footer
+    ? `<div class="custom-footer-html">${settings.footer}</div>`
+    : `<span>Generated by LCMS</span><span>${new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })}</span>`;
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -754,6 +829,7 @@ function indexTemplate({ pages, settings, navItems }) {
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+${showDarkModeIdx ? `<script>${DARK_MODE_JS}</script>` : ''}
 <div class="app-layout">
   ${sidebarHtml(settings, navItems, null)}
   <div class="sidebar-overlay" id="overlay"></div>
@@ -762,6 +838,7 @@ function indexTemplate({ pages, settings, navItems }) {
       <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
     </header>
     <main class="page-main">
+      ${customHeaderIdx}
       <article class="page-article">
         <div class="index-hero">
           <h1>${esc(siteName)}</h1>
@@ -771,8 +848,7 @@ function indexTemplate({ pages, settings, navItems }) {
       </article>
     </main>
     <footer class="site-footer">
-      <span>Generated by LCMS</span>
-      <span>${new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })}</span>
+      ${footerContentIdx}
     </footer>
   </div>
 </div>

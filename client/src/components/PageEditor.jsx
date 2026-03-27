@@ -11,6 +11,7 @@ const BLOCK_TYPES = [
   { type: 'quiz',      icon: '❓', label: 'Quiz' },
   { type: 'code',      icon: '⌨️', label: 'Code' },
   { type: 'image',     icon: '🖼️', label: 'Image' },
+  { type: 'video',     icon: '▶',  label: 'Video' },
   { type: 'divider',   icon: '─',  label: 'Divider' },
   { type: 'case-study', icon: '📋', label: 'Case Study' },
   { type: 'page-link', icon: '→',  label: 'Page Link' },
@@ -31,6 +32,7 @@ function defaultBlock(type) {
     case 'image':      return { id, type, src: '', alt: '', caption: '' };
     case 'divider':    return { id, type };
     case 'case-study': return { id, type, title: '', summary: '', background: '', instructions: '' };
+    case 'video':      return { id, type, url: '', caption: '' };
     case 'page-link':  return { id, type, pageId: '', pageSlug: '', pageTitle: '', description: '' };
     default:           return { id, type };
   }

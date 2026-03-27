@@ -306,6 +306,27 @@ export default function ThemeView({ settings, onSave, addToast }) {
             </div>
           </div>
 
+          {/* Dark Mode */}
+          <div className="settings-section">
+            <h3>Dark Mode</h3>
+            <label className="theme-toggle-row">
+              <input
+                type="checkbox"
+                checked={theme.showDarkModeToggle || false}
+                onChange={e => set('showDarkModeToggle', e.target.checked)}
+              />
+              <span>Show dark mode toggle button in exported site</span>
+            </label>
+            {theme.showDarkModeToggle && (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 8 }}>
+                <ColorField label="Dark bg" themeKey="darkBg" />
+                <ColorField label="Dark text" themeKey="darkText" />
+                <ColorField label="Dark surface" themeKey="darkSurface" />
+                <ColorField label="Dark border" themeKey="darkBorder" />
+              </div>
+            )}
+          </div>
+
           <button className="btn btn-primary" onClick={handleSave} disabled={saving} style={{ width: '100%' }}>
             {saving ? 'Saving…' : 'Save Theme'}
           </button>

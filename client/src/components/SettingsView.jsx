@@ -155,6 +155,40 @@ export default function SettingsView({ settings, onSave, addToast }) {
         )}
       </div>
 
+      {/* Custom Header */}
+      <div className="settings-section">
+        <h3>Custom Header</h3>
+        <div className="field">
+          <label>Custom header HTML</label>
+          <textarea
+            rows={4}
+            value={local.header || ''}
+            onChange={e => setLocal(s => ({ ...s, header: e.target.value }))}
+            placeholder="<div>My custom header</div>"
+          />
+          <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 3 }}>
+            Rendered above page content on every page. Supports HTML.
+          </span>
+        </div>
+      </div>
+
+      {/* Custom Footer */}
+      <div className="settings-section">
+        <h3>Custom Footer</h3>
+        <div className="field">
+          <label>Custom footer HTML</label>
+          <textarea
+            rows={4}
+            value={local.footer || ''}
+            onChange={e => setLocal(s => ({ ...s, footer: e.target.value }))}
+            placeholder="<div>© 2026 My Company</div>"
+          />
+          <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 3 }}>
+            Replaces the default footer text. Supports HTML.
+          </span>
+        </div>
+      </div>
+
       <div>
         <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
           {saving ? 'Saving…' : 'Save Settings'}

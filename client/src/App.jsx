@@ -2,13 +2,14 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   getSites, createSite, deleteSite, renameSite,
   getPages, createPage, deletePage, duplicatePage, generateSite,
-  getSiteSettings, updateSiteSettings, patchPage,
+  getSiteSettings, updateSiteSettings, patchPage, reorderPages,
 } from './api.js';
 import PageEditor from './components/PageEditor.jsx';
 import SettingsView from './components/SettingsView.jsx';
 import ThemeView from './components/ThemeView.jsx';
 import SitePreview from './components/SitePreview.jsx';
 import SiteSelector from './components/SiteSelector.jsx';
+import MediaManager from './components/MediaManager.jsx';
 
 function randomId() {
   return crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
@@ -43,6 +44,8 @@ export default function App() {
   const [editingSectionName, setEditingSectionName] = useState('');
   const [draggingPageId, setDraggingPageId] = useState(null);
   const [dragOverTarget, setDragOverTarget] = useState(undefined);
+  const [dragOverPageId, setDragOverPageId] = useState(null);
+  const [dragInsertPos, setDragInsertPos] = useState('after');
   const renamingRef = useRef(null);
 
   const addToast = useCallback((message, type = 'info') => {
@@ -223,6 +226,43 @@ export default function App() {
 
   const selectPage = (id) => { setSelectedId(id); setView('pages'); };
 
+  // ── Page ordering via drag ───────────────────────────────
+
+  const onPageDragOverPage = (e, pageId) => {
+    if (!draggingPageId || draggingPageId === pageId) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pos = e.clientY < rect.top + rect.height / 2 ? 'before' : 'after';
+    setDragOverPageId(pageId);
+    setDragInsertPos(pos);
+  };
+
+  const onPageDropOnPage = async (e, targetPageId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!draggingPageId || draggingPageId === targetPageId) {
+      setDragOverPageId(null);
+      return;
+    }
+    const targetPage = pages.find(p => p.id === targetPageId);
+    const sectionId = targetPage ? targetPage.section : '';
+    const sectionPages = pages.filter(p => (p.section || '') === (sectionId || ''));
+    const ids = sectionPages.map(p => p.id).filter(id => id !== draggingPageId);
+    const targetIdx = ids.indexOf(targetPageId);
+    const insertAt = dragInsertPos === 'after' ? targetIdx + 1 : targetIdx;
+    ids.splice(insertAt, 0, draggingPageId);
+    setDragOverPageId(null);
+    setDraggingPageId(null);
+    setDragOverTarget(undefined);
+    try {
+      await reorderPages(siteId, ids);
+      await loadPages();
+    } catch {
+      addToast('Failed to reorder pages', 'error');
+    }
+  };
+
   // ── Drag-to-section ──────────────────────────────────────
 
   const onPageDragStart = (e, pageId) => {
@@ -234,6 +274,7 @@ export default function App() {
   const onPageDragEnd = () => {
     setDraggingPageId(null);
     setDragOverTarget(undefined);
+    setDragOverPageId(null);
   };
 
   const onSectionDragOver = (e, targetId) => {
@@ -285,14 +326,20 @@ export default function App() {
     }
   }
 
-  const renderPageItem = (page) => (
+  const renderPageItem = (page) => {
+    const insertClass = dragOverPageId === page.id
+      ? (dragInsertPos === 'before' ? 'drag-insert-before' : 'drag-insert-after')
+      : '';
+    return (
     <div
       key={page.id}
-      className={`page-list-item ${selectedId === page.id && view === 'pages' ? 'active' : ''} ${draggingPageId === page.id ? 'dragging' : ''}`}
+      className={`page-list-item ${selectedId === page.id && view === 'pages' ? 'active' : ''} ${draggingPageId === page.id ? 'dragging' : ''} ${insertClass}`}
       onClick={() => selectPage(page.id)}
       draggable
       onDragStart={e => onPageDragStart(e, page.id)}
       onDragEnd={onPageDragEnd}
+      onDragOver={e => onPageDragOverPage(e, page.id)}
+      onDrop={e => onPageDropOnPage(e, page.id)}
     >
       <div style={{ flex: 1, overflow: 'hidden' }}>
         <div className="page-list-item-title">{page.title}</div>
@@ -304,6 +351,7 @@ export default function App() {
       </div>
     </div>
   );
+  };
 
   return (
     <div className="app">
@@ -439,7 +487,7 @@ export default function App() {
         </div>
 
         <div className="sidebar-footer">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, marginBottom: 6 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 4, marginBottom: 6 }}>
             <button
               className={`btn btn-secondary btn-sm${view === 'settings' ? ' active-view' : ''}`}
               onClick={() => setView(v => v === 'settings' ? 'pages' : 'settings')}
@@ -451,6 +499,12 @@ export default function App() {
               onClick={() => setView(v => v === 'theme' ? 'pages' : 'theme')}
             >
               🎨 Theme
+            </button>
+            <button
+              className={`btn btn-secondary btn-sm${view === 'media' ? ' active-view' : ''}`}
+              onClick={() => setView(v => v === 'media' ? 'pages' : 'media')}
+            >
+              🖼 Media
             </button>
           </div>
           <button
@@ -476,6 +530,8 @@ export default function App() {
           <SettingsView settings={{ ...settings, _pages: pages }} onSave={saveSettings} addToast={addToast} />
         ) : view === 'theme' ? (
           <ThemeView settings={settings} onSave={saveSettings} addToast={addToast} />
+        ) : view === 'media' ? (
+          <MediaManager siteId={siteId} addToast={addToast} />
         ) : view === 'preview' ? (
           <SitePreview
             siteSlug={selectedSite.slug}

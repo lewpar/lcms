@@ -368,6 +368,43 @@ function BlockPreview({ block }) {
       );
     }
 
+    case 'video': {
+      function extractYTId(url) {
+        if (!url) return null;
+        try {
+          const u = new URL(url);
+          if (u.hostname === 'youtu.be') return u.pathname.slice(1) || null;
+          if (u.hostname === 'www.youtube.com' || u.hostname === 'youtube.com') {
+            if (u.pathname.startsWith('/embed/')) return u.pathname.slice(7) || null;
+            return u.searchParams.get('v') || null;
+          }
+        } catch {}
+        return null;
+      }
+      const ytId = extractYTId(block.url);
+      const hasUrl = (block.url || '').trim().length > 0;
+      return (
+        <figure style={{ margin: 0 }}>
+          {ytId ? (
+            <div className="video-preview-wrap">
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${ytId}`}
+                className="video-preview-iframe"
+                allowFullScreen
+                title={block.caption || 'Video'}
+                loading="lazy"
+              />
+            </div>
+          ) : (
+            <div style={{ background: '#f1f5f9', borderRadius: 8, height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontSize: 12 }}>
+              {hasUrl ? 'Invalid YouTube URL' : 'No video URL set'}
+            </div>
+          )}
+          {block.caption && <figcaption style={{ marginTop: 8, fontSize: '13px', color: '#64748b', fontStyle: 'italic', textAlign: 'center' }}>{block.caption}</figcaption>}
+        </figure>
+      );
+    }
+
     case 'divider':
       return <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '4px 0' }} />;
 

@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { uploadAsset } from '../api.js';
 import { v4 as uuidv4 } from '../uuid.js';
+import MediaManager from './MediaManager.jsx';
 
 function blockSummary(block) {
   switch (block.type) {
@@ -13,6 +14,7 @@ function blockSummary(block) {
     }
     case 'code':       return `${block.language || 'code'}: ${block.content?.slice(0, 40) || '(empty)'}`;
     case 'image':      return block.src || '(no image)';
+    case 'video':      return block.url || '(no URL)';
     case 'case-study': return block.title || '(no title)';
     case 'page-link': return block.pageTitle || '(no page selected)';
     case 'divider':   return '──────────';
@@ -290,6 +292,7 @@ function CaseStudyEditor({ block, onChange }) {
 
 function ImageEditor({ block, onChange, addToast, siteId }) {
   const fileRef = useRef();
+  const [showPicker, setShowPicker] = useState(false);
 
   const handleFile = async (e) => {
     const file = e.target.files[0];
@@ -309,6 +312,7 @@ function ImageEditor({ block, onChange, addToast, siteId }) {
         <div style={{ display: 'flex', gap: 6 }}>
           <input type="text" value={block.src || ''} onChange={e => onChange({ src: e.target.value })} placeholder="/assets/photo.jpg or https://…" style={{ flex: 1 }} />
           <button className="btn btn-secondary btn-sm" onClick={() => fileRef.current.click()}>Upload</button>
+          <button className="btn btn-secondary btn-sm" onClick={() => setShowPicker(true)}>Browse</button>
           <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFile} />
         </div>
       </div>
@@ -325,6 +329,77 @@ function ImageEditor({ block, onChange, addToast, siteId }) {
           <input type="text" value={block.caption || ''} onChange={e => onChange({ caption: e.target.value })} placeholder="Optional caption" />
         </div>
       </div>
+      {showPicker && (
+        <MediaManager
+          mode="picker"
+          siteId={siteId}
+          onSelect={({ url }) => { onChange({ src: url }); setShowPicker(false); }}
+          onClose={() => setShowPicker(false)}
+          addToast={addToast}
+        />
+      )}
+    </>
+  );
+}
+
+function extractYouTubeId(url) {
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    if (u.hostname === 'youtu.be') {
+      return u.pathname.slice(1) || null;
+    }
+    if (u.hostname === 'www.youtube.com' || u.hostname === 'youtube.com') {
+      if (u.pathname.startsWith('/embed/')) {
+        return u.pathname.slice(7) || null;
+      }
+      const v = u.searchParams.get('v');
+      return v || null;
+    }
+  } catch {}
+  return null;
+}
+
+function VideoEditor({ block, onChange }) {
+  const id = extractYouTubeId(block.url || '');
+  const hasUrl = (block.url || '').trim().length > 0;
+  return (
+    <>
+      <div className="field">
+        <label>YouTube URL</label>
+        <input
+          type="text"
+          value={block.url || ''}
+          onChange={e => onChange({ url: e.target.value })}
+          placeholder="https://www.youtube.com/watch?v=..."
+        />
+        <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 3 }}>
+          Paste a YouTube video URL. Only YouTube is supported.
+        </span>
+        {hasUrl && !id && (
+          <span style={{ fontSize: 11, color: 'var(--danger)', marginTop: 3 }}>Invalid YouTube URL</span>
+        )}
+      </div>
+      <div className="field">
+        <label>Caption (optional)</label>
+        <input
+          type="text"
+          value={block.caption || ''}
+          onChange={e => onChange({ caption: e.target.value })}
+          placeholder="Video caption"
+        />
+      </div>
+      {id && (
+        <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: 6 }}>
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${id}`}
+            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }}
+            allowFullScreen
+            title={block.caption || 'Video preview'}
+            loading="lazy"
+          />
+        </div>
+      )}
     </>
   );
 }
@@ -409,6 +484,7 @@ export default function BlockEditor({
           {block.type === 'quiz'      && <QuizEditor       block={block} onChange={onChange} />}
           {block.type === 'code'      && <CodeEditor       block={block} onChange={onChange} />}
           {block.type === 'image'     && <ImageEditor      block={block} onChange={onChange} addToast={addToast} siteId={siteId} />}
+          {block.type === 'video'     && <VideoEditor      block={block} onChange={onChange} />}
           {block.type === 'case-study' && <CaseStudyEditor block={block} onChange={onChange} />}
           {block.type === 'page-link' && <PageLinkEditor   block={block} onChange={onChange} pages={pages} />}
           {block.type === 'divider'   && (

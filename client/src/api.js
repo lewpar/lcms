@@ -90,10 +90,32 @@ export async function deletePage(siteId, id) {
   return res.json();
 }
 
+export async function reorderPages(siteId, ids) {
+  const res = await fetch(`${BASE}/sites/${siteId}/pages/reorder`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ids }),
+  });
+  if (!res.ok) throw new Error('Failed to reorder pages');
+  return res.json();
+}
+
+export async function getAssets(siteId) {
+  const res = await fetch(`${BASE}/sites/${siteId}/assets`);
+  if (!res.ok) throw new Error('Failed to fetch assets');
+  return res.json();
+}
+
+export async function deleteAsset(siteId, filename) {
+  const res = await fetch(`${BASE}/sites/${siteId}/assets/${encodeURIComponent(filename)}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Failed to delete asset');
+  return res.json();
+}
+
 export async function uploadAsset(siteId, file) {
   const form = new FormData();
   form.append('file', file);
-  const res = await fetch(`${BASE}/sites/${siteId}/upload`, { method: 'POST', body: form });
+  const res = await fetch(`${BASE}/sites/${siteId}/assets/upload`, { method: 'POST', body: form });
   if (!res.ok) throw new Error('Upload failed');
   return res.json();
 }
