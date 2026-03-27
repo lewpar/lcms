@@ -1,0 +1,165 @@
+import { useState } from 'react';
+
+export default function SettingsView({ settings, onSave, addToast }) {
+  const [local, setLocal] = useState(() => ({ title: '', navPages: [], ...settings }));
+  const [saving, setSaving] = useState(false);
+
+  const pages = settings._pages || [];
+
+  const isInNav = (slug) => local.navPages.length === 0 || local.navPages.includes(slug);
+
+  const toggleNav = (slug) => {
+    setLocal(s => {
+      let navPages = s.navPages.length === 0
+        ? pages.map(p => p.slug)
+        : [...s.navPages];
+      if (navPages.includes(slug)) {
+        navPages = navPages.filter(x => x !== slug);
+      } else {
+        navPages = [...navPages, slug];
+      }
+      return { ...s, navPages };
+    });
+  };
+
+  const moveNav = (slug, dir) => {
+    setLocal(s => {
+      const navPages = s.navPages.length === 0
+        ? pages.map(p => p.slug)
+        : [...s.navPages];
+      const idx = navPages.indexOf(slug);
+      if (idx === -1) return s;
+      const newIdx = idx + dir;
+      if (newIdx < 0 || newIdx >= navPages.length) return s;
+      [navPages[idx], navPages[newIdx]] = [navPages[newIdx], navPages[idx]];
+      return { ...s, navPages };
+    });
+  };
+
+  const handleIncludeAll = () => setLocal(s => ({ ...s, navPages: [] }));
+
+  const included = local.navPages.length === 0
+    ? pages.map(p => p.slug)
+    : local.navPages.filter(slug => pages.find(p => p.slug === slug));
+
+  const excluded = pages.map(p => p.slug).filter(slug => !included.includes(slug));
+  const orderedSlugs = [...included, ...excluded];
+  const pageBySlug = Object.fromEntries(pages.map(p => [p.slug, p]));
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await onSave(local);
+      addToast('Settings saved', 'success');
+    } catch {
+      addToast('Failed to save settings', 'error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="settings-view">
+      <h2>Site Settings</h2>
+
+      {/* General */}
+      <div className="settings-section">
+        <h3>General</h3>
+        <div className="field">
+          <label>Site name</label>
+          <input
+            type="text"
+            value={local.title || ''}
+            onChange={e => setLocal(s => ({ ...s, title: e.target.value }))}
+            placeholder="My Learning Site"
+          />
+        </div>
+        <div className="field">
+          <label>Site description (shown on home page)</label>
+          <input
+            type="text"
+            value={local.description || ''}
+            onChange={e => setLocal(s => ({ ...s, description: e.target.value }))}
+            placeholder="A brief description of this learning site"
+          />
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <div className="settings-section">
+        <h3>Navigation</h3>
+        <p style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5 }}>
+          Choose which pages appear in the exported site's navigation bar and set their order.
+          Unchecked pages are still accessible but won't appear in the nav.
+        </p>
+
+        {pages.length === 0 ? (
+          <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>No pages yet.</p>
+        ) : (
+          <>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={handleIncludeAll}
+                disabled={local.navPages.length === 0}
+              >
+                Include all pages
+              </button>
+              <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                {local.navPages.length === 0
+                  ? 'All pages included (default)'
+                  : `${included.length} of ${pages.length} included`}
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+              {orderedSlugs.map((slug) => {
+                const page = pageBySlug[slug];
+                if (!page) return null;
+                const inNav = isInNav(slug);
+                const navIdx = included.indexOf(slug);
+
+                return (
+                  <div key={slug} className="nav-page-item" style={{ opacity: inNav ? 1 : 0.5 }}>
+                    <input
+                      type="checkbox"
+                      checked={inNav}
+                      onChange={() => toggleNav(slug)}
+                      id={`nav-${slug}`}
+                    />
+                    <label htmlFor={`nav-${slug}`} style={{ flex: 1, cursor: 'pointer' }}>
+                      <div className="nav-page-title">{page.title}</div>
+                      <div className="nav-page-slug">/{page.slug}</div>
+                    </label>
+                    {inNav && (
+                      <div className="nav-page-move">
+                        <button
+                          className="btn btn-secondary btn-sm btn-icon"
+                          disabled={navIdx === 0}
+                          onClick={() => moveNav(slug, -1)}
+                          title="Move up in nav"
+                        >↑</button>
+                        <button
+                          className="btn btn-secondary btn-sm btn-icon"
+                          disabled={navIdx === included.length - 1}
+                          onClick={() => moveNav(slug, 1)}
+                          title="Move down in nav"
+                        >↓</button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
+      </div>
+
+      <div>
+        <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
+          {saving ? 'Saving…' : 'Save Settings'}
+        </button>
+      </div>
+    </div>
+  );
+}

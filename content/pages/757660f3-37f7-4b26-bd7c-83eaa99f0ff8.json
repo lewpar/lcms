@@ -1,0 +1,18 @@
+{
+  "title": "Chapter 1: Advanced",
+  "slug": "ch1-advanced",
+  "section": "ee58ab7b-830a-479a-bed9-4384c61bbaf5",
+  "blocks": [
+    {
+      "id": "3007bce1-ff57-469b-a4c4-80a5a63c67c2",
+      "type": "callout",
+      "icon": "🚀",
+      "title": "Pro Tip",
+      "content": "Practice makes perfect.",
+      "color": "purple"
+    }
+  ],
+  "id": "757660f3-37f7-4b26-bd7c-83eaa99f0ff8",
+  "createdAt": "2026-03-27T05:12:22.816Z",
+  "updatedAt": "2026-03-27T05:55:06.486Z"
+}
