@@ -751,8 +751,8 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .site-selector-search {
   flex: 1;
-  background: transparent;
-  border: none;
+  background: transparent !important;
+  border: none !important;
   color: var(--text);
   font-size: 13px;
   padding: 7px 0;

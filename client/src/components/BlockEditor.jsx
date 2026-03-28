@@ -18,7 +18,22 @@ function blockSummary(block) {
     case 'case-study': return block.title || '(no title)';
     case 'page-link': return block.pageTitle || '(no page selected)';
     case 'divider':   return '──────────';
-    default:          return block.type;
+    case 'flashcard': {
+      const n = block.cards?.length ?? 0;
+      return `${block.title || '(no title)'} — ${n} card${n !== 1 ? 's' : ''}`;
+    }
+    case 'table': {
+      const cols = block.headers?.length ?? 0;
+      const rows = block.rows?.length ?? 0;
+      return `${cols} col${cols !== 1 ? 's' : ''}, ${rows} row${rows !== 1 ? 's' : ''}${block.caption ? ` — ${block.caption}` : ''}`;
+    }
+    case 'accordion': {
+      const n = block.items?.length ?? 0;
+      return `${n} item${n !== 1 ? 's' : ''}`;
+    }
+    case 'embed':       return block.src || '(no URL)';
+    case 'playground':  return block.title || block.starterCode?.slice(0, 50) || '(empty)';
+    default:            return block.type;
   }
 }
 
@@ -438,6 +453,258 @@ function PageLinkEditor({ block, onChange, pages = [] }) {
   );
 }
 
+/* ── Flashcard editor ── */
+
+function FlashcardEditor({ block, onChange }) {
+  const cards = block.cards || [];
+
+  const addCard = () =>
+    onChange({ cards: [...cards, { id: uuidv4(), front: '', back: '' }] });
+
+  const removeCard = (id) =>
+    onChange({ cards: cards.filter(c => c.id !== id) });
+
+  const updateCard = (id, field, val) =>
+    onChange({ cards: cards.map(c => c.id === id ? { ...c, [field]: val } : c) });
+
+  return (
+    <>
+      <div className="field">
+        <label>Title (optional)</label>
+        <input type="text" value={block.title || ''} onChange={e => onChange({ title: e.target.value })} placeholder="Flashcard set title" />
+      </div>
+      <div className="field">
+        <label>{cards.length} Card{cards.length !== 1 ? 's' : ''}</label>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {cards.map((card, i) => (
+            <div key={card.id} style={{ border: '1px solid var(--border)', borderRadius: 6, padding: '10px 12px', background: 'var(--surface)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)' }}>Card {i + 1}</span>
+                {cards.length > 1 && (
+                  <button className="btn btn-danger btn-icon btn-sm" onClick={() => removeCard(card.id)} title="Remove card">✕</button>
+                )}
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                <div className="field" style={{ marginBottom: 0 }}>
+                  <label>Front</label>
+                  <textarea rows={2} value={card.front || ''} onChange={e => updateCard(card.id, 'front', e.target.value)} placeholder="Question or term" />
+                </div>
+                <div className="field" style={{ marginBottom: 0 }}>
+                  <label>Back</label>
+                  <textarea rows={2} value={card.back || ''} onChange={e => updateCard(card.id, 'back', e.target.value)} placeholder="Answer or definition" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <button className="btn btn-secondary btn-sm" style={{ marginTop: 8, alignSelf: 'flex-start' }} onClick={addCard}>
+          + Add Card
+        </button>
+      </div>
+    </>
+  );
+}
+
+/* ── Table editor ── */
+
+function TableEditor({ block, onChange }) {
+  const headers = block.headers || [''];
+  const rows = block.rows || [];
+
+  const setHeaders = (h) => onChange({ headers: h, rows: rows.map(r => { const nr = [...r]; while (nr.length < h.length) nr.push(''); return nr.slice(0, h.length); }) });
+  const setRows = (r) => onChange({ rows: r });
+
+  const addColumn = () => setHeaders([...headers, '']);
+  const removeColumn = (ci) => {
+    const h = headers.filter((_, i) => i !== ci);
+    onChange({ headers: h, rows: rows.map(r => r.filter((_, i) => i !== ci)) });
+  };
+  const updateHeader = (ci, val) => { const h = [...headers]; h[ci] = val; onChange({ headers: h }); };
+
+  const addRow = () => setRows([...rows, new Array(headers.length).fill('')]);
+  const removeRow = (ri) => setRows(rows.filter((_, i) => i !== ri));
+  const updateCell = (ri, ci, val) => {
+    const r = rows.map((row, i) => i === ri ? row.map((c, j) => j === ci ? val : c) : row);
+    setRows(r);
+  };
+
+  return (
+    <>
+      <div className="field">
+        <label>Caption (optional)</label>
+        <input type="text" value={block.caption || ''} onChange={e => onChange({ caption: e.target.value })} placeholder="Table caption" />
+      </div>
+      <div className="field">
+        <label>Columns ({headers.length})</label>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            {headers.map((h, ci) => (
+              <div key={ci} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <input
+                  type="text"
+                  value={h}
+                  onChange={e => updateHeader(ci, e.target.value)}
+                  placeholder={`Col ${ci + 1}`}
+                  style={{ width: 120 }}
+                />
+                {headers.length > 1 && (
+                  <button className="btn btn-danger btn-icon btn-sm" onClick={() => removeColumn(ci)} title="Remove column">✕</button>
+                )}
+              </div>
+            ))}
+            <button className="btn btn-secondary btn-sm" onClick={addColumn}>+ Col</button>
+          </div>
+        </div>
+      </div>
+      <div className="field">
+        <label>Rows ({rows.length})</label>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          {rows.map((row, ri) => (
+            <div key={ri} style={{ display: 'flex', gap: 4, alignItems: 'center', flexWrap: 'wrap' }}>
+              {headers.map((_, ci) => (
+                <input
+                  key={ci}
+                  type="text"
+                  value={(row || [])[ci] || ''}
+                  onChange={e => updateCell(ri, ci, e.target.value)}
+                  placeholder={`Row ${ri + 1}, Col ${ci + 1}`}
+                  style={{ width: 120, flex: '1 1 100px' }}
+                />
+              ))}
+              <button className="btn btn-danger btn-icon btn-sm" onClick={() => removeRow(ri)} title="Remove row">✕</button>
+            </div>
+          ))}
+        </div>
+        <button className="btn btn-secondary btn-sm" style={{ marginTop: 8, alignSelf: 'flex-start' }} onClick={addRow}>
+          + Add Row
+        </button>
+      </div>
+    </>
+  );
+}
+
+/* ── Accordion editor ── */
+
+function AccordionEditor({ block, onChange }) {
+  const items = block.items || [];
+
+  const addItem = () =>
+    onChange({ items: [...items, { id: uuidv4(), title: '', content: '' }] });
+
+  const removeItem = (id) =>
+    onChange({ items: items.filter(i => i.id !== id) });
+
+  const updateItem = (id, field, val) =>
+    onChange({ items: items.map(i => i.id === id ? { ...i, [field]: val } : i) });
+
+  return (
+    <div className="field">
+      <label>{items.length} Item{items.length !== 1 ? 's' : ''}</label>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {items.map((item, i) => (
+          <div key={item.id} style={{ border: '1px solid var(--border)', borderRadius: 6, padding: '10px 12px', background: 'var(--surface)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-muted)' }}>Item {i + 1}</span>
+              {items.length > 1 && (
+                <button className="btn btn-danger btn-icon btn-sm" onClick={() => removeItem(item.id)} title="Remove item">✕</button>
+              )}
+            </div>
+            <div className="field" style={{ marginBottom: 8 }}>
+              <label>Title</label>
+              <input type="text" value={item.title || ''} onChange={e => updateItem(item.id, 'title', e.target.value)} placeholder="Item title" />
+            </div>
+            <div className="field" style={{ marginBottom: 0 }}>
+              <label>Content (markdown supported)</label>
+              <textarea rows={3} value={item.content || ''} onChange={e => updateItem(item.id, 'content', e.target.value)} placeholder="Item content" />
+            </div>
+          </div>
+        ))}
+      </div>
+      <button className="btn btn-secondary btn-sm" style={{ marginTop: 8, alignSelf: 'flex-start' }} onClick={addItem}>
+        + Add Item
+      </button>
+    </div>
+  );
+}
+
+/* ── Embed editor ── */
+
+function EmbedEditor({ block, onChange }) {
+  return (
+    <>
+      <div className="field">
+        <label>URL</label>
+        <input
+          type="text"
+          value={block.src || ''}
+          onChange={e => onChange({ src: e.target.value })}
+          placeholder="https://example.com/embed/..."
+        />
+        <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 3 }}>
+          Any URL that allows embedding in an iframe.
+        </span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 10 }}>
+        <div className="field">
+          <label>Height (px)</label>
+          <input
+            type="number"
+            min={100}
+            max={2000}
+            value={block.height || 400}
+            onChange={e => onChange({ height: Number(e.target.value) })}
+          />
+        </div>
+        <div className="field">
+          <label>Caption (optional)</label>
+          <input type="text" value={block.caption || ''} onChange={e => onChange({ caption: e.target.value })} placeholder="Optional caption" />
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ── Playground editor ── */
+
+function PlaygroundEditor({ block, onChange }) {
+  return (
+    <>
+      <div className="field">
+        <label>Title</label>
+        <input
+          type="text"
+          value={block.title || ''}
+          onChange={e => onChange({ title: e.target.value })}
+          placeholder="Interactive Playground"
+        />
+      </div>
+      <div className="field">
+        <label>Starter code</label>
+        <textarea
+          rows={12}
+          value={block.starterCode || ''}
+          onChange={e => onChange({ starterCode: e.target.value })}
+          placeholder={'// Write JavaScript here\nconsole.log(\'Hello, world!\');'}
+          style={{ fontFamily: 'monospace', fontSize: '12px' }}
+          onKeyDown={e => {
+            if (e.key === 'Tab') {
+              e.preventDefault();
+              const s = e.target.selectionStart;
+              const en = e.target.selectionEnd;
+              const val = e.target.value.substring(0, s) + '  ' + e.target.value.substring(en);
+              onChange({ starterCode: val });
+              setTimeout(() => { e.target.selectionStart = e.target.selectionEnd = s + 2; }, 0);
+            }
+          }}
+        />
+        <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 3 }}>
+          Pre-populate the code editor. Users can edit and run this in the exported site.
+        </span>
+      </div>
+    </>
+  );
+}
+
 /* ── Main BlockEditor ── */
 
 export default function BlockEditor({
@@ -487,6 +754,11 @@ export default function BlockEditor({
           {block.type === 'video'     && <VideoEditor      block={block} onChange={onChange} />}
           {block.type === 'case-study' && <CaseStudyEditor block={block} onChange={onChange} />}
           {block.type === 'page-link' && <PageLinkEditor   block={block} onChange={onChange} pages={pages} />}
+          {block.type === 'flashcard' && <FlashcardEditor  block={block} onChange={onChange} />}
+          {block.type === 'table'     && <TableEditor      block={block} onChange={onChange} />}
+          {block.type === 'accordion' && <AccordionEditor  block={block} onChange={onChange} />}
+          {block.type === 'embed'       && <EmbedEditor       block={block} onChange={onChange} />}
+          {block.type === 'playground' && <PlaygroundEditor  block={block} onChange={onChange} />}
           {block.type === 'divider'   && (
             <p style={{ color: 'var(--text-muted)', fontSize: 12 }}>Horizontal divider — no configuration needed.</p>
           )}

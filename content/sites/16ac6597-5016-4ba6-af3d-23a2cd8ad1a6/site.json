@@ -25,12 +25,19 @@
     "showBreadcrumbs": true,
     "showReadingTime": true
   },
-  "header": "<div>Custom Header. You can modify this header using the site settings.</div>",
+  "header": "<p>Custom Header. You can modify this header using the site settings.</p>",
   "footer": "<div>Generated using LCMS. You can modify this footer using the site settings.</div>",
   "home": {
     "heroTitle": "Demo Site",
     "heroSubtitle": "This is a demo of the Learning Content Management System (LCMS) static site generator.",
     "showPageGrid": false,
-    "blocks": []
+    "blocks": [
+      {
+        "id": "7da79257-41f5-41a2-8008-903ff800cfb3",
+        "type": "playground",
+        "title": "",
+        "starterCode": "// Write your JavaScript here\nconsole.log('Hello, world!');"
+      }
+    ]
   }
 }

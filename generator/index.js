@@ -232,6 +232,87 @@ function renderBlock(block) {
 </figure>`;
     }
 
+    case 'flashcard': {
+      const cards = block.cards || [];
+      if (!cards.length) return '';
+      const titleHtml = block.title ? `<div class="fc-title">${esc(block.title)}</div>` : '';
+      const n = cards.length;
+      const cardsHtml = cards.map((c, i) =>
+        `<div class="fc-card${i === 0 ? ' active' : ''}" data-index="${i}">
+  <div class="fc-inner">
+    <div class="fc-front"><div class="fc-face-label">Front</div><div class="fc-text">${esc(c.front || '')}</div></div>
+    <div class="fc-back"><div class="fc-face-label">Back</div><div class="fc-text">${esc(c.back || '')}</div></div>
+  </div>
+</div>`).join('\n');
+      return `<div class="flashcard-block">${titleHtml}
+<div class="fc-controls">
+  <button class="fc-prev fc-nav-btn" type="button">← Prev</button>
+  <span class="fc-counter">1 / ${n}</span>
+  <button class="fc-next fc-nav-btn" type="button">Next →</button>
+</div>
+<div class="fc-deck">${cardsHtml}</div>
+<div class="fc-hint">Click card to flip</div>
+</div>`;
+    }
+
+    case 'table': {
+      const headers = block.headers || [];
+      const rows = block.rows || [];
+      if (!headers.length) return '';
+      const thead = `<thead><tr>${headers.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead>`;
+      const tbody = rows.length
+        ? `<tbody>${rows.map(r => `<tr>${headers.map((_, i) => `<td>${esc((r || [])[i] || '')}</td>`).join('')}</tr>`).join('')}</tbody>`
+        : '';
+      const cap = block.caption ? `<caption>${esc(block.caption)}</caption>` : '';
+      return `<div class="table-block"><table>${cap}${thead}${tbody}</table></div>`;
+    }
+
+    case 'accordion': {
+      const items = block.items || [];
+      if (!items.length) return '';
+      const itemsHtml = items.map((item, i) =>
+        `<div class="acc-item${i === 0 ? ' open' : ''}">
+  <button class="acc-header" type="button" aria-expanded="${i === 0 ? 'true' : 'false'}">
+    <span>${esc(item.title || '')}</span><span class="acc-icon">▼</span>
+  </button>
+  <div class="acc-body"><div class="acc-body-inner prose">${md(item.content || '')}</div></div>
+</div>`).join('\n');
+      return `<div class="accordion-block">${itemsHtml}</div>`;
+    }
+
+    case 'embed': {
+      if (!block.src) return '';
+      const height = Number(block.height) || 400;
+      const cap = block.caption ? `<figcaption>${esc(block.caption)}</figcaption>` : '';
+      return `<figure class="embed-block">
+  <iframe src="${esc(block.src)}" height="${height}" frameborder="0" allowfullscreen loading="lazy" title="${esc(block.caption || 'Embedded content')}"></iframe>
+  ${cap}
+</figure>`;
+    }
+
+    case 'playground': {
+      const code = block.starterCode || '';
+      const titleText = block.title || 'Interactive Playground';
+      return `<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">${esc(titleText)}</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">${esc(code)}</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>`;
+    }
+
     case 'divider': return `<hr class="block-divider" />`;
     default:        return '';
   }
@@ -496,10 +577,86 @@ img{max-width:100%;height:auto;display:block}
 
 .video-block{margin:0}.video-embed{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--radius)}.video-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}.video-block figcaption{margin-top:8px;font-size:.83em;color:var(--text-muted);text-align:center;font-style:italic}
 
+.flashcard-block{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--bg)}
+.fc-title{background:var(--primary);color:#fff;padding:12px 20px;font-weight:700;font-size:.9em}
+.fc-controls{display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 20px;border-bottom:1px solid var(--border);background:var(--surface)}
+.fc-counter{font-size:.85em;color:var(--text-muted);font-weight:600;min-width:60px;text-align:center}
+.fc-nav-btn{background:transparent;border:1.5px solid var(--border);color:var(--text);cursor:pointer;border-radius:var(--radius);padding:5px 14px;font-size:.8em;font-family:inherit;transition:border-color .15s,background .15s,color .15s}.fc-nav-btn:hover:not(:disabled){border-color:var(--primary);color:var(--primary);background:var(--primary-light)}.fc-nav-btn:disabled{opacity:.35;cursor:not-allowed}
+.fc-deck{padding:24px 20px;display:flex;justify-content:center}
+.fc-card{width:100%;max-width:520px;height:200px;perspective:1000px;cursor:pointer;display:none}.fc-card.active{display:block}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg)}
+.fc-front,.fc-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1.5px solid var(--border);border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:20px;text-align:center;background:var(--bg)}
+.fc-back{transform:rotateY(180deg);background:var(--primary-light);border-color:var(--primary)}
+.fc-face-label{font-size:.65em;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted)}
+.fc-back .fc-face-label{color:var(--primary)}
+.fc-text{font-size:1em;font-weight:600;color:var(--text);line-height:1.5}
+.fc-hint{text-align:center;font-size:.75em;color:var(--text-muted);padding:0 0 14px;font-style:italic}
+
+.table-block{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+.table-block table{width:100%;border-collapse:collapse;font-size:.9em}
+.table-block caption{caption-side:bottom;font-size:.78em;color:var(--text-muted);font-style:italic;padding:8px;text-align:center}
+.table-block th{background:var(--surface);font-weight:700;color:var(--text);padding:10px 14px;border-bottom:2px solid var(--border);text-align:left;white-space:nowrap}
+.table-block td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text)}
+.table-block tr:last-child td{border-bottom:none}
+.table-block tbody tr:hover td{background:var(--primary-light)}
+
+.accordion-block{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.acc-item{border-bottom:1px solid var(--border)}.acc-item:last-child{border-bottom:none}
+.acc-header{width:100%;display:flex;align-items:center;justify-content:space-between;padding:13px 18px;background:var(--surface);border:none;cursor:pointer;font-size:.95em;font-weight:600;color:var(--text);font-family:inherit;text-align:left;transition:background .15s,color .15s}
+.acc-header:hover{background:var(--primary-light);color:var(--primary)}
+.acc-item.open>.acc-header{background:var(--bg);color:var(--primary);border-bottom:1px solid var(--border)}
+.acc-icon{font-size:.7em;transition:transform .25s;flex-shrink:0;margin-left:10px;color:var(--text-muted)}
+.acc-item.open>.acc-header .acc-icon{transform:rotate(180deg)}
+.acc-body{display:none;padding:0 18px}.acc-item.open>.acc-body{display:block}
+.acc-body-inner{padding:14px 0 18px}
+
+.embed-block{margin:0}.embed-block iframe{display:block;width:100%;border-radius:var(--radius);border:1px solid var(--border)}.embed-block figcaption{margin-top:8px;font-size:.83em;color:var(--text-muted);text-align:center;font-style:italic}
+
+.playground-block{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.pg-header{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#1e293b}
+.pg-header-title{font-size:.78em;font-weight:700;color:#94a3b8;letter-spacing:.06em;text-transform:uppercase;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pg-run-btn{background:#22c55e;color:#fff;border:none;padding:5px 14px;border-radius:4px;font-size:.82em;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s;flex-shrink:0}.pg-run-btn:hover{background:#16a34a}
+.pg-clear-btn{background:transparent;color:#64748b;border:1px solid #334155;padding:5px 11px;border-radius:4px;font-size:.82em;cursor:pointer;font-family:inherit;transition:background .15s,color .15s;flex-shrink:0}.pg-clear-btn:hover{background:#334155;color:#e2e8f0}
+.pg-editor-wrap{display:flex;background:#0f172a;height:260px;overflow:hidden}
+.pg-gutter{background:#0f172a;border-right:1px solid #1e293b;flex-shrink:0;width:44px;overflow:hidden;position:relative}
+.pg-line-numbers{position:absolute;top:0;left:0;right:0;padding:14px 8px 14px 0;font-family:'SF Mono','Fira Code',monospace;font-size:13px;line-height:1.65;color:#334155;display:flex;flex-direction:column;align-items:flex-end;user-select:none;-webkit-user-select:none}
+.pg-line-numbers span{display:block;line-height:1.65}
+.pg-code-area{flex:1;position:relative;overflow:hidden}
+.pg-pre,.pg-textarea{position:absolute;top:0;left:0;right:0;bottom:0;padding:14px 16px;margin:0;font-family:'SF Mono','Fira Code',monospace;font-size:13px;line-height:1.65;tab-size:2;white-space:pre;overflow:auto;box-sizing:border-box;border:none;outline:none}
+.pg-pre{color:#e2e8f0;background:transparent;pointer-events:none;z-index:1;scrollbar-width:none;-ms-overflow-style:none}
+.pg-pre::-webkit-scrollbar{display:none}
+.pg-textarea{color:transparent;background:transparent;caret-color:#e2e8f0;resize:none;z-index:2;-webkit-text-fill-color:transparent}
+.pg-kw{color:#93c5fd}.pg-st{color:#86efac}.pg-cm{color:#475569;font-style:italic}.pg-nm{color:#fcd34d}
+.pg-output-wrap{border-top:1px solid #1e293b}
+.pg-output-label{background:#0a0f1a;color:#334155;padding:4px 14px;font-size:.7em;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.pg-output{background:#0a0f1a;padding:8px 14px;min-height:52px;max-height:180px;overflow-y:auto;font-family:'SF Mono','Fira Code',monospace;font-size:12px;line-height:1.7}
+.pg-out-line{white-space:pre-wrap;word-break:break-all;padding:1px 0;display:flex;gap:6px}
+.pg-out-prefix{font-weight:700;flex-shrink:0;font-size:.9em;align-self:flex-start;margin-top:.08em}
+.pg-out-log{color:#cbd5e1}.pg-out-log .pg-out-prefix{color:#475569}
+.pg-out-warn{color:#fcd34d}.pg-out-warn .pg-out-prefix{color:#f59e0b}
+.pg-out-error{color:#f87171}.pg-out-error .pg-out-prefix{color:#ef4444}
+.pg-out-empty{color:#334155;font-style:italic}
+
 .custom-site-header{padding:12px 40px;border-bottom:1px solid var(--border);background:var(--surface)}
 .custom-footer-html{width:100%}
 
 .dark-mode-btn{background:none;border:1px solid rgba(255,255,255,.25);color:#fff;cursor:pointer;border-radius:6px;padding:4px 8px;font-size:14px;line-height:1;transition:background .15s}.dark-mode-btn:hover{background:rgba(255,255,255,.12)}
+.sidebar-collapse-btn{display:none;background:none;border:none;color:var(--sidebar-text);cursor:pointer;font-size:18px;padding:4px 6px;border-radius:4px;line-height:1;transition:background .15s,color .15s;flex-shrink:0}.sidebar-collapse-btn:hover{background:rgba(255,255,255,.12);color:#fff}
+@media(min-width:769px){
+  .sidebar-collapse-btn{display:flex;align-items:center;justify-content:center}
+  .site-sidebar{transition:transform .28s cubic-bezier(.4,0,.2,1),width .28s cubic-bezier(.4,0,.2,1)}
+  .content-area{transition:margin-left .28s cubic-bezier(.4,0,.2,1)}
+  body.sidebar-collapsed .site-sidebar{width:28px;overflow:hidden}
+  body.sidebar-collapsed .content-area{margin-left:28px}
+  body.sidebar-collapsed .site-logo,
+  body.sidebar-collapsed .sidebar-nav,
+  body.sidebar-collapsed .sidebar-footer-note,
+  body.sidebar-collapsed .sidebar-close,
+  body.sidebar-collapsed .dark-mode-btn{display:none}
+  body.sidebar-collapsed .sidebar-top{flex:1;flex-direction:column;padding:0;gap:0;justify-content:center;align-items:center;border-bottom:none}
+  body.sidebar-collapsed .sidebar-collapse-btn{width:100%;padding:32px 0;justify-content:center;font-size:22px;font-weight:300}
+}
 
 @media(max-width:768px){
   .site-sidebar{transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
@@ -698,6 +855,26 @@ const NAV_JS = `
   function close(){sidebar.classList.remove('open');overlay.classList.remove('open');document.body.style.overflow=''}
   var h=document.getElementById('hamburger');var c=document.getElementById('sidebarClose');
   if(h)h.addEventListener('click',open);if(c)c.addEventListener('click',close);if(overlay)overlay.addEventListener('click',close);
+
+  // Desktop sidebar collapse
+  var collapseBtn=document.getElementById('sidebarCollapse');
+  var CKEY='lcms-sidebar-collapsed';
+  function getCollapsed(){try{return localStorage.getItem(CKEY)==='true'}catch(e){return false}}
+  function saveCollapsed(v){try{localStorage.setItem(CKEY,String(v))}catch(e){}}
+  function applyCollapsed(v){
+    if(v){
+      document.body.classList.add('sidebar-collapsed');
+      if(collapseBtn){collapseBtn.innerHTML='&#x203A;';collapseBtn.title='Expand sidebar';collapseBtn.setAttribute('aria-label','Expand sidebar');}
+    }else{
+      document.body.classList.remove('sidebar-collapsed');
+      if(collapseBtn){collapseBtn.innerHTML='&#x2039;';collapseBtn.title='Collapse sidebar';collapseBtn.setAttribute('aria-label','Collapse sidebar');}
+    }
+    saveCollapsed(v);
+  }
+  if(collapseBtn){
+    collapseBtn.addEventListener('click',function(){applyCollapsed(!document.body.classList.contains('sidebar-collapsed'));});
+  }
+  applyCollapsed(getCollapsed());
 })();
 `;
 
@@ -721,16 +898,169 @@ const DARK_MODE_JS = `(function(){
   });
 })();`;
 
+// ── Accordion JS ───────────────────────────────────────
+
+const ACCORDION_JS = `
+(function(){
+  document.addEventListener('DOMContentLoaded',function(){
+    document.querySelectorAll('.accordion-block').forEach(function(el){
+      el.querySelectorAll('.acc-header').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          var item=btn.closest('.acc-item');
+          var isOpen=item.classList.contains('open');
+          el.querySelectorAll('.acc-item').forEach(function(i){
+            i.classList.remove('open');
+            i.querySelector('.acc-header').setAttribute('aria-expanded','false');
+          });
+          if(!isOpen){item.classList.add('open');btn.setAttribute('aria-expanded','true')}
+        });
+      });
+    });
+  });
+})();`;
+
+// ── Flashcard JS ────────────────────────────────────────
+
+const FLASHCARD_JS = `
+(function(){
+  document.addEventListener('DOMContentLoaded',function(){
+    document.querySelectorAll('.flashcard-block').forEach(function(el){
+      var cards=Array.from(el.querySelectorAll('.fc-card'));
+      var counter=el.querySelector('.fc-counter');
+      var prevBtn=el.querySelector('.fc-prev');
+      var nextBtn=el.querySelector('.fc-next');
+      var n=cards.length;var current=0;
+      function show(idx){
+        cards.forEach(function(c){c.classList.remove('active')});
+        cards[idx].classList.add('active');
+        counter.textContent=(idx+1)+' / '+n;
+        prevBtn.disabled=idx===0;nextBtn.disabled=idx===n-1;
+      }
+      cards.forEach(function(card){
+        card.addEventListener('click',function(){card.classList.toggle('flipped')});
+      });
+      prevBtn.addEventListener('click',function(){if(current>0){current--;cards[current].classList.remove('flipped');show(current)}});
+      nextBtn.addEventListener('click',function(){if(current<n-1){current++;cards[current].classList.remove('flipped');show(current)}});
+      show(0);
+    });
+  });
+})();`;
+
+// ── Playground JS ──────────────────────────────────────
+
+const PLAYGROUND_JS = `(function(){
+var KW=/\\b(function|return|if|else|for|while|do|let|const|var|class|new|this|true|false|null|undefined|typeof|instanceof|import|export|default|try|catch|finally|throw|async|await|of|in|break|continue|switch|case)\\b/;
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function highlight(code){
+  var r='',i=0,n=code.length;
+  while(i<n){
+    var c=code[i];
+    if(c==='/'&&code[i+1]==='/'){
+      var j=code.indexOf('\\n',i);if(j<0)j=n;
+      r+='<span class="pg-cm">'+esc(code.slice(i,j))+'</span>';i=j;continue;
+    }
+    if(c==='/'&&code[i+1]==='*'){
+      var j=code.indexOf('*/',i+2);if(j<0)j=n-2;
+      r+='<span class="pg-cm">'+esc(code.slice(i,j+2))+'</span>';i=j+2;continue;
+    }
+    if(c==='"'||c==="'"||c==='\`'){
+      var q=c,j=i+1;
+      while(j<n&&code[j]!==q&&(q==='\`'||code[j]!=='\\n')){if(code[j]==='\\\\')j++;j++;}
+      r+='<span class="pg-st">'+esc(code.slice(i,j+1))+'</span>';i=j+1;continue;
+    }
+    if(/[a-zA-Z_$]/.test(c)){
+      var j=i;while(j<n&&/[\\w$]/.test(code[j]))j++;
+      var w=code.slice(i,j);
+      r+=KW.test(w)?'<span class="pg-kw">'+w+'</span>':esc(w);i=j;continue;
+    }
+    if(/[0-9]/.test(c)){
+      var j=i;while(j<n&&/[0-9.xXa-fA-FbBoO_]/.test(code[j]))j++;
+      r+='<span class="pg-nm">'+esc(code.slice(i,j))+'</span>';i=j;continue;
+    }
+    r+=esc(c);i++;
+  }
+  return r;
+}
+function initPlayground(el){
+  var ta=el.querySelector('.pg-textarea');
+  var pre=el.querySelector('.pg-pre');
+  var lnEl=el.querySelector('.pg-line-numbers');
+  var runBtn=el.querySelector('.pg-run-btn');
+  var clearBtn=el.querySelector('.pg-clear-btn');
+  var out=el.querySelector('.pg-output');
+  function updateLn(){
+    var lines=ta.value.split('\\n').length,h='';
+    for(var i=1;i<=lines;i++)h+='<span>'+i+'</span>';
+    lnEl.innerHTML=h;
+  }
+  function sync(){
+    pre.innerHTML=highlight(ta.value)+'\\n';
+    pre.scrollTop=ta.scrollTop;pre.scrollLeft=ta.scrollLeft;
+    lnEl.style.transform='translateY(-'+ta.scrollTop+'px)';
+    updateLn();
+  }
+  ta.addEventListener('input',sync);
+  ta.addEventListener('scroll',function(){
+    pre.scrollTop=ta.scrollTop;pre.scrollLeft=ta.scrollLeft;
+    lnEl.style.transform='translateY(-'+ta.scrollTop+'px)';
+  });
+  ta.addEventListener('keydown',function(e){
+    if(e.key==='Tab'){
+      e.preventDefault();
+      var s=ta.selectionStart,en=ta.selectionEnd;
+      ta.value=ta.value.substring(0,s)+'  '+ta.value.substring(en);
+      ta.selectionStart=ta.selectionEnd=s+2;sync();
+    }
+  });
+  function str(v){
+    if(v===null)return'null';if(v===undefined)return'undefined';
+    if(typeof v==='string')return v;
+    if(typeof v==='function')return'[Function: '+(v.name||'anonymous')+']';
+    try{return JSON.stringify(v,null,2)}catch(e){return String(v)}
+  }
+  var runId=0;
+  runBtn.addEventListener('click',function(){
+    out.innerHTML='';
+    var thisRun=++runId;
+    var hadOutput=false;
+    function appendOut(text,type){
+      if(runId!==thisRun)return;
+      var empty=out.querySelector('.pg-out-empty');if(empty)empty.remove();
+      var d=document.createElement('div');d.className='pg-out-line pg-out-'+type;
+      if(type!=='empty'){var p=document.createElement('span');p.className='pg-out-prefix';p.textContent='['+type+']';d.appendChild(p);}
+      var m=document.createElement('span');m.textContent=text;d.appendChild(m);
+      out.appendChild(d);out.scrollTop=out.scrollHeight;
+      hadOutput=true;
+    }
+    var pgConsole={
+      log:function(){appendOut(Array.from(arguments).map(str).join(' '),'log');},
+      warn:function(){appendOut(Array.from(arguments).map(str).join(' '),'warn');},
+      error:function(){appendOut(Array.from(arguments).map(str).join(' '),'error');}
+    };
+    try{new Function('console',ta.value)(pgConsole);}
+    catch(e){appendOut(e.name+': '+e.message,'error');}
+    if(!hadOutput){appendOut('(no output)','empty');}
+  });
+  clearBtn.addEventListener('click',function(){out.innerHTML='';});
+  sync();
+}
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.playground-block').forEach(initPlayground);
+});
+})();`;
+
 // ── HTML templates ─────────────────────────────────────
 
 function sidebarHtml(settings, navItems, currentSlug, toc) {
   const siteName = settings.title || 'Learning Site';
   const base = currentSlug ? '../' : './';
   const darkBtn = `<button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>`;
+  const collapseBtn = `<button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>`;
   return `<aside class="site-sidebar" id="sidebar">
   <div class="sidebar-top">
     <a class="site-logo" href="${base}">${esc(siteName)}</a>
     ${darkBtn}
+    ${collapseBtn}
     <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
   </div>
   <nav class="sidebar-nav" aria-label="Site navigation">
@@ -757,7 +1087,10 @@ function getFontLink(fontKey) {
 
 function pageTemplate({ page, blocksHtml, settings, navItems }) {
   const { title, description, slug, section } = page;
-  const hasQuiz = blocksHtml.includes('quiz-block');
+  const hasQuiz       = blocksHtml.includes('quiz-block');
+  const hasAccordion  = (page.blocks || []).some(b => b.type === 'accordion');
+  const hasFlashcard  = (page.blocks || []).some(b => b.type === 'flashcard');
+  const hasPlayground = (page.blocks || []).some(b => b.type === 'playground');
   const hasCode = (page.blocks || []).some(b => b.type === 'code');
   const toc = extractToc(page.blocks || []);
 
@@ -829,7 +1162,10 @@ ${showDarkMode ? `<script>${DARK_MODE_JS}</script>` : ''}
   </div>
 </div>
 <script src="../nav.js"></script>
-${hasQuiz ? `<script src="../quiz.js"></script>` : ''}
+${hasQuiz       ? `<script src="../quiz.js"></script>`       : ''}
+${hasAccordion  ? `<script src="../accordion.js"></script>`  : ''}
+${hasFlashcard  ? `<script src="../flashcard.js"></script>`  : ''}
+${hasPlayground ? `<script src="../playground.js"></script>` : ''}
 ${hasCode ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>` : ''}
 </body>
 </html>`;
@@ -843,7 +1179,10 @@ function indexTemplate({ pages, settings, navItems }) {
   const heroSubtitle = home.heroSubtitle || settings.description || '';
   const showPageGrid = home.showPageGrid !== false;
   const homeBlocks = home.blocks || [];
-  const hasQuiz = homeBlocks.some(b => b.type === 'quiz');
+  const hasQuiz       = homeBlocks.some(b => b.type === 'quiz');
+  const hasAccordion  = homeBlocks.some(b => b.type === 'accordion');
+  const hasFlashcard  = homeBlocks.some(b => b.type === 'flashcard');
+  const hasPlayground = homeBlocks.some(b => b.type === 'playground');
   const hasCode = homeBlocks.some(b => b.type === 'code');
   const blocksHtml = homeBlocks.map(renderBlock).join('\n');
 
@@ -913,7 +1252,10 @@ function indexTemplate({ pages, settings, navItems }) {
   </div>
 </div>
 <script src="nav.js"></script>
-${hasQuiz ? `<script src="quiz.js"></script>` : ''}
+${hasQuiz       ? `<script src="quiz.js"></script>`       : ''}
+${hasAccordion  ? `<script src="accordion.js"></script>`  : ''}
+${hasFlashcard  ? `<script src="flashcard.js"></script>`  : ''}
+${hasPlayground ? `<script src="playground.js"></script>` : ''}
 ${hasCode ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>` : ''}
 </body>
 </html>`;
@@ -938,6 +1280,9 @@ function generate() {
   fs.writeFileSync(path.join(OUTPUT_DIR, 'styles.css'), css);
   fs.writeFileSync(path.join(OUTPUT_DIR, 'quiz.js'), QUIZ_JS);
   fs.writeFileSync(path.join(OUTPUT_DIR, 'nav.js'), NAV_JS);
+  fs.writeFileSync(path.join(OUTPUT_DIR, 'accordion.js'), ACCORDION_JS);
+  fs.writeFileSync(path.join(OUTPUT_DIR, 'flashcard.js'), FLASHCARD_JS);
+  fs.writeFileSync(path.join(OUTPUT_DIR, 'playground.js'), PLAYGROUND_JS);
 
   let pages = [];
   if (fs.existsSync(PAGES_DIR)) {

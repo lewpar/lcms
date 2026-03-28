@@ -67,6 +67,102 @@ const CALLOUT_CONFIG = {
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
+// ── Playground preview ─────────────────────────────────
+
+function PlaygroundPreview({ block }) {
+  const [code, setCode] = useState(block.starterCode || '');
+  const [output, setOutput] = useState(null);
+  const runIdRef = useRef(0);
+
+  useEffect(() => {
+    setCode(block.starterCode || '');
+    setOutput(null);
+  }, [block.id]);
+
+  const run = () => {
+    const thisRun = ++runIdRef.current;
+    setOutput([]);
+
+    const stringify = (v) => {
+      if (v === null) return 'null';
+      if (v === undefined) return 'undefined';
+      if (typeof v === 'string') return v;
+      if (typeof v === 'function') return `[Function: ${v.name || 'anonymous'}]`;
+      try { return JSON.stringify(v, null, 2); } catch { return String(v); }
+    };
+
+    const append = (s, t) => {
+      if (runIdRef.current !== thisRun) return;
+      setOutput(prev => {
+        const next = (prev || []).filter(l => l.t !== 'empty');
+        return [...next, { s, t }];
+      });
+    };
+
+    const pgConsole = {
+      log:   (...args) => append(args.map(stringify).join(' '), 'log'),
+      warn:  (...args) => append(args.map(stringify).join(' '), 'warn'),
+      error: (...args) => append(args.map(stringify).join(' '), 'error'),
+    };
+
+    let hadOutput = false;
+    const origAppend = append;
+    const trackingConsole = {
+      log:   (...args) => { hadOutput = true; pgConsole.log(...args); },
+      warn:  (...args) => { hadOutput = true; pgConsole.warn(...args); },
+      error: (...args) => { hadOutput = true; pgConsole.error(...args); },
+    };
+
+    try { new Function('console', code)(trackingConsole); }
+    catch (e) { hadOutput = true; origAppend(`${e.name}: ${e.message}`, 'error'); }
+
+    if (!hadOutput) origAppend('(no output)', 'empty');
+  };
+
+  const msgColors   = { log: '#cbd5e1', warn: '#fcd34d', error: '#f87171' };
+  const prefixColors = { log: '#475569', warn: '#f59e0b', error: '#ef4444' };
+
+  return (
+    <div style={{ border: '1px solid #e2e8f0', borderRadius: 8, overflow: 'hidden', fontFamily: 'monospace' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '7px 10px', background: '#1e293b' }}>
+        <span style={{ flex: 1, fontSize: 11, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '.06em' }}>
+          {block.title || 'Interactive Playground'}
+        </span>
+        <button className="btn btn-sm" style={{ background: '#22c55e', color: '#fff', border: 'none', fontSize: 11, padding: '4px 12px', borderRadius: 4 }} onClick={run}>▶ Run</button>
+        {output !== null && <button className="btn btn-sm btn-secondary" style={{ fontSize: 11, padding: '4px 10px' }} onClick={() => setOutput(null)}>⊘ Clear</button>}
+      </div>
+      <textarea
+        value={code}
+        onChange={e => setCode(e.target.value)}
+        rows={8}
+        style={{ width: '100%', background: '#0f172a', color: '#e2e8f0', padding: '12px 14px', fontFamily: "'SF Mono','Fira Code',monospace", fontSize: 12, lineHeight: 1.65, border: 'none', resize: 'vertical', outline: 'none', display: 'block', boxSizing: 'border-box' }}
+        spellCheck={false}
+        onKeyDown={e => {
+          if (e.key === 'Tab') {
+            e.preventDefault();
+            const s = e.target.selectionStart, en = e.target.selectionEnd;
+            const v = e.target.value.substring(0, s) + '  ' + e.target.value.substring(en);
+            setCode(v);
+            setTimeout(() => { e.target.selectionStart = e.target.selectionEnd = s + 2; }, 0);
+          }
+        }}
+      />
+      {output !== null && (
+        <div style={{ background: '#0a0f1a', borderTop: '1px solid #1e293b', padding: '8px 14px', minHeight: 40, maxHeight: 180, overflowY: 'auto' }}>
+          {output.map((line, i) => (
+            <div key={i} style={{ display: 'flex', gap: 6, fontSize: 12, lineHeight: 1.7, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+              {line.t !== 'empty' && (
+                <span style={{ color: prefixColors[line.t] || '#475569', fontWeight: 700, flexShrink: 0, fontSize: '0.9em', alignSelf: 'flex-start', marginTop: '0.08em' }}>[{line.t}]</span>
+              )}
+              <span style={{ color: line.t === 'empty' ? '#334155' : (msgColors[line.t] || '#cbd5e1'), fontStyle: line.t === 'empty' ? 'italic' : 'normal' }}>{line.s}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Interactive quiz ───────────────────────────────────
 
 function QuizPreview({ block }) {
@@ -344,6 +440,9 @@ function BlockPreview({ block }) {
     case 'case-study':
       return <CaseStudyPreview block={block} />;
 
+    case 'playground':
+      return <PlaygroundPreview block={block} />;
+
     case 'code': {
       const highlighted = highlight(block.content || '', block.language || 'plaintext');
       return (
@@ -415,6 +514,106 @@ function BlockPreview({ block }) {
             <div style={{ background: '#f1f5f9', borderRadius: 8, height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontSize: 12 }}>
               {hasUrl ? 'Invalid YouTube URL' : 'No video URL set'}
             </div>
+          )}
+          {block.caption && <figcaption style={{ marginTop: 8, fontSize: '13px', color: '#64748b', fontStyle: 'italic', textAlign: 'center' }}>{block.caption}</figcaption>}
+        </figure>
+      );
+    }
+
+    case 'flashcard': {
+      const cards = block.cards || [];
+      const [fcIdx, setFcIdx] = useState(0);
+      const [flipped, setFlipped] = useState(false);
+      const card = cards[fcIdx] || {};
+      const n = cards.length;
+      if (!n) return <div style={{ color: '#94a3b8', fontStyle: 'italic', fontSize: 12 }}>No cards yet.</div>;
+      return (
+        <div style={{ border: '1px solid #e2e8f0', borderRadius: 8, overflow: 'hidden' }}>
+          {block.title && <div style={{ background: '#6c63ff', color: '#fff', padding: '10px 16px', fontWeight: 700, fontSize: '.88em' }}>{block.title}</div>}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, padding: '10px 16px', borderBottom: '1px solid #e2e8f0', background: '#f8fafc' }}>
+            <button className="btn btn-secondary btn-sm" disabled={fcIdx === 0} onClick={() => { setFcIdx(i => i - 1); setFlipped(false); }}>← Prev</button>
+            <span style={{ fontSize: '.82em', color: '#64748b', fontWeight: 600 }}>{fcIdx + 1} / {n}</span>
+            <button className="btn btn-secondary btn-sm" disabled={fcIdx === n - 1} onClick={() => { setFcIdx(i => i + 1); setFlipped(false); }}>Next →</button>
+          </div>
+          <div style={{ padding: 20, display: 'flex', justifyContent: 'center' }}>
+            <div
+              onClick={() => setFlipped(f => !f)}
+              style={{ width: '100%', maxWidth: 480, height: 160, border: `1.5px solid ${flipped ? '#6c63ff' : '#e2e8f0'}`, borderRadius: 8, background: flipped ? 'rgba(108,99,255,.08)' : '#fff', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, padding: 16, textAlign: 'center', transition: 'background .2s,border-color .2s' }}
+            >
+              <div style={{ fontSize: '.62em', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.1em', color: flipped ? '#6c63ff' : '#94a3b8' }}>{flipped ? 'Back' : 'Front'}</div>
+              <div style={{ fontWeight: 600, lineHeight: 1.5 }}>{flipped ? (card.back || '(empty)') : (card.front || '(empty)')}</div>
+            </div>
+          </div>
+          <div style={{ textAlign: 'center', fontSize: '.72em', color: '#94a3b8', paddingBottom: 10, fontStyle: 'italic' }}>Click card to flip</div>
+        </div>
+      );
+    }
+
+    case 'table': {
+      const headers = block.headers || [];
+      const rows = block.rows || [];
+      if (!headers.length) return <div style={{ color: '#94a3b8', fontStyle: 'italic', fontSize: 12 }}>No columns defined.</div>;
+      return (
+        <div style={{ overflowX: 'auto', border: '1px solid #e2e8f0', borderRadius: 8 }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.9em' }}>
+            {block.caption && <caption style={{ captionSide: 'bottom', fontSize: '.78em', color: '#64748b', fontStyle: 'italic', padding: 8, textAlign: 'center' }}>{block.caption}</caption>}
+            <thead>
+              <tr>{headers.map((h, i) => <th key={i} style={{ background: '#f8fafc', fontWeight: 700, padding: '9px 13px', borderBottom: '2px solid #e2e8f0', textAlign: 'left', whiteSpace: 'nowrap' }}>{h || `Col ${i + 1}`}</th>)}</tr>
+            </thead>
+            {rows.length > 0 && (
+              <tbody>
+                {rows.map((row, ri) => (
+                  <tr key={ri}>
+                    {headers.map((_, ci) => <td key={ci} style={{ padding: '8px 13px', borderBottom: ri < rows.length - 1 ? '1px solid #e2e8f0' : 'none' }}>{(row || [])[ci] || ''}</td>)}
+                  </tr>
+                ))}
+              </tbody>
+            )}
+          </table>
+        </div>
+      );
+    }
+
+    case 'accordion': {
+      const items = block.items || [];
+      const [openIdx, setOpenIdx] = useState(0);
+      if (!items.length) return <div style={{ color: '#94a3b8', fontStyle: 'italic', fontSize: 12 }}>No items yet.</div>;
+      return (
+        <div style={{ border: '1px solid #e2e8f0', borderRadius: 8, overflow: 'hidden' }}>
+          {items.map((item, i) => (
+            <div key={item.id || i} style={{ borderBottom: i < items.length - 1 ? '1px solid #e2e8f0' : 'none' }}>
+              <button
+                onClick={() => setOpenIdx(openIdx === i ? -1 : i)}
+                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: openIdx === i ? '#fff' : '#f8fafc', border: 'none', cursor: 'pointer', fontSize: '.93em', fontWeight: 600, color: openIdx === i ? '#6c63ff' : '#0f172a', textAlign: 'left', transition: 'background .15s,color .15s' }}
+              >
+                <span>{item.title || '(no title)'}</span>
+                <span style={{ fontSize: '.7em', color: '#94a3b8', marginLeft: 8, transition: 'transform .2s', transform: openIdx === i ? 'rotate(180deg)' : 'none' }}>▼</span>
+              </button>
+              {openIdx === i && (
+                <div style={{ padding: '4px 16px 16px', borderTop: '1px solid #e2e8f0' }}>
+                  <div className="prose" style={{ fontSize: '.92em' }} dangerouslySetInnerHTML={{ __html: md(item.content || '') }} />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    case 'embed': {
+      const hasUrl = (block.src || '').trim().length > 0;
+      return (
+        <figure style={{ margin: 0 }}>
+          {hasUrl ? (
+            <iframe
+              src={block.src}
+              height={block.height || 400}
+              style={{ display: 'block', width: '100%', border: '1px solid #e2e8f0', borderRadius: 8 }}
+              title={block.caption || 'Embedded content'}
+              loading="lazy"
+            />
+          ) : (
+            <div style={{ background: '#f1f5f9', borderRadius: 8, height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontSize: 12 }}>No URL set</div>
           )}
           {block.caption && <figcaption style={{ marginTop: 8, fontSize: '13px', color: '#64748b', fontStyle: 'italic', textAlign: 'center' }}>{block.caption}</figcaption>}
         </figure>
