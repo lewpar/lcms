@@ -51,6 +51,7 @@ export default function HomeEditor({ settings, onSave, addToast, siteId, siteSlu
   const [saveStatus, setSaveStatus] = useState('saved');
   const [previewKey, setPreviewKey] = useState(0);
   const [showAddBlock, setShowAddBlock] = useState(false);
+  const [metaOpen, setMetaOpen] = useState(false);
   const [expandedBlockId, setExpandedBlockId] = useState(null);
   const [pendingRemoveId, setPendingRemoveId] = useState(null);
 
@@ -158,35 +159,41 @@ export default function HomeEditor({ settings, onSave, addToast, siteId, siteSlu
         </div>
 
         <div className="meta-card">
-          <div className="field">
-            <label>Hero title</label>
-            <input
-              type="text"
-              value={home.heroTitle || ''}
-              onChange={e => set('heroTitle', e.target.value)}
-              placeholder={settings.title || 'Site name'}
-            />
-            <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 3 }}>
-              Defaults to site name if left blank.
-            </span>
-          </div>
-          <div className="field">
-            <label>Hero subtitle</label>
-            <input
-              type="text"
-              value={home.heroSubtitle || ''}
-              onChange={e => set('heroSubtitle', e.target.value)}
-              placeholder="A short tagline or description"
-            />
-          </div>
-          <label className="theme-toggle-row" style={{ marginTop: 4 }}>
-            <input
-              type="checkbox"
-              checked={home.showPageGrid !== false}
-              onChange={e => set('showPageGrid', e.target.checked)}
-            />
-            <span>Show page grid below content</span>
-          </label>
+          <button className={`meta-card-toggle${metaOpen ? ' open' : ''}`} onClick={() => setMetaOpen(o => !o)}>
+            <span>Home Settings</span>
+            <span className="meta-card-toggle-icon">{metaOpen ? '▾' : '▸'}</span>
+          </button>
+          {metaOpen && <div className="meta-card-body"><>
+            <div className="field">
+              <label>Hero title</label>
+              <input
+                type="text"
+                value={home.heroTitle || ''}
+                onChange={e => set('heroTitle', e.target.value)}
+                placeholder={settings.title || 'Site name'}
+              />
+              <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 3 }}>
+                Defaults to site name if left blank.
+              </span>
+            </div>
+            <div className="field">
+              <label>Hero subtitle</label>
+              <input
+                type="text"
+                value={home.heroSubtitle || ''}
+                onChange={e => set('heroSubtitle', e.target.value)}
+                placeholder="A short tagline or description"
+              />
+            </div>
+            <label className="theme-toggle-row" style={{ marginTop: 4 }}>
+              <input
+                type="checkbox"
+                checked={home.showPageGrid !== false}
+                onChange={e => set('showPageGrid', e.target.checked)}
+              />
+              <span>Show page grid below content</span>
+            </label>
+          </></div>}
         </div>
 
         <div className="blocks-header">
