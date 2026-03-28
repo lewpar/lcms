@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { getNginxStatus, reloadNginx } from '../api.js';
 
 export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRename, cmsSettings = {}, onUpdateCmsSettings }) {
   const [search, setSearch] = useState('');
@@ -8,6 +9,11 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
   const [baseUrlInput, setBaseUrlInput] = useState('');
   const [outputPathInput, setOutputPathInput] = useState('');
   const [savingCms, setSavingCms] = useState(false);
+
+  // Nginx status
+  const [nginxStatus, setNginxStatus] = useState(null); // null | 'active' | 'inactive' | 'failed' | 'unknown'
+  const [nginxLoading, setNginxLoading] = useState(false);
+  const [nginxReloading, setNginxReloading] = useState(false);
 
   // New site dialog
   const [newDialog, setNewDialog] = useState(false);
@@ -32,10 +38,25 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
     if (gearView === 'delete') setTimeout(() => deleteInputRef.current?.focus(), 30);
   }, [gearView]);
 
+  const fetchNginxStatus = useCallback(async () => {
+    setNginxLoading(true);
+    try { const d = await getNginxStatus(); setNginxStatus(d.status); }
+    catch { setNginxStatus('unknown'); }
+    finally { setNginxLoading(false); }
+  }, []);
+
+  const handleNginxReload = async () => {
+    setNginxReloading(true);
+    try { await reloadNginx(); await fetchNginxStatus(); }
+    catch { setNginxStatus('unknown'); }
+    finally { setNginxReloading(false); }
+  };
+
   const openCmsSettings = () => {
     setBaseUrlInput(cmsSettings.baseUrl || '');
     setOutputPathInput(cmsSettings.outputPath || '');
     setShowCmsSettings(true);
+    fetchNginxStatus();
   };
 
   const saveCmsSettings = async () => {
@@ -223,6 +244,26 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
               <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>
                 Absolute path on disk where generated sites are written. Used in nginx config.
               </span>
+            </div>
+            <div className="cms-settings-nginx">
+              <div className="cms-settings-nginx-header">
+                <span className="cms-settings-nginx-label">Nginx</span>
+                <span className={`cms-settings-nginx-badge cms-settings-nginx-badge--${nginxStatus || 'unknown'}`}>
+                  {nginxLoading ? '…' : (nginxStatus || '—')}
+                </span>
+                <button
+                  className="btn btn-secondary btn-sm"
+                  onClick={fetchNginxStatus}
+                  disabled={nginxLoading}
+                  title="Refresh nginx status"
+                >↻</button>
+                <button
+                  className="btn btn-secondary btn-sm"
+                  onClick={handleNginxReload}
+                  disabled={nginxReloading || nginxLoading}
+                  title="Reload nginx"
+                >{nginxReloading ? 'Reloading…' : 'Reload'}</button>
+              </div>
             </div>
             <div className="site-dialog-actions">
               <button className="btn btn-secondary btn-sm" onClick={() => setShowCmsSettings(false)}>Cancel</button>

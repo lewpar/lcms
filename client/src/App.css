@@ -883,6 +883,37 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   margin-top: 2px;
 }
 
+/* ── Nginx status widget ──────────────────────────────────────────── */
+.cms-settings-nginx {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+}
+.cms-settings-nginx-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cms-settings-nginx-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  flex: 1;
+}
+.cms-settings-nginx-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.cms-settings-nginx-badge--active   { background: #1a3d2b; color: #4ade80; }
+.cms-settings-nginx-badge--inactive { background: #2d2d2d; color: var(--text-muted); }
+.cms-settings-nginx-badge--failed   { background: #3d1a1a; color: #f87171; }
+.cms-settings-nginx-badge--unknown  { background: #2d2d2d; color: var(--text-muted); }
+
 .site-project-actions {
   display: flex;
   align-items: center;

@@ -18,6 +18,23 @@ export async function updateCmsSettings(data) {
   return res.json();
 }
 
+// ── Nginx ─────────────────────────────────────────────────
+
+export async function getNginxStatus() {
+  const res = await fetch(`${BASE}/nginx/status`);
+  if (!res.ok) throw new Error('Failed to fetch nginx status');
+  return res.json();
+}
+
+export async function reloadNginx() {
+  const res = await fetch(`${BASE}/nginx/reload`, { method: 'POST' });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || 'Failed to reload nginx');
+  }
+  return res.json();
+}
+
 // ── Sites ────────────────────────────────────────────────
 
 export async function getSites() {
