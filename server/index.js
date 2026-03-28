@@ -23,4 +23,12 @@ app.use('/api/sites/:siteId/settings',         require('./routes/settings'));
 app.use('/api/sites/:siteId/assets',           require('./routes/assets'));
 app.use('/api/sites/:siteId/generate',         require('./routes/generate'));
 
+// Production: serve the built React client and fall back to index.html for SPA routing
+if (process.env.SERVE_CLIENT === '1') {
+  const path = require('path');
+  const clientDist = path.join(__dirname, '..', 'client', 'dist');
+  app.use(express.static(clientDist));
+  app.get('*', (req, res) => res.sendFile(path.join(clientDist, 'index.html')));
+}
+
 app.listen(PORT, () => console.log(`LCMS server running on http://localhost:${PORT}`));

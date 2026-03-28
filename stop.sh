@@ -7,11 +7,10 @@ if [ ! -f .lcms.pid ]; then
   exit 1
 fi
 
-read SERVER_PID CLIENT_PID < .lcms.pid
-
 kill_pid() {
   local pid=$1
   local name=$2
+  if [ -z "$pid" ]; then return; fi
   if kill -0 "$pid" 2>/dev/null; then
     kill "$pid" && echo "Stopped $name (PID $pid)"
   else
@@ -19,7 +18,9 @@ kill_pid() {
   fi
 }
 
-kill_pid "$SERVER_PID" "API server"
+read -r SERVER_PID CLIENT_PID < .lcms.pid
+
+kill_pid "$SERVER_PID" "Server"
 kill_pid "$CLIENT_PID" "Client"
 
 rm .lcms.pid
