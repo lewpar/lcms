@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const ICON_GROUPS = [
   { label: 'General',  icons: ['📄','📋','📝','✏️','📌','🔖','📎','🗂️','🗒️','📃'] },
@@ -10,6 +10,12 @@ const ICON_GROUPS = [
 ];
 
 export default function IconPickerDialog({ open, current, onSelect, onClose }) {
+  const [pending, setPending] = useState(current || '');
+
+  useEffect(() => {
+    if (open) setPending(current || '');
+  }, [open, current]);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };
@@ -19,11 +25,23 @@ export default function IconPickerDialog({ open, current, onSelect, onClose }) {
 
   if (!open) return null;
 
+  const handleApply = () => {
+    onSelect(pending);
+    onClose();
+  };
+
+  const handleClear = () => {
+    onSelect('');
+    onClose();
+  };
+
   return (
     <div className="ipd-backdrop" onClick={onClose}>
       <div className="ipd-dialog" onClick={e => e.stopPropagation()}>
         <div className="ipd-header">
-          <span className="ipd-title">Pick Icon</span>
+          <span className="ipd-title">
+            Pick Icon {pending ? <span style={{ marginLeft: 6 }}>{pending}</span> : ''}
+          </span>
           <button className="ipd-close btn btn-icon btn-sm" onClick={onClose}>✕</button>
         </div>
 
@@ -35,8 +53,8 @@ export default function IconPickerDialog({ open, current, onSelect, onClose }) {
                 {group.icons.map(icon => (
                   <button
                     key={icon}
-                    className={`ipd-icon-btn${current === icon ? ' selected' : ''}`}
-                    onClick={() => { onSelect(icon); onClose(); }}
+                    className={`ipd-icon-btn${pending === icon ? ' selected' : ''}`}
+                    onClick={() => setPending(icon)}
                     title={icon}
                   >
                     {icon}
@@ -49,11 +67,16 @@ export default function IconPickerDialog({ open, current, onSelect, onClose }) {
 
         <div className="ipd-footer">
           {current && (
-            <button className="btn btn-secondary btn-sm" onClick={() => { onSelect(''); onClose(); }}>
+            <button className="btn btn-secondary btn-sm" onClick={handleClear}>
               Clear Icon
             </button>
           )}
-          <button className="btn btn-secondary btn-sm" style={{ marginLeft: 'auto' }} onClick={onClose}>Cancel</button>
+          <div style={{ display: 'flex', gap: 8, marginLeft: 'auto' }}>
+            <button className="btn btn-secondary btn-sm" onClick={onClose}>Cancel</button>
+            <button className="btn btn-primary btn-sm" disabled={!pending} onClick={handleApply}>
+              Set Icon
+            </button>
+          </div>
         </div>
       </div>
     </div>
