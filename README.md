@@ -1,46 +1,53 @@
 # LCMS — Local Content Management System
 
-A locally-hosted CMS that exports static sites as vanilla HTML/CSS/JS.
+A locally-hosted CMS for building and exporting static learning sites as vanilla HTML/CSS/JS.
 
-## Quick start
+## Requirements
 
-```bash
-npm run install:all   # install all dependencies (first time only)
-npm run dev           # start CMS at http://localhost:5173
-```
+- Node.js 18+
 
-## Exporting
-
-Click **Export Static Site** in the sidebar, or run:
+## Getting started
 
 ```bash
-npm run generate
+# Install dependencies (first time only)
+npm install
+cd client && npm install && cd ..
 ```
 
-Output lands in `output/`. Deploy that directory to any static host (Netlify, Vercel, GitHub Pages, etc.).
+| Script | Description |
+|--------|-------------|
+| `./start.sh` | Start in development mode — API on `:3001`, CMS on `:5173` (Vite HMR) |
+| `./start-prod.sh` | Build the client then start a single production server on `:3001` |
+| `./stop.sh` | Stop whichever mode is running |
+
+## What it does
+
+The CMS lets you create multiple sites, each with a home page and any number of content pages. Pages are built from blocks using a split-pane editor with a live preview on the right. Saving a page automatically regenerates the preview.
+
+Sites are exported as fully self-contained static sites — no runtime dependencies, no server required.
 
 ## Block types
 
-| Block    | Description |
-|----------|-------------|
-| Markdown | Full GFM markdown with tables, lists, code fences |
-| Heading  | Standalone H1–H6 with optional anchor ID |
-| Alert    | Coloured banner — info / success / warning / error |
-| Callout  | Side-accented callout with icon and colour |
-| Quiz     | Interactive multiple-choice quiz (JS-powered in output) |
-| Code     | Code block with language label and optional caption |
-| Image    | Uploaded or URL-linked image with alt text and caption |
-| Divider  | Horizontal rule |
+| Block      | Description |
+|------------|-------------|
+| Markdown   | GFM markdown with tables, code fences, headings |
+| Heading    | Standalone H1–H6 with auto-generated anchor |
+| Callout    | Side-accented callout in blue, green, yellow, red, purple, or grey |
+| Quiz       | Interactive multiple-choice quiz with progress, feedback, and results |
+| Code       | Syntax-highlighted code block with language label and caption |
+| Image      | Uploaded or URL image with alt text and caption |
+| Video      | Embedded video (YouTube/Vimeo) |
+| Page Link  | Card linking to another page in the site |
+| Case Study | Structured case study with background and instructions |
+| Divider    | Horizontal rule |
 
 ## Project structure
 
 ```
 lcms/
-├── client/        React CMS app (Vite)
-├── server/        Express API
-├── generator/     Static site generator
-├── content/
-│   ├── pages/     Page JSON files (source of truth)
-│   └── assets/    Uploaded images
-└── output/        Generated static site (gitignore this)
+├── client/       React CMS (Vite)
+├── server/       Express API + static file serving
+├── generator/    Static site generator (Node, outputs HTML/CSS/JS)
+├── content/      Sites, pages, and uploaded assets (source of truth)
+└── output/       Generated static sites (gitignored)
 ```
