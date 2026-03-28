@@ -892,6 +892,9 @@ function indexTemplate({ pages, settings, navItems }) {
     ${customHeaderIdx}
     <header class="top-bar">
       <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <span>Home</span>
+      </nav>
     </header>
     <main class="page-main">
       <article class="page-article">
