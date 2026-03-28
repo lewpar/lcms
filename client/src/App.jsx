@@ -352,7 +352,7 @@ export default function App() {
       onDragOver={e => onPageDragOverPage(e, page.id)}
       onDrop={e => onPageDropOnPage(e, page.id)}
     >
-      <span className="page-list-item-icon">📄</span>
+      <span className="page-list-item-icon">{page.icon || '📄'}</span>
       <div style={{ flex: 1, overflow: 'hidden' }}>
         <div className="page-list-item-title">{page.title}</div>
         <div className="page-list-item-slug">/{page.slug}</div>

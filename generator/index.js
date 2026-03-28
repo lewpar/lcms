@@ -1313,6 +1313,7 @@ function generate() {
     title: p.title, slug: p.slug, description: p.description,
     section: resolveSectionName(p.section),
     inNav: p.inNav !== false,
+    icon: p.icon || '',
   }));
   const navItems = allSummaries.filter(p => p.inNav);
 

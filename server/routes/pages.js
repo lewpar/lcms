@@ -68,7 +68,7 @@ router.get('/', (req, res) => {
       .map(f => {
         try {
           const d = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8'));
-          return { id: d.id, title: d.title, slug: d.slug, section: d.section || '', updatedAt: d.updatedAt, order: d.order };
+          return { id: d.id, title: d.title, slug: d.slug, section: d.section || '', updatedAt: d.updatedAt, order: d.order, icon: d.icon || '' };
         } catch { return null; }
       })
       .filter(Boolean)
