@@ -749,7 +749,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .site-selector-search {
   flex: 1;
-  background: none;
+  background: transparent;
   border: none;
   color: var(--text);
   font-size: 13px;
