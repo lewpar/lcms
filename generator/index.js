@@ -7,10 +7,10 @@ const { marked } = require('marked');
 
 const mdRenderer = new marked.Renderer();
 const _origHeading = mdRenderer.heading.bind(mdRenderer);
-mdRenderer.heading = function({ text, depth }) {
+mdRenderer.heading = function(text, level) {
   const plain = String(text || '').replace(/<[^>]*>/g, '');
   const id = slugify(plain);
-  return `<h${depth}${id ? ` id="${id}"` : ''}>${text || ''}</h${depth}>\n`;
+  return `<h${level}${id ? ` id="${id}"` : ''}>${text || ''}</h${level}>\n`;
 };
 marked.setOptions({ gfm: true, breaks: true });
 
