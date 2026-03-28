@@ -7,7 +7,6 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
   // CMS-wide settings dialog
   const [showCmsSettings, setShowCmsSettings] = useState(false);
   const [baseUrlInput, setBaseUrlInput] = useState('');
-  const [outputPathInput, setOutputPathInput] = useState('');
   const [savingCms, setSavingCms] = useState(false);
 
   // Nginx status
@@ -54,14 +53,13 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
 
   const openCmsSettings = () => {
     setBaseUrlInput(cmsSettings.baseUrl || '');
-    setOutputPathInput(cmsSettings.outputPath || '');
     setShowCmsSettings(true);
     fetchNginxStatus();
   };
 
   const saveCmsSettings = async () => {
     setSavingCms(true);
-    try { await onUpdateCmsSettings({ baseUrl: baseUrlInput, outputPath: outputPathInput }); }
+    try { await onUpdateCmsSettings({ baseUrl: baseUrlInput }); }
     finally { setSavingCms(false); setShowCmsSettings(false); }
   };
 
@@ -229,20 +227,6 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
                 {baseUrlInput
                   ? <>Sites will be accessible at <strong>{baseUrlInput.replace(/\/+$/, '')}/&lt;site-slug&gt;</strong></>
                   : 'Set a base URL to track deployment links for each site.'}
-              </span>
-            </div>
-            <div className="field">
-              <label>Output folder</label>
-              <input
-                type="text"
-                className="site-dialog-input"
-                placeholder="Absolute path to the output folder"
-                value={outputPathInput}
-                onChange={e => setOutputPathInput(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter') saveCmsSettings(); if (e.key === 'Escape') setShowCmsSettings(false); }}
-              />
-              <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>
-                Absolute path on disk where generated sites are written. Used in nginx config.
               </span>
             </div>
             <div className="cms-settings-nginx">
