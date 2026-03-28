@@ -134,6 +134,7 @@ export default function HomeEditor({ settings, onSave, addToast, siteId, siteSlu
   const statusColor = { saved: 'var(--success)', saving: 'var(--text-muted)' };
 
   return (
+    <>
     <SplitPane
       storageKey="home-editor"
       defaultLeftPct={44}
@@ -243,5 +244,6 @@ export default function HomeEditor({ settings, onSave, addToast, siteId, siteSlu
         onConfirm={confirmRemoveBlock}
         onCancel={() => setPendingRemoveId(null)}
       />
+    </>
   );
 }
