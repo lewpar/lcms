@@ -7,6 +7,7 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
   const [editingName, setEditingName] = useState('');
   const [deleteDialog, setDeleteDialog] = useState(null); // { id, name }
   const [deleteInput, setDeleteInput] = useState('');
+  const [search, setSearch] = useState('');
   const renameRef = useRef(null);
   const deleteInputRef = useRef(null);
 
@@ -55,22 +56,69 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
     setEditingId(null);
   };
 
+  const q = search.trim().toLowerCase();
+  const filtered = q ? sites.filter(s => s.name.toLowerCase().includes(q) || s.slug.toLowerCase().includes(q)) : sites;
+
   return (
     <div className="site-selector">
       <div className="site-selector-header">
         <div className="site-selector-logo">LCMS</div>
         <h1 className="site-selector-title">Your Sites</h1>
-        <p className="site-selector-subtitle">Select a site to edit, or create a new one.</p>
       </div>
 
-      <div className="site-grid">
-        {sites.map(site => (
-          <div key={site.id} className="site-card">
-            <div className="site-card-body" onClick={() => editingId !== site.id && onOpen(site)}>
+      <div className="site-selector-toolbar">
+        <div className="site-selector-search-wrap">
+          <span className="site-selector-search-icon">⌕</span>
+          <input
+            className="site-selector-search"
+            type="text"
+            placeholder="Search sites…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+          {search && (
+            <button className="site-selector-search-clear" onClick={() => setSearch('')} aria-label="Clear search">✕</button>
+          )}
+        </div>
+
+        <form onSubmit={handleCreate} className="site-new-form">
+          <input
+            type="text"
+            className="site-new-input"
+            placeholder="New site name…"
+            value={newName}
+            onChange={e => setNewName(e.target.value)}
+          />
+          <button className="btn btn-primary btn-sm" type="submit" disabled={creating || !newName.trim()}>
+            {creating ? 'Creating…' : '+ New Site'}
+          </button>
+        </form>
+      </div>
+
+      {filtered.length === 0 && (
+        <div className="site-selector-empty">
+          {q ? `No sites match "${search}"` : 'No sites yet. Create one above.'}
+        </div>
+      )}
+
+      <div className="site-project-list">
+        {filtered.map(site => (
+          <div
+            key={site.id}
+            className="site-project-row"
+            onClick={() => editingId !== site.id && onOpen(site)}
+          >
+            <div className="site-project-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/>
+              </svg>
+            </div>
+
+            <div className="site-project-info">
               {editingId === site.id ? (
                 <input
                   ref={renameRef}
-                  className="site-card-rename-input"
+                  className="site-project-rename-input"
                   value={editingName}
                   onChange={e => setEditingName(e.target.value)}
                   onBlur={commitRename}
@@ -82,47 +130,32 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
                   autoFocus
                 />
               ) : (
-                <div
-                  className="site-card-name"
+                <span
+                  className="site-project-name"
                   onDoubleClick={e => { e.stopPropagation(); startRename(site); }}
                   title="Double-click to rename"
-                >
-                  {site.name}
-                </div>
+                >{site.name}</span>
               )}
-              <div className="site-card-slug">/{site.slug}</div>
+              <span className="site-project-slug">/{site.slug}</span>
             </div>
-            <div className="site-card-actions">
-              <button className="btn btn-primary btn-sm" onClick={() => onOpen(site)}>
-                Open →
-              </button>
+
+            <div className="site-project-actions" onClick={e => e.stopPropagation()}>
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={e => { e.stopPropagation(); startRename(site); }}
+                title="Rename"
+              >Rename</button>
               <button
                 className="btn btn-secondary btn-sm"
                 onClick={e => { e.stopPropagation(); openDeleteDialog(site); }}
                 title="Delete site"
-              >
-                Delete
+              >Delete</button>
+              <button className="btn btn-primary btn-sm" onClick={() => onOpen(site)}>
+                Open →
               </button>
             </div>
           </div>
         ))}
-
-        {/* New site card */}
-        <div className="site-card site-card--new">
-          <form onSubmit={handleCreate} className="site-new-form">
-            <div className="site-card-name" style={{ color: 'var(--text-muted)', marginBottom: 10 }}>New Site</div>
-            <input
-              type="text"
-              className="site-new-input"
-              placeholder="Site name…"
-              value={newName}
-              onChange={e => setNewName(e.target.value)}
-            />
-            <button className="btn btn-primary btn-sm" type="submit" disabled={creating || !newName.trim()}>
-              {creating ? 'Creating…' : '+ Create'}
-            </button>
-          </form>
-        </div>
       </div>
 
       {deleteDialog && (

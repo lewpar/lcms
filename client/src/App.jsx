@@ -352,6 +352,7 @@ export default function App() {
       onDragOver={e => onPageDragOverPage(e, page.id)}
       onDrop={e => onPageDropOnPage(e, page.id)}
     >
+      <span className="page-list-item-icon">📄</span>
       <div style={{ flex: 1, overflow: 'hidden' }}>
         <div className="page-list-item-title">{page.title}</div>
         <div className="page-list-item-slug">/{page.slug}</div>
@@ -411,8 +412,9 @@ export default function App() {
           className={`page-list-item home-page-item${view === 'home' ? ' active' : ''}`}
           onClick={() => setView('home')}
         >
+          <span className="page-list-item-icon">📄</span>
           <div style={{ flex: 1, overflow: 'hidden' }}>
-            <div className="page-list-item-title">🏠 Home</div>
+            <div className="page-list-item-title">Home</div>
             <div className="page-list-item-slug">/</div>
           </div>
         </div>

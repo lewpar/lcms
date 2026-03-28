@@ -150,6 +150,13 @@ body {
   padding-bottom: 2px;
 }
 
+.page-list-item-icon {
+  font-size: 13px;
+  flex-shrink: 0;
+  line-height: 1;
+  opacity: 0.6;
+}
+
 .page-list-item-title {
   flex: 1;
   font-size: 13px;
@@ -710,69 +717,161 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   margin-bottom: 6px;
 }
 
-.site-selector-subtitle {
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-.site-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
+.site-selector-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   width: 100%;
-  max-width: 900px;
+  max-width: 760px;
+  margin-bottom: 20px;
 }
 
-.site-card {
+.site-selector-search-wrap {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.site-selector-search-icon {
+  position: absolute;
+  left: 10px;
+  color: var(--text-muted);
+  font-size: 16px;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.site-selector-search {
+  width: 100%;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 13px;
+  padding: 7px 30px 7px 32px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.site-selector-search:focus { border-color: var(--accent); }
+.site-selector-search::placeholder { color: var(--text-muted); }
+
+.site-selector-search-clear {
+  position: absolute;
+  right: 6px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  line-height: 1;
+}
+.site-selector-search-clear:hover { color: var(--text); }
+
+.site-new-form {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.site-new-input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 13px;
+  padding: 7px 10px;
+  outline: none;
+  width: 160px;
+  transition: border-color 0.15s;
+}
+.site-new-input:focus { border-color: var(--accent); }
+.site-new-input::placeholder { color: var(--text-muted); }
+
+.site-selector-empty {
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 32px 0;
+}
+
+.site-project-list {
+  width: 100%;
+  max-width: 760px;
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.site-project-row {
+  display: flex;
+  align-items: center;
   gap: 14px;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  padding: 13px 18px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
   cursor: pointer;
+  transition: background 0.12s;
+}
+.site-project-row:last-child { border-bottom: none; }
+.site-project-row:hover { background: var(--surface2); }
+
+.site-project-icon {
+  flex-shrink: 0;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
 }
 
-.site-card:hover { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
-.site-card--new { cursor: default; border-style: dashed; }
-.site-card--new:hover { border-color: var(--accent); box-shadow: none; }
+.site-project-info {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
 
-.site-card-body { flex: 1; }
-
-.site-card-name {
-  font-size: 15px;
-  font-weight: 700;
+.site-project-name {
+  font-size: 14px;
+  font-weight: 600;
   color: var(--text);
-  margin-bottom: 4px;
-  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.site-card-slug {
+.site-project-slug {
   font-size: 11px;
   color: var(--text-muted);
   font-family: monospace;
+  flex-shrink: 0;
 }
 
-.site-card-rename-input {
-  width: 100%;
+.site-project-rename-input {
   background: var(--surface2);
   border: 1px solid var(--accent);
   border-radius: var(--radius-sm);
   color: var(--text);
   font-size: 14px;
-  font-weight: 700;
-  padding: 4px 8px;
+  font-weight: 600;
+  padding: 2px 8px;
   outline: none;
-  margin-bottom: 4px;
+  width: 200px;
 }
 
-.site-card-actions {
+.site-project-actions {
   display: flex;
   gap: 6px;
   align-items: center;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.15s;
 }
+.site-project-row:hover .site-project-actions { opacity: 1; }
 
 .site-delete-overlay {
   position: fixed;
