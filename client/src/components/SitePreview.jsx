@@ -25,6 +25,7 @@ export default function SitePreview({ siteId, siteSlug, addToast, pageSlug = '',
   const iframeRef      = useRef(null);
   const prevSignalRef  = useRef(null);   // track last seen refreshSignal
   const prevSiteIdRef  = useRef(null);   // detect site switches
+  const generateRef    = useRef(null);   // stable ref to avoid effect re-firing on generate identity change
 
   const iframeSrc = currentSlug ? `${base}/${currentSlug}/` : `${base}/`;
 
@@ -50,6 +51,8 @@ export default function SitePreview({ siteId, siteSlug, addToast, pageSlug = '',
       setGenerating(false);
     }
   }, [siteId, addToast]);
+
+  useEffect(() => { generateRef.current = generate; }, [generate]);
 
   // ── Effects ────────────────────────────────────────────
 
@@ -78,8 +81,9 @@ export default function SitePreview({ siteId, siteSlug, addToast, pageSlug = '',
     }
     if (refreshSignal === prevSignalRef.current) return;
     prevSignalRef.current = refreshSignal;
-    generate();
-  }, [refreshSignal, generate]);
+    generateRef.current();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshSignal]);
 
   // Navigate when pageSlug prop changes
   useEffect(() => {
