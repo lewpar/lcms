@@ -110,35 +110,41 @@ function QuizPreview({ block }) {
   const correctCount = answers.filter((a, i) => questions[i] && a === questions[i].correctIndex).length;
   const pct = n > 0 ? Math.round((correctCount / n) * 100) : 0;
 
+  const PRIMARY = '#6c63ff';
   const s = {
-    wrap: { border: '1px solid #e2e8f0', borderRadius: 10, overflow: 'hidden', background: '#fff' },
-    start: { padding: 28, background: 'linear-gradient(135deg, #f8fafc 0%, #f0f4ff 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, textAlign: 'center' },
-    badge: { background: '#6c63ff', color: '#fff', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '3px 12px', borderRadius: 20 },
-    title: { fontWeight: 800, fontSize: '1.2em', color: '#0f172a' },
-    muted: { color: '#64748b', fontSize: '0.87em' },
-    startBtn: { background: '#6c63ff', color: '#fff', border: 'none', padding: '11px 26px', borderRadius: 8, fontSize: '0.92em', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', marginTop: 4 },
-    qWrap: { padding: '18px 20px' },
-    progressWrap: { display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 },
-    progressBar: { flex: 1, height: 6, background: '#e2e8f0', borderRadius: 3, overflow: 'hidden' },
-    progressFill: { height: '100%', background: '#6c63ff', borderRadius: 3, transition: 'width 0.4s ease', width: `${progress}%` },
-    progressText: { fontSize: '0.78em', color: '#64748b', fontWeight: 700, whiteSpace: 'nowrap' },
-    qText: { fontSize: '1.02em', fontWeight: 700, marginBottom: 16, lineHeight: 1.45, color: '#0f172a' },
-    optionBase: { width: '100%', textAlign: 'left', background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 8, padding: '11px 14px', cursor: 'pointer', fontSize: '0.9em', color: '#374151', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8, transition: 'all 0.15s' },
-    optionSelected: { borderColor: '#6c63ff', background: '#f5f4ff' },
-    optionCorrect: { borderColor: '#86efac', background: '#f0fdf4', color: '#15803d' },
-    optionIncorrect: { borderColor: '#fca5a5', background: '#fef2f2', color: '#b91c1c' },
-    navBtn: { background: '#6c63ff', color: '#fff', border: 'none', padding: '10px 22px', borderRadius: 8, fontSize: '0.9em', fontWeight: 700, cursor: 'pointer', marginTop: 12, fontFamily: 'inherit' },
-    submitBtn: { background: selectedOption === -1 ? '#e2e8f0' : '#6c63ff', color: selectedOption === -1 ? '#94a3b8' : '#fff', border: 'none', padding: '10px 22px', borderRadius: 8, fontSize: '0.9em', fontWeight: 700, cursor: selectedOption === -1 ? 'not-allowed' : 'pointer', marginTop: 12, fontFamily: 'inherit' },
-    feedback: (ok) => ({ padding: '10px 14px', borderRadius: 8, fontWeight: 700, fontSize: '0.88em', marginTop: 12, background: ok ? '#f0fdf4' : '#fef2f2', color: ok ? '#16a34a' : '#dc2626', border: `1px solid ${ok ? '#86efac' : '#fca5a5'}` }),
-    explanation: { padding: '10px 14px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: '0.85em', color: '#64748b', marginTop: 8 },
-    results: { padding: 28, background: 'linear-gradient(135deg, #f8fafc 0%, #f0f4ff 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 },
-    ring: { width: 96, height: 96, borderRadius: '50%', border: '5px solid #6c63ff', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff' },
-    scoreNum: { fontSize: '1.5em', fontWeight: 800, color: '#6c63ff', lineHeight: 1 },
-    scoreLbl: { fontSize: '0.6em', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' },
-    scorePct: { fontSize: '1em', fontWeight: 700, color: '#1e293b' },
-    review: { width: '100%', display: 'flex', flexDirection: 'column', gap: 6 },
-    reviewItem: (ok) => ({ display: 'flex', gap: 8, fontSize: '0.83em', padding: '8px 12px', borderRadius: 8, background: ok ? '#f0fdf4' : '#fef2f2', color: ok ? '#15803d' : '#b91c1c', alignItems: 'flex-start' }),
-    retryBtn: { background: '#6c63ff', color: '#fff', border: 'none', padding: '10px 22px', borderRadius: 8, fontSize: '0.9em', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' },
+    wrap: { border: '1px solid #e2e8f0', borderRadius: 10, overflow: 'hidden', background: '#fff', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' },
+    header: { background: PRIMARY, padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
+    headerTitle: { fontSize: '0.88em', fontWeight: 700, color: '#fff', letterSpacing: '0.01em' },
+    headerBadge: { background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: '0.7em', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '3px 10px', borderRadius: 20 },
+    start: { padding: '32px 28px', background: '#fff', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, textAlign: 'center' },
+    title: { fontWeight: 800, fontSize: '1.25em', color: '#0f172a', lineHeight: 1.3 },
+    muted: { color: '#64748b', fontSize: '0.88em', lineHeight: 1.6 },
+    count: { color: '#64748b', fontSize: '0.82em', display: 'flex', alignItems: 'center', gap: 6 },
+    startBtn: { background: PRIMARY, color: '#fff', border: 'none', padding: '11px 28px', borderRadius: 8, fontSize: '0.92em', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', marginTop: 4, boxShadow: '0 2px 6px rgba(0,0,0,0.14)' },
+    qWrap: { padding: '22px 24px', background: '#fff' },
+    progressWrap: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20, paddingBottom: 18, borderBottom: '1px solid #f1f5f9' },
+    progressBar: { flex: 1, height: 8, background: '#e2e8f0', borderRadius: 4, overflow: 'hidden' },
+    progressFill: { height: '100%', background: PRIMARY, borderRadius: 4, transition: 'width 0.5s cubic-bezier(.4,0,.2,1)', width: `${progress}%` },
+    progressText: { fontSize: '0.8em', color: '#64748b', fontWeight: 700, whiteSpace: 'nowrap', minWidth: 48, textAlign: 'right' },
+    qText: { fontSize: '1.04em', fontWeight: 700, marginBottom: 16, lineHeight: 1.5, color: '#0f172a' },
+    optionBase: { width: '100%', textAlign: 'left', background: '#fff', border: '1.5px solid #e2e8f0', borderRadius: 8, padding: '12px 14px', cursor: 'pointer', fontSize: '0.92em', color: '#374151', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 14, marginBottom: 10, transition: 'all 0.15s' },
+    optionSelected: { borderColor: PRIMARY, background: '#f5f4ff', boxShadow: `0 0 0 3px rgba(108,99,255,0.1)` },
+    optionCorrect: { borderColor: '#22c55e', background: '#f0fdf4', color: '#15803d', fontWeight: 600 },
+    optionIncorrect: { borderColor: '#ef4444', background: '#fef2f2', color: '#b91c1c' },
+    submitBtn: { background: selectedOption === -1 ? '#e2e8f0' : PRIMARY, color: selectedOption === -1 ? '#94a3b8' : '#fff', border: 'none', padding: '11px 24px', borderRadius: 8, fontSize: '0.9em', fontWeight: 700, cursor: selectedOption === -1 ? 'not-allowed' : 'pointer', marginTop: 14, fontFamily: 'inherit', boxShadow: selectedOption === -1 ? 'none' : '0 2px 6px rgba(0,0,0,0.14)' },
+    navBtn: { background: PRIMARY, color: '#fff', border: 'none', padding: '11px 24px', borderRadius: 8, fontSize: '0.9em', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 2px 6px rgba(0,0,0,0.14)' },
+    outlineBtn: { background: 'transparent', color: PRIMARY, border: `1.5px solid ${PRIMARY}`, padding: '11px 24px', borderRadius: 8, fontSize: '0.9em', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' },
+    feedback: (ok) => ({ padding: '11px 14px', borderRadius: 8, fontWeight: 600, fontSize: '0.88em', marginTop: 14, lineHeight: 1.5, background: ok ? '#f0fdf4' : '#fef2f2', color: ok ? '#15803d' : '#dc2626', border: `1px solid ${ok ? '#bbf7d0' : '#fecaca'}` }),
+    explanation: { padding: '11px 14px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: '0.86em', color: '#64748b', marginTop: 10, lineHeight: 1.6 },
+    results: { padding: '36px 28px', background: '#fff', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 },
+    resultsTitle: { fontSize: '1.2em', fontWeight: 800, color: '#0f172a' },
+    ring: { width: 110, height: 110, borderRadius: '50%', border: `6px solid ${PRIMARY}`, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff', boxShadow: `0 0 0 10px rgba(108,99,255,0.1), 0 4px 16px rgba(0,0,0,0.1)` },
+    scoreNum: { fontSize: '1.6em', fontWeight: 800, color: PRIMARY, lineHeight: 1 },
+    scoreLbl: { fontSize: '0.6em', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', marginTop: 2 },
+    scorePct: { fontSize: '0.95em', fontWeight: 600, color: '#64748b' },
+    review: { width: '100%', display: 'flex', flexDirection: 'column', gap: 6, maxWidth: 480 },
+    reviewItem: (ok) => ({ display: 'flex', gap: 10, fontSize: '0.84em', padding: '9px 14px', borderRadius: 8, background: ok ? '#f0fdf4' : '#fef2f2', color: ok ? '#15803d' : '#b91c1c', alignItems: 'flex-start', lineHeight: 1.5, border: `1px solid ${ok ? '#bbf7d0' : '#fecaca'}` }),
+    retryBtn: { background: PRIMARY, color: '#fff', border: 'none', padding: '11px 24px', borderRadius: 8, fontSize: '0.9em', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 2px 6px rgba(0,0,0,0.14)' },
   };
 
   const letterStyle = (i, isAnswered) => {
@@ -146,12 +152,13 @@ function QuizPreview({ block }) {
     const isCorrect = isAnswered && i === questions[current]?.correctIndex;
     const isWrong = isAnswered && i === selected && i !== questions[current]?.correctIndex;
     return {
-      width: 26, height: 26, borderRadius: '50%', flexShrink: 0,
+      width: 30, height: 30, borderRadius: '50%', flexShrink: 0,
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
       fontSize: '0.72em', fontWeight: 800,
-      background: isSelected ? '#6c63ff' : isCorrect ? '#22c55e' : isWrong ? '#ef4444' : '#f1f5f9',
+      background: isSelected || isCorrect || isWrong ? (isCorrect ? '#22c55e' : isWrong ? '#ef4444' : PRIMARY) : '#f1f5f9',
       color: isSelected || isCorrect || isWrong ? '#fff' : '#94a3b8',
-      border: `1.5px solid ${isSelected ? '#6c63ff' : isCorrect ? '#22c55e' : isWrong ? '#ef4444' : '#e2e8f0'}`,
+      border: `1.5px solid ${isSelected ? PRIMARY : isCorrect ? '#22c55e' : isWrong ? '#ef4444' : '#e2e8f0'}`,
+      transition: 'all 0.15s',
     };
   };
 
@@ -160,11 +167,17 @@ function QuizPreview({ block }) {
   if (phase === 'start') {
     return (
       <div style={s.wrap}>
+        <div style={s.header}>
+          <span style={s.headerTitle}>{b.title || '(untitled quiz)'}</span>
+          <span style={s.headerBadge}>{n} question{n !== 1 ? 's' : ''}</span>
+        </div>
         <div style={s.start}>
-          <span style={s.badge}>Quiz</span>
           <div style={s.title}>{b.title || '(untitled quiz)'}</div>
           {b.description && <div style={s.muted}>{b.description}</div>}
-          <div style={s.muted}>{n} question{n !== 1 ? 's' : ''}</div>
+          <div style={s.count}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: PRIMARY, opacity: 0.6, display: 'inline-block' }} />
+            {n} question{n !== 1 ? 's' : ''}
+          </div>
           <button style={s.startBtn} onClick={startQuiz}>Start Quiz →</button>
         </div>
       </div>
@@ -174,13 +187,12 @@ function QuizPreview({ block }) {
   if (phase === 'results') {
     return (
       <div style={s.wrap}>
-        <div style={{ ...s.qWrap, paddingBottom: 0 }}>
-          <div style={s.progressWrap}>
-            <div style={s.progressBar}><div style={{ ...s.progressFill, width: '100%' }} /></div>
-            <span style={s.progressText}>{n} / {n}</span>
-          </div>
+        <div style={s.header}>
+          <span style={s.headerTitle}>{b.title || 'Quiz'}</span>
+          <span style={s.headerBadge}>Complete</span>
         </div>
         <div style={s.results}>
+          <div style={s.resultsTitle}>Quiz Complete</div>
           <div style={s.ring}>
             <div style={{ textAlign: 'center' }}>
               <div style={s.scoreNum}>{correctCount}/{n}</div>
@@ -213,6 +225,10 @@ function QuizPreview({ block }) {
 
   return (
     <div style={s.wrap}>
+      <div style={s.header}>
+        <span style={s.headerTitle}>{b.title || 'Quiz'}</span>
+        <span style={s.headerBadge}>{current + 1} / {n}</span>
+      </div>
       <div style={s.qWrap}>
         <div style={s.progressWrap}>
           <div style={s.progressBar}><div style={{ ...s.progressFill, width: `${progress}%` }} /></div>

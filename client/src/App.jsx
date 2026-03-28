@@ -5,6 +5,7 @@ import {
   getSiteSettings, updateSiteSettings, patchPage, reorderPages,
 } from './api.js';
 import PageEditor from './components/PageEditor.jsx';
+import HomeEditor from './components/HomeEditor.jsx';
 import SettingsView from './components/SettingsView.jsx';
 import ThemeView from './components/ThemeView.jsx';
 import SitePreview from './components/SitePreview.jsx';
@@ -397,6 +398,17 @@ export default function App() {
           {search && <button onClick={() => setSearch('')} className="sidebar-search-clear">✕</button>}
         </div>
 
+        {/* Home page entry */}
+        <div
+          className={`page-list-item home-page-item${view === 'home' ? ' active' : ''}`}
+          onClick={() => setView('home')}
+        >
+          <div style={{ flex: 1, overflow: 'hidden' }}>
+            <div className="page-list-item-title">🏠 Home</div>
+            <div className="page-list-item-slug">/</div>
+          </div>
+        </div>
+
         <div className="page-list">
           {filteredPages.length === 0 && (
             <p style={{ padding: '8px 4px', fontSize: '12px', color: 'var(--text-muted)' }}>
@@ -543,10 +555,20 @@ export default function App() {
             addToast={addToast}
             initialSlug={pages.find(p => p.id === selectedId)?.slug || ''}
           />
+        ) : view === 'home' ? (
+          <HomeEditor
+            settings={settings}
+            onSave={saveSettings}
+            addToast={addToast}
+            siteId={siteId}
+            siteSlug={selectedSite.slug}
+            pages={pages}
+          />
         ) : selectedId ? (
           <PageEditor
             key={selectedId}
             siteId={siteId}
+            siteSlug={selectedSite.slug}
             pageId={selectedId}
             onSaved={handlePageSaved}
             addToast={addToast}

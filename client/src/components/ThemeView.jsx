@@ -10,46 +10,16 @@ const PRESETS = [
     radius: 8, font: 'inter', fontSize: 16, contentWidth: 800,
   },
   {
-    name: 'Ocean',
-    primary: '#0ea5e9', sidebarBg: '#0c1a2e', contentBg: '#ffffff', textColor: '#0c1a2e',
-    darkPrimary: '#38bdf8', darkSidebarBg: '#061018', darkContentBg: '#0a1628', darkTextColor: '#e0f2fe',
-    radius: 8, font: 'inter', fontSize: 16, contentWidth: 800,
-  },
-  {
-    name: 'Forest',
-    primary: '#22c55e', sidebarBg: '#0f2617', contentBg: '#f7fdf8', textColor: '#0f2617',
-    darkPrimary: '#4ade80', darkSidebarBg: '#071610', darkContentBg: '#0d1f12', darkTextColor: '#dcfce7',
-    radius: 8, font: 'open-sans', fontSize: 16, contentWidth: 860,
-  },
-  {
-    name: 'Sunset',
-    primary: '#f97316', sidebarBg: '#1c100a', contentBg: '#fffaf7', textColor: '#1c0f0a',
-    darkPrimary: '#fb923c', darkSidebarBg: '#140c06', darkContentBg: '#1a0e06', darkTextColor: '#fed7aa',
-    radius: 8, font: 'lato', fontSize: 16, contentWidth: 800,
-  },
-  {
-    name: 'Rose',
-    primary: '#f43f5e', sidebarBg: '#1c0a0f', contentBg: '#fff7f9', textColor: '#1c0a0f',
-    darkPrimary: '#fb7185', darkSidebarBg: '#14060a', darkContentBg: '#1a0a0f', darkTextColor: '#fce7f3',
-    radius: 8, font: 'inter', fontSize: 15, contentWidth: 760,
-  },
-  {
-    name: 'Purple',
-    primary: '#a855f7', sidebarBg: '#160d25', contentBg: '#fdfaff', textColor: '#160d25',
-    darkPrimary: '#c084fc', darkSidebarBg: '#0e0818', darkContentBg: '#0f0a1e', darkTextColor: '#f3e8ff',
-    radius: 8, font: 'inter', fontSize: 16, contentWidth: 800,
-  },
-  {
     name: 'Sharp',
-    primary: '#334155', sidebarBg: '#0f172a', contentBg: '#ffffff', textColor: '#0f172a',
-    darkPrimary: '#64748b', darkSidebarBg: '#07090e', darkContentBg: '#0a0d12', darkTextColor: '#cbd5e1',
+    primary: '#0ea5e9', sidebarBg: '#0f172a', contentBg: '#ffffff', textColor: '#0f172a',
+    darkPrimary: '#38bdf8', darkSidebarBg: '#07090e', darkContentBg: '#0a0d12', darkTextColor: '#e0f2fe',
     radius: 0, font: 'source-sans', fontSize: 15, contentWidth: 900,
   },
   {
     name: 'Rounded',
-    primary: '#6c63ff', sidebarBg: '#1e293b', contentBg: '#ffffff', textColor: '#1e293b',
-    darkPrimary: '#7c74ff', darkSidebarBg: '#131925', darkContentBg: '#0f172a', darkTextColor: '#e2e8f0',
-    radius: 16, font: 'inter', fontSize: 16, contentWidth: 780,
+    primary: '#22c55e', sidebarBg: '#0f2617', contentBg: '#f7fdf8', textColor: '#0f2617',
+    darkPrimary: '#4ade80', darkSidebarBg: '#071610', darkContentBg: '#0d1f12', darkTextColor: '#dcfce7',
+    radius: 16, font: 'open-sans', fontSize: 16, contentWidth: 780,
   },
 ];
 
@@ -282,7 +252,7 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
         </div>
       </div>}
       right={<div className="theme-preview-pane">
-        <SitePreview key={previewKey} siteId={siteId} siteSlug={siteSlug} addToast={addToast} initialSlug="" />
+        <SitePreview refreshSignal={previewKey} siteId={siteId} siteSlug={siteSlug} addToast={addToast} />
       </div>}
     />
   );

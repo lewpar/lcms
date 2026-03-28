@@ -1,107 +1,193 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { getPages, generateSite } from '../api.js';
 
-export default function SitePreview({ siteId, siteSlug, addToast, initialSlug }) {
+/**
+ * Unified live site preview used across all CMS editors.
+ *
+ * Props:
+ *   siteId        — required
+ *   siteSlug      — required
+ *   addToast      — required
+ *   pageSlug      — navigate to this page on load/change (default: home)
+ *   refreshSignal — increment this number to trigger a regeneration
+ */
+export default function SitePreview({ siteId, siteSlug, addToast, pageSlug = '', refreshSignal = 0 }) {
   const base = `/site-preview/${siteSlug}`;
-  const [pages, setPages] = useState([]);
-  const [generating, setGenerating] = useState(true);
-  const [generated, setGenerated] = useState(false);
-  const [iframeKey, setIframeKey] = useState(0);
-  const [iframeSrc, setIframeSrc] = useState(initialSlug ? `${base}/${initialSlug}/` : `${base}/`);
-  const [themeMode, setThemeMode] = useState('light');
-  const iframeRef = useRef(null);
 
-  useEffect(() => {
-    getPages(siteId).then(setPages).catch(() => {});
-    handleGenerate();
-  }, [siteId]);
+  const [pages, setPages]               = useState([]);
+  const [generating, setGenerating]     = useState(false);
+  const [everGenerated, setEverGenerated] = useState(false);
+  const [failed, setFailed]             = useState(false);
+  const [iframeVersion, setIframeVersion] = useState(0);
+  const [currentSlug, setCurrentSlug]   = useState(pageSlug);
+  const [themeMode, setThemeMode]       = useState('light');
 
-  const applyThemeToIframe = (mode) => {
+  const iframeRef      = useRef(null);
+  const prevSignalRef  = useRef(null);   // track last seen refreshSignal
+  const prevSiteIdRef  = useRef(null);   // detect site switches
+
+  const iframeSrc = currentSlug ? `${base}/${currentSlug}/` : `${base}/`;
+
+  // ── Helpers ────────────────────────────────────────────
+
+  const applyTheme = useCallback((mode) => {
     try {
       iframeRef.current?.contentDocument?.documentElement?.setAttribute('data-theme', mode);
     } catch {}
-  };
+  }, []);
 
-  const handleGenerate = async () => {
+  const generate = useCallback(async () => {
     setGenerating(true);
+    setFailed(false);
     try {
       await generateSite(siteId);
-      setGenerated(true);
-      setIframeKey(k => k + 1);
-    } catch (err) {
-      addToast('Generation failed: ' + err.message, 'error');
+      setEverGenerated(true);
+      setIframeVersion(v => v + 1);
+    } catch {
+      setFailed(true);
+      addToast('Preview generation failed', 'error');
     } finally {
       setGenerating(false);
     }
-  };
+  }, [siteId, addToast]);
+
+  // ── Effects ────────────────────────────────────────────
+
+  // Load pages for toolbar nav
+  useEffect(() => {
+    getPages(siteId).then(setPages).catch(() => {});
+  }, [siteId]);
+
+  // Initial generation when site changes
+  useEffect(() => {
+    if (prevSiteIdRef.current === siteId) return;
+    prevSiteIdRef.current = siteId;
+    setEverGenerated(false);
+    setFailed(false);
+    setCurrentSlug(pageSlug);
+    prevSignalRef.current = refreshSignal; // sync signal so next effect doesn't double-fire
+    generate();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [siteId]);
+
+  // Regenerate when parent signals a save (skip initial render)
+  useEffect(() => {
+    if (prevSignalRef.current === null) {
+      prevSignalRef.current = refreshSignal;
+      return;
+    }
+    if (refreshSignal === prevSignalRef.current) return;
+    prevSignalRef.current = refreshSignal;
+    generate();
+  }, [refreshSignal, generate]);
+
+  // Navigate when pageSlug prop changes
+  useEffect(() => {
+    if (currentSlug === pageSlug) return;
+    setCurrentSlug(pageSlug);
+    setIframeVersion(v => v + 1);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageSlug]);
+
+  // ── Actions ────────────────────────────────────────────
 
   const navigate = (slug) => {
-    const src = slug ? `${base}/${slug}/` : `${base}/`;
-    setIframeSrc(src);
-    setIframeKey(k => k + 1);
+    setCurrentSlug(slug);
+    setIframeVersion(v => v + 1);
   };
 
   const toggleTheme = () => {
     const next = themeMode === 'light' ? 'dark' : 'light';
     setThemeMode(next);
-    applyThemeToIframe(next);
+    applyTheme(next);
   };
+
+  // ── Render ─────────────────────────────────────────────
 
   return (
     <div className="site-preview-view">
+
+      {/* Toolbar */}
       <div className="site-preview-toolbar">
-        <span className="site-preview-title">Preview — {siteSlug}</span>
         <div className="site-preview-nav">
-          <button className="site-preview-nav-btn" onClick={() => navigate('')}>Home</button>
+          <button
+            className={`site-preview-nav-btn${currentSlug === '' ? ' active' : ''}`}
+            onClick={() => navigate('')}
+          >Home</button>
           {pages.map(p => (
             <button
               key={p.id}
-              className="site-preview-nav-btn"
+              className={`site-preview-nav-btn${currentSlug === p.slug ? ' active' : ''}`}
               onClick={() => navigate(p.slug)}
               title={`/${p.slug}/`}
-            >
-              {p.title}
-            </button>
+            >{p.title}</button>
           ))}
         </div>
-        <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+
+        <div className="site-preview-toolbar-actions">
+          {generating && (
+            <span className="site-preview-gen-dot" title="Generating…" />
+          )}
           <button
-            className="site-preview-theme-btn"
+            className={`preview-theme-toggle${themeMode === 'dark' ? ' preview-theme-toggle--dark' : ''}`}
             onClick={toggleTheme}
             title={themeMode === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+            aria-label={themeMode === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
           >
-            {themeMode === 'light' ? '☽ Dark' : '☀ Light'}
+            <span className="preview-theme-toggle__icons">
+              <span className="preview-theme-toggle__sun">☀</span>
+              <span className="preview-theme-toggle__moon">☽</span>
+            </span>
+            <span className="preview-theme-toggle__thumb" />
           </button>
           <button
             className="btn btn-secondary btn-sm"
-            onClick={handleGenerate}
+            onClick={generate}
             disabled={generating}
           >
-            {generating ? '⟳ Generating…' : '↺ Regenerate'}
+            {generating ? 'Generating…' : '↺ Refresh'}
           </button>
         </div>
       </div>
 
-      {generating ? (
-        <div className="site-preview-loading">
-          <div className="site-preview-spinner">⟳</div>
-          <div>Generating site preview…</div>
-        </div>
-      ) : !generated ? (
-        <div className="site-preview-loading">
-          <div>Failed to generate. Check console for errors.</div>
-          <button className="btn btn-primary" onClick={handleGenerate}>Try Again</button>
-        </div>
-      ) : (
-        <iframe
-          key={iframeKey}
-          ref={iframeRef}
-          src={iframeSrc}
-          className="site-preview-iframe"
-          title="Site Preview"
-          onLoad={() => applyThemeToIframe(themeMode)}
-        />
-      )}
+      {/* Content */}
+      <div className="site-preview-content">
+        {/* Initial loading state (no site generated yet) */}
+        {!everGenerated && !failed && (
+          <div className="site-preview-loading">
+            <div className="site-preview-spinner">⟳</div>
+            <div>Generating preview…</div>
+          </div>
+        )}
+
+        {/* Failed state (first generation failed) */}
+        {!everGenerated && failed && (
+          <div className="site-preview-loading">
+            <div style={{ fontSize: 32 }}>⚠</div>
+            <div>Generation failed.</div>
+            <button className="btn btn-primary btn-sm" onClick={generate}>Try Again</button>
+          </div>
+        )}
+
+        {/* Iframe — stays visible during subsequent regenerations */}
+        {everGenerated && (
+          <iframe
+            key={`${iframeVersion}:${currentSlug}`}
+            ref={iframeRef}
+            src={iframeSrc}
+            className="site-preview-iframe"
+            title="Site Preview"
+            onLoad={() => applyTheme(themeMode)}
+          />
+        )}
+
+        {/* Subtle update overlay shown during background regeneration */}
+        {everGenerated && generating && (
+          <div className="site-preview-update-toast">
+            <span className="site-preview-update-spinner">⟳</span> Updating…
+          </div>
+        )}
+      </div>
     </div>
   );
 }

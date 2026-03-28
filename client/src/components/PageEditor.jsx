@@ -4,7 +4,7 @@ import SplitPane from './SplitPane.jsx';
 
 // Keep stable refs so the unmount cleanup can fire without stale closures
 import BlockEditor from './BlockEditor.jsx';
-import Preview from './Preview.jsx';
+import SitePreview from './SitePreview.jsx';
 import { v4 as uuidv4 } from '../uuid.js';
 
 const BLOCK_TYPES = [
@@ -51,11 +51,12 @@ const RESERVED_SLUGS = new Set([
   'register', 'dashboard', 'settings', 'profile', 'account',
 ]);
 
-export default function PageEditor({ siteId, pageId, onSaved, addToast, pages = [] }) {
+export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast, pages = [] }) {
   const [page, setPage] = useState(null);
   const [saveStatus, setSaveStatus] = useState('saved'); // 'saved' | 'unsaved' | 'saving'
   const [showAddBlock, setShowAddBlock] = useState(false);
   const [expandedBlockId, setExpandedBlockId] = useState(null);
+  const [previewKey, setPreviewKey] = useState(0);
 
   // Drag state
   const dragIndex = useRef(null);
@@ -82,6 +83,7 @@ export default function PageEditor({ siteId, pageId, onSaved, addToast, pages = 
     try {
       await updatePage(siteId, p.id, p);
       setSaveStatus('saved');
+      setPreviewKey(k => k + 1);
       onSaved(silent);
     } catch {
       setSaveStatus('unsaved');
@@ -176,8 +178,8 @@ export default function PageEditor({ siteId, pageId, onSaved, addToast, pages = 
 
   const handleDragEnd = () => { dragIndex.current = null; setDragOver(null); };
 
-  const statusLabel = { saved: '✓ Saved', unsaved: '● Unsaved', saving: '⟳ Saving…' };
-  const statusColor = { saved: 'var(--success)', unsaved: 'var(--warning)', saving: 'var(--text-muted)' };
+  const statusLabel = { saved: '✓ Saved', unsaved: '⟳ Saving…', saving: '⟳ Saving…' };
+  const statusColor = { saved: 'var(--success)', unsaved: 'var(--text-muted)', saving: 'var(--text-muted)' };
 
   return (
     <div className="editor">
@@ -241,6 +243,14 @@ export default function PageEditor({ siteId, pageId, onSaved, addToast, pages = 
                 placeholder="Short description for SEO"
               />
             </div>
+            <label className="theme-toggle-row" style={{ marginTop: 4 }}>
+              <input
+                type="checkbox"
+                checked={page.inNav !== false}
+                onChange={e => updateMeta('inNav', e.target.checked)}
+              />
+              <span>Include in site navigation</span>
+            </label>
           </div>
 
           {/* Blocks */}
@@ -298,7 +308,13 @@ export default function PageEditor({ siteId, pageId, onSaved, addToast, pages = 
           </div>
         </div>}
         right={<div className="editor-preview">
-          <Preview page={page} pages={pages} />
+          <SitePreview
+              refreshSignal={previewKey}
+              siteId={siteId}
+              siteSlug={siteSlug}
+              addToast={addToast}
+              pageSlug={page?.slug || ''}
+            />
         </div>}
       />
     </div>

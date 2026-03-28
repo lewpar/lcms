@@ -56,7 +56,7 @@ function clampString(val, max) {
 // Strip unknown keys and apply length limits to string fields
 function sanitiseSettings(raw) {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
-  const allowed = ['title', 'description', 'navPages', 'sections', 'theme', 'header', 'footer'];
+  const allowed = ['title', 'description', 'navPages', 'sections', 'theme', 'header', 'footer', 'home'];
   const out = {};
   for (const key of allowed) {
     if (!(key in raw)) continue;
@@ -71,7 +71,7 @@ function sanitiseSettings(raw) {
 
 function sanitisePage(raw) {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
-  const allowed = ['title', 'slug', 'description', 'blocks', 'section', 'order'];
+  const allowed = ['title', 'slug', 'description', 'blocks', 'section', 'order', 'inNav'];
   const out = {};
   for (const key of allowed) {
     if (!(key in raw)) continue;
@@ -79,6 +79,7 @@ function sanitisePage(raw) {
     else if (key === 'slug')        out.slug        = clampString(raw.slug, MAX_STR.slug) ?? '';
     else if (key === 'description') out.description = clampString(raw.description, MAX_STR.description) ?? '';
     else if (key === 'section')     out.section     = clampString(raw.section, MAX_STR.section) ?? '';
+    else if (key === 'inNav')       out.inNav       = raw.inNav !== false;
     else                            out[key]        = raw[key];
   }
   return out;
