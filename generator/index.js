@@ -889,11 +889,11 @@ function indexTemplate({ pages, settings, navItems }) {
   ${sidebarHtml(settings, navItems, null)}
   <div class="sidebar-overlay" id="overlay"></div>
   <div class="content-area">
+    ${customHeaderIdx}
     <header class="top-bar">
       <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
     </header>
     <main class="page-main">
-      ${customHeaderIdx}
       <article class="page-article">
         <div class="home-hero">
           <h1>${esc(heroTitle)}</h1>
