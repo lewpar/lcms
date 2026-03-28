@@ -1,0 +1,36 @@
+{
+  "title": "Demo Site",
+  "description": "This is a demo site for the LCMS generator.",
+  "navPages": [],
+  "sections": [
+    {
+      "id": "282ad6a6-e2e7-4a8a-b0ec-82dc2f8b35d0",
+      "name": "Blocks"
+    }
+  ],
+  "theme": {
+    "primary": "#6c63ff",
+    "sidebarBg": "#1e293b",
+    "contentBg": "#ffffff",
+    "textColor": "#1e293b",
+    "darkPrimary": "#7c74ff",
+    "darkSidebarBg": "#131925",
+    "darkContentBg": "#0f172a",
+    "darkTextColor": "#e2e8f0",
+    "radius": 8,
+    "font": "inter",
+    "fontSize": 16,
+    "contentWidth": 800,
+    "sidebarWidth": 240,
+    "showBreadcrumbs": true,
+    "showReadingTime": true
+  },
+  "header": "<div>Custom Header. You can modify this header using the site settings.</div>",
+  "footer": "<div>Generated using LCMS. You can modify this footer using the site settings.</div>",
+  "home": {
+    "heroTitle": "Demo Site",
+    "heroSubtitle": "This is a demo of the Learning Content Management System (LCMS) static site generator.",
+    "showPageGrid": false,
+    "blocks": []
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "9791e62b-c0bb-476e-b942-623dff54fe15",
+  "title": "Callouts",
+  "slug": "callouts",
+  "section": "282ad6a6-e2e7-4a8a-b0ec-82dc2f8b35d0",
+  "description": "",
+  "blocks": [
+    {
+      "id": "4f13bd4d-a4ad-4b66-a5a2-dce162ed3b00",
+      "type": "callout",
+      "title": "Info",
+      "content": "This callout could be used to add additional information.",
+      "color": "blue"
+    },
+    {
+      "id": "bbf486bb-665a-48d4-9b54-6245eaa0ae80",
+      "type": "callout",
+      "title": "Warn",
+      "content": "This callout could be used to add additional warning information.",
+      "color": "yellow"
+    },
+    {
+      "id": "cdb2acbe-47cf-4949-b020-992306040cf6",
+      "type": "callout",
+      "title": "Critical",
+      "content": "This callout could be used to add additional critical information.",
+      "color": "red"
+    }
+  ],
+  "createdAt": "2026-03-28T00:35:44.518Z",
+  "updatedAt": "2026-03-28T00:38:17.625Z"
+}

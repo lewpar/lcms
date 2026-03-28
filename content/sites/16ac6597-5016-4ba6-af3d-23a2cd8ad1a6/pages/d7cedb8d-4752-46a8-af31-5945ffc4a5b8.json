@@ -1,0 +1,43 @@
+{
+  "id": "d7cedb8d-4752-46a8-af31-5945ffc4a5b8",
+  "title": "Quiz",
+  "slug": "quiz",
+  "section": "282ad6a6-e2e7-4a8a-b0ec-82dc2f8b35d0",
+  "description": "",
+  "blocks": [
+    {
+      "id": "1bc843c8-44b0-4eb6-b149-788608efa714",
+      "type": "quiz",
+      "title": "Sample Quiz",
+      "description": "This is a sample quiz configurable through the block editor.",
+      "questions": [
+        {
+          "id": "be4933b5-e197-490a-8d67-d42191b2b9fe",
+          "question": "Which of the following is a fruit?",
+          "options": [
+            "Chair",
+            "Dog",
+            "Apple",
+            "Tree"
+          ],
+          "correctIndex": 2,
+          "explanation": "You can add an explanation here, shown after each answer."
+        },
+        {
+          "id": "454fc076-da76-42de-a92a-6bdfba39f3a8",
+          "question": "Which of the following does NOT have 4 legs?",
+          "options": [
+            "Dog",
+            "Chair",
+            "Human",
+            "Cat"
+          ],
+          "correctIndex": 2,
+          "explanation": "You can add an explanation here, shown after each answer."
+        }
+      ]
+    }
+  ],
+  "createdAt": "2026-03-28T00:38:26.912Z",
+  "updatedAt": "2026-03-28T00:58:53.902Z"
+}
