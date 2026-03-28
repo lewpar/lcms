@@ -483,6 +483,10 @@ img{max-width:100%;height:auto;display:block}
 .qs-review-item{display:flex;align-items:flex-start;gap:10px;font-size:.84em;padding:9px 14px;border-radius:var(--radius);line-height:1.5}
 .qs-review-item.correct{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}.qs-review-item.incorrect{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
 .qs-review-marker{font-weight:800;flex-shrink:0;margin-top:1px}
+.qs-review-body{display:flex;flex-direction:column;gap:2px}
+.qs-review-q{font-weight:600}
+.qs-review-answer{font-size:.9em;opacity:.85}
+.qs-review-correct{font-size:.9em;font-weight:700}
 [data-theme="dark"] .qs-option.qs-correct{background:rgba(34,197,94,.12);color:#86efac;border-color:#22c55e}
 [data-theme="dark"] .qs-option.qs-incorrect{background:rgba(239,68,68,.12);color:#fca5a5;border-color:#ef4444}
 [data-theme="dark"] .qs-feedback.qs-correct{background:rgba(34,197,94,.12);color:#86efac;border-color:rgba(34,197,94,.3)}
@@ -609,8 +613,15 @@ const QUIZ_JS = `
       var review=el.querySelector('.qs-review');review.innerHTML='';
       questions.forEach(function(q,i){
         var isOk=answers[i]===q.correctIndex;
+        var givenIdx=answers[i];
+        var givenText=givenIdx>=0&&q.options[givenIdx]?q.options[givenIdx]:'No answer';
+        var correctText=q.options[q.correctIndex]||'';
+        var qText=q.question.length>72?q.question.slice(0,72)+'…':q.question;
+        var detail=isOk
+          ? '<span class="qs-review-answer">Your answer: '+givenText+'</span>'
+          : '<span class="qs-review-answer">Your answer: '+givenText+'</span><span class="qs-review-correct">Correct: '+correctText+'</span>';
         var div=document.createElement('div');div.className='qs-review-item '+(isOk?'correct':'incorrect');
-        div.innerHTML='<span class="qs-review-marker">'+(isOk?'✓':'✗')+'</span><span>'+(q.question.length>72?q.question.slice(0,72)+'…':q.question)+'</span>';
+        div.innerHTML='<span class="qs-review-marker">'+(isOk?'✓':'✗')+'</span><span class="qs-review-body"><span class="qs-review-q">'+qText+'</span>'+detail+'</span>';
         review.appendChild(div);
       });
       saveState('results');
@@ -789,6 +800,7 @@ ${showDarkMode ? `<script>${DARK_MODE_JS}</script>` : ''}
   ${sidebarHtml(settings, navItems, slug, toc)}
   <div class="sidebar-overlay" id="overlay"></div>
   <div class="content-area">
+    ${customHeader}
     <header class="top-bar">
       <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
       ${showBreadcrumbs ? `<nav class="breadcrumb" aria-label="Breadcrumb">
@@ -799,7 +811,6 @@ ${showDarkMode ? `<script>${DARK_MODE_JS}</script>` : ''}
       </nav>` : ''}
     </header>
     <main class="page-main">
-      ${customHeader}
       <article class="page-article">
         <div class="page-header">
           <h1 class="page-title">${esc(title)}</h1>
