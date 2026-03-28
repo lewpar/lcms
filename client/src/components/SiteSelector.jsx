@@ -75,7 +75,9 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
 
       <div className="site-selector-toolbar">
         <div className="site-selector-search-wrap">
-          <span className="site-selector-search-icon">⌕</span>
+          <svg className="site-selector-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
           <input
             className="site-selector-search"
             type="text"
