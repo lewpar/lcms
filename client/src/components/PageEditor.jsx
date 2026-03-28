@@ -5,6 +5,7 @@ import SplitPane from './SplitPane.jsx';
 // Keep stable refs so the unmount cleanup can fire without stale closures
 import BlockEditor from './BlockEditor.jsx';
 import SitePreview from './SitePreview.jsx';
+import ConfirmDialog from './ConfirmDialog.jsx';
 import { v4 as uuidv4 } from '../uuid.js';
 
 const BLOCK_TYPES = [
@@ -57,6 +58,7 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
   const [showAddBlock, setShowAddBlock] = useState(false);
   const [expandedBlockId, setExpandedBlockId] = useState(null);
   const [previewKey, setPreviewKey] = useState(0);
+  const [pendingRemoveId, setPendingRemoveId] = useState(null);
 
   // Drag state
   const dragIndex = useRef(null);
@@ -140,6 +142,11 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
   const removeBlock = (id) => {
     setPage(p => ({ ...p, blocks: p.blocks.filter(b => b.id !== id) }));
     if (expandedBlockId === id) setExpandedBlockId(null);
+  };
+
+  const confirmRemoveBlock = () => {
+    removeBlock(pendingRemoveId);
+    setPendingRemoveId(null);
   };
 
   const addBlock = (type) => {
@@ -268,7 +275,7 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
                 expanded={expandedBlockId === block.id}
                 onToggle={() => setExpandedBlockId(expandedBlockId === block.id ? null : block.id)}
                 onChange={changes => updateBlock(block.id, changes)}
-                onRemove={() => removeBlock(block.id)}
+                onRemove={() => setPendingRemoveId(block.id)}
                 addToast={addToast}
                 pages={pages}
                 siteId={siteId}
@@ -316,6 +323,15 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
               pageSlug={page?.slug || ''}
             />
         </div>}
+      />
+
+      <ConfirmDialog
+        open={!!pendingRemoveId}
+        title="Delete block?"
+        message="This block will be permanently removed from the page."
+        confirmLabel="Delete"
+        onConfirm={confirmRemoveBlock}
+        onCancel={() => setPendingRemoveId(null)}
       />
     </div>
   );

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import BlockEditor from './BlockEditor.jsx';
 import SplitPane from './SplitPane.jsx';
 import SitePreview from './SitePreview.jsx';
+import ConfirmDialog from './ConfirmDialog.jsx';
 import { v4 as uuidv4 } from '../uuid.js';
 
 const BLOCK_TYPES = [
@@ -40,6 +41,7 @@ export default function HomeEditor({ settings, onSave, addToast, siteId, siteSlu
   const [previewKey, setPreviewKey] = useState(0);
   const [showAddBlock, setShowAddBlock] = useState(false);
   const [expandedBlockId, setExpandedBlockId] = useState(null);
+  const [pendingRemoveId, setPendingRemoveId] = useState(null);
 
   const dragIndex = useRef(null);
   const [dragOver, setDragOver] = useState(null);
@@ -89,6 +91,11 @@ export default function HomeEditor({ settings, onSave, addToast, siteId, siteSlu
   const removeBlock = (id) => {
     setHome(h => ({ ...h, blocks: h.blocks.filter(b => b.id !== id) }));
     if (expandedBlockId === id) setExpandedBlockId(null);
+  };
+
+  const confirmRemoveBlock = () => {
+    removeBlock(pendingRemoveId);
+    setPendingRemoveId(null);
   };
 
   const addBlock = (type) => {
@@ -184,7 +191,7 @@ export default function HomeEditor({ settings, onSave, addToast, siteId, siteSlu
               expanded={expandedBlockId === block.id}
               onToggle={() => setExpandedBlockId(expandedBlockId === block.id ? null : block.id)}
               onChange={changes => updateBlock(block.id, changes)}
-              onRemove={() => removeBlock(block.id)}
+              onRemove={() => setPendingRemoveId(block.id)}
               addToast={addToast}
               pages={pages}
               siteId={siteId}
@@ -227,5 +234,14 @@ export default function HomeEditor({ settings, onSave, addToast, siteId, siteSlu
         <SitePreview refreshSignal={previewKey} siteId={siteId} siteSlug={siteSlug} addToast={addToast} />
       </div>}
     />
+
+      <ConfirmDialog
+        open={!!pendingRemoveId}
+        title="Delete block?"
+        message="This block will be permanently removed from the page."
+        confirmLabel="Delete"
+        onConfirm={confirmRemoveBlock}
+        onCancel={() => setPendingRemoveId(null)}
+      />
   );
 }
