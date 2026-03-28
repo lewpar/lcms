@@ -8,7 +8,11 @@ const { readSites, writeSites, siteDir, settingsFile, ensureDirs, slugify, OUTPU
 const { requireValidSiteId, safeError, MAX_STR } = require('../lib/validate');
 
 router.get('/', (req, res) => {
-  res.json(readSites());
+  const sites = readSites().map(s => ({
+    ...s,
+    deployed: fs.existsSync(path.join(OUTPUT_DIR, s.slug, 'index.html')),
+  }));
+  res.json(sites);
 });
 
 router.post('/', (req, res) => {

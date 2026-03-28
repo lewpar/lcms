@@ -3,6 +3,7 @@ import {
   getSites, createSite, deleteSite, renameSite,
   getPages, createPage, deletePage, duplicatePage, generateSite,
   getSiteSettings, updateSiteSettings, patchPage, reorderPages,
+  getCmsSettings, updateCmsSettings,
 } from './api.js';
 import PageEditor from './components/PageEditor.jsx';
 import HomeEditor from './components/HomeEditor.jsx';
@@ -31,6 +32,7 @@ const DEFAULT_SETTINGS = { title: 'My Site', navPages: [], sections: [], theme: 
 
 export default function App() {
   const [sites, setSites] = useState([]);
+  const [cmsSettings, setCmsSettings] = useState({ baseUrl: '' });
   const [selectedSite, setSelectedSite] = useState(null);
 
   const [pages, setPages] = useState([]);
@@ -60,8 +62,13 @@ export default function App() {
 
   // ── Site selection ───────────────────────────────────────
 
-  useEffect(() => {
+  const loadSites = useCallback(() => {
     getSites().then(setSites).catch(() => addToast('Failed to load sites', 'error'));
+  }, [addToast]);
+
+  useEffect(() => {
+    loadSites();
+    getCmsSettings().then(setCmsSettings).catch(() => {});
   }, []);
 
   const openSite = (site) => {
@@ -225,6 +232,7 @@ export default function App() {
     try {
       const result = await generateSite(siteId);
       addToast(result.message || 'Site deployed!', 'success');
+      loadSites();
     } catch (err) {
       addToast(err.message, 'error');
     } finally { setGenerating(false); }
@@ -317,6 +325,11 @@ export default function App() {
           onOpen={openSite}
           onDelete={handleDeleteSite}
           onRename={handleRenameSite}
+          cmsSettings={cmsSettings}
+          onUpdateCmsSettings={async (data) => {
+            const updated = await updateCmsSettings(data);
+            setCmsSettings(updated);
+          }}
         />
         <Toast toasts={toasts} />
       </>
@@ -387,6 +400,18 @@ export default function App() {
             <div style={{ flex: 1, minWidth: 0 }}>
               <h1 style={{ fontSize: 14, lineHeight: 1.2 }}>{selectedSite.name}</h1>
               <p style={{ fontSize: 10 }}>/{selectedSite.slug}</p>
+              {cmsSettings.baseUrl && (
+                selectedSite.deployed
+                  ? <a
+                      href={`${cmsSettings.baseUrl}/${selectedSite.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="site-deployed-url"
+                    >
+                      {cmsSettings.baseUrl}/{selectedSite.slug}
+                    </a>
+                  : <span className="site-not-deployed">Not deployed yet</span>
+              )}
             </div>
             <button
               className={`btn btn-secondary btn-sm btn-icon${view === 'settings' ? ' active-view' : ''}`}

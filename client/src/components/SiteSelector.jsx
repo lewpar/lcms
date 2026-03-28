@@ -1,7 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 
-export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRename }) {
+export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRename, cmsSettings = {}, onUpdateCmsSettings }) {
   const [search, setSearch] = useState('');
+
+  // CMS-wide settings dialog
+  const [showCmsSettings, setShowCmsSettings] = useState(false);
+  const [baseUrlInput, setBaseUrlInput] = useState('');
+  const [savingCms, setSavingCms] = useState(false);
 
   // New site dialog
   const [newDialog, setNewDialog] = useState(false);
@@ -25,6 +30,17 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
     if (gearView === 'rename') setTimeout(() => renameRef.current?.select(), 30);
     if (gearView === 'delete') setTimeout(() => deleteInputRef.current?.focus(), 30);
   }, [gearView]);
+
+  const openCmsSettings = () => {
+    setBaseUrlInput(cmsSettings.baseUrl || '');
+    setShowCmsSettings(true);
+  };
+
+  const saveCmsSettings = async () => {
+    setSavingCms(true);
+    try { await onUpdateCmsSettings({ baseUrl: baseUrlInput }); }
+    finally { setSavingCms(false); setShowCmsSettings(false); }
+  };
 
   const openGear = (e, site) => {
     e.stopPropagation();
@@ -92,6 +108,11 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
         <button className="btn btn-primary btn-sm site-selector-new-btn" onClick={() => { setNewName(''); setNewDialog(true); }}>
           + New
         </button>
+        <button className="btn btn-secondary btn-sm btn-icon" onClick={openCmsSettings} title="CMS settings">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
       </div>
 
       {filtered.length === 0 && (
@@ -111,6 +132,19 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
             <div className="site-project-info">
               <span className="site-project-name">{site.name}</span>
               <span className="site-project-slug">/{site.slug}</span>
+              {cmsSettings.baseUrl && (
+                site.deployed
+                  ? <a
+                      href={`${cmsSettings.baseUrl}/${site.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="site-project-url"
+                      onClick={e => e.stopPropagation()}
+                    >
+                      {cmsSettings.baseUrl}/{site.slug}
+                    </a>
+                  : <span className="site-project-url site-project-url--undeployed">Not deployed yet</span>
+              )}
             </div>
             <div className="site-project-actions" onClick={e => e.stopPropagation()}>
               <button className="site-gear-btn" onClick={e => openGear(e, site)} title="Site settings">
@@ -148,6 +182,38 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* CMS-wide settings dialog */}
+      {showCmsSettings && (
+        <div className="site-dialog-backdrop" onClick={() => setShowCmsSettings(false)}>
+          <div className="site-dialog" onClick={e => e.stopPropagation()}>
+            <h3 className="site-dialog-title">CMS Settings</h3>
+            <div className="field">
+              <label>Base URL</label>
+              <input
+                type="text"
+                className="site-dialog-input"
+                placeholder="https://example.com"
+                value={baseUrlInput}
+                onChange={e => setBaseUrlInput(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') saveCmsSettings(); if (e.key === 'Escape') setShowCmsSettings(false); }}
+                autoFocus
+              />
+              <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>
+                {baseUrlInput
+                  ? <>Sites will be accessible at <strong>{baseUrlInput.replace(/\/+$/, '')}/&lt;site-slug&gt;</strong></>
+                  : 'Set a base URL to track deployment links for each site.'}
+              </span>
+            </div>
+            <div className="site-dialog-actions">
+              <button className="btn btn-secondary btn-sm" onClick={() => setShowCmsSettings(false)}>Cancel</button>
+              <button className="btn btn-primary btn-sm" onClick={saveCmsSettings} disabled={savingCms}>
+                {savingCms ? 'Saving…' : 'Save'}
+              </button>
+            </div>
           </div>
         </div>
       )}

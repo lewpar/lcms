@@ -854,6 +854,34 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   font-family: monospace;
   flex-shrink: 0;
 }
+.site-project-url {
+  font-size: 10px;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.site-project-url:hover { text-decoration: underline; }
+.site-project-url--undeployed { color: var(--text-muted); font-style: italic; }
+.site-deployed-url {
+  display: block;
+  font-size: 10px;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+.site-deployed-url:hover { text-decoration: underline; }
+.site-not-deployed {
+  display: block;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 2px;
+}
 
 .site-project-actions {
   display: flex;

@@ -1,5 +1,23 @@
 const BASE = '/api';
 
+// ── CMS Settings ─────────────────────────────────────────
+
+export async function getCmsSettings() {
+  const res = await fetch(`${BASE}/cms-settings`);
+  if (!res.ok) throw new Error('Failed to fetch CMS settings');
+  return res.json();
+}
+
+export async function updateCmsSettings(data) {
+  const res = await fetch(`${BASE}/cms-settings`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Failed to update CMS settings');
+  return res.json();
+}
+
 // ── Sites ────────────────────────────────────────────────
 
 export async function getSites() {

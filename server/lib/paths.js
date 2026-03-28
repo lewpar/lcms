@@ -3,11 +3,12 @@
 const fs   = require('fs');
 const path = require('path');
 
-const ROOT        = path.join(__dirname, '..', '..');
-const CONTENT_DIR = path.join(ROOT, 'content');
-const SITES_DIR   = path.join(CONTENT_DIR, 'sites');
-const SITES_INDEX = path.join(CONTENT_DIR, 'sites.json');
-const OUTPUT_DIR  = path.join(ROOT, 'output');
+const ROOT             = path.join(__dirname, '..', '..');
+const CONTENT_DIR      = path.join(ROOT, 'content');
+const SITES_DIR        = path.join(CONTENT_DIR, 'sites');
+const SITES_INDEX      = path.join(CONTENT_DIR, 'sites.json');
+const OUTPUT_DIR       = path.join(ROOT, 'output');
+const CMS_SETTINGS_FILE = path.join(CONTENT_DIR, 'cms-settings.json');
 
 for (const dir of [CONTENT_DIR, SITES_DIR, OUTPUT_DIR]) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
@@ -42,7 +43,7 @@ const RESERVED_SLUGS = new Set([
 function isReservedSlug(slug) { return RESERVED_SLUGS.has(slug); }
 
 module.exports = {
-  ROOT, CONTENT_DIR, SITES_DIR, SITES_INDEX, OUTPUT_DIR,
+  ROOT, CONTENT_DIR, SITES_DIR, SITES_INDEX, OUTPUT_DIR, CMS_SETTINGS_FILE,
   readSites, writeSites,
   siteDir, pagesDir, assetsDir, settingsFile, ensureDirs,
   slugify, RESERVED_SLUGS, isReservedSlug,

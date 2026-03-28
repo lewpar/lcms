@@ -17,6 +17,7 @@ app.use('/assets/:siteId', (req, res, next) => {
 });
 
 // API routes
+app.use('/api/cms-settings',                   require('./routes/cms-settings'));
 app.use('/api/sites',                          require('./routes/sites'));
 app.use('/api/sites/:siteId/pages',            require('./routes/pages'));
 app.use('/api/sites/:siteId/settings',         require('./routes/settings'));
