@@ -2,3 +2,4 @@ node_modules/
 output/
 client/dist/
 .lcms.pid
+logs/

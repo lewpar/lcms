@@ -24,4 +24,5 @@ kill_pid "$SERVER_PID" "Server"
 kill_pid "$CLIENT_PID" "Client"
 
 rm .lcms.pid
+stty sane
 echo "Done."
