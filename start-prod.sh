@@ -8,6 +8,14 @@ if [ -f .lcms.pid ]; then
   exit 1
 fi
 
+read -rp "Port to bind to [3001]: " INPUT_PORT
+PORT=${INPUT_PORT:-3001}
+
+if ! [[ "$PORT" =~ ^[0-9]+$ ]] || [ "$PORT" -lt 1 ] || [ "$PORT" -gt 65535 ]; then
+  echo "Invalid port: $PORT"
+  exit 1
+fi
+
 echo "Building client..."
 cd client
 npx vite build
@@ -15,10 +23,10 @@ cd ..
 
 echo "Starting LCMS (production)..."
 
-SERVE_CLIENT=1 node server/index.js &
+SERVE_CLIENT=1 PORT=$PORT node server/index.js &
 SERVER_PID=$!
 
 echo "$SERVER_PID" > .lcms.pid
 
-echo "Server running (PID $SERVER_PID) on http://localhost:3001"
+echo "Server running (PID $SERVER_PID) on http://localhost:$PORT"
 echo "Run ./stop.sh to stop."

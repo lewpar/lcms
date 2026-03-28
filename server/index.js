@@ -5,7 +5,7 @@ const cors    = require('cors');
 const { assetsDir, OUTPUT_DIR } = require('./lib/paths');
 
 const app  = express();
-const PORT = 3001;
+const PORT = parseInt(process.env.PORT, 10) || 3001;
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
