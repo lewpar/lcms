@@ -225,11 +225,11 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
         left={<div className="editor-pane">
           {/* Metadata */}
           <div className="meta-card">
-            <button className="meta-card-toggle" onClick={() => setMetaOpen(o => !o)}>
+            <button className={`meta-card-toggle${metaOpen ? ' open' : ''}`} onClick={() => setMetaOpen(o => !o)}>
               <span>Page Settings</span>
               <span className="meta-card-toggle-icon">{metaOpen ? '▾' : '▸'}</span>
             </button>
-            {metaOpen && <>
+            {metaOpen && <div className="meta-card-body"><>
               <div className="field">
                 <label>Icon</label>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -304,7 +304,7 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
                 />
                 <span>Include in site navigation</span>
               </label>
-            </>}
+            </></div>}
           </div>
 
           {/* Blocks */}
