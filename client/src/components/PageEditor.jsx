@@ -7,6 +7,7 @@ import BlockEditor from './BlockEditor.jsx';
 import SitePreview from './SitePreview.jsx';
 import ConfirmDialog from './ConfirmDialog.jsx';
 import AddBlockDialog from './AddBlockDialog.jsx';
+import IconPickerDialog from './IconPickerDialog.jsx';
 import { v4 as uuidv4 } from '../uuid.js';
 
 const BLOCK_TYPES = [
@@ -67,6 +68,7 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
   const [page, setPage] = useState(null);
   const [saveStatus, setSaveStatus] = useState('saved'); // 'saved' | 'unsaved' | 'saving'
   const [showAddBlock, setShowAddBlock] = useState(false);
+  const [showIconPicker, setShowIconPicker] = useState(false);
   const [expandedBlockId, setExpandedBlockId] = useState(null);
   const [previewKey, setPreviewKey] = useState(0);
   const [pendingRemoveId, setPendingRemoveId] = useState(null);
@@ -223,6 +225,23 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
           {/* Metadata */}
           <div className="meta-card">
             <div className="field">
+              <label>Icon</label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontSize: 22, lineHeight: 1, minWidth: 28, textAlign: 'center' }}>
+                  {page.icon || <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>None</span>}
+                </span>
+                <button className="btn btn-secondary btn-sm" onClick={() => setShowIconPicker(true)}>
+                  {page.icon ? 'Change' : 'Pick Icon'}
+                </button>
+                {page.icon && (
+                  <button className="btn btn-secondary btn-sm" onClick={() => updateMeta('icon', '')}>Clear</button>
+                )}
+              </div>
+              <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 3 }}>
+                Shown in the sidebar when collapsed on exported sites.
+              </span>
+            </div>
+            <div className="field">
               <label>Title</label>
               <input
                 type="text"
@@ -333,6 +352,13 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
         confirmLabel="Delete"
         onConfirm={confirmRemoveBlock}
         onCancel={() => setPendingRemoveId(null)}
+      />
+
+      <IconPickerDialog
+        open={showIconPicker}
+        current={page.icon || ''}
+        onSelect={icon => updateMeta('icon', icon)}
+        onClose={() => setShowIconPicker(false)}
       />
     </div>
   );

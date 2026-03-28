@@ -1746,6 +1746,94 @@ code {
   transform: translateX(36px);
 }
 
+/* ── Icon Picker Dialog ── */
+.ipd-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  animation: fadeInFast 0.15s ease;
+}
+.ipd-dialog {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  width: 400px;
+  max-width: calc(100vw - 32px);
+  display: flex;
+  flex-direction: column;
+  max-height: 70vh;
+  animation: fadeInUp 0.15s ease;
+}
+.ipd-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.ipd-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+.ipd-list {
+  overflow-y: auto;
+  flex: 1;
+  padding: 10px 16px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ipd-group-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.ipd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  gap: 4px;
+}
+.ipd-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+  line-height: 1;
+}
+.ipd-icon-btn:hover {
+  background: var(--surface3);
+  border-color: var(--accent);
+}
+.ipd-icon-btn.selected {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+}
+.ipd-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px 12px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
 /* ── Add Block Dialog ── */
 .abd-backdrop {
   position: fixed;
