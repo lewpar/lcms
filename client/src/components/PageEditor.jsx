@@ -6,6 +6,7 @@ import SplitPane from './SplitPane.jsx';
 import BlockEditor from './BlockEditor.jsx';
 import SitePreview from './SitePreview.jsx';
 import ConfirmDialog from './ConfirmDialog.jsx';
+import AddBlockDialog from './AddBlockDialog.jsx';
 import { v4 as uuidv4 } from '../uuid.js';
 
 const BLOCK_TYPES = [
@@ -302,26 +303,16 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
               />
             ))}
 
-            {showAddBlock ? (
-              <div className="add-block-panel">
-                <h4>Add Block</h4>
-                <div className="block-type-grid">
-                  {BLOCK_TYPES.map(({ type, icon, label }) => (
-                    <button key={type} className="block-type-btn" onClick={() => addBlock(type)}>
-                      <span className="icon">{icon}</span>
-                      <span className="label">{label}</span>
-                    </button>
-                  ))}
-                </div>
-                <div style={{ marginTop: 10 }}>
-                  <button className="btn btn-secondary btn-sm" onClick={() => setShowAddBlock(false)}>Cancel</button>
-                </div>
-              </div>
-            ) : (
-              <button className="btn btn-secondary" style={{ alignSelf: 'flex-start' }} onClick={() => setShowAddBlock(true)}>
-                + Add Block
-              </button>
-            )}
+            <button className="btn btn-secondary" style={{ alignSelf: 'flex-start' }} onClick={() => setShowAddBlock(true)}>
+              + Add Block
+            </button>
+
+            <AddBlockDialog
+              open={showAddBlock}
+              blockTypes={BLOCK_TYPES}
+              onAdd={addBlock}
+              onClose={() => setShowAddBlock(false)}
+            />
           </div>
         </div>}
         right={<div className="editor-preview">
