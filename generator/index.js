@@ -337,7 +337,7 @@ function buildNavHtml(navItems, currentSlug, toc) {
     const isActive = p.slug === currentSlug;
     const href = currentSlug ? `../${esc(p.slug)}/` : `${esc(p.slug)}/`;
     const icon = p.icon || '';
-    const iconClass = 'nav-link-icon' + (icon ? '' : ' nav-link-icon-default');
+    const iconClass = ['nav-link-icon', !icon ? 'nav-link-icon-default' : '', p.iconCollapsedOnly ? 'nav-link-icon-collapsed-only' : ''].filter(Boolean).join(' ');
     return `<a href="${href}" class="nav-link${isActive ? ' active' : ''}" title="${esc(p.title)}"><span class="${iconClass}">${icon || '📄'}</span><span class="nav-link-text">${esc(p.title)}</span></a>`
       + (isActive ? tocHtml : '');
   };
@@ -425,6 +425,7 @@ img{max-width:100%;height:auto;display:block}
 .nav-link.active{color:var(--sidebar-text-active);background:var(--primary-active);border-left-color:var(--primary);font-weight:600}
 .nav-link-icon{font-size:15px;line-height:1;flex-shrink:0}
 .nav-link-icon-default{opacity:.3}
+.nav-link-icon-collapsed-only{display:none}
 .nav-link-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .nav-section{margin-top:20px}
 .nav-section-title{font-size:.68em;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3);padding:0 18px 6px}
@@ -666,6 +667,7 @@ img{max-width:100%;height:auto;display:block}
   body.sidebar-collapsed .nav-link-text,body.sidebar-collapsed .nav-section-title,body.sidebar-collapsed .nav-toc{display:none}
   body.sidebar-collapsed .nav-link-icon{font-size:18px;opacity:1}
   body.sidebar-collapsed .nav-link-icon-default{opacity:.45}
+  body.sidebar-collapsed .nav-link-icon-collapsed-only{display:inline}
   body.sidebar-collapsed .nav-section{margin-top:0}
 }
 
@@ -1314,6 +1316,7 @@ function generate() {
     section: resolveSectionName(p.section),
     inNav: p.inNav !== false,
     icon: p.icon || '',
+    iconCollapsedOnly: !!p.iconCollapsedOnly,
   }));
   const navItems = allSummaries.filter(p => p.inNav);
 

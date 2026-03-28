@@ -69,6 +69,7 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
   const [saveStatus, setSaveStatus] = useState('saved'); // 'saved' | 'unsaved' | 'saving'
   const [showAddBlock, setShowAddBlock] = useState(false);
   const [showIconPicker, setShowIconPicker] = useState(false);
+  const [metaOpen, setMetaOpen] = useState(false);
   const [expandedBlockId, setExpandedBlockId] = useState(null);
   const [previewKey, setPreviewKey] = useState(0);
   const [pendingRemoveId, setPendingRemoveId] = useState(null);
@@ -224,70 +225,86 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
         left={<div className="editor-pane">
           {/* Metadata */}
           <div className="meta-card">
-            <div className="field">
-              <label>Icon</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 22, lineHeight: 1, minWidth: 28, textAlign: 'center' }}>
-                  {page.icon || <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>None</span>}
-                </span>
-                <button className="btn btn-secondary btn-sm" onClick={() => setShowIconPicker(true)}>
-                  {page.icon ? 'Change' : 'Pick Icon'}
-                </button>
+            <button className="meta-card-toggle" onClick={() => setMetaOpen(o => !o)}>
+              <span>Page Settings</span>
+              <span className="meta-card-toggle-icon">{metaOpen ? '▾' : '▸'}</span>
+            </button>
+            {metaOpen && <>
+              <div className="field">
+                <label>Icon</label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 22, lineHeight: 1, minWidth: 28, textAlign: 'center' }}>
+                    {page.icon || <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>None</span>}
+                  </span>
+                  <button className="btn btn-secondary btn-sm" onClick={() => setShowIconPicker(true)}>
+                    {page.icon ? 'Change' : 'Pick Icon'}
+                  </button>
+                  {page.icon && (
+                    <button className="btn btn-secondary btn-sm" onClick={() => updateMeta('icon', '')}>Clear</button>
+                  )}
+                </div>
                 {page.icon && (
-                  <button className="btn btn-secondary btn-sm" onClick={() => updateMeta('icon', '')}>Clear</button>
+                  <label className="theme-toggle-row" style={{ marginTop: 6 }}>
+                    <input
+                      type="checkbox"
+                      checked={!!page.iconCollapsedOnly}
+                      onChange={e => updateMeta('iconCollapsedOnly', e.target.checked)}
+                    />
+                    <span>Only show icon when sidebar is collapsed</span>
+                  </label>
+                )}
+                <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 3 }}>
+                  {page.iconCollapsedOnly ? 'Icon shown only in the collapsed sidebar rail.' : 'Icon shown in both expanded and collapsed sidebar.'}
+                </span>
+              </div>
+              <div className="field">
+                <label>Title</label>
+                <input
+                  type="text"
+                  value={page.title}
+                  onChange={e => {
+                    const title = e.target.value;
+                    setPage(p => ({
+                      ...p, title,
+                      slug: p.slug === slugify(p.title) ? slugify(title) : p.slug,
+                    }));
+                  }}
+                  placeholder="Page title"
+                />
+              </div>
+              <div className="field">
+                <label>Slug (URL path)</label>
+                <input
+                  type="text"
+                  value={page.slug}
+                  onChange={e => updateMeta('slug', slugify(e.target.value))}
+                  placeholder="page-slug"
+                  style={RESERVED_SLUGS.has(page.slug) ? { borderColor: 'var(--danger)' } : undefined}
+                />
+                {RESERVED_SLUGS.has(page.slug) && (
+                  <span style={{ fontSize: 11, color: 'var(--danger)', marginTop: 3 }}>
+                    "{page.slug}" is a reserved keyword and cannot be used as a slug.
+                  </span>
                 )}
               </div>
-              <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 3 }}>
-                Shown in the sidebar when collapsed on exported sites.
-              </span>
-            </div>
-            <div className="field">
-              <label>Title</label>
-              <input
-                type="text"
-                value={page.title}
-                onChange={e => {
-                  const title = e.target.value;
-                  setPage(p => ({
-                    ...p, title,
-                    slug: p.slug === slugify(p.title) ? slugify(title) : p.slug,
-                  }));
-                }}
-                placeholder="Page title"
-              />
-            </div>
-            <div className="field">
-              <label>Slug (URL path)</label>
-              <input
-                type="text"
-                value={page.slug}
-                onChange={e => updateMeta('slug', slugify(e.target.value))}
-                placeholder="page-slug"
-                style={RESERVED_SLUGS.has(page.slug) ? { borderColor: 'var(--danger)' } : undefined}
-              />
-              {RESERVED_SLUGS.has(page.slug) && (
-                <span style={{ fontSize: 11, color: 'var(--danger)', marginTop: 3 }}>
-                  "{page.slug}" is a reserved keyword and cannot be used as a slug.
-                </span>
-              )}
-            </div>
-            <div className="field">
-              <label>Description (meta)</label>
-              <input
-                type="text"
-                value={page.description || ''}
-                onChange={e => updateMeta('description', e.target.value)}
-                placeholder="Short description for SEO"
-              />
-            </div>
-            <label className="theme-toggle-row" style={{ marginTop: 4 }}>
-              <input
-                type="checkbox"
-                checked={page.inNav !== false}
-                onChange={e => updateMeta('inNav', e.target.checked)}
-              />
-              <span>Include in site navigation</span>
-            </label>
+              <div className="field">
+                <label>Description (meta)</label>
+                <input
+                  type="text"
+                  value={page.description || ''}
+                  onChange={e => updateMeta('description', e.target.value)}
+                  placeholder="Short description for SEO"
+                />
+              </div>
+              <label className="theme-toggle-row" style={{ marginTop: 4 }}>
+                <input
+                  type="checkbox"
+                  checked={page.inNav !== false}
+                  onChange={e => updateMeta('inNav', e.target.checked)}
+                />
+                <span>Include in site navigation</span>
+              </label>
+            </>}
           </div>
 
           {/* Blocks */}

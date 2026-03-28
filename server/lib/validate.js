@@ -71,7 +71,7 @@ function sanitiseSettings(raw) {
 
 function sanitisePage(raw) {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
-  const allowed = ['title', 'slug', 'description', 'blocks', 'section', 'order', 'inNav', 'icon'];
+  const allowed = ['title', 'slug', 'description', 'blocks', 'section', 'order', 'inNav', 'icon', 'iconCollapsedOnly'];
   const out = {};
   for (const key of allowed) {
     if (!(key in raw)) continue;
@@ -81,6 +81,7 @@ function sanitisePage(raw) {
     else if (key === 'section')     out.section     = clampString(raw.section, MAX_STR.section) ?? '';
     else if (key === 'inNav')       out.inNav       = raw.inNav !== false;
     else if (key === 'icon')        out.icon        = clampString(raw.icon, 10) ?? '';
+    else if (key === 'iconCollapsedOnly') out.iconCollapsedOnly = !!raw.iconCollapsedOnly;
     else                            out[key]        = raw[key];
   }
   return out;
