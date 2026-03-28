@@ -89,8 +89,8 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
             <button className="site-selector-search-clear" onClick={() => setSearch('')} aria-label="Clear search">✕</button>
           )}
         </div>
-        <button className="btn btn-primary btn-sm" onClick={() => { setNewName(''); setNewDialog(true); }}>
-          + New Site
+        <button className="btn btn-primary btn-sm site-selector-new-btn" onClick={() => { setNewName(''); setNewDialog(true); }}>
+          + New
         </button>
       </div>
 
