@@ -21,12 +21,15 @@ cd client
 npx vite build
 cd ..
 
+mkdir -p logs
 echo "Starting LCMS (production)..."
 
-SERVE_CLIENT=1 PORT=$PORT node server/index.js &
+SERVE_CLIENT=1 PORT=$PORT node server/index.js >> logs/server.log 2>&1 &
 SERVER_PID=$!
+disown $SERVER_PID
 
 echo "$SERVER_PID" > .lcms.pid
 
 echo "Server running (PID $SERVER_PID) on http://localhost:$PORT"
+echo "Logs: logs/server.log"
 echo "Run ./stop.sh to stop."
