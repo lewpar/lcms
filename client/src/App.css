@@ -914,6 +914,37 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .cms-settings-nginx-badge--failed   { background: #3d1a1a; color: #f87171; }
 .cms-settings-nginx-badge--unknown  { background: #2d2d2d; color: var(--text-muted); }
 
+/* ── Nginx panel (per-site modal) ─────────────────────────────────── */
+.nginx-panel-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.nginx-panel-status-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  flex: 1;
+}
+.nginx-panel-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 14px 0;
+}
+.nginx-panel-site {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.nginx-panel-site-name {
+  font-size: 14px;
+  font-weight: 600;
+  flex: 1;
+}
+.nginx-panel-deployed   { font-size: 12px; color: #4ade80; font-weight: 600; }
+.nginx-panel-undeployed { font-size: 12px; color: var(--text-muted); font-style: italic; }
+
 .site-project-actions {
   display: flex;
   align-items: center;

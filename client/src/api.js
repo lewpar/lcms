@@ -69,6 +69,12 @@ export async function deleteSite(siteId) {
   return res.json();
 }
 
+export async function undeploySite(siteId) {
+  const res = await fetch(`${BASE}/sites/${siteId}/deploy`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Failed to undeploy site');
+  return res.json();
+}
+
 // ── Pages ────────────────────────────────────────────────
 
 export async function getPages(siteId) {
