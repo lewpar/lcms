@@ -3,7 +3,7 @@ import {
   getSites, createSite, deleteSite, renameSite, undeploySite,
   getPages, createPage, deletePage, duplicatePage, generateSite,
   getSiteSettings, updateSiteSettings, patchPage, reorderPages,
-  getCmsSettings, updateCmsSettings, getNginxStatus, reloadNginx,
+  getCmsSettings, updateCmsSettings, getNginxStatus,
 } from './api.js';
 import PageEditor from './components/PageEditor.jsx';
 import HomeEditor from './components/HomeEditor.jsx';
@@ -47,7 +47,6 @@ export default function App() {
   const [undeploying, setUndeploying] = useState(false);
   const [nginxStatus, setNginxStatus] = useState(null);
   const [nginxStatusLoading, setNginxStatusLoading] = useState(false);
-  const [nginxReloading, setNginxReloading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [search, setSearch] = useState('');
   const [collapsedSections, setCollapsedSections] = useState({});
@@ -272,12 +271,6 @@ export default function App() {
     } finally { setUndeploying(false); }
   };
 
-  const handleNginxReload = async () => {
-    setNginxReloading(true);
-    try { await reloadNginx(); await fetchNginxStatus(); }
-    catch { setNginxStatus('unknown'); }
-    finally { setNginxReloading(false); }
-  };
 
   const handlePageSaved = useCallback(async (silent = false) => {
     await loadPages();
@@ -671,10 +664,7 @@ export default function App() {
                   {nginxStatusLoading ? '…' : (nginxStatus || '—')}
                 </span>
                 <button className="btn btn-secondary btn-sm" onClick={fetchNginxStatus} disabled={nginxStatusLoading} title="Refresh">↻</button>
-                <button className="btn btn-secondary btn-sm" onClick={handleNginxReload} disabled={nginxReloading || nginxStatusLoading}>
-                  {nginxReloading ? 'Reloading…' : 'Reload nginx'}
-                </button>
-              </div>
+                </div>
 
               <div className="nginx-panel-divider" />
 

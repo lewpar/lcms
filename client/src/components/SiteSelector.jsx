@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { getNginxStatus, reloadNginx } from '../api.js';
+import { getNginxStatus } from '../api.js';
 
 export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRename, cmsSettings = {}, onUpdateCmsSettings }) {
   const [search, setSearch] = useState('');
@@ -12,7 +12,6 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
   // Nginx status
   const [nginxStatus, setNginxStatus] = useState(null); // null | 'active' | 'inactive' | 'failed' | 'unknown'
   const [nginxLoading, setNginxLoading] = useState(false);
-  const [nginxReloading, setNginxReloading] = useState(false);
 
   // New site dialog
   const [newDialog, setNewDialog] = useState(false);
@@ -43,13 +42,6 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
     catch { setNginxStatus('unknown'); }
     finally { setNginxLoading(false); }
   }, []);
-
-  const handleNginxReload = async () => {
-    setNginxReloading(true);
-    try { await reloadNginx(); await fetchNginxStatus(); }
-    catch { setNginxStatus('unknown'); }
-    finally { setNginxReloading(false); }
-  };
 
   const openCmsSettings = () => {
     setBaseUrlInput(cmsSettings.baseUrl || '');
@@ -241,12 +233,6 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
                   disabled={nginxLoading}
                   title="Refresh nginx status"
                 >↻</button>
-                <button
-                  className="btn btn-secondary btn-sm"
-                  onClick={handleNginxReload}
-                  disabled={nginxReloading || nginxLoading}
-                  title="Reload nginx"
-                >{nginxReloading ? 'Reloading…' : 'Reload'}</button>
               </div>
             </div>
             <div className="site-dialog-actions">

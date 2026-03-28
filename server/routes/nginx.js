@@ -18,14 +18,4 @@ router.get('/status', (req, res) => {
   res.json(getNginxStatus());
 });
 
-router.post('/reload', (req, res) => {
-  try {
-    execFileSync('systemctl', ['reload', 'nginx'], { timeout: 10000 });
-    res.json({ success: true });
-  } catch (err) {
-    const msg = (err.stderr || err.message || '').toString().trim();
-    res.status(500).json({ error: msg || 'Failed to reload nginx' });
-  }
-});
-
 module.exports = router;

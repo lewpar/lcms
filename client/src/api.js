@@ -26,14 +26,6 @@ export async function getNginxStatus() {
   return res.json();
 }
 
-export async function reloadNginx() {
-  const res = await fetch(`${BASE}/nginx/reload`, { method: 'POST' });
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error || 'Failed to reload nginx');
-  }
-  return res.json();
-}
 
 // ── Sites ────────────────────────────────────────────────
 

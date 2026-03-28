@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 const router = require('express').Router({ mergeParams: true });
+
 const { readSites, ROOT, OUTPUT_DIR } = require('../lib/paths');
 const { requireValidSiteId, requireSiteExists, safeError } = require('../lib/validate');
 
@@ -28,13 +29,6 @@ router.post('/', requireValidSiteId, requireSiteExists, (req, res) => {
     fs.mkdirSync(destDir, { recursive: true });
     // -rT: copy contents of src into dest (GNU coreutils, available on Ubuntu)
     execFileSync('cp', ['-rT', srcDir, destDir], { timeout: 30000 });
-
-    // 4. Reload nginx so any config changes take effect
-    try {
-      execFileSync('systemctl', ['reload', 'nginx'], { timeout: 10000 });
-    } catch {
-      // nginx reload failure is non-fatal — files are already copied
-    }
 
     res.json({ success: true, message: out.trim() || 'Site deployed', siteSlug: site.slug });
   } catch (err) { res.status(500).json({ error: safeError(err) }); }
