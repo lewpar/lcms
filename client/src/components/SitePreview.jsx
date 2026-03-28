@@ -177,7 +177,7 @@ export default function SitePreview({ siteId, siteSlug, addToast, pageSlug = '',
             src={iframeSrc}
             className="site-preview-iframe"
             title="Site Preview"
-            onLoad={() => applyTheme(themeMode)}
+            onLoad={(e) => { e.target.classList.add('site-preview-iframe--loaded'); applyTheme(themeMode); }}
           />
         )}
 

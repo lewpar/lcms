@@ -843,6 +843,54 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   z-index: 1000;
 }
 
+/* ── Confirm dialog ── */
+.cdialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  animation: fadeInFast 0.12s ease both;
+}
+
+.cdialog {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  width: 340px;
+  max-width: 90vw;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  animation: slideUp 0.15s ease both;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(10px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.cdialog-title {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.cdialog-message {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.cdialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .modal-box {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -1223,6 +1271,11 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   border: none;
   width: 100%;
   min-height: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.site-preview-iframe--loaded {
+  opacity: 1;
 }
 
 .site-preview-loading {

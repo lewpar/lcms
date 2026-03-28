@@ -11,6 +11,7 @@ import ThemeView from './components/ThemeView.jsx';
 import SitePreview from './components/SitePreview.jsx';
 import SiteSelector from './components/SiteSelector.jsx';
 import MediaManager from './components/MediaManager.jsx';
+import ConfirmDialog from './components/ConfirmDialog.jsx';
 
 function randomId() {
   return crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
@@ -49,6 +50,7 @@ export default function App() {
   const [dragOverPageId, setDragOverPageId] = useState(null);
   const [dragInsertPos, setDragInsertPos] = useState('after');
   const renamingRef = useRef(null);
+  const [deletePageDialog, setDeletePageDialog] = useState(null); // { id, title }
 
   const addToast = useCallback((message, type = 'info') => {
     const id = Date.now();
@@ -200,9 +202,15 @@ export default function App() {
     } catch { addToast('Duplicate failed', 'error'); }
   };
 
-  const handleDelete = async (e, id) => {
+  const handleDelete = (e, id) => {
     e.stopPropagation();
-    if (!confirm('Delete this page?')) return;
+    const page = pages.find(p => p.id === id);
+    setDeletePageDialog({ id, title: page?.title || 'this page' });
+  };
+
+  const confirmDeletePage = async () => {
+    const { id } = deletePageDialog;
+    setDeletePageDialog(null);
     try {
       await deletePage(siteId, id);
       if (selectedId === id) setSelectedId(null);
@@ -597,6 +605,15 @@ export default function App() {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={!!deletePageDialog}
+        title="Delete page?"
+        message={deletePageDialog ? `"${deletePageDialog.title}" will be permanently deleted.` : ''}
+        confirmLabel="Delete"
+        onConfirm={confirmDeletePage}
+        onCancel={() => setDeletePageDialog(null)}
+      />
 
       <Toast toasts={toasts} />
     </div>
