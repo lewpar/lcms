@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from './uuid.js';
 import {
   getSites, createSite, deleteSite, renameSite,
   getPages, createPage, deletePage, duplicatePage, generateSite,
-  deployGithubPages, undeployNginx, undeployGithubPages,
+  deployToNginx, deployGithubPages, undeployNginx, undeployGithubPages,
   getSiteSettings, updateSiteSettings, patchPage, reorderPages,
   getCmsSettings, updateCmsSettings, getNginxStatus,
 } from './api.js';
@@ -75,6 +75,7 @@ export default function App() {
   useEffect(() => {
     loadSites();
     getCmsSettings().then(setCmsSettings).catch(() => {});
+    getNginxStatus().then(d => setNginxStatus(d.status)).catch(() => setNginxStatus('unknown'));
   }, []);
 
   const openSite = (site) => {
@@ -260,7 +261,7 @@ export default function App() {
   const handleDeployNginx = async () => {
     setDeploying(true);
     try {
-      const result = await generateSite(siteId);
+      const result = await deployToNginx(siteId);
       addToast(result.message || 'Site deployed to nginx!', 'success');
       await loadSites();
       setShowNginxPanel(false);
@@ -781,12 +782,14 @@ export default function App() {
               Choose a deployment target for <strong>{selectedSite.name}</strong>.
             </p>
             <div className="deploy-picker-options">
-              <button className="deploy-picker-option" onClick={openNginxPanel}>
-                <span className="deploy-picker-icon">⬡</span>
-                <span className="deploy-picker-label">Nginx</span>
-                <span className="deploy-picker-desc">Copy to /var/www/html on this server</span>
-                {selectedSite.deployedNginx && <span className="deploy-picker-badge">Deployed</span>}
-              </button>
+              {nginxStatus === 'active' && (
+                <button className="deploy-picker-option" onClick={openNginxPanel}>
+                  <span className="deploy-picker-icon">⬡</span>
+                  <span className="deploy-picker-label">Nginx</span>
+                  <span className="deploy-picker-desc">Copy to /var/www/html on this server</span>
+                  {selectedSite.deployedNginx && <span className="deploy-picker-badge">Deployed</span>}
+                </button>
+              )}
               <button className="deploy-picker-option" onClick={openGithubPanel}>
                 <span className="deploy-picker-icon">⎇</span>
                 <span className="deploy-picker-label">GitHub Pages</span>

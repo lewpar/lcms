@@ -183,6 +183,12 @@ export async function generateSite(siteId) {
   return res.json();
 }
 
+export async function deployToNginx(siteId) {
+  const res = await fetch(`${BASE}/sites/${siteId}/generate/nginx`, { method: 'POST' });
+  if (!res.ok) await apiError(res, 'Nginx deployment failed');
+  return res.json();
+}
+
 export async function getSiteSettings(siteId) {
   const res = await fetch(`${BASE}/sites/${siteId}/settings`);
   if (!res.ok) await apiError(res, 'Failed to fetch settings');

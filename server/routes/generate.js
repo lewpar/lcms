@@ -23,8 +23,18 @@ function deployToDir(slug, destRoot) {
   execFileSync('cp', ['-rT', srcDir, destDir], { timeout: 30000 });
 }
 
-// Deploy to nginx (/var/www/html/<slug>/)
+// Generate only — outputs to output/<slug>/ for the live preview.
+// Does not require nginx or any external web server.
 router.post('/', requireValidSiteId, requireSiteExists, (req, res) => {
+  const site = readSites().find(s => s.id === req.params.siteId);
+  try {
+    const out = generate(site.id, site.slug);
+    res.json({ success: true, message: out.trim() || 'Site generated', siteSlug: site.slug });
+  } catch (err) { res.status(500).json({ error: safeError(err) }); }
+});
+
+// Deploy to nginx (/var/www/html/<slug>/)
+router.post('/nginx', requireValidSiteId, requireSiteExists, (req, res) => {
   const site = readSites().find(s => s.id === req.params.siteId);
   try {
     const out = generate(site.id, site.slug);

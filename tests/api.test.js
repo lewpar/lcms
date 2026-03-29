@@ -402,6 +402,21 @@ describe('POST /api/sites/:siteId/pages/reorder', () => {
   });
 });
 
+// ── Generate (preview) ────────────────────────────────────────────────────────
+
+describe('POST /api/sites/:siteId/generate/nginx', () => {
+  beforeEach(cleanupSites);
+
+  test('returns 500 when nginx web root does not exist', async () => {
+    const site = await createSite('Nginx Deploy');
+    const res = await request(app)
+      .post(`/api/sites/${site.id}/generate/nginx`);
+    // Without /var/www/html present the endpoint must fail gracefully
+    assert.equal(res.status, 500);
+    assert.ok(res.body.error);
+  });
+});
+
 // ── Undeploy routes (filesystem not present — should still respond) ──────────
 
 describe('DELETE /api/sites/:siteId/deploy/nginx', () => {
