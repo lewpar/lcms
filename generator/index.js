@@ -32,6 +32,9 @@ const SETTINGS_FILE = path.join(ROOT, 'content', 'sites', siteId, 'site.json');
 const OUTPUT_DIR    = siteSlug ? path.join(ROOT, 'output', siteSlug) : null;
 const ASSETS_URL_PREFIX = `/assets/${siteId}/`;
 
+// When true, renderBlock keeps asset paths as absolute server URLs (used in preview mode)
+let previewAssetPaths = false;
+
 // ── Color helpers ──────────────────────────────────────
 
 function hexToRgb(hex) {
@@ -257,9 +260,11 @@ function renderBlock(block) {
 
     case 'image': {
       if (!block.src) return '';
-      const src = block.src.startsWith(ASSETS_URL_PREFIX)
-        ? `../assets/${block.src.slice(ASSETS_URL_PREFIX.length)}`
-        : block.src.startsWith('/assets/') ? `../assets/${block.src.split('/').pop()}` : esc(block.src);
+      const src = previewAssetPaths
+        ? esc(block.src)
+        : block.src.startsWith(ASSETS_URL_PREFIX)
+          ? `../assets/${block.src.slice(ASSETS_URL_PREFIX.length)}`
+          : block.src.startsWith('/assets/') ? `../assets/${block.src.split('/').pop()}` : esc(block.src);
       const cap = block.caption ? `<figcaption>${esc(block.caption)}</figcaption>` : '';
       return `<figure class="image-block"><img src="${src}" alt="${esc(block.alt||'')}" loading="lazy" />${cap}</figure>`;
     }
@@ -499,9 +504,9 @@ function buildNavHtml(navItems, currentSlug, toc) {
 // ── CSS ────────────────────────────────────────────────
 
 function buildCss(theme) {
-  const primary      = (theme && theme.primary)        || '#6c63ff';
-  const sidebarBg    = (theme && theme.sidebarBg)      || '#1e293b';
-  const radius       = (theme && theme.radius != null) ? theme.radius : 8;
+  const primary      = (theme && theme.primary)        || '#ecba46';
+  const sidebarBg    = (theme && theme.sidebarBg)      || '#111111';
+  const radius       = (theme && theme.radius != null) ? theme.radius : 4;
   const fontKey      = (theme && theme.font)           || 'inter';
   const fontSize     = (theme && theme.fontSize)       || 16;
   const contentWidth = (theme && theme.contentWidth)   || 800;
@@ -1279,7 +1284,9 @@ document.addEventListener('DOMContentLoaded',function(){
 function renderPagePreview(page, settings) {
   const blocks  = page.blocks || [];
   const title   = page.title || '';
+  previewAssetPaths = true;
   const blocksHtml = blocks.map(renderBlock).join('\n');
+  previewAssetPaths = false;
 
   const hasQuiz           = blocksHtml.includes('quiz-block');
   const hasAccordion      = blocks.some(b => b.type === 'accordion');

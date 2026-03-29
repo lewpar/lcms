@@ -4,6 +4,12 @@ import SplitPane from './SplitPane.jsx';
 
 const PRESETS = [
   {
+    name: 'Cyber',
+    primary: '#ecba46', sidebarBg: '#111111', contentBg: '#ffffff', textColor: '#111111',
+    darkPrimary: '#ecba46', darkSidebarBg: '#0a0a0a', darkContentBg: '#1a1a1a', darkTextColor: '#f5f5f5',
+    radius: 4, font: 'inter', fontSize: 16, contentWidth: 800,
+  },
+  {
     name: 'Default',
     primary: '#6c63ff', sidebarBg: '#1e293b', contentBg: '#ffffff', textColor: '#1e293b',
     darkPrimary: '#7c74ff', darkSidebarBg: '#131925', darkContentBg: '#0f172a', darkTextColor: '#e2e8f0',
@@ -53,9 +59,9 @@ const COLOR_FIELDS = [
 
 export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug }) {
   const defaultTheme = {
-    primary: '#6c63ff', sidebarBg: '#1e293b', contentBg: '#ffffff', textColor: '#1e293b',
-    darkPrimary: '#7c74ff', darkSidebarBg: '#131925', darkContentBg: '#0f172a', darkTextColor: '#e2e8f0',
-    radius: 8, font: 'inter', fontSize: 16, contentWidth: 800, sidebarWidth: 240,
+    primary: '#ecba46', sidebarBg: '#111111', contentBg: '#ffffff', textColor: '#111111',
+    darkPrimary: '#ecba46', darkSidebarBg: '#0a0a0a', darkContentBg: '#1a1a1a', darkTextColor: '#f5f5f5',
+    radius: 4, font: 'inter', fontSize: 16, contentWidth: 800, sidebarWidth: 240,
     showBreadcrumbs: true, showReadingTime: true,
   };
   const [theme, setTheme] = useState(() => ({ ...defaultTheme, ...(settings.theme || {}) }));

@@ -1,0 +1,33 @@
+{
+  "title": "anh",
+  "navPages": [],
+  "sections": [
+    {
+      "id": "fd3c1439-8c96-48b6-b420-134599fdae0a",
+      "name": "test"
+    }
+  ],
+  "theme": {
+    "primary": "#ecba46",
+    "sidebarBg": "#111111",
+    "contentBg": "#ffffff",
+    "textColor": "#111111",
+    "darkPrimary": "#ecba46",
+    "darkSidebarBg": "#0a0a0a",
+    "darkContentBg": "#1a1a1a",
+    "darkTextColor": "#f5f5f5",
+    "radius": 4,
+    "font": "inter",
+    "fontSize": 16,
+    "contentWidth": 800,
+    "sidebarWidth": 240,
+    "showBreadcrumbs": true,
+    "showReadingTime": true
+  },
+  "home": {
+    "heroTitle": "",
+    "heroSubtitle": "",
+    "showPageGrid": true,
+    "blocks": []
+  }
+}

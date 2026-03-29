@@ -6,10 +6,9 @@
   "description": "",
   "blocks": [
     {
-      "id": "e18d56be-ed81-4def-bd07-9a036a96ad7f",
-      "type": "difficulty",
-      "level": 4,
-      "label": ""
+      "id": "f756f888-a0f0-4e6f-ba2e-09bd7157fd99",
+      "type": "markdown",
+      "content": "In **JavaScript**, asynchronous operations are tasks that take time to complete, such as fetching data from a server. These tasks often return a `Promise`, which is an object that represents a value that will be available now, later, or possibly never if an error occurs. A Promise eventually either resolves (success) or rejects (error).\n\nThe `async` and `await` keywords make it easier to work with `Promises`. When a function is marked with `async`, you can use `await` inside it to pause the code until a `Promise` resolves, allowing the code to run in a clear, step-by-step order."
     },
     {
       "id": "941bb843-0224-4104-9af2-7fcf9ae8bd50",
@@ -18,23 +17,74 @@
     {
       "id": "7f4e5a4e-3cb4-4261-8bf8-1167f1de2754",
       "type": "fill-in-the-blank",
-      "prompt": "const response = ___ fetch(\"...\");\nconst json = ___ response.json();\n\nconsole.log(json.name);",
+      "prompt": "___ function getData(url) \n{\n    const response = ___ fetch(url);\n    const json = ___ response.json();\n\n    // ...\n}",
       "answers": [
+        "async",
         "await",
         "await"
       ],
-      "language": "plaintext",
-      "title": "Async - Fill in the blanks"
+      "language": "javascript",
+      "title": "Async / Await - Fill in the blanks"
     },
     {
-      "id": "c343f0a2-e8d7-4e17-8ada-aba5808e90b7",
-      "type": "video",
-      "url": "https://www.youtube.com/watch?v=2IrIPXSpQWM",
-      "caption": ""
+      "id": "6fd896ef-2787-419f-84f2-9f5175756636",
+      "type": "quiz",
+      "title": "Async/Await and Promises Quiz",
+      "description": "Test your understanding of how JavaScript handles asynchronous code using Promises, async, and await.",
+      "questions": [
+        {
+          "id": "3da352f4-c064-4f32-9235-800bfc36c52e",
+          "question": "What is a Promise in JavaScript?",
+          "options": [
+            "A function that runs instantly",
+            "An object that represents a value that may be available in the future",
+            "A type of loop used for repeating code",
+            "A variable that cannot change"
+          ],
+          "correctIndex": 1,
+          "explanation": "A Promise represents the result of an asynchronous operation. It may resolve with a value later or reject if an error occurs."
+        },
+        {
+          "id": "96cd9381-029b-4149-b9df-12d403c03822",
+          "question": "What does the await keyword do?",
+          "options": [
+            "Stops the program permanently",
+            "Repeats a function until it works",
+            "Pauses the function until a Promise finishes",
+            "Converts a variable into a Promise"
+          ],
+          "correctIndex": 2,
+          "explanation": "The await keyword pauses an async function until a Promise resolves, allowing code to run in a clearer step-by-step order."
+        },
+        {
+          "id": "8bb3b269-d357-4ecd-a681-81228457d0fa",
+          "question": "Where can you use the await keyword?",
+          "options": [
+            "Inside an async function",
+            "Inside any function",
+            "Only inside loops",
+            "Only inside if statements"
+          ],
+          "correctIndex": 0,
+          "explanation": "await can only be used inside functions that are marked with the async keyword."
+        },
+        {
+          "id": "2b3e685c-d44d-4ac6-9b0b-7832eceed18f",
+          "question": "What does the async keyword do when added to a function?",
+          "options": [
+            "Makes the function run faster",
+            "Allows the function to use await and return a Promise",
+            "Prevents the function from returning values",
+            "Turns the function into a loop"
+          ],
+          "correctIndex": 1,
+          "explanation": "Adding async to a function allows you to use await inside it, and the function automatically returns a Promise."
+        }
+      ]
     }
   ],
   "createdAt": "2026-03-29T06:04:32.177Z",
-  "updatedAt": "2026-03-29T09:47:55.331Z",
+  "updatedAt": "2026-03-29T22:38:47.593Z",
   "icon": "🗂️",
   "order": 3
 }
