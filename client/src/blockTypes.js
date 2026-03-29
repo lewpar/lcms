@@ -1,21 +1,30 @@
 import { v4 as uuidv4 } from './uuid.js';
 
+export const CALLOUT_COLORS = {
+  blue:   { bg: '#eff6ff', border: '#3b82f6', text: '#1e40af' },
+  green:  { bg: '#f0fdf4', border: '#22c55e', text: '#15803d' },
+  yellow: { bg: '#fffbeb', border: '#f59e0b', text: '#92400e' },
+  red:    { bg: '#fef2f2', border: '#ef4444', text: '#991b1b' },
+  purple: { bg: '#faf5ff', border: '#a855f7', text: '#6b21a8' },
+  gray:   { bg: '#f8fafc', border: '#94a3b8', text: '#475569' },
+};
+
 export const BLOCK_TYPES = [
-  { type: 'markdown',    icon: '✏️', label: 'Markdown' },
-  { type: 'heading',     icon: '𝐇',  label: 'Heading' },
-  { type: 'callout',     icon: '💡', label: 'Callout' },
-  { type: 'quiz',        icon: '❓', label: 'Quiz' },
-  { type: 'code',        icon: '⌨️', label: 'Code' },
-  { type: 'image',       icon: '🖼️', label: 'Image' },
-  { type: 'video',       icon: '▶',  label: 'Video' },
-  { type: 'divider',     icon: '─',  label: 'Divider' },
-  { type: 'case-study',  icon: '📋', label: 'Case Study' },
-  { type: 'page-link',   icon: '→',  label: 'Page Link' },
-  { type: 'flashcard',   icon: '🃏', label: 'Flashcard' },
-  { type: 'table',       icon: '⊞',  label: 'Table' },
-  { type: 'accordion',   icon: '☰',  label: 'Accordion' },
-  { type: 'embed',       icon: '⊡',  label: 'Embed' },
-  { type: 'playground',  icon: '▶',  label: 'Playground' },
+  { type: 'markdown',    icon: '✏️', label: 'Markdown',   group: 'Content' },
+  { type: 'heading',     icon: '𝐇',  label: 'Heading',    group: 'Content' },
+  { type: 'callout',     icon: '💡', label: 'Callout',    group: 'Content' },
+  { type: 'divider',     icon: '─',  label: 'Divider',    group: 'Content' },
+  { type: 'image',       icon: '🖼️', label: 'Image',      group: 'Media' },
+  { type: 'video',       icon: '▶',  label: 'Video',      group: 'Media' },
+  { type: 'code',        icon: '⌨️', label: 'Code',       group: 'Media' },
+  { type: 'embed',       icon: '⊡',  label: 'Embed',      group: 'Media' },
+  { type: 'quiz',        icon: '❓', label: 'Quiz',       group: 'Interactive' },
+  { type: 'flashcard',   icon: '🃏', label: 'Flashcard',  group: 'Interactive' },
+  { type: 'accordion',   icon: '☰',  label: 'Accordion',  group: 'Interactive' },
+  { type: 'playground',  icon: '▶',  label: 'Playground', group: 'Interactive' },
+  { type: 'table',       icon: '⊞',  label: 'Table',      group: 'Structure' },
+  { type: 'page-link',   icon: '→',  label: 'Page Link',  group: 'Structure' },
+  { type: 'case-study',  icon: '📋', label: 'Case Study', group: 'Structure' },
 ];
 
 export function defaultBlock(type) {

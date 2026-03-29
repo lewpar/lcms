@@ -17,8 +17,7 @@ for (const dir of [CONTENT_DIR, SITES_DIR, OUTPUT_DIR]) {
 }
 if (!fs.existsSync(SITES_INDEX)) fs.writeFileSync(SITES_INDEX, '[]');
 
-function readSites()       { try { return JSON.parse(fs.readFileSync(SITES_INDEX, 'utf-8')); } catch { return []; } }
-function writeSites(sites) { fs.writeFileSync(SITES_INDEX, JSON.stringify(sites, null, 2)); }
+const { readSites, writeSites } = require('./storage');
 
 function siteDir(id)      { return path.join(SITES_DIR, id); }
 function pagesDir(id)     { return path.join(siteDir(id), 'pages'); }

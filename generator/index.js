@@ -55,6 +55,7 @@ function extractToc(blocks) {
   const items = [];
   for (const b of (blocks || [])) {
     if (b.type === 'heading' && b.level <= 3 && b.text) {
+      // b.id_attr is a stable anchor set by the editor so heading links survive title edits
       items.push({ text: b.text, level: b.level, id: b.id_attr || slugify(b.text) });
     } else if (b.type === 'markdown' && b.content) {
       for (const line of b.content.split('\n')) {

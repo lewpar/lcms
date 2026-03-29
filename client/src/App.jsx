@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { v4 as uuidv4 } from './uuid.js';
 import {
   getSites, createSite, deleteSite, renameSite,
   getPages, createPage, deletePage, duplicatePage, generateSite,
@@ -14,10 +15,6 @@ import SitePreview from './components/SitePreview.jsx';
 import SiteSelector from './components/SiteSelector.jsx';
 import MediaManager from './components/MediaManager.jsx';
 import ConfirmDialog from './components/ConfirmDialog.jsx';
-
-function randomId() {
-  return crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
-}
 
 function Toast({ toasts }) {
   return (
@@ -64,7 +61,7 @@ export default function App() {
   const [deletePageDialog, setDeletePageDialog] = useState(null); // { id, title }
 
   const addToast = useCallback((message, type = 'info') => {
-    const id = Date.now();
+    const id = uuidv4();
     setToasts(t => [...t, { id, message, type }]);
     setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 3000);
   }, []);
@@ -147,7 +144,7 @@ export default function App() {
   // ── Sections ─────────────────────────────────────────────
 
   const addSection = async () => {
-    const id = randomId();
+    const id = uuidv4();
     const name = 'New Section';
     const newSections = [...(settings.sections || []), { id, name }];
     const newSettings = { ...settings, sections: newSections };

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { marked } from 'marked';
+import { CALLOUT_COLORS } from '../blockTypes.js';
 import { PREVIEW_STYLES } from '../previewStyles.js';
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
@@ -56,14 +57,7 @@ function calcReadingTime(blocks) {
   return Math.max(1, Math.ceil(words / 200));
 }
 
-const CALLOUT_CONFIG = {
-  blue:   { bg: '#eff6ff', border: '#3b82f6', text: '#1e40af' },
-  green:  { bg: '#f0fdf4', border: '#22c55e', text: '#15803d' },
-  yellow: { bg: '#fffbeb', border: '#f59e0b', text: '#92400e' },
-  red:    { bg: '#fef2f2', border: '#ef4444', text: '#991b1b' },
-  purple: { bg: '#faf5ff', border: '#a855f7', text: '#6b21a8' },
-  gray:   { bg: '#f8fafc', border: '#94a3b8', text: '#475569' },
-};
+const CALLOUT_CONFIG = CALLOUT_COLORS;
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 

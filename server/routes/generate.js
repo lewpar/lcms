@@ -14,6 +14,15 @@ function generate(siteId, slug) {
   });
 }
 
+// Copy the generated output directory into a deployment destination.
+// Uses `cp -rT` (GNU coreutils) to merge the source tree into the dest dir.
+function deployToDir(slug, destRoot) {
+  const srcDir  = path.join(OUTPUT_DIR, slug);
+  const destDir = path.join(destRoot, slug);
+  fs.mkdirSync(destDir, { recursive: true });
+  execFileSync('cp', ['-rT', srcDir, destDir], { timeout: 30000 });
+}
+
 // Deploy to nginx (/var/www/html/<slug>/)
 router.post('/', requireValidSiteId, requireSiteExists, (req, res) => {
   const site = readSites().find(s => s.id === req.params.siteId);
@@ -24,11 +33,7 @@ router.post('/', requireValidSiteId, requireSiteExists, (req, res) => {
       return res.status(500).json({ error: `Nginx web root not found: ${NGINX_WEB_ROOT}` });
     }
 
-    const srcDir  = path.join(OUTPUT_DIR, site.slug);
-    const destDir = path.join(NGINX_WEB_ROOT, site.slug);
-    fs.mkdirSync(destDir, { recursive: true });
-    execFileSync('cp', ['-rT', srcDir, destDir], { timeout: 30000 });
-
+    deployToDir(site.slug, NGINX_WEB_ROOT);
     res.json({ success: true, message: out.trim() || 'Site deployed to nginx', siteSlug: site.slug });
   } catch (err) { res.status(500).json({ error: safeError(err) }); }
 });
@@ -38,12 +43,7 @@ router.post('/github-pages', requireValidSiteId, requireSiteExists, (req, res) =
   const site = readSites().find(s => s.id === req.params.siteId);
   try {
     const out = generate(site.id, site.slug);
-
-    const srcDir  = path.join(OUTPUT_DIR, site.slug);
-    const destDir = path.join(DOCS_DIR, site.slug);
-    fs.mkdirSync(destDir, { recursive: true });
-    execFileSync('cp', ['-rT', srcDir, destDir], { timeout: 30000 });
-
+    deployToDir(site.slug, DOCS_DIR);
     res.json({ success: true, message: out.trim() || 'Site deployed to GitHub Pages', siteSlug: site.slug });
   } catch (err) { res.status(500).json({ error: safeError(err) }); }
 });

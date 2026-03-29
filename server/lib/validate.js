@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const { readSites } = require('./storage');
 
 // ── ID / filename format checks ────────────────────────
 
@@ -28,12 +29,14 @@ function assertWithinDir(resolvedPath, baseDir) {
 
 // ── Error sanitisation ─────────────────────────────────
 
-// Strip filesystem paths from error messages before sending to clients
+// Strip filesystem paths from error messages before sending to clients.
+// The unix pattern uses a negative lookbehind so it doesn't mangle URLs
+// (e.g. http://host/path — the slash is preceded by a word character).
 function safeError(err, fallback = 'An internal error occurred.') {
   if (!err || typeof err.message !== 'string') return fallback;
   const msg = err.message
-    .replace(/\/[^\s,'"()]+/g, '[path]')         // unix paths
-    .replace(/[A-Z]:\\[^\s,'"()]+/gi, '[path]'); // windows paths
+    .replace(/(?<![a-zA-Z0-9.])\/[^\s,'"()]+/g, '[path]') // unix paths
+    .replace(/[A-Z]:\\[^\s,'"()]+/gi, '[path]');           // windows paths
   return msg && msg.trim().length > 0 && msg.length < 300 ? msg : fallback;
 }
 
@@ -100,7 +103,6 @@ function requireValidId(req, res, next) {
 }
 
 function requireSiteExists(req, res, next) {
-  const { readSites } = require('./paths');
   if (!readSites().find(s => s.id === req.params.siteId)) {
     return res.status(404).json({ error: 'Site not found.' });
   }

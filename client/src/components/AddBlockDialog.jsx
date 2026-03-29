@@ -1,13 +1,17 @@
-import { useState, useRef, useEffect } from 'react';
-
-const GROUPS = [
-  { label: 'Content',     types: ['markdown', 'heading', 'callout', 'divider'] },
-  { label: 'Media',       types: ['image', 'video', 'code', 'embed'] },
-  { label: 'Interactive', types: ['quiz', 'flashcard', 'accordion', 'playground'] },
-  { label: 'Structure',   types: ['table', 'page-link', 'case-study'] },
-];
+import { useState, useRef, useEffect, useMemo } from 'react';
 
 export default function AddBlockDialog({ open, blockTypes, onAdd, onClose }) {
+  // Derive groups from the group field on each block type so AddBlockDialog
+  // stays in sync with blockTypes.js without a separate GROUPS constant.
+  const groups = useMemo(() => {
+    const map = new Map();
+    for (const bt of blockTypes) {
+      if (!bt.group) continue;
+      if (!map.has(bt.group)) map.set(bt.group, []);
+      map.get(bt.group).push(bt.type);
+    }
+    return Array.from(map, ([label, types]) => ({ label, types }));
+  }, [blockTypes]);
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState(null);
   const searchRef = useRef(null);
@@ -83,7 +87,7 @@ export default function AddBlockDialog({ open, blockTypes, onAdd, onClose }) {
               ? <div className="abd-empty">No blocks match "{search}"</div>
               : <div className="abd-grid">{filtered.map(bt => renderBtn(bt.type))}</div>
           ) : (
-            GROUPS.map(group => {
+            groups.map(group => {
               const items = group.types.filter(t => blockMap[t]);
               if (!items.length) return null;
               return (

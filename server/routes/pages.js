@@ -10,6 +10,7 @@ const {
   isValidId, assertWithinDir, safeError, sanitisePage,
 } = require('../lib/validate');
 
+// Guard against extremely large payloads in the reorder endpoint
 const MAX_REORDER_IDS = 1000;
 
 // Resolve a page file path and verify it stays within the pages directory

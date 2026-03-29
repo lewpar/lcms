@@ -10,16 +10,7 @@ import AddBlockDialog from './AddBlockDialog.jsx';
 import IconPickerDialog from './IconPickerDialog.jsx';
 import { v4 as uuidv4 } from '../uuid.js';
 import { BLOCK_TYPES, defaultBlock } from '../blockTypes.js';
-
-const slugify = (text) =>
-  text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-
-const RESERVED_SLUGS = new Set([
-  'assets', 'api', 'admin', 'static', 'public', 'media', 'upload', 'uploads',
-  'files', 'images', 'img', 'js', 'css', 'fonts', 'favicon', 'robots',
-  'sitemap', 'feed', 'rss', 'atom', 'auth', 'login', 'logout', 'signup',
-  'register', 'dashboard', 'settings', 'profile', 'account',
-]);
+import { slugify, RESERVED_SLUGS } from '../utils.js';
 
 export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast, pages = [] }) {
   const [page, setPage] = useState(null);
