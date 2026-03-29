@@ -66,7 +66,7 @@ export default function ContentPreview({ siteId, page, refreshSignal = 0 }) {
             srcDoc={srcDoc}
             className="site-preview-iframe site-preview-iframe--loaded"
             title="Content Preview"
-            sandbox="allow-scripts"
+            sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
           />
         )}
 
