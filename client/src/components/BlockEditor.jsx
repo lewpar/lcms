@@ -753,6 +753,15 @@ function FillInTheBlankEditor({ block, onChange }) {
   return (
     <>
       <div className="field">
+        <label>Title <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>(optional — defaults to "Fill in the Blanks")</span></label>
+        <input
+          type="text"
+          value={block.title || ''}
+          onChange={e => onChange({ title: e.target.value })}
+          placeholder="Fill in the Blanks"
+        />
+      </div>
+      <div className="field">
         <label>Content type</label>
         <select value={language} onChange={e => onChange({ language: e.target.value })}>
           {FITB_LANGUAGES.map(l => (

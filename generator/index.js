@@ -387,6 +387,8 @@ function renderBlock(block) {
       const lang = block.language || 'plaintext';
       const answersJson = JSON.stringify(answers).replace(/&/g,'\\u0026').replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/'/g,'\\u0027');
 
+      const headerTitle = esc(block.title || 'Fill in the Blanks');
+
       if (lang !== 'plaintext') {
         // Code mode: render highlighted code with inline inputs
         const parts = (block.prompt || '').split('___');
@@ -399,7 +401,7 @@ function renderBlock(block) {
           return highlighted;
         }).join('');
         return `<div class="fitb-block fitb-block--code" data-answers='${answersJson}'>
-  <div class="fitb-header">Fill in the Blanks</div>
+  <div class="fitb-header">${headerTitle}</div>
   <div class="fitb-code-body">
     <pre class="fitb-code-pre"><code>${codeHtml}</code></pre>
     <div class="fitb-footer fitb-code-footer">
@@ -427,7 +429,7 @@ function renderBlock(block) {
         return `<p class="fitb-line">${lineHtml}</p>`;
       }).join('');
       return `<div class="fitb-block" data-answers='${answersJson}'>
-  <div class="fitb-header">Fill in the Blanks</div>
+  <div class="fitb-header">${headerTitle}</div>
   <div class="fitb-body">
     <div class="fitb-prompt">${linesHtml}</div>
     <div class="fitb-footer">

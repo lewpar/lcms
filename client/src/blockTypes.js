@@ -50,7 +50,7 @@ export function defaultBlock(type) {
     case 'accordion':   return { id, type, items: [{ id: uuidv4(), title: '', content: '' }] };
     case 'embed':             return { id, type, src: '', height: 400, caption: '' };
     case 'playground':        return { id, type, title: 'Try it yourself', starterCode: '// Write your JavaScript here\nconsole.log(\'Hello, world!\');' };
-    case 'fill-in-the-blank': return { id, type, prompt: '', answers: [], language: 'plaintext' };
+    case 'fill-in-the-blank': return { id, type, title: '', prompt: '', answers: [], language: 'plaintext' };
     case 'difficulty':        return { id, type, level: 1, label: '' };
     default:                  return { id, type };
   }

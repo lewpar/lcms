@@ -384,9 +384,10 @@ function FillInTheBlankPreview({ block }) {
   );
   const isCorrect = (i) => (userAnswers[i] || '').trim().toLowerCase() === (correctAnswers[i] || '').trim().toLowerCase();
 
+  const headerTitle = block.title || 'Fill in the Blanks';
   const FITB_HEADER = (
     <div style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '8px 16px', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#94a3b8' }}>
-      Fill in the Blanks
+      {headerTitle}
     </div>
   );
 
