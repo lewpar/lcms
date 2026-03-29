@@ -1075,7 +1075,7 @@ const NAV_JS = `
 
 const DARK_MODE_JS = `(function(){
   var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
-  var isDark=stored?stored==='dark':window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var isDark=stored?stored==='dark':false;
   document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
   document.addEventListener('DOMContentLoaded',function(){
     var btn=document.getElementById('darkModeBtn');
