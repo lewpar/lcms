@@ -10,6 +10,7 @@ const SITES_INDEX      = path.join(CONTENT_DIR, 'sites.json');
 const OUTPUT_DIR       = path.join(ROOT, 'output');
 const CMS_SETTINGS_FILE = path.join(CONTENT_DIR, 'cms-settings.json');
 const DOCS_DIR          = path.join(ROOT, 'docs');
+const NGINX_WEB_ROOT    = '/var/www/html';
 
 for (const dir of [CONTENT_DIR, SITES_DIR, OUTPUT_DIR]) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
@@ -44,7 +45,7 @@ const RESERVED_SLUGS = new Set([
 function isReservedSlug(slug) { return RESERVED_SLUGS.has(slug); }
 
 module.exports = {
-  ROOT, CONTENT_DIR, SITES_DIR, SITES_INDEX, OUTPUT_DIR, CMS_SETTINGS_FILE, DOCS_DIR,
+  ROOT, CONTENT_DIR, SITES_DIR, SITES_INDEX, OUTPUT_DIR, CMS_SETTINGS_FILE, DOCS_DIR, NGINX_WEB_ROOT,
   readSites, writeSites,
   siteDir, pagesDir, assetsDir, settingsFile, ensureDirs,
   slugify, RESERVED_SLUGS, isReservedSlug,

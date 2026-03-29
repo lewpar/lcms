@@ -5,10 +5,8 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 const router = require('express').Router({ mergeParams: true });
 
-const { readSites, ROOT, OUTPUT_DIR, DOCS_DIR } = require('../lib/paths');
+const { readSites, ROOT, OUTPUT_DIR, DOCS_DIR, NGINX_WEB_ROOT } = require('../lib/paths');
 const { requireValidSiteId, requireSiteExists, safeError } = require('../lib/validate');
-
-const NGINX_WEB_ROOT = '/var/www/html';
 
 function generate(siteId, slug) {
   return execFileSync('node', ['generator/index.js', siteId, slug], {

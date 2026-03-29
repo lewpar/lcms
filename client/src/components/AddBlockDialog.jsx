@@ -16,7 +16,7 @@ export default function AddBlockDialog({ open, blockTypes, onAdd, onClose }) {
     if (open) {
       setSearch('');
       setSelected(null);
-      setTimeout(() => searchRef.current?.focus(), 40);
+      setTimeout(() => searchRef.current?.focus(), 30);
     }
   }, [open]);
 

@@ -4,10 +4,8 @@ const fs      = require('fs');
 const path    = require('path');
 const { v4: uuidv4 } = require('uuid');
 const router  = require('express').Router();
-const { readSites, writeSites, siteDir, settingsFile, ensureDirs, slugify, OUTPUT_DIR, DOCS_DIR } = require('../lib/paths');
+const { readSites, writeSites, siteDir, settingsFile, ensureDirs, slugify, OUTPUT_DIR, DOCS_DIR, NGINX_WEB_ROOT } = require('../lib/paths');
 const { requireValidSiteId, requireSiteExists, safeError, MAX_STR } = require('../lib/validate');
-
-const NGINX_WEB_ROOT = '/var/www/html';
 
 router.get('/', (req, res) => {
   const sites = readSites().map(s => ({
@@ -43,7 +41,7 @@ router.patch('/:siteId', requireValidSiteId, (req, res) => {
       try {
         const s = JSON.parse(fs.readFileSync(fp, 'utf-8'));
         fs.writeFileSync(fp, JSON.stringify({ ...s, title: sites[idx].name }, null, 2));
-      } catch {}
+      } catch (err) { console.error('Failed to update settings title on rename:', err.message); }
     }
   }
   try {

@@ -97,7 +97,7 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
         setPreviewKey(k => k + 1);
       } catch {
         addToast('Failed to save theme', 'error');
-        setSaveStatus('saved');
+        setSaveStatus('error');
       }
     }, 1000);
     return () => clearTimeout(saveTimer.current);
@@ -110,8 +110,8 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
 
   const set = (key, val) => setTheme(t => ({ ...t, [key]: val }));
 
-  const statusLabel = { saved: '✓ Saved', saving: '⟳ Saving…' };
-  const statusColor = { saved: 'var(--success)', saving: 'var(--text-muted)' };
+  const statusLabel = { saved: '✓ Saved', saving: '⟳ Saving…', error: '✕ Save failed' };
+  const statusColor = { saved: 'var(--success)', saving: 'var(--text-muted)', error: 'var(--danger)' };
 
   const ColorPickerRow = ({ label, themeKey }) => (
     <div className="field" style={{ margin: 0 }}>

@@ -758,7 +758,7 @@ export default function App() {
                 type="text"
                 value={undeployInput}
                 onChange={e => setUndeployInput(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && undeployInput === selectedSite.name) handleUndeploy(); if (e.key === 'Escape') setNginxView('main'); }}
+                onKeyDown={e => { if (e.key === 'Enter' && undeployInput === selectedSite.name) handleUndeployNginx(); if (e.key === 'Escape') setNginxView('main'); }}
                 placeholder={selectedSite.name}
                 autoFocus
                 autoComplete="off"

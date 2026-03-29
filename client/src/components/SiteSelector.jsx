@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { getNginxStatus } from '../api.js';
 
+const FOCUS_DELAY = 30;
+
 export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRename, cmsSettings = {}, onUpdateCmsSettings }) {
   const [search, setSearch] = useState('');
 
@@ -29,12 +31,12 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
   const deleteInputRef = useRef(null);
 
   useEffect(() => {
-    if (newDialog) setTimeout(() => newInputRef.current?.focus(), 30);
+    if (newDialog) setTimeout(() => newInputRef.current?.focus(), FOCUS_DELAY);
   }, [newDialog]);
 
   useEffect(() => {
-    if (gearView === 'rename') setTimeout(() => renameRef.current?.select(), 30);
-    if (gearView === 'delete') { setUndeployOnDelete(true); setTimeout(() => deleteInputRef.current?.focus(), 30); }
+    if (gearView === 'rename') setTimeout(() => renameRef.current?.select(), FOCUS_DELAY);
+    if (gearView === 'delete') { setUndeployOnDelete(true); setTimeout(() => deleteInputRef.current?.focus(), FOCUS_DELAY); }
   }, [gearView]);
 
   const fetchNginxStatus = useCallback(async () => {

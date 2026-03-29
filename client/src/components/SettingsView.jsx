@@ -27,14 +27,14 @@ export default function SettingsView({ settings, onSave, addToast, siteId, siteS
         setPreviewKey(k => k + 1);
       } catch {
         addToast('Failed to save settings', 'error');
-        setSaveStatus('saved');
+        setSaveStatus('error');
       }
     }, 1000);
     return () => clearTimeout(saveTimer.current);
   }, [local]);
 
-  const statusLabel = { saved: '✓ Saved', saving: '⟳ Saving…' };
-  const statusColor = { saved: 'var(--success)', saving: 'var(--text-muted)' };
+  const statusLabel = { saved: '✓ Saved', saving: '⟳ Saving…', error: '✕ Save failed' };
+  const statusColor = { saved: 'var(--success)', saving: 'var(--text-muted)', error: 'var(--danger)' };
 
   return (
     <SplitPane
