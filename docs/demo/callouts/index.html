@@ -8,13 +8,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles.css?v=mncbq2n4" />
+  <link rel="stylesheet" href="../styles.css?v=mncccob3" />
   
 </head>
 <body>
 <script>(function(){
   var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
-  var isDark=stored?stored==='dark':window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var isDark=stored?stored==='dark':false;
   document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
   document.addEventListener('DOMContentLoaded',function(){
     var btn=document.getElementById('darkModeBtn');
@@ -81,7 +81,7 @@
     </footer>
   </div>
 </div>
-<script src="../nav.js?v=mncbq2n4"></script>
+<script src="../nav.js?v=mncccob3"></script>
 
 
 
