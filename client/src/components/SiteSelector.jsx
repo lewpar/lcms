@@ -24,6 +24,7 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
   const [gearView, setGearView] = useState('menu'); // 'menu' | 'rename' | 'delete'
   const [renameName, setRenameName] = useState('');
   const [deleteInput, setDeleteInput] = useState('');
+  const [undeployOnDelete, setUndeployOnDelete] = useState(true);
   const renameRef = useRef(null);
   const deleteInputRef = useRef(null);
 
@@ -33,7 +34,7 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
 
   useEffect(() => {
     if (gearView === 'rename') setTimeout(() => renameRef.current?.select(), 30);
-    if (gearView === 'delete') setTimeout(() => deleteInputRef.current?.focus(), 30);
+    if (gearView === 'delete') { setUndeployOnDelete(true); setTimeout(() => deleteInputRef.current?.focus(), 30); }
   }, [gearView]);
 
   const fetchNginxStatus = useCallback(async () => {
@@ -87,7 +88,7 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
 
   const confirmDelete = () => {
     if (deleteInput === gearSite.name) {
-      onDelete(gearSite.id);
+      onDelete(gearSite.id, { undeploy: undeployOnDelete });
       closeGear();
     }
   };
@@ -299,6 +300,14 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
                   This action <strong>cannot be undone</strong>. This will permanently delete{' '}
                   <strong>{gearSite.name}</strong> and all its pages.
                 </p>
+                <label className="theme-toggle-row" style={{ marginBottom: 12 }}>
+                  <input
+                    type="checkbox"
+                    checked={undeployOnDelete}
+                    onChange={e => setUndeployOnDelete(e.target.checked)}
+                  />
+                  <span>Also undeploy site (nginx &amp; GitHub Pages)</span>
+                </label>
                 <p className="site-dialog-body">Type <strong>{gearSite.name}</strong> to confirm.</p>
                 <div className="field">
                   <input

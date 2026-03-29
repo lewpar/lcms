@@ -102,7 +102,10 @@ export default function App() {
     openSite(site);
   };
 
-  const handleDeleteSite = async (siteId) => {
+  const handleDeleteSite = async (siteId, { undeploy = false } = {}) => {
+    if (undeploy) {
+      await Promise.allSettled([undeployNginx(siteId), undeployGithubPages(siteId)]);
+    }
     await deleteSite(siteId);
     setSites(s => s.filter(x => x.id !== siteId));
     if (selectedSite?.id === siteId) closeSite();
