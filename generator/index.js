@@ -1358,7 +1358,7 @@ function getFontLink(fontKey) {
   <link href="https://fonts.googleapis.com/css2?family=${q}&display=swap" rel="stylesheet">`;
 }
 
-function pageTemplate({ page, blocksHtml, settings, navItems }) {
+function pageTemplate({ page, blocksHtml, settings, navItems, v }) {
   const { title, description, slug, section } = page;
   const hasQuiz           = blocksHtml.includes('quiz-block');
   const hasAccordion      = (page.blocks || []).some(b => b.type === 'accordion');
@@ -1398,7 +1398,7 @@ function pageTemplate({ page, blocksHtml, settings, navItems }) {
   <title>${esc(title)} — ${esc(settings.title || 'LCMS')}</title>
   ${description ? `<meta name="description" content="${esc(description)}" />` : ''}
   ${fontLink}
-  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="../styles.css?v=${v}" />
   ${hasCode ? `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />` : ''}
 </head>
 <body>
@@ -1435,18 +1435,18 @@ ${showDarkMode ? `<script>${DARK_MODE_JS}</script>` : ''}
     </footer>
   </div>
 </div>
-<script src="../nav.js"></script>
-${hasQuiz           ? `<script src="../quiz.js"></script>`       : ''}
-${hasAccordion      ? `<script src="../accordion.js"></script>`  : ''}
-${hasFlashcard      ? `<script src="../flashcard.js"></script>`  : ''}
-${hasPlayground     ? `<script src="../playground.js"></script>` : ''}
-${hasFillInTheBlank ? `<script src="../fitb.js"></script>`       : ''}
+<script src="../nav.js?v=${v}"></script>
+${hasQuiz           ? `<script src="../quiz.js?v=${v}"></script>`       : ''}
+${hasAccordion      ? `<script src="../accordion.js?v=${v}"></script>`  : ''}
+${hasFlashcard      ? `<script src="../flashcard.js?v=${v}"></script>`  : ''}
+${hasPlayground     ? `<script src="../playground.js?v=${v}"></script>` : ''}
+${hasFillInTheBlank ? `<script src="../fitb.js?v=${v}"></script>`       : ''}
 ${hasCode ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>` : ''}
 </body>
 </html>`;
 }
 
-function indexTemplate({ pages, settings, navItems }) {
+function indexTemplate({ pages, settings, navItems, v }) {
   const siteName = settings.title || 'Learning Site';
   const fontLink = getFontLink((settings.theme || {}).font);
   const home = settings.home || {};
@@ -1495,7 +1495,7 @@ function indexTemplate({ pages, settings, navItems }) {
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${esc(siteName)}</title>
   ${fontLink}
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=${v}" />
   ${hasCode ? `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />` : ''}
 </head>
 <body>
@@ -1527,12 +1527,12 @@ function indexTemplate({ pages, settings, navItems }) {
     </footer>
   </div>
 </div>
-<script src="nav.js"></script>
-${hasQuiz           ? `<script src="quiz.js"></script>`       : ''}
-${hasAccordion      ? `<script src="accordion.js"></script>`  : ''}
-${hasFlashcard      ? `<script src="flashcard.js"></script>`  : ''}
-${hasPlayground     ? `<script src="playground.js"></script>` : ''}
-${hasFillInTheBlank ? `<script src="fitb.js"></script>`       : ''}
+<script src="nav.js?v=${v}"></script>
+${hasQuiz           ? `<script src="quiz.js?v=${v}"></script>`       : ''}
+${hasAccordion      ? `<script src="accordion.js?v=${v}"></script>`  : ''}
+${hasFlashcard      ? `<script src="flashcard.js?v=${v}"></script>`  : ''}
+${hasPlayground     ? `<script src="playground.js?v=${v}"></script>` : ''}
+${hasFillInTheBlank ? `<script src="fitb.js?v=${v}"></script>`       : ''}
 ${hasCode ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>` : ''}
 </body>
 </html>`;
@@ -1541,6 +1541,8 @@ ${hasCode ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11
 // ── Main ───────────────────────────────────────────────
 
 function generate() {
+  const buildVer = Date.now().toString(36);
+
   let settings = { title: 'My Learning Site', sections: [], navPages: [], theme: {} };
   if (fs.existsSync(SETTINGS_FILE)) {
     try { settings = { ...settings, ...JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf-8')) }; } catch {}
@@ -1590,10 +1592,10 @@ function generate() {
     fs.mkdirSync(pageDir, { recursive: true });
     const blocksHtml = (page.blocks || []).map(renderBlock).join('\n');
     const pageWithResolvedSection = { ...page, section: resolveSectionName(page.section) };
-    fs.writeFileSync(path.join(pageDir, 'index.html'), pageTemplate({ page: pageWithResolvedSection, blocksHtml, settings, navItems }));
+    fs.writeFileSync(path.join(pageDir, 'index.html'), pageTemplate({ page: pageWithResolvedSection, blocksHtml, settings, navItems, v: buildVer }));
   }
 
-  fs.writeFileSync(path.join(OUTPUT_DIR, 'index.html'), indexTemplate({ pages: allSummaries, settings, navItems }));
+  fs.writeFileSync(path.join(OUTPUT_DIR, 'index.html'), indexTemplate({ pages: allSummaries, settings, navItems, v: buildVer }));
 
   const msg = `Generated ${pages.length} page(s) → output/${siteSlug}/`;
   console.log(msg);
