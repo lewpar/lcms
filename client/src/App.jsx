@@ -435,16 +435,14 @@ export default function App() {
               <h1 style={{ fontSize: 14, lineHeight: 1.2 }}>{selectedSite.name}</h1>
               <p style={{ fontSize: 10 }}>/{selectedSite.slug}</p>
               {cmsSettings.baseUrl && (
-                selectedSite.deployed
-                  ? <a
-                      href={`${cmsSettings.baseUrl}/${selectedSite.slug}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="site-deployed-url"
-                    >
-                      {cmsSettings.baseUrl}/{selectedSite.slug}
-                    </a>
-                  : <span className="site-not-deployed">Not deployed yet</span>
+                <a
+                  href={`${cmsSettings.baseUrl}/${selectedSite.slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={selectedSite.deployed ? 'site-deployed-url' : 'site-not-deployed'}
+                >
+                  {cmsSettings.baseUrl}/{selectedSite.slug}
+                </a>
               )}
             </div>
             <button

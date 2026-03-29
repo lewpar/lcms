@@ -146,17 +146,15 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
               <span className="site-project-name">{site.name}</span>
               <span className="site-project-slug">/{site.slug}</span>
               {cmsSettings.baseUrl && (
-                site.deployed
-                  ? <a
-                      href={`${cmsSettings.baseUrl}/${site.slug}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="site-project-url"
-                      onClick={e => e.stopPropagation()}
-                    >
-                      {cmsSettings.baseUrl}/{site.slug}
-                    </a>
-                  : <span className="site-project-url site-project-url--undeployed">Not deployed yet</span>
+                <a
+                  href={`${cmsSettings.baseUrl}/${site.slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`site-project-url${site.deployed ? '' : ' site-project-url--undeployed'}`}
+                  onClick={e => e.stopPropagation()}
+                >
+                  {cmsSettings.baseUrl}/{site.slug}
+                </a>
               )}
             </div>
             <div className="site-project-actions" onClick={e => e.stopPropagation()}>
