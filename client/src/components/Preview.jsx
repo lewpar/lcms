@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { marked } from 'marked';
-import { CALLOUT_COLORS } from '../blockTypes.js';
+import { CALLOUT_COLORS, DIFFICULTY_LABELS, DIFFICULTY_COLORS } from '../blockTypes.js';
 import { PREVIEW_STYLES } from '../previewStyles.js';
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
@@ -364,6 +364,71 @@ function QuizPreview({ block }) {
   );
 }
 
+// ── Fill-in-the-blank ───────────────────────────────────
+
+function FillInTheBlankPreview({ block }) {
+  const parts = (block.prompt || '').split('___');
+  const correctAnswers = block.answers || [];
+  const [userAnswers, setUserAnswers] = useState(correctAnswers.map(() => ''));
+  const [checked, setChecked] = useState(false);
+
+  const updateAnswer = (i, val) => {
+    setChecked(false);
+    setUserAnswers(a => { const n = [...a]; n[i] = val; return n; });
+  };
+
+  const allCorrect = checked && correctAnswers.every((ans, i) =>
+    (userAnswers[i] || '').trim().toLowerCase() === (ans || '').trim().toLowerCase()
+  );
+
+  return (
+    <div style={{ border: '1px solid #e2e8f0', borderRadius: 10, padding: '16px 18px', background: '#fff' }}>
+      <div style={{ fontSize: '0.95em', lineHeight: 2, color: '#1e293b' }}>
+        {parts.map((part, i) => (
+          <span key={i}>
+            {part}
+            {i < parts.length - 1 && (
+              <span style={{ display: 'inline-block', position: 'relative' }}>
+                <input
+                  type="text"
+                  value={userAnswers[i] || ''}
+                  onChange={e => updateAnswer(i, e.target.value)}
+                  style={{
+                    border: 'none',
+                    borderBottom: `2px solid ${checked ? (((userAnswers[i] || '').trim().toLowerCase() === (correctAnswers[i] || '').trim().toLowerCase()) ? '#22c55e' : '#ef4444') : '#94a3b8'}`,
+                    outline: 'none',
+                    background: 'transparent',
+                    width: Math.max(80, ((correctAnswers[i] || '').length + 4) * 8),
+                    textAlign: 'center',
+                    fontSize: '0.95em',
+                    padding: '0 4px',
+                    color: '#0f172a',
+                  }}
+                />
+              </span>
+            )}
+          </span>
+        ))}
+      </div>
+      {parts.length > 1 && (
+        <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 10 }}>
+          <button
+            onClick={() => setChecked(true)}
+            style={{ padding: '5px 14px', borderRadius: 6, border: 'none', background: '#6c63ff', color: '#fff', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}
+          >
+            Check
+          </button>
+          {checked && (
+            <span style={{ fontSize: 13, fontWeight: 600, color: allCorrect ? '#22c55e' : '#ef4444' }}>
+              {allCorrect ? '✓ Correct!' : '✗ Not quite — try again.'}
+            </span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Case study ─────────────────────────────────────────
 
 function CaseStudyPreview({ block }) {
@@ -611,6 +676,26 @@ function BlockPreview({ block }) {
           )}
           {block.caption && <figcaption style={{ marginTop: 8, fontSize: '13px', color: '#64748b', fontStyle: 'italic', textAlign: 'center' }}>{block.caption}</figcaption>}
         </figure>
+      );
+    }
+
+    case 'fill-in-the-blank': {
+      return <FillInTheBlankPreview block={block} />;
+    }
+
+    case 'difficulty': {
+      const level = Math.max(1, Math.min(5, block.level || 2));
+      const label = block.label || DIFFICULTY_LABELS[level - 1];
+      const color = DIFFICULTY_COLORS[level - 1];
+      return (
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '7px 14px', borderRadius: 8, background: color + '18', border: `1px solid ${color}55` }}>
+          <span style={{ fontSize: 13, fontWeight: 700, color }}>⚡ {label}</span>
+          <div style={{ display: 'flex', gap: 3 }}>
+            {[1, 2, 3, 4, 5].map(i => (
+              <div key={i} style={{ width: 10, height: 10, borderRadius: 2, background: i <= level ? color : color + '33' }} />
+            ))}
+          </div>
+        </div>
       );
     }
 

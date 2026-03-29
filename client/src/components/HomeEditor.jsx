@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import BlockEditor from './BlockEditor.jsx';
 import SplitPane from './SplitPane.jsx';
-import SitePreview from './SitePreview.jsx';
+import ContentPreview from './ContentPreview.jsx';
 import ConfirmDialog from './ConfirmDialog.jsx';
 import AddBlockDialog from './AddBlockDialog.jsx';
 import { BLOCK_TYPES, defaultBlock } from '../blockTypes.js';
+import { AUTOSAVE_DELAY_MS } from '../utils.js';
 
 export default function HomeEditor({ settings, onSave, addToast, siteId, siteSlug, pages }) {
   const defaultHome = { heroTitle: '', heroSubtitle: '', showPageGrid: true, blocks: [] };
@@ -16,6 +17,7 @@ export default function HomeEditor({ settings, onSave, addToast, siteId, siteSlu
   const [metaOpen, setMetaOpen] = useState(false);
   const [expandedBlockId, setExpandedBlockId] = useState(null);
   const [pendingRemoveId, setPendingRemoveId] = useState(null);
+  const [insertAtIndex, setInsertAtIndex] = useState(null);
 
   const dragIndex = useRef(null);
   const [dragOver, setDragOver] = useState(null);
@@ -53,7 +55,7 @@ export default function HomeEditor({ settings, onSave, addToast, siteId, siteSlu
         addToast('Failed to save home page', 'error');
         setSaveStatus('error');
       }
-    }, 1000);
+    }, AUTOSAVE_DELAY_MS);
     return () => clearTimeout(saveTimer.current);
   }, [home]);
 
@@ -74,9 +76,24 @@ export default function HomeEditor({ settings, onSave, addToast, siteId, siteSlu
 
   const addBlock = (type) => {
     const block = defaultBlock(type);
-    setHome(h => ({ ...h, blocks: [...h.blocks, block] }));
+    setHome(h => {
+      const blocks = [...h.blocks];
+      const at = insertAtIndex !== null ? insertAtIndex : blocks.length;
+      blocks.splice(at, 0, block);
+      return { ...h, blocks };
+    });
     setExpandedBlockId(block.id);
     setShowAddBlock(false);
+    setInsertAtIndex(null);
+  };
+
+  const moveBlock = (fromIndex, toIndex) => {
+    setHome(h => {
+      const blocks = [...h.blocks];
+      const [moved] = blocks.splice(fromIndex, 1);
+      blocks.splice(toIndex, 0, moved);
+      return { ...h, blocks };
+    });
   };
 
   const handleDragStart = (index) => { dragIndex.current = index; };
@@ -173,6 +190,9 @@ export default function HomeEditor({ settings, onSave, addToast, siteId, siteSlu
               onToggle={() => setExpandedBlockId(expandedBlockId === block.id ? null : block.id)}
               onChange={changes => updateBlock(block.id, changes)}
               onRemove={() => setPendingRemoveId(block.id)}
+              onMoveUp={() => moveBlock(idx, idx - 1)}
+              onMoveDown={() => moveBlock(idx, idx + 1)}
+              onAddBelow={() => { setInsertAtIndex(idx + 1); setShowAddBlock(true); }}
               addToast={addToast}
               pages={pages}
               siteId={siteId}
@@ -202,7 +222,11 @@ export default function HomeEditor({ settings, onSave, addToast, siteId, siteSlu
         </div>
       </div>}
       right={<div className="editor-preview">
-        <SitePreview refreshSignal={previewKey} siteId={siteId} siteSlug={siteSlug} addToast={addToast} />
+        <ContentPreview
+          siteId={siteId}
+          page={{ title: home.heroTitle || settings.title || 'Home', blocks: home.blocks || [] }}
+          refreshSignal={previewKey}
+        />
       </div>}
     />
 

@@ -183,6 +183,16 @@ export async function generateSite(siteId) {
   return res.json();
 }
 
+export async function previewPage(siteId, page) {
+  const res = await fetch(`${BASE}/sites/${siteId}/generate/preview-page`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ page }),
+  });
+  if (!res.ok) throw new Error('Preview failed');
+  return res.text();
+}
+
 export async function deployToNginx(siteId) {
   const res = await fetch(`${BASE}/sites/${siteId}/generate/nginx`, { method: 'POST' });
   if (!res.ok) await apiError(res, 'Nginx deployment failed');

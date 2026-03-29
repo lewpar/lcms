@@ -14,11 +14,14 @@ mdRenderer.heading = function(text, level) {
 };
 marked.setOptions({ gfm: true, breaks: true });
 
-const siteId   = process.argv[2];
-const siteSlug = process.argv[3];
+const args        = process.argv.slice(2);
+const previewMode = args[0] === '--preview';
+const siteId      = previewMode ? args[1] : args[0];
+const siteSlug    = previewMode ? null    : args[1];
 
-if (!siteId || !siteSlug) {
+if (!siteId || (!previewMode && !siteSlug)) {
   console.error('Usage: node generator/index.js <siteId> <siteSlug>');
+  console.error('       node generator/index.js --preview <siteId>');
   process.exit(1);
 }
 
@@ -26,7 +29,7 @@ const ROOT          = path.join(__dirname, '..');
 const PAGES_DIR     = path.join(ROOT, 'content', 'sites', siteId, 'pages');
 const ASSETS_DIR    = path.join(ROOT, 'content', 'sites', siteId, 'assets');
 const SETTINGS_FILE = path.join(ROOT, 'content', 'sites', siteId, 'site.json');
-const OUTPUT_DIR    = path.join(ROOT, 'output', siteSlug);
+const OUTPUT_DIR    = siteSlug ? path.join(ROOT, 'output', siteSlug) : null;
 const ASSETS_URL_PREFIX = `/assets/${siteId}/`;
 
 // ── Color helpers ──────────────────────────────────────
@@ -311,6 +314,41 @@ function renderBlock(block) {
   <div class="pg-output-label">Output</div>
   <div class="pg-output"></div>
 </div>
+</div>`;
+    }
+
+    case 'fill-in-the-blank': {
+      const parts = (block.prompt || '').split('___');
+      const answers = block.answers || [];
+      const answersJson = JSON.stringify(answers).replace(/&/g,'\\u0026').replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/'/g,'\\u0027');
+      const promptHtml = parts.map((part, i) => {
+        const w = Math.max(80, ((answers[i] || '').length + 4) * 8);
+        return esc(part) + (i < parts.length - 1
+          ? `<input class="fitb-input" data-idx="${i}" type="text" autocomplete="off" style="width:${w}px">`
+          : '');
+      }).join('');
+      return `<div class="fitb-block" data-answers='${answersJson}'>
+  <div class="fitb-prompt">${promptHtml}</div>
+  <div class="fitb-footer">
+    <button class="fitb-check-btn" type="button">Check</button>
+    <span class="fitb-result" hidden></span>
+  </div>
+</div>`;
+    }
+
+    case 'difficulty': {
+      const DIFF_LABELS = ['Beginner','Elementary','Intermediate','Advanced','Expert'];
+      const DIFF_COLORS = ['#22c55e','#84cc16','#f59e0b','#f97316','#ef4444'];
+      const level = Math.max(1, Math.min(5, block.level || 2));
+      const label = block.label || DIFF_LABELS[level - 1];
+      const color = DIFF_COLORS[level - 1];
+      const pips = [1,2,3,4,5].map(i =>
+        `<div class="diff-pip" style="background:${i <= level ? color : color + '33'}"></div>`
+      ).join('');
+      return `<div class="difficulty-block" style="background:${color}18;border:1px solid ${color}55">
+  <span class="diff-icon">⚡</span>
+  <span class="diff-label" style="color:${color}">${esc(label)}</span>
+  <div class="diff-pips">${pips}</div>
 </div>`;
     }
 
@@ -644,6 +682,22 @@ img{max-width:100%;height:auto;display:block}
 .pg-out-warn{color:#fcd34d}.pg-out-warn .pg-out-prefix{color:#f59e0b}
 .pg-out-error{color:#f87171}.pg-out-error .pg-out-prefix{color:#ef4444}
 .pg-out-empty{color:#334155;font-style:italic}
+
+.fitb-block{border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;background:var(--bg)}
+.fitb-prompt{font-size:.95em;line-height:2.2;color:var(--text)}
+.fitb-input{border:none;border-bottom:2px solid #94a3b8;background:transparent;outline:none;text-align:center;padding:0 4px;font-size:.95em;font-family:inherit;color:var(--text);transition:border-color .15s;min-width:80px}
+.fitb-input:focus{border-bottom-color:var(--primary)}
+.fitb-input.fitb-correct{border-bottom-color:#22c55e}
+.fitb-input.fitb-incorrect{border-bottom-color:#ef4444}
+.fitb-footer{margin-top:12px;display:flex;align-items:center;gap:12px}
+.fitb-check-btn{background:var(--primary);color:#fff;border:none;padding:7px 18px;border-radius:var(--radius);font-size:.85em;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}.fitb-check-btn:hover{background:var(--primary-dark)}
+.fitb-result{font-size:.88em;font-weight:600}.fitb-result-correct{color:#22c55e}.fitb-result-incorrect{color:#ef4444}
+
+.difficulty-block{display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border-radius:var(--radius)}
+.diff-icon{font-size:1em}
+.diff-label{font-size:.88em;font-weight:700}
+.diff-pips{display:flex;gap:3px;align-items:center}
+.diff-pip{width:10px;height:10px;border-radius:2px}
 
 .custom-site-header{padding:12px 40px;border-bottom:1px solid var(--border);background:var(--surface)}
 .custom-footer-html{width:100%}
@@ -1063,6 +1117,86 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 })();`;
 
+// ── Fill-in-the-blank JS ───────────────────────────────
+
+const FITB_JS = `(function(){
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.fitb-block').forEach(function(el){
+    var answers=JSON.parse(el.dataset.answers||'[]');
+    var inputs=el.querySelectorAll('.fitb-input');
+    var checkBtn=el.querySelector('.fitb-check-btn');
+    var result=el.querySelector('.fitb-result');
+    inputs.forEach(function(inp){
+      inp.addEventListener('input',function(){
+        result.hidden=true;
+        inputs.forEach(function(i){i.classList.remove('fitb-correct','fitb-incorrect');});
+      });
+      inp.addEventListener('keydown',function(e){if(e.key==='Enter')checkBtn.click();});
+    });
+    checkBtn.addEventListener('click',function(){
+      var all=true;
+      inputs.forEach(function(inp,i){
+        var ok=(answers[i]||'').trim().toLowerCase()===(inp.value||'').trim().toLowerCase();
+        inp.classList.toggle('fitb-correct',ok);
+        inp.classList.toggle('fitb-incorrect',!ok);
+        if(!ok)all=false;
+      });
+      result.hidden=false;
+      result.textContent=all?'✓ Correct!':'✗ Not quite \u2014 try again.';
+      result.className='fitb-result '+(all?'fitb-result-correct':'fitb-result-incorrect');
+    });
+  });
+});
+})();`;
+
+// ── Minimal page preview (no nav/header/footer) ────────
+
+function renderPagePreview(page, settings) {
+  const blocks  = page.blocks || [];
+  const title   = page.title || '';
+  const blocksHtml = blocks.map(renderBlock).join('\n');
+
+  const hasQuiz           = blocksHtml.includes('quiz-block');
+  const hasAccordion      = blocks.some(b => b.type === 'accordion');
+  const hasFlashcard      = blocks.some(b => b.type === 'flashcard');
+  const hasPlayground     = blocks.some(b => b.type === 'playground');
+  const hasFillInTheBlank = blocks.some(b => b.type === 'fill-in-the-blank');
+  const hasCode           = blocks.some(b => b.type === 'code');
+
+  const css = buildCss(settings.theme || {});
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${esc(title)}</title>
+  <style>
+${css}
+body{padding:28px 32px;margin:0}
+.preview-wrap{max-width:800px;margin:0 auto}
+.preview-title{font-size:1.6em;font-weight:800;color:var(--text);margin:0 0 24px}
+.preview-blocks{display:flex;flex-direction:column;gap:16px}
+  </style>
+  ${hasCode ? `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">` : ''}
+</head>
+<body>
+<div class="preview-wrap">
+  ${title ? `<h1 class="preview-title">${esc(title)}</h1>` : ''}
+  <div class="preview-blocks">
+    ${blocksHtml || '<p style="color:var(--text-muted);font-style:italic">No blocks yet.</p>'}
+  </div>
+</div>
+${hasQuiz           ? `<script>${QUIZ_JS}</script>`       : ''}
+${hasAccordion      ? `<script>${ACCORDION_JS}</script>`  : ''}
+${hasFlashcard      ? `<script>${FLASHCARD_JS}</script>`  : ''}
+${hasPlayground     ? `<script>${PLAYGROUND_JS}</script>` : ''}
+${hasFillInTheBlank ? `<script>${FITB_JS}</script>`       : ''}
+${hasCode ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>` : ''}
+</body>
+</html>`;
+}
+
 // ── HTML templates ─────────────────────────────────────
 
 function sidebarHtml(settings, navItems, currentSlug, toc) {
@@ -1101,10 +1235,11 @@ function getFontLink(fontKey) {
 
 function pageTemplate({ page, blocksHtml, settings, navItems }) {
   const { title, description, slug, section } = page;
-  const hasQuiz       = blocksHtml.includes('quiz-block');
-  const hasAccordion  = (page.blocks || []).some(b => b.type === 'accordion');
-  const hasFlashcard  = (page.blocks || []).some(b => b.type === 'flashcard');
-  const hasPlayground = (page.blocks || []).some(b => b.type === 'playground');
+  const hasQuiz           = blocksHtml.includes('quiz-block');
+  const hasAccordion      = (page.blocks || []).some(b => b.type === 'accordion');
+  const hasFlashcard      = (page.blocks || []).some(b => b.type === 'flashcard');
+  const hasPlayground     = (page.blocks || []).some(b => b.type === 'playground');
+  const hasFillInTheBlank = (page.blocks || []).some(b => b.type === 'fill-in-the-blank');
   const hasCode = (page.blocks || []).some(b => b.type === 'code');
   const toc = extractToc(page.blocks || []);
 
@@ -1176,10 +1311,11 @@ ${showDarkMode ? `<script>${DARK_MODE_JS}</script>` : ''}
   </div>
 </div>
 <script src="../nav.js"></script>
-${hasQuiz       ? `<script src="../quiz.js"></script>`       : ''}
-${hasAccordion  ? `<script src="../accordion.js"></script>`  : ''}
-${hasFlashcard  ? `<script src="../flashcard.js"></script>`  : ''}
-${hasPlayground ? `<script src="../playground.js"></script>` : ''}
+${hasQuiz           ? `<script src="../quiz.js"></script>`       : ''}
+${hasAccordion      ? `<script src="../accordion.js"></script>`  : ''}
+${hasFlashcard      ? `<script src="../flashcard.js"></script>`  : ''}
+${hasPlayground     ? `<script src="../playground.js"></script>` : ''}
+${hasFillInTheBlank ? `<script src="../fitb.js"></script>`       : ''}
 ${hasCode ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>` : ''}
 </body>
 </html>`;
@@ -1193,10 +1329,11 @@ function indexTemplate({ pages, settings, navItems }) {
   const heroSubtitle = home.heroSubtitle || settings.description || '';
   const showPageGrid = home.showPageGrid !== false;
   const homeBlocks = home.blocks || [];
-  const hasQuiz       = homeBlocks.some(b => b.type === 'quiz');
-  const hasAccordion  = homeBlocks.some(b => b.type === 'accordion');
-  const hasFlashcard  = homeBlocks.some(b => b.type === 'flashcard');
-  const hasPlayground = homeBlocks.some(b => b.type === 'playground');
+  const hasQuiz           = homeBlocks.some(b => b.type === 'quiz');
+  const hasAccordion      = homeBlocks.some(b => b.type === 'accordion');
+  const hasFlashcard      = homeBlocks.some(b => b.type === 'flashcard');
+  const hasPlayground     = homeBlocks.some(b => b.type === 'playground');
+  const hasFillInTheBlank = homeBlocks.some(b => b.type === 'fill-in-the-blank');
   const hasCode = homeBlocks.some(b => b.type === 'code');
   const blocksHtml = homeBlocks.map(renderBlock).join('\n');
 
@@ -1266,10 +1403,11 @@ function indexTemplate({ pages, settings, navItems }) {
   </div>
 </div>
 <script src="nav.js"></script>
-${hasQuiz       ? `<script src="quiz.js"></script>`       : ''}
-${hasAccordion  ? `<script src="accordion.js"></script>`  : ''}
-${hasFlashcard  ? `<script src="flashcard.js"></script>`  : ''}
-${hasPlayground ? `<script src="playground.js"></script>` : ''}
+${hasQuiz           ? `<script src="quiz.js"></script>`       : ''}
+${hasAccordion      ? `<script src="accordion.js"></script>`  : ''}
+${hasFlashcard      ? `<script src="flashcard.js"></script>`  : ''}
+${hasPlayground     ? `<script src="playground.js"></script>` : ''}
+${hasFillInTheBlank ? `<script src="fitb.js"></script>`       : ''}
 ${hasCode ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>` : ''}
 </body>
 </html>`;
@@ -1297,6 +1435,7 @@ function generate() {
   fs.writeFileSync(path.join(OUTPUT_DIR, 'accordion.js'), ACCORDION_JS);
   fs.writeFileSync(path.join(OUTPUT_DIR, 'flashcard.js'), FLASHCARD_JS);
   fs.writeFileSync(path.join(OUTPUT_DIR, 'playground.js'), PLAYGROUND_JS);
+  fs.writeFileSync(path.join(OUTPUT_DIR, 'fitb.js'), FITB_JS);
 
   let pages = [];
   if (fs.existsSync(PAGES_DIR)) {
@@ -1336,4 +1475,23 @@ function generate() {
   return msg;
 }
 
-generate();
+if (previewMode) {
+  let raw = '';
+  process.stdin.setEncoding('utf-8');
+  process.stdin.on('data', chunk => { raw += chunk; });
+  process.stdin.on('end', () => {
+    try {
+      const { page } = JSON.parse(raw);
+      let settings = { theme: {} };
+      if (fs.existsSync(SETTINGS_FILE)) {
+        try { settings = { ...settings, ...JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf-8')) }; } catch {}
+      }
+      process.stdout.write(renderPagePreview(page, settings));
+    } catch (e) {
+      process.stderr.write(e.message + '\n');
+      process.exit(1);
+    }
+  });
+} else {
+  generate();
+}

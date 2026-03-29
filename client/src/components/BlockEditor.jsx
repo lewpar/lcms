@@ -2,10 +2,11 @@ import { useRef, useState } from 'react';
 import { uploadAsset } from '../api.js';
 import { v4 as uuidv4 } from '../uuid.js';
 import MediaManager from './MediaManager.jsx';
+import { BLOCK_TYPES, CALLOUT_COLORS, DIFFICULTY_LABELS, DIFFICULTY_COLORS } from '../blockTypes.js';
 
 function blockSummary(block) {
   switch (block.type) {
-    case 'markdown': return block.content?.slice(0, 60) || '(empty)';
+    case 'markdown': return block.content?.replace(/^#{1,6}\s+/gm, '').replace(/[*_`~>[\]]/g, '').replace(/\s+/g, ' ').trim().slice(0, 60) || '(empty)';
     case 'heading':  return `H${block.level}: ${block.text || '(empty)'}`;
     case 'callout':  return block.title || block.content?.slice(0, 40) || '(empty)';
     case 'quiz': {
@@ -31,8 +32,16 @@ function blockSummary(block) {
       const n = block.items?.length ?? 0;
       return `${n} item${n !== 1 ? 's' : ''}`;
     }
-    case 'embed':       return block.src || '(no URL)';
-    case 'playground':  return block.title || block.starterCode?.slice(0, 50) || '(empty)';
+    case 'embed':             return block.src || '(no URL)';
+    case 'playground':        return block.title || block.starterCode?.slice(0, 50) || '(empty)';
+    case 'fill-in-the-blank': {
+      const count = (block.prompt || '').split('___').length - 1;
+      return block.prompt?.slice(0, 50) || `(${count} blank${count !== 1 ? 's' : ''})`;
+    }
+    case 'difficulty': {
+      const lbl = block.label || DIFFICULTY_LABELS[Math.max(0, (block.level || 2) - 1)];
+      return `Level ${block.level || 2}: ${lbl}`;
+    }
     default:            return block.type;
   }
 }
@@ -87,14 +96,17 @@ function CalloutEditor({ block, onChange }) {
         </div>
         <div className="field">
           <label>Color</label>
-          <select value={block.color || 'blue'} onChange={e => onChange({ color: e.target.value })}>
-            <option value="blue">Blue</option>
-            <option value="green">Green</option>
-            <option value="yellow">Yellow</option>
-            <option value="red">Red</option>
-            <option value="purple">Purple</option>
-            <option value="gray">Gray</option>
-          </select>
+          <div className="callout-swatches">
+            {Object.entries(CALLOUT_COLORS).map(([color, cfg]) => (
+              <button
+                key={color}
+                className={`callout-swatch${(block.color || 'blue') === color ? ' callout-swatch--active' : ''}`}
+                style={{ background: cfg.bg, borderColor: cfg.border }}
+                onClick={() => onChange({ color })}
+                title={color[0].toUpperCase() + color.slice(1)}
+              />
+            ))}
+          </div>
         </div>
       </div>
       <div className="field">
@@ -220,7 +232,7 @@ function QuizEditor({ block, onChange }) {
       </div>
 
       <div className="field">
-        <label>{questions.length} Question{questions.length !== 1 ? 's' : ''}</label>
+        <span className="block-subsection-count">{questions.length} Question{questions.length !== 1 ? 's' : ''}</span>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           {questions.map((q, i) => (
             <QuestionEditor
@@ -241,7 +253,7 @@ function QuizEditor({ block, onChange }) {
   );
 }
 
-const CODE_LANGUAGES = ['plaintext', 'python', 'javascript', 'html', 'css', 'json'];
+const CODE_LANGUAGES = ['plaintext', 'python', 'javascript', 'typescript', 'html', 'css', 'json', 'bash', 'sql', 'yaml', 'rust', 'go', 'markdown'];
 
 function CodeEditor({ block, onChange }) {
   return (
@@ -308,12 +320,14 @@ function CaseStudyEditor({ block, onChange }) {
 function ImageEditor({ block, onChange, addToast, siteId }) {
   const fileRef = useRef();
   const [showPicker, setShowPicker] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   const handleFile = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     try {
       const { url } = await uploadAsset(siteId, file);
+      setImgError(false);
       onChange({ src: url });
     } catch {
       addToast('Upload failed', 'error');
@@ -332,7 +346,16 @@ function ImageEditor({ block, onChange, addToast, siteId }) {
         </div>
       </div>
       {block.src && (
-        <img src={block.src} alt={block.alt || ''} style={{ maxWidth: '100%', maxHeight: 180, objectFit: 'contain', borderRadius: 4, background: '#00000033' }} />
+        <img
+          src={block.src}
+          alt={block.alt || ''}
+          style={{ maxWidth: '100%', maxHeight: 180, objectFit: 'contain', borderRadius: 4, background: '#00000033', display: imgError ? 'none' : undefined }}
+          onLoad={() => setImgError(false)}
+          onError={() => setImgError(true)}
+        />
+      )}
+      {block.src && imgError && (
+        <span style={{ fontSize: 12, color: 'var(--danger)' }}>⚠ Image failed to load — check the URL or re-upload.</span>
       )}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
         <div className="field">
@@ -474,7 +497,7 @@ function FlashcardEditor({ block, onChange }) {
         <input type="text" value={block.title || ''} onChange={e => onChange({ title: e.target.value })} placeholder="Flashcard set title" />
       </div>
       <div className="field">
-        <label>{cards.length} Card{cards.length !== 1 ? 's' : ''}</label>
+        <span className="block-subsection-count">{cards.length} Card{cards.length !== 1 ? 's' : ''}</span>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {cards.map((card, i) => (
             <div key={card.id} style={{ border: '1px solid var(--border)', borderRadius: 6, padding: '10px 12px', background: 'var(--surface)' }}>
@@ -535,47 +558,44 @@ function TableEditor({ block, onChange }) {
         <input type="text" value={block.caption || ''} onChange={e => onChange({ caption: e.target.value })} placeholder="Table caption" />
       </div>
       <div className="field">
-        <label>Columns ({headers.length})</label>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+        <label>Table ({headers.length} col{headers.length !== 1 ? 's' : ''}, {rows.length} row{rows.length !== 1 ? 's' : ''})</label>
+        <div className="table-editor-grid" style={{ '--table-cols': headers.length }}>
+          {/* Header row */}
+          <div className="table-editor-row table-editor-header-row">
             {headers.map((h, ci) => (
-              <div key={ci} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <div key={ci} style={{ display: 'flex', gap: 2 }}>
                 <input
                   type="text"
                   value={h}
                   onChange={e => updateHeader(ci, e.target.value)}
                   placeholder={`Col ${ci + 1}`}
-                  style={{ width: 120 }}
+                  style={{ flex: 1, minWidth: 0, fontWeight: 600 }}
                 />
                 {headers.length > 1 && (
                   <button className="btn btn-danger btn-icon btn-sm" onClick={() => removeColumn(ci)} title="Remove column">✕</button>
                 )}
               </div>
             ))}
-            <button className="btn btn-secondary btn-sm" onClick={addColumn}>+ Col</button>
+            <button className="btn btn-secondary btn-sm table-editor-add-col" onClick={addColumn} title="Add column">+</button>
           </div>
-        </div>
-      </div>
-      <div className="field">
-        <label>Rows ({rows.length})</label>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          {/* Data rows */}
           {rows.map((row, ri) => (
-            <div key={ri} style={{ display: 'flex', gap: 4, alignItems: 'center', flexWrap: 'wrap' }}>
+            <div key={ri} className="table-editor-row">
               {headers.map((_, ci) => (
                 <input
                   key={ci}
                   type="text"
                   value={(row || [])[ci] || ''}
                   onChange={e => updateCell(ri, ci, e.target.value)}
-                  placeholder={`Row ${ri + 1}, Col ${ci + 1}`}
-                  style={{ width: 120, flex: '1 1 100px' }}
+                  placeholder={`${ri + 1},${ci + 1}`}
+                  style={{ minWidth: 0 }}
                 />
               ))}
               <button className="btn btn-danger btn-icon btn-sm" onClick={() => removeRow(ri)} title="Remove row">✕</button>
             </div>
           ))}
         </div>
-        <button className="btn btn-secondary btn-sm" style={{ marginTop: 8, alignSelf: 'flex-start' }} onClick={addRow}>
+        <button className="btn btn-secondary btn-sm" style={{ marginTop: 6, alignSelf: 'flex-start' }} onClick={addRow}>
           + Add Row
         </button>
       </div>
@@ -599,7 +619,7 @@ function AccordionEditor({ block, onChange }) {
 
   return (
     <div className="field">
-      <label>{items.length} Item{items.length !== 1 ? 's' : ''}</label>
+      <span className="block-subsection-count">{items.length} Item{items.length !== 1 ? 's' : ''}</span>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {items.map((item, i) => (
           <div key={item.id} style={{ border: '1px solid var(--border)', borderRadius: 6, padding: '10px 12px', background: 'var(--surface)' }}>
@@ -705,12 +725,106 @@ function PlaygroundEditor({ block, onChange }) {
   );
 }
 
+/* ── Fill-in-the-blank editor ── */
+
+function FillInTheBlankEditor({ block, onChange }) {
+  const blankCount = (block.prompt || '').split('___').length - 1;
+  const answers = block.answers || [];
+
+  const syncAnswers = (prompt) => {
+    const count = prompt.split('___').length - 1;
+    const newAnswers = Array.from({ length: count }, (_, i) => answers[i] || '');
+    onChange({ prompt, answers: newAnswers });
+  };
+
+  const updateAnswer = (i, val) => {
+    const newAnswers = [...answers];
+    newAnswers[i] = val;
+    onChange({ answers: newAnswers });
+  };
+
+  return (
+    <>
+      <div className="field">
+        <label>Prompt — use ___ for each blank</label>
+        <textarea
+          rows={4}
+          value={block.prompt || ''}
+          onChange={e => syncAnswers(e.target.value)}
+          placeholder="The capital of France is ___ and it is located in ___ Europe."
+        />
+        <span style={{ fontSize: 11, color: blankCount === 0 ? 'var(--warning)' : 'var(--text-muted)', marginTop: 3 }}>
+          {blankCount === 0 ? 'No blanks found — add ___ where you want an input.' : `${blankCount} blank${blankCount !== 1 ? 's' : ''} detected.`}
+        </span>
+      </div>
+      {blankCount > 0 && (
+        <div className="field">
+          <label>Correct answers</label>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            {Array.from({ length: blankCount }, (_, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontSize: 12, color: 'var(--text-muted)', minWidth: 56 }}>Blank {i + 1}</span>
+                <input
+                  type="text"
+                  value={answers[i] || ''}
+                  onChange={e => updateAnswer(i, e.target.value)}
+                  placeholder={`Answer for blank ${i + 1}`}
+                  style={{ flex: 1 }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+/* ── Difficulty indicator editor ── */
+
+function DifficultyEditor({ block, onChange }) {
+  const level = block.level || 2;
+  return (
+    <>
+      <div className="field">
+        <label>Difficulty level</label>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          {DIFFICULTY_LABELS.map((lbl, i) => (
+            <button
+              key={i}
+              className={`btn btn-sm${level === i + 1 ? ' btn-primary' : ' btn-secondary'}`}
+              onClick={() => onChange({ level: i + 1 })}
+            >
+              {lbl}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="field">
+        <label>Custom label (optional)</label>
+        <input
+          type="text"
+          value={block.label || ''}
+          onChange={e => onChange({ label: e.target.value })}
+          placeholder={DIFFICULTY_LABELS[level - 1]}
+        />
+        <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 3 }}>
+          Defaults to "{DIFFICULTY_LABELS[level - 1]}" if left blank.
+        </span>
+      </div>
+    </>
+  );
+}
+
 /* ── Main BlockEditor ── */
 
 export default function BlockEditor({
   block, index, total, expanded, onToggle, onChange, onRemove, addToast, pages, siteId,
+  onMoveUp, onMoveDown, onAddBelow,
   isDragging, dragOverClass, onDragStart, onDragOver, onDrop, onDragEnd,
 }) {
+  const bt = BLOCK_TYPES.find(b => b.type === block.type);
+
   return (
     <div
       className={`block-card${expanded ? ' expanded' : ''}${isDragging ? ' dragging' : ''}${dragOverClass ? ` ${dragOverClass}` : ''}`}
@@ -732,8 +846,27 @@ export default function BlockEditor({
 
         {/* Clickable area to expand/collapse */}
         <div className="block-header-clickable" onClick={onToggle}>
-          <span className={`block-type-badge ${block.type}`}>{block.type}</span>
+          <span className={`block-type-badge ${block.type}`}>
+            {bt?.icon && <span className="block-type-icon">{bt.icon}</span>}
+            {bt?.label || block.type}
+          </span>
           <span className="block-summary">{blockSummary(block)}</span>
+        </div>
+
+        {/* Move up/down */}
+        <div className="block-move-btns">
+          <button
+            className="btn btn-secondary btn-icon btn-sm"
+            onClick={e => { e.stopPropagation(); onMoveUp(); }}
+            disabled={index === 0}
+            title="Move up"
+          >↑</button>
+          <button
+            className="btn btn-secondary btn-icon btn-sm"
+            onClick={e => { e.stopPropagation(); onMoveDown(); }}
+            disabled={index === total - 1}
+            title="Move down"
+          >↓</button>
         </div>
 
         <button
@@ -745,23 +878,29 @@ export default function BlockEditor({
 
       {expanded && (
         <div className="block-body">
-          {block.type === 'markdown'  && <MarkdownEditor   block={block} onChange={onChange} />}
-          {block.type === 'heading'   && <HeadingEditor    block={block} onChange={onChange} />}
-          {block.type === 'callout'   && <CalloutEditor    block={block} onChange={onChange} />}
-          {block.type === 'quiz'      && <QuizEditor       block={block} onChange={onChange} />}
-          {block.type === 'code'      && <CodeEditor       block={block} onChange={onChange} />}
-          {block.type === 'image'     && <ImageEditor      block={block} onChange={onChange} addToast={addToast} siteId={siteId} />}
-          {block.type === 'video'     && <VideoEditor      block={block} onChange={onChange} />}
-          {block.type === 'case-study' && <CaseStudyEditor block={block} onChange={onChange} />}
-          {block.type === 'page-link' && <PageLinkEditor   block={block} onChange={onChange} pages={pages} />}
-          {block.type === 'flashcard' && <FlashcardEditor  block={block} onChange={onChange} />}
-          {block.type === 'table'     && <TableEditor      block={block} onChange={onChange} />}
-          {block.type === 'accordion' && <AccordionEditor  block={block} onChange={onChange} />}
-          {block.type === 'embed'       && <EmbedEditor       block={block} onChange={onChange} />}
-          {block.type === 'playground' && <PlaygroundEditor  block={block} onChange={onChange} />}
-          {block.type === 'divider'   && (
+          {block.type === 'markdown'   && <MarkdownEditor   block={block} onChange={onChange} />}
+          {block.type === 'heading'    && <HeadingEditor    block={block} onChange={onChange} />}
+          {block.type === 'callout'    && <CalloutEditor    block={block} onChange={onChange} />}
+          {block.type === 'quiz'       && <QuizEditor       block={block} onChange={onChange} />}
+          {block.type === 'code'       && <CodeEditor       block={block} onChange={onChange} />}
+          {block.type === 'image'      && <ImageEditor      block={block} onChange={onChange} addToast={addToast} siteId={siteId} />}
+          {block.type === 'video'      && <VideoEditor      block={block} onChange={onChange} />}
+          {block.type === 'case-study' && <CaseStudyEditor  block={block} onChange={onChange} />}
+          {block.type === 'page-link'  && <PageLinkEditor   block={block} onChange={onChange} pages={pages} />}
+          {block.type === 'flashcard'  && <FlashcardEditor  block={block} onChange={onChange} />}
+          {block.type === 'table'      && <TableEditor      block={block} onChange={onChange} />}
+          {block.type === 'accordion'  && <AccordionEditor  block={block} onChange={onChange} />}
+          {block.type === 'embed'             && <EmbedEditor          block={block} onChange={onChange} />}
+          {block.type === 'playground'       && <PlaygroundEditor     block={block} onChange={onChange} />}
+          {block.type === 'fill-in-the-blank' && <FillInTheBlankEditor block={block} onChange={onChange} />}
+          {block.type === 'difficulty'        && <DifficultyEditor     block={block} onChange={onChange} />}
+          {block.type === 'divider'    && (
             <p style={{ color: 'var(--text-muted)', fontSize: 12 }}>Horizontal divider — no configuration needed.</p>
           )}
+
+          <button className="block-add-below-btn" onClick={() => onAddBelow()}>
+            + Insert block below
+          </button>
         </div>
       )}
     </div>

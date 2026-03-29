@@ -9,22 +9,27 @@ export const CALLOUT_COLORS = {
   gray:   { bg: '#f8fafc', border: '#94a3b8', text: '#475569' },
 };
 
+export const DIFFICULTY_LABELS = ['Beginner', 'Elementary', 'Intermediate', 'Advanced', 'Expert'];
+export const DIFFICULTY_COLORS = ['#22c55e', '#84cc16', '#f59e0b', '#f97316', '#ef4444'];
+
 export const BLOCK_TYPES = [
-  { type: 'markdown',    icon: '✏️', label: 'Markdown',   group: 'Content' },
-  { type: 'heading',     icon: '𝐇',  label: 'Heading',    group: 'Content' },
-  { type: 'callout',     icon: '💡', label: 'Callout',    group: 'Content' },
-  { type: 'divider',     icon: '─',  label: 'Divider',    group: 'Content' },
-  { type: 'image',       icon: '🖼️', label: 'Image',      group: 'Media' },
-  { type: 'video',       icon: '▶',  label: 'Video',      group: 'Media' },
-  { type: 'code',        icon: '⌨️', label: 'Code',       group: 'Media' },
-  { type: 'embed',       icon: '⊡',  label: 'Embed',      group: 'Media' },
-  { type: 'quiz',        icon: '❓', label: 'Quiz',       group: 'Interactive' },
-  { type: 'flashcard',   icon: '🃏', label: 'Flashcard',  group: 'Interactive' },
-  { type: 'accordion',   icon: '☰',  label: 'Accordion',  group: 'Interactive' },
-  { type: 'playground',  icon: '▶',  label: 'Playground', group: 'Interactive' },
-  { type: 'table',       icon: '⊞',  label: 'Table',      group: 'Structure' },
-  { type: 'page-link',   icon: '→',  label: 'Page Link',  group: 'Structure' },
-  { type: 'case-study',  icon: '📋', label: 'Case Study', group: 'Structure' },
+  { type: 'markdown',          icon: '✏️', label: 'Markdown',          group: 'Content' },
+  { type: 'heading',           icon: '𝐇',  label: 'Heading',           group: 'Content' },
+  { type: 'callout',           icon: '💡', label: 'Callout',           group: 'Content' },
+  { type: 'difficulty',        icon: '⚡', label: 'Difficulty',        group: 'Content' },
+  { type: 'divider',           icon: '─',  label: 'Divider',           group: 'Content' },
+  { type: 'image',             icon: '🖼️', label: 'Image',             group: 'Media' },
+  { type: 'video',             icon: '▶',  label: 'Video',             group: 'Media' },
+  { type: 'code',              icon: '⌨️', label: 'Code',              group: 'Media' },
+  { type: 'embed',             icon: '⊡',  label: 'Embed',             group: 'Media' },
+  { type: 'quiz',              icon: '❓', label: 'Quiz',              group: 'Interactive' },
+  { type: 'flashcard',         icon: '🃏', label: 'Flashcard',         group: 'Interactive' },
+  { type: 'fill-in-the-blank', icon: '✍️', label: 'Fill in the Blank', group: 'Interactive' },
+  { type: 'accordion',         icon: '☰',  label: 'Accordion',         group: 'Interactive' },
+  { type: 'playground',        icon: '▶',  label: 'Playground',        group: 'Interactive' },
+  { type: 'table',             icon: '⊞',  label: 'Table',             group: 'Structure' },
+  { type: 'page-link',         icon: '→',  label: 'Page Link',         group: 'Structure' },
+  { type: 'case-study',        icon: '📋', label: 'Case Study',        group: 'Structure' },
 ];
 
 export function defaultBlock(type) {
@@ -43,8 +48,10 @@ export function defaultBlock(type) {
     case 'flashcard':   return { id, type, title: '', cards: [{ id: uuidv4(), front: '', back: '' }] };
     case 'table':       return { id, type, caption: '', headers: ['Column 1', 'Column 2'], rows: [['', '']] };
     case 'accordion':   return { id, type, items: [{ id: uuidv4(), title: '', content: '' }] };
-    case 'embed':       return { id, type, src: '', height: 400, caption: '' };
-    case 'playground':  return { id, type, title: 'Try it yourself', starterCode: '// Write your JavaScript here\nconsole.log(\'Hello, world!\');' };
-    default:            return { id, type };
+    case 'embed':             return { id, type, src: '', height: 400, caption: '' };
+    case 'playground':        return { id, type, title: 'Try it yourself', starterCode: '// Write your JavaScript here\nconsole.log(\'Hello, world!\');' };
+    case 'fill-in-the-blank': return { id, type, prompt: '', answers: [] };
+    case 'difficulty':        return { id, type, level: 2, label: '' };
+    default:                  return { id, type };
   }
 }

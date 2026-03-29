@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execFileSync } = require('child_process');
+const { execFileSync, spawnSync } = require('child_process');
 const router = require('express').Router({ mergeParams: true });
 
 const { readSites, ROOT, OUTPUT_DIR, DOCS_DIR, NGINX_WEB_ROOT } = require('../lib/paths');
@@ -22,6 +22,25 @@ function deployToDir(slug, destRoot) {
   fs.mkdirSync(destDir, { recursive: true });
   execFileSync('cp', ['-rT', srcDir, destDir], { timeout: 30000 });
 }
+
+// Render a minimal page preview (blocks only, no nav/header/footer).
+// Accepts { page: { title, blocks } } in the request body.
+// Returns standalone HTML with the site's theme CSS and inlined JS.
+router.post('/preview-page', requireValidSiteId, requireSiteExists, (req, res) => {
+  const { page } = req.body;
+  if (!page) return res.status(400).json({ error: 'page is required' });
+  const result = spawnSync('node', ['generator/index.js', '--preview', req.params.siteId], {
+    input: JSON.stringify({ page }),
+    cwd: ROOT,
+    encoding: 'utf-8',
+    timeout: 10000,
+  });
+  if (result.error || result.status !== 0) {
+    return res.status(500).json({ error: result.stderr || 'Preview generation failed' });
+  }
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.send(result.stdout);
+});
 
 // Generate only — outputs to output/<slug>/ for the live preview.
 // Does not require nginx or any external web server.

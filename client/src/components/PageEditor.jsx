@@ -4,23 +4,24 @@ import SplitPane from './SplitPane.jsx';
 
 // Keep stable refs so the unmount cleanup can fire without stale closures
 import BlockEditor from './BlockEditor.jsx';
-import SitePreview from './SitePreview.jsx';
+import ContentPreview from './ContentPreview.jsx';
 import ConfirmDialog from './ConfirmDialog.jsx';
 import AddBlockDialog from './AddBlockDialog.jsx';
 import IconPickerDialog from './IconPickerDialog.jsx';
 import { v4 as uuidv4 } from '../uuid.js';
 import { BLOCK_TYPES, defaultBlock } from '../blockTypes.js';
-import { slugify, RESERVED_SLUGS } from '../utils.js';
+import { slugify, RESERVED_SLUGS, AUTOSAVE_DELAY_MS } from '../utils.js';
 
 export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast, pages = [] }) {
   const [page, setPage] = useState(null);
   const [saveStatus, setSaveStatus] = useState('saved'); // 'saved' | 'unsaved' | 'saving'
   const [showAddBlock, setShowAddBlock] = useState(false);
   const [showIconPicker, setShowIconPicker] = useState(false);
-  const [metaOpen, setMetaOpen] = useState(false);
+  const [metaOpen, setMetaOpen] = useState(true);
   const [expandedBlockId, setExpandedBlockId] = useState(null);
   const [previewKey, setPreviewKey] = useState(0);
   const [pendingRemoveId, setPendingRemoveId] = useState(null);
+  const [insertAtIndex, setInsertAtIndex] = useState(null);
 
   // Drag state
   const dragIndex = useRef(null);
@@ -67,7 +68,7 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
     if (isFirstLoad.current) { isFirstLoad.current = false; return; }
     setSaveStatus('unsaved');
     clearTimeout(autoSaveTimer.current);
-    autoSaveTimer.current = setTimeout(() => doSave(page, true), 2000);
+    autoSaveTimer.current = setTimeout(() => doSave(page, true), AUTOSAVE_DELAY_MS);
     return () => clearTimeout(autoSaveTimer.current);
   }, [page]);
 
@@ -113,9 +114,24 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
 
   const addBlock = (type) => {
     const block = defaultBlock(type);
-    setPage(p => ({ ...p, blocks: [...p.blocks, block] }));
+    setPage(p => {
+      const blocks = [...p.blocks];
+      const at = insertAtIndex !== null ? insertAtIndex : blocks.length;
+      blocks.splice(at, 0, block);
+      return { ...p, blocks };
+    });
     setExpandedBlockId(block.id);
     setShowAddBlock(false);
+    setInsertAtIndex(null);
+  };
+
+  const moveBlock = (fromIndex, toIndex) => {
+    setPage(p => {
+      const blocks = [...p.blocks];
+      const [moved] = blocks.splice(fromIndex, 1);
+      blocks.splice(toIndex, 0, moved);
+      return { ...p, blocks };
+    });
   };
 
   // Drag handlers
@@ -147,8 +163,8 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
 
   const handleDragEnd = () => { dragIndex.current = null; setDragOver(null); };
 
-  const statusLabel = { saved: '✓ Saved', unsaved: '⟳ Saving…', saving: '⟳ Saving…' };
-  const statusColor = { saved: 'var(--success)', unsaved: 'var(--text-muted)', saving: 'var(--text-muted)' };
+  const statusLabel = { saved: '✓ Saved', unsaved: '● Unsaved', saving: '⟳ Saving…' };
+  const statusColor = { saved: 'var(--success)', unsaved: 'var(--warning)', saving: 'var(--text-muted)' };
 
   return (
     <div className="editor">
@@ -271,6 +287,9 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
                 onToggle={() => setExpandedBlockId(expandedBlockId === block.id ? null : block.id)}
                 onChange={changes => updateBlock(block.id, changes)}
                 onRemove={() => setPendingRemoveId(block.id)}
+                onMoveUp={() => moveBlock(idx, idx - 1)}
+                onMoveDown={() => moveBlock(idx, idx + 1)}
+                onAddBelow={() => { setInsertAtIndex(idx + 1); setShowAddBlock(true); }}
                 addToast={addToast}
                 pages={pages}
                 siteId={siteId}
@@ -300,13 +319,11 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
           </div>
         </div>}
         right={<div className="editor-preview">
-          <SitePreview
-              refreshSignal={previewKey}
-              siteId={siteId}
-              siteSlug={siteSlug}
-              addToast={addToast}
-              pageSlug={page?.slug || ''}
-            />
+          <ContentPreview
+            siteId={siteId}
+            page={page}
+            refreshSignal={previewKey}
+          />
         </div>}
       />
 

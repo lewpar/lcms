@@ -525,7 +525,11 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   background: var(--surface3);
   color: var(--text-muted);
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
+.block-type-icon { font-style: normal; }
 
 .block-type-badge.markdown { background: #6c63ff22; color: #9b94ff; }
 .block-type-badge.quiz     { background: #22c55e22; color: #4ade80; }
@@ -1455,45 +1459,20 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   flex-shrink: 0;
 }
 
-.site-preview-title {
-  font-size: 13px;
-  font-weight: 700;
-  flex-shrink: 0;
-  color: var(--text);
+.site-preview-toolbar--label {
+  justify-content: center;
+  padding: 7px 16px;
 }
 
-.site-preview-nav {
-  flex: 1;
-  display: flex;
-  gap: 4px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.site-preview-nav::-webkit-scrollbar { display: none; }
-
-.site-preview-nav-btn {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--text-muted);
-  padding: 4px 10px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s, color 0.15s;
-}
-.site-preview-nav-btn:hover { background: var(--surface3); color: var(--text); }
-.site-preview-nav-btn.active {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-}
-
-.site-preview-toolbar-actions {
+.site-preview-label {
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
 }
 
 .site-preview-gen-dot {
@@ -1683,8 +1662,102 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   border: 0;
 }
 
-/* ── Block type badge for video ── */
-.block-type-badge.video { background: #ef444422; color: #f87171; }
+/* ── Block type badge colors ── */
+.block-type-badge.video      { background: #ef444422; color: #f87171; }
+.block-type-badge.case-study { background: #f9731622; color: #fed7aa; }
+.block-type-badge.page-link  { background: #06b6d422; color: #22d3ee; }
+.block-type-badge.flashcard  { background: #eab30822; color: #fde047; }
+.block-type-badge.table      { background: #10b98122; color: #34d399; }
+.block-type-badge.accordion  { background: #8b5cf622; color: #a78bfa; }
+.block-type-badge.embed      { background: #6b728022; color: #d1d5db; }
+.block-type-badge.playground        { background: #f43f5e22; color: #fb7185; }
+.block-type-badge.fill-in-the-blank { background: #0ea5e922; color: #38bdf8; }
+.block-type-badge.difficulty        { background: #f59e0b22; color: #fbbf24; }
+
+/* ── Callout color swatches ── */
+.callout-swatches {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  padding-top: 2px;
+}
+.callout-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.1s, box-shadow 0.1s;
+  outline: none;
+}
+.callout-swatch:hover { transform: scale(1.15); }
+.callout-swatch--active {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px currentColor;
+  transform: scale(1.1);
+}
+
+/* ── Block move buttons (↑↓) — fade in on header hover ── */
+.block-move-btns {
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.block-header:hover .block-move-btns { opacity: 1; }
+
+/* ── Block subsection count label ── */
+.block-subsection-count {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+/* ── Insert block below button ── */
+.block-add-below-btn {
+  margin-top: 4px;
+  align-self: center;
+  background: none;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 11px;
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  width: 100%;
+}
+.block-add-below-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-hover-bg, #6c63ff11);
+}
+
+/* ── Table editor grid ── */
+.table-editor-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow-x: auto;
+}
+.table-editor-row {
+  display: grid;
+  grid-template-columns: repeat(var(--table-cols, 1), minmax(80px, 1fr)) 28px;
+  gap: 3px;
+  align-items: center;
+}
+.table-editor-header-row input {
+  background: var(--surface2);
+  font-weight: 600;
+}
+.table-editor-add-col {
+  /* sits in the last column slot of the header row */
+  justify-self: start;
+}
 
 /* ── Misc ── */
 code {
@@ -1873,55 +1946,6 @@ code {
   background: #fff;
 }
 
-/* ── Fancy light/dark toggle ─────────────────────────── */
-.preview-theme-toggle {
-  position: relative;
-  width: 64px;
-  height: 28px;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  cursor: pointer;
-  padding: 0;
-  overflow: visible;
-  transition: background 0.25s, border-color 0.25s;
-  flex-shrink: 0;
-}
-.preview-theme-toggle--dark {
-  background: #1e293b;
-  border-color: #475569;
-}
-.preview-theme-toggle__icons {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 7px;
-  font-size: 12px;
-  pointer-events: none;
-  border-radius: 14px;
-  overflow: hidden;
-}
-.preview-theme-toggle__sun  { color: #f59e0b; opacity: 1;   transition: opacity 0.2s; line-height: 1; }
-.preview-theme-toggle__moon { color: #94a3b8; opacity: 0.35; transition: opacity 0.2s; line-height: 1; }
-.preview-theme-toggle--dark .preview-theme-toggle__sun  { opacity: 0.35; }
-.preview-theme-toggle--dark .preview-theme-toggle__moon { opacity: 1; color: #e2e8f0; }
-.preview-theme-toggle__thumb {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--primary);
-  transition: transform 0.25s cubic-bezier(.4,0,.2,1), background 0.25s;
-  pointer-events: none;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-}
-.preview-theme-toggle--dark .preview-theme-toggle__thumb {
-  transform: translateX(36px);
-}
 
 /* ── Icon Picker Dialog ── */
 .ipd-backdrop {
