@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz — Demo Site</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=mncbq2n4" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">Demo Site</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Blocks</div><a href="../markdown/" class="nav-link" title="Markdown"><span class="nav-link-icon">✏️</span><span class="nav-link-text">Markdown</span></a><a href="../callouts/" class="nav-link" title="Callouts"><span class="nav-link-icon">📢</span><span class="nav-link-text">Callouts</span></a><a href="../quiz/" class="nav-link active" title="Quiz"><span class="nav-link-icon">🧠</span><span class="nav-link-text">Quiz</span></a><a href="../other/" class="nav-link" title="Other"><span class="nav-link-icon">🗂️</span><span class="nav-link-text">Other</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    <div class="custom-site-header"><p>Custom Header. You can modify this header using the site settings.</p></div>
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>Blocks</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Quiz</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Quiz</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">Blocks</span>
+            <span>⏱ 1 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><div class="quiz-block" data-questions='[{"id":"be4933b5-e197-490a-8d67-d42191b2b9fe","question":"Which of the following is a fruit?","options":["Chair","Dog","Apple","Tree"],"correctIndex":2,"explanation":"You can add an explanation here, shown after each answer."},{"id":"454fc076-da76-42de-a92a-6bdfba39f3a8","question":"Which of the following does NOT have 4 legs?","options":["Dog","Chair","Human","Cat"],"correctIndex":2,"explanation":"You can add an explanation here, shown after each answer."}]' data-quiz-id="1bc843c8-44b0-4eb6-b149-788608efa714">
+  <div class="quiz-block-header">
+    <span class="quiz-block-header-title">Sample Quiz</span>
+    <span class="quiz-block-header-badge">2 questions</span>
+  </div>
+  <div class="qs-start">
+    <h3 class="qs-title">Sample Quiz</h3>
+    <p class="qs-desc">This is a sample quiz configurable through the block editor.</p><p class="qs-count">2 questions</p>
+    <button class="qs-start-btn quiz-btn" type="button">Start Quiz →</button>
+    <div class="qs-resume" hidden>
+      <p class="qs-resume-status"></p>
+      <div class="qs-resume-actions">
+        <button class="qs-continue-btn quiz-btn" type="button">Continue →</button>
+        <button class="qs-restart-btn quiz-btn quiz-btn-outline" type="button">↺ Start Over</button>
+      </div>
+    </div>
+  </div>
+  <div class="qs-question" hidden>
+    <div class="qs-progress-wrap">
+      <div class="qs-progress-bar"><div class="qs-progress-fill"></div></div>
+      <span class="qs-progress-text">1 / 2</span>
+    </div>
+    <div class="qs-q-text"></div>
+    <ul class="qs-options" role="list"></ul>
+    <div class="qs-nav">
+      <button class="qs-submit quiz-btn" type="button" disabled>Submit Answer</button>
+    </div>
+    <div class="qs-feedback" hidden></div>
+    <div class="qs-explanation" hidden></div>
+    <div class="qs-next-nav" hidden>
+      <button class="qs-next quiz-btn quiz-btn-outline" type="button" hidden>Next →</button>
+      <button class="qs-finish quiz-btn quiz-btn-outline" type="button" hidden>See Results →</button>
+    </div>
+  </div>
+  <div class="qs-results" hidden>
+    <p class="qs-results-title">Quiz Complete</p>
+    <div class="qs-score-ring"><div class="qs-score-inner">
+      <div class="qs-score-num"></div><div class="qs-score-lbl">correct</div>
+    </div></div>
+    <div class="qs-score-pct"></div>
+    <div class="qs-review"></div>
+    <button class="qs-retry-btn quiz-btn" type="button">↺ Try Again</button>
+  </div>
+</div></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../callouts/">← Callouts</a>
+  <a class="pn-btn pn-next" href="../other/">Other →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="custom-footer-html"><div>Generated using LCMS. You can modify this footer using the site settings.</div></div>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mncbq2n4"></script>
+<script src="../quiz.js?v=mncbq2n4"></script>
+
+
+
+
+
+</body>
+</html>
