@@ -1572,9 +1572,22 @@ function generate() {
       .filter(Boolean);
   }
 
-  // Build section ID → name map for resolving section IDs stored in page.section
+  // Build section ID → index/name maps; index is used to sort pages by section order
   const sectionNameMap = {};
-  for (const s of (settings.sections || [])) { sectionNameMap[s.id] = s.name; }
+  const sectionIndexMap = {};
+  for (let i = 0; i < (settings.sections || []).length; i++) {
+    const s = settings.sections[i];
+    sectionNameMap[s.id] = s.name;
+    sectionIndexMap[s.id] = i;
+  }
+
+  // Sort pages: section array order first, then explicit page order within each section
+  pages.sort((a, b) => {
+    const aSecIdx = a.section ? (sectionIndexMap[a.section] ?? Infinity) : Infinity;
+    const bSecIdx = b.section ? (sectionIndexMap[b.section] ?? Infinity) : Infinity;
+    if (aSecIdx !== bSecIdx) return aSecIdx - bSecIdx;
+    return (a.order ?? Infinity) - (b.order ?? Infinity);
+  });
 
   const resolveSectionName = (sectionId) => sectionId ? (sectionNameMap[sectionId] || '') : '';
 

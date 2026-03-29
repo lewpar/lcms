@@ -473,16 +473,6 @@ export default function App() {
             <div style={{ flex: 1, minWidth: 0 }}>
               <h1 style={{ fontSize: 14, lineHeight: 1.2 }}>{selectedSite.name}</h1>
               <p style={{ fontSize: 10 }}>/{selectedSite.slug}</p>
-              {cmsSettings.baseUrl && (
-                <a
-                  href={`${cmsSettings.baseUrl}/${selectedSite.slug}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={selectedSite.deployed ? 'site-deployed-url' : 'site-not-deployed'}
-                >
-                  {cmsSettings.baseUrl}/{selectedSite.slug}
-                </a>
-              )}
             </div>
             <button
               className={`btn btn-secondary btn-sm btn-icon${view === 'settings' ? ' active-view' : ''}`}
@@ -518,7 +508,7 @@ export default function App() {
         <div className="page-list">
           {filteredPages.length === 0 && (
             <p style={{ padding: '8px 4px', fontSize: '12px', color: 'var(--text-muted)' }}>
-              {search ? 'No pages match.' : 'No pages yet.'}
+              {search ? 'No pages match.' : sections.length === 0 ? 'No section yet.' : 'No pages yet.'}
             </p>
           )}
 
@@ -581,7 +571,7 @@ export default function App() {
                   <div className="sidebar-section-pages">
                     {sectionPages.length === 0 ? (
                       <div className={`sidebar-section-empty${isDragOver ? ' drag-hint' : ''}`}>
-                        {isDragOver ? 'Drop here' : 'No pages — drag one here'}
+                        {isDragOver ? 'Drop here' : 'No pages yet.'}
                       </div>
                     ) : (
                       sectionPages.map(renderPageItem)
@@ -643,6 +633,17 @@ export default function App() {
               ⬆ Deploy
             </button>
           </div>
+          {cmsSettings.baseUrl && (
+            <a
+              href={`${cmsSettings.baseUrl}/${selectedSite.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={selectedSite.deployed ? 'site-deployed-url' : 'site-not-deployed'}
+              style={{ display: 'block', marginTop: 6, fontSize: 11, wordBreak: 'break-all' }}
+            >
+              {cmsSettings.baseUrl}/{selectedSite.slug}
+            </a>
+          )}
         </div>
       </aside>
 
