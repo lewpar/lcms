@@ -1,0 +1,32 @@
+{
+  "id": "9303d1e7-fa0b-4988-aee9-ff339743e01b",
+  "title": "Other",
+  "slug": "other",
+  "section": "282ad6a6-e2e7-4a8a-b0ec-82dc2f8b35d0",
+  "description": "",
+  "blocks": [
+    {
+      "id": "e18d56be-ed81-4def-bd07-9a036a96ad7f",
+      "type": "difficulty",
+      "level": 4,
+      "label": ""
+    },
+    {
+      "id": "941bb843-0224-4104-9af2-7fcf9ae8bd50",
+      "type": "divider"
+    },
+    {
+      "id": "7f4e5a4e-3cb4-4261-8bf8-1167f1de2754",
+      "type": "fill-in-the-blank",
+      "prompt": "const response = ___ fetch(\"...\");\nconst json = ___ response.json();\n\nconsole.log(json.name);",
+      "answers": [
+        "await",
+        "await"
+      ]
+    }
+  ],
+  "createdAt": "2026-03-29T06:04:32.177Z",
+  "updatedAt": "2026-03-29T09:29:29.664Z",
+  "icon": "🗂️",
+  "order": 3
+}

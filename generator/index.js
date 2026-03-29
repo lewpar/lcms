@@ -54,6 +54,71 @@ function slugify(text) {
 }
 function md(text) { return text ? marked.parse(text, { renderer: mdRenderer }) : ''; }
 
+// ── Syntax highlighter (for FITB code mode) ────────────
+
+function highlightCode(code, lang) {
+  if (!lang || lang === 'plaintext') return esc(code);
+
+  const JS_KW = new Set(['break','case','catch','class','const','continue','debugger','default','delete','do','else','export','extends','finally','for','function','if','import','in','instanceof','let','new','of','return','static','super','switch','throw','try','typeof','var','void','while','with','yield','async','await','null','undefined','true','false','this','from','as']);
+  const PY_KW = new Set(['False','None','True','and','as','assert','async','await','break','class','continue','def','del','elif','else','except','finally','for','from','global','if','import','in','is','lambda','nonlocal','not','or','pass','raise','return','try','while','with','yield','print']);
+  const kw = lang === 'python' ? PY_KW : JS_KW;
+
+  let html = '';
+  let i = 0;
+
+  while (i < code.length) {
+    // Python comment
+    if (lang === 'python' && code[i] === '#') {
+      const end = code.indexOf('\n', i);
+      const t = end === -1 ? code.slice(i) : code.slice(i, end);
+      html += `<span class="h-cm">${esc(t)}</span>`; i += t.length;
+    }
+    // JS single-line comment
+    else if (lang !== 'python' && code[i] === '/' && code[i+1] === '/') {
+      const end = code.indexOf('\n', i);
+      const t = end === -1 ? code.slice(i) : code.slice(i, end);
+      html += `<span class="h-cm">${esc(t)}</span>`; i += t.length;
+    }
+    // JS multi-line comment
+    else if (lang !== 'python' && code[i] === '/' && code[i+1] === '*') {
+      const end = code.indexOf('*/', i + 2);
+      const t = end === -1 ? code.slice(i) : code.slice(i, end + 2);
+      html += `<span class="h-cm">${esc(t)}</span>`; i += t.length;
+    }
+    // Strings (single or double quote)
+    else if (code[i] === '"' || code[i] === "'") {
+      const q = code[i]; let j = i + 1;
+      while (j < code.length && code[j] !== q) { if (code[j] === '\\') j++; j++; }
+      const t = code.slice(i, j + 1);
+      html += `<span class="h-st">${esc(t)}</span>`; i = j + 1;
+    }
+    // JS template literal
+    else if (lang !== 'python' && code[i] === '`') {
+      let j = i + 1;
+      while (j < code.length && code[j] !== '`') { if (code[j] === '\\') j++; j++; }
+      const t = code.slice(i, j + 1);
+      html += `<span class="h-st">${esc(t)}</span>`; i = j + 1;
+    }
+    // Identifier / keyword
+    else if (/[A-Za-z_$]/.test(code[i])) {
+      let j = i; while (j < code.length && /[\w$]/.test(code[j])) j++;
+      const t = code.slice(i, j);
+      html += kw.has(t) ? `<span class="h-kw">${esc(t)}</span>` : esc(t);
+      i = j;
+    }
+    // Number
+    else if (/[0-9]/.test(code[i])) {
+      let j = i; while (j < code.length && /[\d.xXa-fA-FbBoO_]/.test(code[j])) j++;
+      html += `<span class="h-nm">${esc(code.slice(i, j))}</span>`; i = j;
+    }
+    // Everything else (operators, whitespace, newlines, punctuation)
+    else {
+      html += esc(code[i]); i++;
+    }
+  }
+  return html;
+}
+
 function extractToc(blocks) {
   const items = [];
   for (const b of (blocks || [])) {
@@ -318,37 +383,76 @@ function renderBlock(block) {
     }
 
     case 'fill-in-the-blank': {
-      const parts = (block.prompt || '').split('___');
       const answers = block.answers || [];
+      const lang = block.language || 'plaintext';
       const answersJson = JSON.stringify(answers).replace(/&/g,'\\u0026').replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/'/g,'\\u0027');
-      const promptHtml = parts.map((part, i) => {
-        const w = Math.max(80, ((answers[i] || '').length + 4) * 8);
-        return esc(part) + (i < parts.length - 1
-          ? `<input class="fitb-input" data-idx="${i}" type="text" autocomplete="off" style="width:${w}px">`
-          : '');
+
+      if (lang !== 'plaintext') {
+        // Code mode: render highlighted code with inline inputs
+        const parts = (block.prompt || '').split('___');
+        const codeHtml = parts.map((part, i) => {
+          const highlighted = highlightCode(part, lang);
+          if (i < parts.length - 1) {
+            const w = Math.max(80, ((answers[i] || '').length + 4) * 9);
+            return highlighted + `<input class="fitb-input fitb-code-input" data-idx="${i}" type="text" autocomplete="off" style="width:${w}px">`;
+          }
+          return highlighted;
+        }).join('');
+        return `<div class="fitb-block fitb-block--code" data-answers='${answersJson}'>
+  <div class="fitb-header">Fill in the Blanks</div>
+  <div class="fitb-code-body">
+    <pre class="fitb-code-pre"><code>${codeHtml}</code></pre>
+    <div class="fitb-footer fitb-code-footer">
+      <button class="fitb-check-btn" type="button">Check Answers</button>
+      <span class="fitb-result" hidden></span>
+    </div>
+  </div>
+</div>`;
+      }
+
+      // Plain text mode
+      let blankIdx = 0;
+      const linesHtml = (block.prompt || '').split('\n').map(line => {
+        if (!line.trim()) return '<div class="fitb-spacer"></div>';
+        const lineParts = line.split('___');
+        const lineHtml = lineParts.map((part, i) => {
+          const escaped = esc(part);
+          if (i < lineParts.length - 1) {
+            const idx = blankIdx++;
+            const w = Math.max(80, ((answers[idx] || '').length + 4) * 8);
+            return escaped + `<input class="fitb-input" data-idx="${idx}" type="text" autocomplete="off" style="width:${w}px">`;
+          }
+          return escaped;
+        }).join('');
+        return `<p class="fitb-line">${lineHtml}</p>`;
       }).join('');
       return `<div class="fitb-block" data-answers='${answersJson}'>
-  <div class="fitb-prompt">${promptHtml}</div>
-  <div class="fitb-footer">
-    <button class="fitb-check-btn" type="button">Check</button>
-    <span class="fitb-result" hidden></span>
+  <div class="fitb-header">Fill in the Blanks</div>
+  <div class="fitb-body">
+    <div class="fitb-prompt">${linesHtml}</div>
+    <div class="fitb-footer">
+      <button class="fitb-check-btn" type="button">Check Answers</button>
+      <span class="fitb-result" hidden></span>
+    </div>
   </div>
 </div>`;
     }
 
     case 'difficulty': {
-      const DIFF_LABELS = ['Beginner','Elementary','Intermediate','Advanced','Expert'];
-      const DIFF_COLORS = ['#22c55e','#84cc16','#f59e0b','#f97316','#ef4444'];
-      const level = Math.max(1, Math.min(5, block.level || 2));
+      const DIFF_LABELS = ['Easy','Medium','Hard','Very Hard'];
+      const DIFF_COLORS = ['#22c55e','#f59e0b','#f97316','#ef4444'];
+      const level = Math.max(1, Math.min(4, block.level || 1));
       const label = block.label || DIFF_LABELS[level - 1];
       const color = DIFF_COLORS[level - 1];
-      const pips = [1,2,3,4,5].map(i =>
-        `<div class="diff-pip" style="background:${i <= level ? color : color + '33'}"></div>`
+      const bars = [1,2,3,4].map(i =>
+        `<div class="diff-bar" style="background:${i <= level ? color : color + '33'}"></div>`
       ).join('');
-      return `<div class="difficulty-block" style="background:${color}18;border:1px solid ${color}55">
-  <span class="diff-icon">⚡</span>
-  <span class="diff-label" style="color:${color}">${esc(label)}</span>
-  <div class="diff-pips">${pips}</div>
+      return `<div class="difficulty-block" style="background:${color}12;border-left:3px solid ${color}">
+  <div class="diff-info">
+    <span class="diff-tag">Difficulty</span>
+    <span class="diff-level" style="color:${color}">${esc(label)}</span>
+  </div>
+  <div class="diff-bars">${bars}</div>
 </div>`;
     }
 
@@ -683,21 +787,40 @@ img{max-width:100%;height:auto;display:block}
 .pg-out-error{color:#f87171}.pg-out-error .pg-out-prefix{color:#ef4444}
 .pg-out-empty{color:#334155;font-style:italic}
 
-.fitb-block{border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;background:var(--bg)}
-.fitb-prompt{font-size:.95em;line-height:2.2;color:var(--text)}
-.fitb-input{border:none;border-bottom:2px solid #94a3b8;background:transparent;outline:none;text-align:center;padding:0 4px;font-size:.95em;font-family:inherit;color:var(--text);transition:border-color .15s;min-width:80px}
-.fitb-input:focus{border-bottom-color:var(--primary)}
-.fitb-input.fitb-correct{border-bottom-color:#22c55e}
-.fitb-input.fitb-incorrect{border-bottom-color:#ef4444}
-.fitb-footer{margin-top:12px;display:flex;align-items:center;gap:12px}
+.fitb-block{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--bg)}
+.fitb-header{background:var(--surface);border-bottom:1px solid var(--border);padding:8px 16px;font-size:.7em;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted)}
+.fitb-body{padding:18px 20px}
+.fitb-prompt{color:var(--text)}
+.fitb-line{font-size:.95em;line-height:2.4;margin:0 0 2px}
+.fitb-line:last-child{margin-bottom:0}
+.fitb-spacer{height:.5em}
+.fitb-input{border:1.5px solid var(--border);border-radius:4px;background:var(--surface);outline:none;text-align:center;padding:1px 8px;font-size:.92em;font-family:inherit;color:var(--text);transition:border-color .15s,background .15s;min-width:80px;vertical-align:middle}
+.fitb-input:focus{border-color:var(--primary);background:var(--primary-light)}
+.fitb-input.fitb-correct{border-color:#22c55e;background:#f0fdf4}
+.fitb-input.fitb-incorrect{border-color:#ef4444;background:#fef2f2}
+.fitb-footer{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:12px}
 .fitb-check-btn{background:var(--primary);color:#fff;border:none;padding:7px 18px;border-radius:var(--radius);font-size:.85em;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}.fitb-check-btn:hover{background:var(--primary-dark)}
 .fitb-result{font-size:.88em;font-weight:600}.fitb-result-correct{color:#22c55e}.fitb-result-incorrect{color:#ef4444}
+[data-theme="dark"] .fitb-input.fitb-correct{background:rgba(34,197,94,.12)}
+[data-theme="dark"] .fitb-input.fitb-incorrect{background:rgba(239,68,68,.12)}
+.fitb-block--code{background:#282c34;border-color:#3b4252}
+.fitb-block--code .fitb-header{background:#21252b;border-bottom-color:#3b4252}
+.fitb-code-body{display:flex;flex-direction:column}
+.fitb-code-pre{margin:0;padding:18px 20px;background:transparent;overflow:auto;font-family:'Fira Code','Consolas','Courier New',monospace;font-size:.875em;line-height:1.9;color:#abb2bf}
+.fitb-code-pre code{font-family:inherit;background:none;padding:0;white-space:pre}
+.fitb-code-footer{border-top-color:#3b4252;padding:14px 20px;margin:0}
+.fitb-code-input{background:#3b4252;border-color:#4b5563;color:#abb2bf;font-family:'Fira Code','Consolas','Courier New',monospace;font-size:inherit;line-height:1.6;padding:0 8px;min-width:80px;vertical-align:middle}
+.fitb-code-input:focus{border-color:#6c63ff;background:#434c5e}
+.fitb-code-input.fitb-correct{border-color:#22c55e;background:rgba(34,197,94,.2)}
+.fitb-code-input.fitb-incorrect{border-color:#ef4444;background:rgba(239,68,68,.2)}
+.h-kw{color:#c678dd}.h-st{color:#98c379}.h-cm{color:#5c6370;font-style:italic}.h-nm{color:#d19a66}
 
-.difficulty-block{display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border-radius:var(--radius)}
-.diff-icon{font-size:1em}
-.diff-label{font-size:.88em;font-weight:700}
-.diff-pips{display:flex;gap:3px;align-items:center}
-.diff-pip{width:10px;height:10px;border-radius:2px}
+.difficulty-block{display:inline-flex;align-items:center;gap:16px;padding:10px 14px;border-radius:var(--radius);border-left:3px solid transparent}
+.diff-info{display:flex;flex-direction:column;gap:2px}
+.diff-tag{font-size:.65em;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted)}
+.diff-level{font-size:.88em;font-weight:700}
+.diff-bars{display:flex;gap:3px;align-items:center}
+.diff-bar{width:18px;height:6px;border-radius:3px}
 
 .custom-site-header{padding:12px 40px;border-bottom:1px solid var(--border);background:var(--surface)}
 .custom-footer-html{width:100%}

@@ -9,8 +9,8 @@ export const CALLOUT_COLORS = {
   gray:   { bg: '#f8fafc', border: '#94a3b8', text: '#475569' },
 };
 
-export const DIFFICULTY_LABELS = ['Beginner', 'Elementary', 'Intermediate', 'Advanced', 'Expert'];
-export const DIFFICULTY_COLORS = ['#22c55e', '#84cc16', '#f59e0b', '#f97316', '#ef4444'];
+export const DIFFICULTY_LABELS = ['Easy', 'Medium', 'Hard', 'Very Hard'];
+export const DIFFICULTY_COLORS = ['#22c55e', '#f59e0b', '#f97316', '#ef4444'];
 
 export const BLOCK_TYPES = [
   { type: 'markdown',          icon: '✏️', label: 'Markdown',          group: 'Content' },
@@ -50,8 +50,8 @@ export function defaultBlock(type) {
     case 'accordion':   return { id, type, items: [{ id: uuidv4(), title: '', content: '' }] };
     case 'embed':             return { id, type, src: '', height: 400, caption: '' };
     case 'playground':        return { id, type, title: 'Try it yourself', starterCode: '// Write your JavaScript here\nconsole.log(\'Hello, world!\');' };
-    case 'fill-in-the-blank': return { id, type, prompt: '', answers: [] };
-    case 'difficulty':        return { id, type, level: 2, label: '' };
+    case 'fill-in-the-blank': return { id, type, prompt: '', answers: [], language: 'plaintext' };
+    case 'difficulty':        return { id, type, level: 1, label: '' };
     default:                  return { id, type };
   }
 }

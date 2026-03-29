@@ -367,8 +367,10 @@ function QuizPreview({ block }) {
 // ── Fill-in-the-blank ───────────────────────────────────
 
 function FillInTheBlankPreview({ block }) {
-  const parts = (block.prompt || '').split('___');
   const correctAnswers = block.answers || [];
+  const lang = block.language || 'plaintext';
+  const isCode = lang !== 'plaintext';
+
   const [userAnswers, setUserAnswers] = useState(correctAnswers.map(() => ''));
   const [checked, setChecked] = useState(false);
 
@@ -380,51 +382,130 @@ function FillInTheBlankPreview({ block }) {
   const allCorrect = checked && correctAnswers.every((ans, i) =>
     (userAnswers[i] || '').trim().toLowerCase() === (ans || '').trim().toLowerCase()
   );
+  const isCorrect = (i) => (userAnswers[i] || '').trim().toLowerCase() === (correctAnswers[i] || '').trim().toLowerCase();
+
+  const FITB_HEADER = (
+    <div style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '8px 16px', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#94a3b8' }}>
+      Fill in the Blanks
+    </div>
+  );
+
+  const FITB_FOOTER = (numBlanks, borderColor = '#e2e8f0') => numBlanks > 0 && (
+    <div style={{ margin: '0 20px', paddingTop: 14, paddingBottom: 14, borderTop: `1px solid ${borderColor}`, display: 'flex', alignItems: 'center', gap: 10 }}>
+      <button
+        onClick={() => setChecked(true)}
+        style={{ padding: '6px 16px', borderRadius: 6, border: 'none', background: '#6c63ff', color: '#fff', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}
+      >
+        Check Answers
+      </button>
+      {checked && (
+        <span style={{ fontSize: 13, fontWeight: 600, color: allCorrect ? '#22c55e' : '#ef4444' }}>
+          {allCorrect ? '✓ All correct!' : '✗ Not quite — try again.'}
+        </span>
+      )}
+    </div>
+  );
+
+  if (isCode) {
+    const parts = (block.prompt || '').split('___');
+    const numBlanks = parts.length - 1;
+    const hljsLang = lang === 'javascript' ? 'javascript' : lang === 'python' ? 'python' : 'plaintext';
+
+    return (
+      <div style={{ border: '1px solid #282c34', borderRadius: 10, overflow: 'hidden' }}>
+        {FITB_HEADER}
+        <div style={{ background: '#282c34' }}>
+          <pre style={{ margin: 0, padding: '18px 20px', background: 'transparent', overflow: 'auto', fontFamily: "'Fira Code', 'Consolas', monospace", fontSize: '0.875em', lineHeight: 1.9 }}>
+            <code>
+              {parts.map((part, i) => (
+                <span key={i}>
+                  <span dangerouslySetInnerHTML={{ __html: highlight(part, hljsLang) }} />
+                  {i < parts.length - 1 && (
+                    <input
+                      type="text"
+                      value={userAnswers[i] || ''}
+                      onChange={e => updateAnswer(i, e.target.value)}
+                      style={{
+                        border: `1.5px solid ${checked ? (isCorrect(i) ? '#22c55e' : '#ef4444') : '#4b5563'}`,
+                        borderRadius: 4,
+                        background: checked ? (isCorrect(i) ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)') : '#3b4252',
+                        outline: 'none',
+                        textAlign: 'center',
+                        padding: '0 8px',
+                        fontSize: '0.92em',
+                        fontFamily: 'inherit',
+                        lineHeight: '1.6',
+                        width: Math.max(80, ((correctAnswers[i] || '').length + 4) * 8),
+                        verticalAlign: 'middle',
+                        color: '#abb2bf',
+                      }}
+                    />
+                  )}
+                </span>
+              ))}
+            </code>
+          </pre>
+          {FITB_FOOTER(numBlanks, '#3b4252')}
+        </div>
+      </div>
+    );
+  }
+
+  // Plain text mode
+  let counter = 0;
+  const lineData = (block.prompt || '').split('\n').map(line => {
+    if (!line.trim()) return { empty: true };
+    const parts = line.split('___');
+    return {
+      empty: false,
+      segments: parts.map((text, pi) => ({
+        text,
+        hasBlank: pi < parts.length - 1,
+        idx: pi < parts.length - 1 ? counter++ : null,
+      })),
+    };
+  });
 
   return (
-    <div style={{ border: '1px solid #e2e8f0', borderRadius: 10, padding: '16px 18px', background: '#fff' }}>
-      <div style={{ fontSize: '0.95em', lineHeight: 2, color: '#1e293b' }}>
-        {parts.map((part, i) => (
-          <span key={i}>
-            {part}
-            {i < parts.length - 1 && (
-              <span style={{ display: 'inline-block', position: 'relative' }}>
-                <input
-                  type="text"
-                  value={userAnswers[i] || ''}
-                  onChange={e => updateAnswer(i, e.target.value)}
-                  style={{
-                    border: 'none',
-                    borderBottom: `2px solid ${checked ? (((userAnswers[i] || '').trim().toLowerCase() === (correctAnswers[i] || '').trim().toLowerCase()) ? '#22c55e' : '#ef4444') : '#94a3b8'}`,
-                    outline: 'none',
-                    background: 'transparent',
-                    width: Math.max(80, ((correctAnswers[i] || '').length + 4) * 8),
-                    textAlign: 'center',
-                    fontSize: '0.95em',
-                    padding: '0 4px',
-                    color: '#0f172a',
-                  }}
-                />
-              </span>
-            )}
-          </span>
-        ))}
-      </div>
-      {parts.length > 1 && (
-        <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <button
-            onClick={() => setChecked(true)}
-            style={{ padding: '5px 14px', borderRadius: 6, border: 'none', background: '#6c63ff', color: '#fff', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}
-          >
-            Check
-          </button>
-          {checked && (
-            <span style={{ fontSize: 13, fontWeight: 600, color: allCorrect ? '#22c55e' : '#ef4444' }}>
-              {allCorrect ? '✓ Correct!' : '✗ Not quite — try again.'}
-            </span>
+    <div style={{ border: '1px solid #e2e8f0', borderRadius: 10, overflow: 'hidden', background: '#fff' }}>
+      {FITB_HEADER}
+      <div style={{ padding: '18px 20px' }}>
+        <div>
+          {lineData.map((line, li) =>
+            line.empty
+              ? <div key={li} style={{ height: '0.5em' }} />
+              : (
+                <p key={li} style={{ fontSize: '0.95em', lineHeight: 2.4, margin: '0 0 2px', color: '#1e293b' }}>
+                  {line.segments.map((seg, si) => (
+                    <span key={si}>
+                      {seg.text}
+                      {seg.hasBlank && (
+                        <input
+                          type="text"
+                          value={userAnswers[seg.idx] || ''}
+                          onChange={e => updateAnswer(seg.idx, e.target.value)}
+                          style={{
+                            border: `1.5px solid ${checked ? (isCorrect(seg.idx) ? '#22c55e' : '#ef4444') : '#94a3b8'}`,
+                            borderRadius: 4,
+                            background: checked ? (isCorrect(seg.idx) ? '#f0fdf4' : '#fef2f2') : '#f8fafc',
+                            outline: 'none',
+                            textAlign: 'center',
+                            padding: '1px 8px',
+                            fontSize: '0.92em',
+                            width: Math.max(80, ((correctAnswers[seg.idx] || '').length + 4) * 8),
+                            verticalAlign: 'middle',
+                            color: '#0f172a',
+                          }}
+                        />
+                      )}
+                    </span>
+                  ))}
+                </p>
+              )
           )}
         </div>
-      )}
+        {FITB_FOOTER(counter)}
+      </div>
     </div>
   );
 }
@@ -684,15 +765,18 @@ function BlockPreview({ block }) {
     }
 
     case 'difficulty': {
-      const level = Math.max(1, Math.min(5, block.level || 2));
+      const level = Math.max(1, Math.min(4, block.level || 1));
       const label = block.label || DIFFICULTY_LABELS[level - 1];
       const color = DIFFICULTY_COLORS[level - 1];
       return (
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '7px 14px', borderRadius: 8, background: color + '18', border: `1px solid ${color}55` }}>
-          <span style={{ fontSize: 13, fontWeight: 700, color }}>⚡ {label}</span>
-          <div style={{ display: 'flex', gap: 3 }}>
-            {[1, 2, 3, 4, 5].map(i => (
-              <div key={i} style={{ width: 10, height: 10, borderRadius: 2, background: i <= level ? color : color + '33' }} />
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 14, padding: '10px 14px', borderRadius: 8, background: color + '12', borderLeft: `3px solid ${color}` }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <span style={{ fontSize: '0.65em', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#94a3b8' }}>Difficulty</span>
+            <span style={{ fontSize: '0.88em', fontWeight: 700, color }}>{label}</span>
+          </div>
+          <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
+            {[1, 2, 3, 4].map(i => (
+              <div key={i} style={{ width: 18, height: 6, borderRadius: 3, background: i <= level ? color : color + '33' }} />
             ))}
           </div>
         </div>

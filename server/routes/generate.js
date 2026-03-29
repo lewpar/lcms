@@ -67,13 +67,26 @@ router.post('/nginx', requireValidSiteId, requireSiteExists, (req, res) => {
   } catch (err) { res.status(500).json({ error: safeError(err) }); }
 });
 
-// Deploy to GitHub Pages (docs/<slug>/)
+// Deploy to GitHub Pages (docs/<slug>/) then git add/commit/push the docs folder.
 router.post('/github-pages', requireValidSiteId, requireSiteExists, (req, res) => {
   const site = readSites().find(s => s.id === req.params.siteId);
   try {
     const out = generate(site.id, site.slug);
     deployToDir(site.slug, DOCS_DIR);
-    res.json({ success: true, message: out.trim() || 'Site deployed to GitHub Pages', siteSlug: site.slug });
+
+    // Stage only the docs folder, commit, and push
+    let gitWarning = null;
+    try {
+      execFileSync('git', ['add', 'docs/'], { cwd: ROOT, timeout: 15000 });
+      execFileSync('git', ['commit', '-m', `Deploy ${site.slug} to GitHub Pages`], { cwd: ROOT, timeout: 15000 });
+      execFileSync('git', ['push'], { cwd: ROOT, timeout: 30000 });
+    } catch (gitErr) {
+      // Non-fatal: the files are deployed; just warn if git operations fail
+      gitWarning = gitErr.stderr ? gitErr.stderr.toString().trim() : String(gitErr.message || gitErr);
+    }
+
+    const message = out.trim() || 'Site deployed to GitHub Pages';
+    res.json({ success: true, message, siteSlug: site.slug, ...(gitWarning ? { gitWarning } : {}) });
   } catch (err) { res.status(500).json({ error: safeError(err) }); }
 });
 

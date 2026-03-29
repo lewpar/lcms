@@ -25,7 +25,7 @@ export default function SitePreview({ siteId, siteSlug, addToast, pageSlug = '',
   const prevSiteIdRef = useRef(null);
   const generateRef   = useRef(null);
 
-  const iframeSrc = currentSlug ? `${base}/${currentSlug}/` : `${base}/`;
+  const iframeSrc = `${currentSlug ? `${base}/${currentSlug}/` : `${base}/`}?v=${iframeVersion}`;
 
   // ── Helpers ────────────────────────────────────────────
 

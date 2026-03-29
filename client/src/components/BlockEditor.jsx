@@ -39,8 +39,8 @@ function blockSummary(block) {
       return block.prompt?.slice(0, 50) || `(${count} blank${count !== 1 ? 's' : ''})`;
     }
     case 'difficulty': {
-      const lbl = block.label || DIFFICULTY_LABELS[Math.max(0, (block.level || 2) - 1)];
-      return `Level ${block.level || 2}: ${lbl}`;
+      const lbl = block.label || DIFFICULTY_LABELS[Math.max(0, (block.level || 1) - 1)];
+      return lbl;
     }
     default:            return block.type;
   }
@@ -727,9 +727,16 @@ function PlaygroundEditor({ block, onChange }) {
 
 /* ── Fill-in-the-blank editor ── */
 
+const FITB_LANGUAGES = [
+  { value: 'plaintext',  label: 'Plain Text' },
+  { value: 'javascript', label: 'JavaScript / TypeScript' },
+  { value: 'python',     label: 'Python' },
+];
+
 function FillInTheBlankEditor({ block, onChange }) {
   const blankCount = (block.prompt || '').split('___').length - 1;
   const answers = block.answers || [];
+  const language = block.language || 'plaintext';
 
   const syncAnswers = (prompt) => {
     const count = prompt.split('___').length - 1;
@@ -746,12 +753,23 @@ function FillInTheBlankEditor({ block, onChange }) {
   return (
     <>
       <div className="field">
+        <label>Content type</label>
+        <select value={language} onChange={e => onChange({ language: e.target.value })}>
+          {FITB_LANGUAGES.map(l => (
+            <option key={l.value} value={l.value}>{l.label}</option>
+          ))}
+        </select>
+      </div>
+      <div className="field">
         <label>Prompt — use ___ for each blank</label>
         <textarea
-          rows={4}
+          rows={language === 'plaintext' ? 4 : 8}
           value={block.prompt || ''}
           onChange={e => syncAnswers(e.target.value)}
-          placeholder="The capital of France is ___ and it is located in ___ Europe."
+          style={language !== 'plaintext' ? { fontFamily: 'monospace', fontSize: 13 } : undefined}
+          placeholder={language === 'plaintext'
+            ? 'The capital of France is ___ and it is located in ___ Europe.'
+            : 'const ___ = require(\'express\');\nconst app = ___();\n'}
         />
         <span style={{ fontSize: 11, color: blankCount === 0 ? 'var(--warning)' : 'var(--text-muted)', marginTop: 3 }}>
           {blankCount === 0 ? 'No blanks found — add ___ where you want an input.' : `${blankCount} blank${blankCount !== 1 ? 's' : ''} detected.`}
@@ -783,7 +801,7 @@ function FillInTheBlankEditor({ block, onChange }) {
 /* ── Difficulty indicator editor ── */
 
 function DifficultyEditor({ block, onChange }) {
-  const level = block.level || 2;
+  const level = block.level || 1;
   return (
     <>
       <div className="field">
