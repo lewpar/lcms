@@ -7,7 +7,7 @@
     "server": "node server/index.js",
     "generate": "node generator/index.js",
     "install:all": "npm install && npm install --workspace=client",
-    "test": "node --test tests/api.test.js"
+    "test": "node --test --test-reporter=spec tests/api.test.js"
   },
   "workspaces": [
     "client"
