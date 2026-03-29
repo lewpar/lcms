@@ -782,14 +782,19 @@ export default function App() {
               Choose a deployment target for <strong>{selectedSite.name}</strong>.
             </p>
             <div className="deploy-picker-options">
-              {nginxStatus === 'active' && (
-                <button className="deploy-picker-option" onClick={openNginxPanel}>
-                  <span className="deploy-picker-icon">⬡</span>
-                  <span className="deploy-picker-label">Nginx</span>
-                  <span className="deploy-picker-desc">Copy to /var/www/html on this server</span>
-                  {selectedSite.deployedNginx && <span className="deploy-picker-badge">Deployed</span>}
-                </button>
-              )}
+              <button
+                className="deploy-picker-option"
+                onClick={nginxStatus === 'active' ? openNginxPanel : undefined}
+                disabled={nginxStatus !== 'active'}
+              >
+                <span className="deploy-picker-icon">⬡</span>
+                <span className="deploy-picker-label">
+                  Nginx
+                  {nginxStatus !== 'active' && <span className="deploy-picker-unavailable"> — not detected</span>}
+                </span>
+                <span className="deploy-picker-desc">Copy to /var/www/html on this server</span>
+                {selectedSite.deployedNginx && nginxStatus === 'active' && <span className="deploy-picker-badge">Deployed</span>}
+              </button>
               <button className="deploy-picker-option" onClick={openGithubPanel}>
                 <span className="deploy-picker-icon">⎇</span>
                 <span className="deploy-picker-label">GitHub Pages</span>
