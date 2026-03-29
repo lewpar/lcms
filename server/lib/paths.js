@@ -4,7 +4,8 @@ const fs   = require('fs');
 const path = require('path');
 
 const ROOT             = path.join(__dirname, '..', '..');
-const CONTENT_DIR      = path.join(ROOT, 'content');
+// LCMS_DATA_DIR overrides the content directory — used by tests to isolate data.
+const CONTENT_DIR      = process.env.LCMS_DATA_DIR || path.join(ROOT, 'content');
 const SITES_DIR        = path.join(CONTENT_DIR, 'sites');
 const SITES_INDEX      = path.join(CONTENT_DIR, 'sites.json');
 const OUTPUT_DIR       = path.join(ROOT, 'output');
