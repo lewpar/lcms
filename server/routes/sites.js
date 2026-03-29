@@ -4,7 +4,7 @@ const fs      = require('fs');
 const path    = require('path');
 const { v4: uuidv4 } = require('uuid');
 const router  = require('express').Router();
-const { readSites, writeSites, siteDir, settingsFile, ensureDirs, slugify, OUTPUT_DIR } = require('../lib/paths');
+const { readSites, writeSites, siteDir, settingsFile, ensureDirs, slugify, OUTPUT_DIR, DOCS_DIR } = require('../lib/paths');
 const { requireValidSiteId, requireSiteExists, safeError, MAX_STR } = require('../lib/validate');
 
 const NGINX_WEB_ROOT = '/var/www/html';
@@ -12,7 +12,8 @@ const NGINX_WEB_ROOT = '/var/www/html';
 router.get('/', (req, res) => {
   const sites = readSites().map(s => ({
     ...s,
-    deployed: fs.existsSync(path.join(NGINX_WEB_ROOT, s.slug, 'index.html')),
+    deployedNginx:       fs.existsSync(path.join(NGINX_WEB_ROOT, s.slug, 'index.html')),
+    deployedGithubPages: fs.existsSync(path.join(DOCS_DIR, s.slug, 'index.html')),
   }));
   res.json(sites);
 });
@@ -51,10 +52,19 @@ router.patch('/:siteId', requireValidSiteId, (req, res) => {
   } catch (err) { res.status(500).json({ error: safeError(err) }); }
 });
 
-router.delete('/:siteId/deploy', requireValidSiteId, requireSiteExists, (req, res) => {
+router.delete('/:siteId/deploy/nginx', requireValidSiteId, requireSiteExists, (req, res) => {
   const site = readSites().find(s => s.id === req.params.siteId);
   try {
     const deployDir = path.join(NGINX_WEB_ROOT, site.slug);
+    if (fs.existsSync(deployDir)) fs.rmSync(deployDir, { recursive: true });
+    res.json({ success: true });
+  } catch (err) { res.status(500).json({ error: safeError(err) }); }
+});
+
+router.delete('/:siteId/deploy/github-pages', requireValidSiteId, requireSiteExists, (req, res) => {
+  const site = readSites().find(s => s.id === req.params.siteId);
+  try {
+    const deployDir = path.join(DOCS_DIR, site.slug);
     if (fs.existsSync(deployDir)) fs.rmSync(deployDir, { recursive: true });
     res.json({ success: true });
   } catch (err) { res.status(500).json({ error: safeError(err) }); }

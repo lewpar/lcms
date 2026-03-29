@@ -61,9 +61,24 @@ export async function deleteSite(siteId) {
   return res.json();
 }
 
-export async function undeploySite(siteId) {
-  const res = await fetch(`${BASE}/sites/${siteId}/deploy`, { method: 'DELETE' });
-  if (!res.ok) throw new Error('Failed to undeploy site');
+export async function undeployNginx(siteId) {
+  const res = await fetch(`${BASE}/sites/${siteId}/deploy/nginx`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Failed to undeploy from nginx');
+  return res.json();
+}
+
+export async function deployGithubPages(siteId) {
+  const res = await fetch(`${BASE}/sites/${siteId}/generate/github-pages`, { method: 'POST' });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || 'GitHub Pages deployment failed');
+  }
+  return res.json();
+}
+
+export async function undeployGithubPages(siteId) {
+  const res = await fetch(`${BASE}/sites/${siteId}/deploy/github-pages`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Failed to undeploy from GitHub Pages');
   return res.json();
 }
 
