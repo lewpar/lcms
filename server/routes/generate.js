@@ -75,10 +75,13 @@ router.post('/github-pages', requireValidSiteId, requireSiteExists, (req, res) =
     deployToDir(site.slug, DOCS_DIR);
 
     // Stage only the docs folder, commit, and push
+    const commitMessage = (req.body && typeof req.body.commitMessage === 'string' && req.body.commitMessage.trim())
+      ? req.body.commitMessage.trim()
+      : `Deploy ${site.slug} to GitHub Pages`;
     let gitWarning = null;
     try {
       execFileSync('git', ['add', 'docs/'], { cwd: ROOT, timeout: 15000 });
-      execFileSync('git', ['commit', '-m', `Deploy ${site.slug} to GitHub Pages`], { cwd: ROOT, timeout: 15000 });
+      execFileSync('git', ['commit', '-m', commitMessage], { cwd: ROOT, timeout: 15000 });
       execFileSync('git', ['push'], { cwd: ROOT, timeout: 30000 });
     } catch (gitErr) {
       // Non-fatal: the files are deployed; just warn if git operations fail

@@ -79,8 +79,12 @@ export async function undeployNginx(siteId) {
   return res.json();
 }
 
-export async function deployGithubPages(siteId) {
-  const res = await fetch(`${BASE}/sites/${siteId}/generate/github-pages`, { method: 'POST' });
+export async function deployGithubPages(siteId, commitMessage = null) {
+  const res = await fetch(`${BASE}/sites/${siteId}/generate/github-pages`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ commitMessage }),
+  });
   if (!res.ok) await apiError(res, 'GitHub Pages deployment failed');
   return res.json();
 }

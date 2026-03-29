@@ -44,6 +44,7 @@ export default function App() {
   const [showGithubPanel, setShowGithubPanel] = useState(false);
   const [githubView, setGithubView] = useState('main'); // 'main' | 'confirm-deploy' | 'confirm-undeploy'
   const [undeployInput, setUndeployInput] = useState('');
+  const [githubCommitMsg, setGithubCommitMsg] = useState('');
   const [deploying, setDeploying] = useState(false);
   const [undeploying, setUndeploying] = useState(false);
   const [nginxStatus, setNginxStatus] = useState(null);
@@ -287,7 +288,7 @@ export default function App() {
   const handleDeployGithub = async () => {
     setDeploying(true);
     try {
-      const result = await deployGithubPages(siteId);
+      const result = await deployGithubPages(siteId, githubCommitMsg.trim() || null);
       addToast(result.message || 'Site deployed to GitHub Pages!', 'success');
       await loadSites();
       setShowGithubPanel(false);
@@ -841,9 +842,21 @@ export default function App() {
 
             {githubView === 'confirm-deploy' && (<>
               <h3 style={{ marginBottom: 8 }}>Deploy to GitHub Pages?</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 20 }}>
+              <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 12 }}>
                 This will build <strong>{selectedSite.name}</strong> and copy it to <code>docs/{selectedSite.slug}/</code>.
               </p>
+              <input
+                type="text"
+                className="input"
+                placeholder={`Deploy ${selectedSite.slug} to GitHub Pages`}
+                value={githubCommitMsg}
+                onChange={e => setGithubCommitMsg(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && !deploying) handleDeployGithub(); if (e.key === 'Escape') setGithubView('main'); }}
+                disabled={deploying}
+                autoFocus
+                autoComplete="off"
+                style={{ width: '100%', marginBottom: 16 }}
+              />
               <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
                 <button className="btn btn-secondary btn-sm" onClick={() => setGithubView('main')} disabled={deploying}>Back</button>
                 <button className="btn btn-success btn-sm" onClick={handleDeployGithub} disabled={deploying}>
