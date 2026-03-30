@@ -119,8 +119,9 @@ function CalloutEditor({ block, onChange }) {
 
 /* ── Quiz: multi-question editor ── */
 
-function QuestionEditor({ question, index, total, onChange, onRemove }) {
+function QuestionEditor({ question, index, total, onChange, onRemove, addToast, siteId }) {
   const [open, setOpen] = useState(index === 0);
+  const imgRef = useRef();
 
   const addOption = () => onChange({ options: [...(question.options || []), ''] });
   const removeOption = (i) => {
@@ -132,6 +133,26 @@ function QuestionEditor({ question, index, total, onChange, onRemove }) {
     const options = [...question.options];
     options[i] = val;
     onChange({ options });
+  };
+
+  const mediaType = question.media?.type || 'none';
+
+  const setMediaType = (type) => {
+    if (type === 'none') onChange({ media: null });
+    else if (type === 'text') onChange({ media: { type: 'text', content: '' } });
+    else if (type === 'code') onChange({ media: { type: 'code', content: '', language: 'javascript' } });
+    else if (type === 'image') onChange({ media: { type: 'image', src: '', alt: '' } });
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const { url } = await uploadAsset(siteId, file);
+      onChange({ media: { ...question.media, src: url } });
+    } catch {
+      addToast('Upload failed', 'error');
+    }
   };
 
   return (
@@ -151,6 +172,74 @@ function QuestionEditor({ question, index, total, onChange, onRemove }) {
 
       {open && (
         <div className="quiz-question-body">
+          <div className="field">
+            <label>Media</label>
+            <select value={mediaType} onChange={e => setMediaType(e.target.value)}>
+              <option value="none">None</option>
+              <option value="text">Plain text</option>
+              <option value="code">Code</option>
+              <option value="image">Image</option>
+            </select>
+          </div>
+
+          {mediaType === 'text' && (
+            <div className="field">
+              <textarea
+                rows={3}
+                value={question.media.content || ''}
+                onChange={e => onChange({ media: { ...question.media, content: e.target.value } })}
+                placeholder="Text shown above the question"
+              />
+            </div>
+          )}
+
+          {mediaType === 'code' && (<>
+            <div className="field">
+              <label>Language</label>
+              <select
+                value={question.media.language || 'javascript'}
+                onChange={e => onChange({ media: { ...question.media, language: e.target.value } })}
+              >
+                <option value="javascript">JavaScript</option>
+                <option value="python">Python</option>
+              </select>
+            </div>
+            <div className="field">
+              <textarea
+                rows={6}
+                value={question.media.content || ''}
+                onChange={e => onChange({ media: { ...question.media, content: e.target.value } })}
+                placeholder="Code shown above the question"
+                style={{ fontFamily: 'monospace', fontSize: 12 }}
+              />
+            </div>
+          </>)}
+
+          {mediaType === 'image' && (<>
+            <div className="field">
+              <div style={{ display: 'flex', gap: 6 }}>
+                <input
+                  type="text"
+                  value={question.media.src || ''}
+                  onChange={e => onChange({ media: { ...question.media, src: e.target.value } })}
+                  placeholder="/assets/... or https://..."
+                  style={{ flex: 1 }}
+                />
+                <button className="btn btn-secondary btn-sm" onClick={() => imgRef.current.click()}>Upload</button>
+                <input ref={imgRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} />
+              </div>
+            </div>
+            <div className="field">
+              <label>Alt text</label>
+              <input
+                type="text"
+                value={question.media.alt || ''}
+                onChange={e => onChange({ media: { ...question.media, alt: e.target.value } })}
+                placeholder="Descriptive alt text"
+              />
+            </div>
+          </>)}
+
           <div className="field">
             <label>Question text</label>
             <textarea
@@ -206,7 +295,7 @@ function QuestionEditor({ question, index, total, onChange, onRemove }) {
   );
 }
 
-function QuizEditor({ block, onChange }) {
+function QuizEditor({ block, onChange, addToast, siteId }) {
   const questions = block.questions || [];
 
   const addQuestion = () =>
@@ -242,6 +331,8 @@ function QuizEditor({ block, onChange }) {
               total={questions.length}
               onChange={changes => updateQuestion(q.id, changes)}
               onRemove={() => removeQuestion(q.id)}
+              addToast={addToast}
+              siteId={siteId}
             />
           ))}
         </div>
@@ -908,7 +999,7 @@ export default function BlockEditor({
           {block.type === 'markdown'   && <MarkdownEditor   block={block} onChange={onChange} />}
           {block.type === 'heading'    && <HeadingEditor    block={block} onChange={onChange} />}
           {block.type === 'callout'    && <CalloutEditor    block={block} onChange={onChange} />}
-          {block.type === 'quiz'       && <QuizEditor       block={block} onChange={onChange} />}
+          {block.type === 'quiz'       && <QuizEditor       block={block} onChange={onChange} addToast={addToast} siteId={siteId} />}
           {block.type === 'code'       && <CodeEditor       block={block} onChange={onChange} />}
           {block.type === 'image'      && <ImageEditor      block={block} onChange={onChange} addToast={addToast} siteId={siteId} />}
           {block.type === 'video'      && <VideoEditor      block={block} onChange={onChange} />}

@@ -201,7 +201,19 @@ function renderBlock(block) {
 
     case 'quiz': {
       const b = normalizeQuiz(block);
-      const qs = b.questions || [];
+      // Resolve image paths in question media so exports use relative paths and preview uses absolute
+      const qs = (b.questions || []).map(q => {
+        if (q.media && q.media.type === 'image' && q.media.src) {
+          const raw = q.media.src;
+          const src = previewAssetPaths
+            ? raw
+            : raw.startsWith(ASSETS_URL_PREFIX)
+              ? `../assets/${raw.slice(ASSETS_URL_PREFIX.length)}`
+              : raw.startsWith('/assets/') ? `../assets/${raw.split('/').pop()}` : raw;
+          return { ...q, media: { ...q.media, src } };
+        }
+        return q;
+      });
       const dataJson = JSON.stringify(qs).replace(/&/g,'\\u0026').replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/'/g,'\\u0027');
       const n = qs.length;
       const desc = b.description ? `<p class="qs-desc">${esc(b.description)}</p>` : '';
@@ -228,6 +240,8 @@ function renderBlock(block) {
       <span class="qs-progress-text">1 / ${n}</span>
     </div>
     <div class="qs-q-text"></div>
+    <div class="qs-media" hidden></div>
+    <div class="qs-media-sep" hidden></div>
     <ul class="qs-options" role="list"></ul>
     <div class="qs-nav">
       <button class="qs-submit quiz-btn" type="button" disabled>Submit Answer</button>
@@ -266,7 +280,7 @@ function renderBlock(block) {
           ? `../assets/${block.src.slice(ASSETS_URL_PREFIX.length)}`
           : block.src.startsWith('/assets/') ? `../assets/${block.src.split('/').pop()}` : esc(block.src);
       const cap = block.caption ? `<figcaption>${esc(block.caption)}</figcaption>` : '';
-      return `<figure class="image-block"><img src="${src}" alt="${esc(block.alt||'')}" loading="lazy" />${cap}</figure>`;
+      return `<figure class="image-block img-loading"><img src="${src}" alt="${esc(block.alt||'')}" loading="lazy" onload="this.closest('.image-block').classList.remove('img-loading')" onerror="this.closest('.image-block').classList.remove('img-loading')" />${cap}</figure>`;
     }
 
     case 'case-study': {
@@ -649,7 +663,12 @@ img{max-width:100%;height:auto;display:block}
 .code-lang{background:#1e293b;color:#94a3b8;padding:5px 14px;font-size:.72em;font-family:monospace}
 .code-block pre{background:#0f172a;color:#e2e8f0;padding:16px;margin:0;overflow-x:auto;font-family:'SF Mono','Fira Code',monospace;font-size:.875em;line-height:1.65}
 .code-cap{background:var(--surface);border-top:1px solid var(--border);padding:5px 14px;font-size:.78em;color:var(--text-muted);text-align:center}
-.image-block{text-align:center}.image-block img{margin:0 auto;border-radius:var(--radius)}.image-block figcaption{margin-top:8px;font-size:.83em;color:var(--text-muted);font-style:italic}
+.image-block{text-align:center;border-radius:var(--radius);min-height:80px}
+.image-block.img-loading{background:linear-gradient(90deg,var(--surface) 25%,var(--border) 50%,var(--surface) 75%);background-size:200% 100%;animation:img-shimmer 1.4s infinite}
+@keyframes img-shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.image-block img{display:block;margin:0 auto;border-radius:var(--radius);opacity:0;transition:opacity .35s}
+.image-block:not(.img-loading) img{opacity:1}
+.image-block figcaption{margin-top:8px;font-size:.83em;color:var(--text-muted);font-style:italic}
 .block-divider{border:none;border-top:1px solid var(--border)}
 .page-link-card{display:flex;align-items:center;justify-content:space-between;gap:16px;border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 18px;background:var(--surface);text-decoration:none;color:inherit;transition:border-color .15s,background .15s}
 .page-link-card:hover{border-color:var(--primary);background:var(--primary-light)}
@@ -692,6 +711,12 @@ img{max-width:100%;height:auto;display:block}
 .qs-progress-bar{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden}
 .qs-progress-fill{height:100%;background:var(--primary);border-radius:4px;transition:width .5s cubic-bezier(.4,0,.2,1);width:0%}
 .qs-progress-text{font-size:.8em;color:var(--text-muted);font-weight:700;white-space:nowrap;min-width:52px;text-align:right}
+.qs-media{margin-bottom:0;border-radius:var(--radius);overflow:hidden}
+.qs-media-sep{border:none;border-top:1px solid var(--border);margin:18px 0}
+.qs-media-text{font-size:.93em;color:var(--text);line-height:1.7;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin:0;font-weight:400}
+.qs-media-code{background:#282c34;border-radius:var(--radius);padding:14px 18px;overflow-x:auto;margin:0}
+.qs-media-code code{color:#abb2bf;font-family:monospace;font-size:.84em;white-space:pre}
+.qs-media-image{max-width:100%;border-radius:var(--radius);display:block}
 .qs-q-text{font-size:1.06em;font-weight:700;margin-bottom:18px;line-height:1.5;color:var(--text)}
 .qs-options{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
 .qs-option{width:100%;text-align:left;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);padding:13px 16px;cursor:pointer;font-size:.93em;color:var(--text);transition:border-color .15s,background .15s,box-shadow .15s;font-family:inherit;display:flex;align-items:center;gap:14px}
@@ -884,6 +909,8 @@ const QUIZ_JS = `
     var resultsScreen=el.querySelector('.qs-results');
     var fill=el.querySelector('.qs-progress-fill');
     var progressText=el.querySelector('.qs-progress-text');
+    var mediaEl=el.querySelector('.qs-media');
+    var mediaSep=el.querySelector('.qs-media-sep');
     var qText=el.querySelector('.qs-q-text');
     var optsList=el.querySelector('.qs-options');
     var submitBtn=el.querySelector('.qs-submit');
@@ -912,11 +939,29 @@ const QUIZ_JS = `
 
     var LETTERS=['A','B','C','D','E','F','G','H'];
 
+    function renderMedia(m){
+      mediaEl.innerHTML='';
+      if(!m||!m.type||m.type==='none'){mediaEl.hidden=true;mediaSep.hidden=true;return;}
+      mediaEl.hidden=false;mediaSep.hidden=false;
+      if(m.type==='text'){
+        var p=document.createElement('p');p.className='qs-media-text';p.textContent=m.content||'';mediaEl.appendChild(p);
+      }else if(m.type==='code'){
+        var pre=document.createElement('pre');pre.className='qs-media-code';
+        var code=document.createElement('code');
+        if(m.language&&m.language!=='plaintext')code.className='language-'+m.language;
+        code.textContent=m.content||'';pre.appendChild(code);mediaEl.appendChild(pre);
+        if(typeof hljs!=='undefined'&&m.language&&m.language!=='plaintext'){try{hljs.highlightElement(code);}catch(e){}}
+      }else if(m.type==='image'){
+        var img=document.createElement('img');img.className='qs-media-image';img.src=m.src||'';img.alt=m.alt||'';mediaEl.appendChild(img);
+      }
+    }
+
     function renderQ(idx){
       answered=false;selectedOption=-1;
       var q=questions[idx];
       fill.style.width=((idx/n)*100)+'%';
       progressText.textContent=(idx+1)+' / '+n;
+      renderMedia(q.media||null);
       qText.textContent=q.question;
       optsList.innerHTML='';
       q.options.forEach(function(opt,i){
@@ -1281,6 +1326,14 @@ document.addEventListener('DOMContentLoaded',function(){
 
 // ── Minimal page preview (no nav/header/footer) ────────
 
+// True if blocks contain a code block OR a quiz question with code media — used to gate hljs loading.
+function blocksNeedHighlighting(blocks) {
+  return blocks.some(b =>
+    b.type === 'code' ||
+    (b.type === 'quiz' && (b.questions || []).some(q => q.media && q.media.type === 'code' && q.media.language && q.media.language !== 'plaintext'))
+  );
+}
+
 function renderPagePreview(page, settings) {
   const blocks  = page.blocks || [];
   const title   = page.title || '';
@@ -1293,7 +1346,7 @@ function renderPagePreview(page, settings) {
   const hasFlashcard      = blocks.some(b => b.type === 'flashcard');
   const hasPlayground     = blocks.some(b => b.type === 'playground');
   const hasFillInTheBlank = blocks.some(b => b.type === 'fill-in-the-blank');
-  const hasCode           = blocks.some(b => b.type === 'code');
+  const hasCode           = blocksNeedHighlighting(blocks);
 
   const css = buildCss(settings.theme || {});
 
@@ -1372,7 +1425,7 @@ function pageTemplate({ page, blocksHtml, settings, navItems, v }) {
   const hasFlashcard      = (page.blocks || []).some(b => b.type === 'flashcard');
   const hasPlayground     = (page.blocks || []).some(b => b.type === 'playground');
   const hasFillInTheBlank = (page.blocks || []).some(b => b.type === 'fill-in-the-blank');
-  const hasCode = (page.blocks || []).some(b => b.type === 'code');
+  const hasCode = blocksNeedHighlighting(page.blocks || []);
   const toc = extractToc(page.blocks || []);
 
   // Build flat ordered nav list for prev/next (unsectioned first, then sectioned in order)
@@ -1466,7 +1519,7 @@ function indexTemplate({ pages, settings, navItems, v }) {
   const hasFlashcard      = homeBlocks.some(b => b.type === 'flashcard');
   const hasPlayground     = homeBlocks.some(b => b.type === 'playground');
   const hasFillInTheBlank = homeBlocks.some(b => b.type === 'fill-in-the-blank');
-  const hasCode = homeBlocks.some(b => b.type === 'code');
+  const hasCode = blocksNeedHighlighting(homeBlocks);
   const blocksHtml = homeBlocks.map(renderBlock).join('\n');
 
   const sectionOrder = [], sectionMap = {}, unsectioned = [];
