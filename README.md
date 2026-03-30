@@ -1,4 +1,4 @@
-# LCMS — Local Content Management System
+# LCMS — Learning Content Management System
 
 A locally-hosted CMS for building and exporting static learning sites as vanilla HTML/CSS/JS.
 
@@ -28,23 +28,54 @@ Sites are exported as fully self-contained static sites — no runtime dependenc
 
 ## Block types
 
+### Content
 | Block       | Description |
 |-------------|-------------|
 | Markdown    | GFM markdown with tables, code fences, headings |
 | Heading     | Standalone H1–H6 with auto-generated anchor |
 | Callout     | Side-accented callout in blue, green, yellow, red, purple, or grey |
-| Quiz        | Interactive multiple-choice quiz with progress, feedback, and results |
-| Code        | Syntax-highlighted code block with language label and caption |
+| Difficulty  | Difficulty rating badge (Easy / Medium / Hard / Very Hard) |
+| Divider     | Horizontal rule |
+
+### Media
+| Block       | Description |
+|-------------|-------------|
 | Image       | Uploaded or URL image with alt text and caption |
 | Video       | Embedded video (YouTube) |
+| Code        | Syntax-highlighted code block with language label and caption |
+| Embed       | Generic iframe embed with configurable height |
+
+### Interactive
+| Block              | Description |
+|--------------------|-------------|
+| Quiz               | Multiple-choice quiz with progress tracking, per-question feedback, and a results screen |
+| Flashcard          | Flip-card deck with front/back sides and prev/next navigation |
+| Fill in the Blank  | Cloze-style exercise with plain text or syntax-highlighted code mode |
+| Accordion          | Collapsible sections with title and markdown content |
+| Playground         | In-browser JavaScript editor with an output console |
+
+### Structure
+| Block       | Description |
+|-------------|-------------|
+| Table       | Data table with editable headers and rows |
 | Page Link   | Card linking to another page in the site |
 | Case Study  | Structured case study with background and instructions |
-| Flashcard   | Flip-card deck with front/back sides and prev/next navigation |
-| Table       | Data table with editable headers and rows |
-| Accordion   | Collapsible sections with title and markdown content |
-| Embed       | Generic iframe embed with configurable height |
-| Playground  | Interactive JavaScript editor with output console |
-| Divider     | Horizontal rule |
+
+## Deployment
+
+The **Deploy** button in the sidebar offers two targets.
+
+### Nginx (local server)
+
+Builds the site and copies it to `/var/www/html/<site-slug>/`, making it immediately live via nginx. Requires nginx to be installed and the web root to be writable by your user — see [INSTALL.md](INSTALL.md) for the one-time setup.
+
+The nginx option is greyed out if nginx is not detected on the system.
+
+### GitHub Pages
+
+Builds the site, copies it to `docs/<site-slug>/`, then runs `git add docs/ && git commit && git push`. A commit message field is shown in the dialog before deploying; if left blank it defaults to `Deploy <site-slug> to GitHub Pages`.
+
+**One-time setup:** in your GitHub repository settings, set the Pages source to **Deploy from a branch** → branch `master` (or `main`) → folder `/docs`.
 
 ## Project structure
 
