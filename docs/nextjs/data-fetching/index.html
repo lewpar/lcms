@@ -6,7 +6,7 @@
   <title>Data Fetching — nextjs</title>
   
   
-  <link rel="stylesheet" href="../styles.css?v=mnclhkj4" />
+  <link rel="stylesheet" href="../styles.css?v=mnclt8lx" />
   
 </head>
 <body>
@@ -58,7 +58,7 @@
           <h1 class="page-title">Data Fetching</h1>
           <div class="page-meta">
             <span class="page-meta-tag">activities</span>
-            <span>⏱ 1 min read</span>
+            <span>⏱ 2 min read</span>
           </div>
         </div>
         <div class="blocks"><div class="prose"><p>Fetching is the process of requesting data from another location on the internet, usually from an API. In the browser, <strong>JavaScript</strong> provides a function called <code>fetch</code> that allows a web page to send a request and receive a response, such as loading information needed for the page. Because this takes time, <code>fetch</code> returns a <code>Promise</code>, which represents a result that will arrive later, and using <code>async</code> and <code>await</code> lets your code wait for that result in a clear, step-by-step way without freezing the page.</p>
@@ -92,6 +92,50 @@ loadQuote();</textarea>
   <div class="pg-output-label">Output</div>
   <div class="pg-output"></div>
 </div>
+</div>
+<div class="quiz-block" data-questions='[{"id":"73ac99c6-b13a-4f57-b301-739b0797c339","question":"What does the async keyword do?","options":["It makes a function run faster","It allows a function to use await and return a Promise","It sends a request to the internet","It converts data into JSON"],"correctIndex":1,"explanation":"The async keyword allows a function to use await and automatically makes the function return a Promise."},{"id":"9d456811-2b1d-4022-bc24-ea3eaee0749e","question":"What does await do in an async function?","options":["Stops the entire program","Deletes the Promise","Pauses the function until the Promise finishes","Sends the request to the server"],"correctIndex":2,"explanation":"await pauses the function until the Promise is finished and the result is available."}]' data-quiz-id="4df0bd47-db6d-4cea-adee-42f29c1f9028">
+  <div class="quiz-block-header">
+    <span class="quiz-block-header-title">Quiz</span>
+    <span class="quiz-block-header-badge">2 questions</span>
+  </div>
+  <div class="qs-start">
+    <h3 class="qs-title">Quiz</h3>
+    <p class="qs-desc">Test your understanding of how async and await work in JavaScript.</p><p class="qs-count">2 questions</p>
+    <button class="qs-start-btn quiz-btn" type="button">Start Quiz →</button>
+    <div class="qs-resume" hidden>
+      <p class="qs-resume-status"></p>
+      <div class="qs-resume-actions">
+        <button class="qs-continue-btn quiz-btn" type="button">Continue →</button>
+        <button class="qs-restart-btn quiz-btn quiz-btn-outline" type="button">↺ Start Over</button>
+      </div>
+    </div>
+  </div>
+  <div class="qs-question" hidden>
+    <div class="qs-progress-wrap">
+      <div class="qs-progress-bar"><div class="qs-progress-fill"></div></div>
+      <span class="qs-progress-text">1 / 2</span>
+    </div>
+    <div class="qs-q-text"></div>
+    <ul class="qs-options" role="list"></ul>
+    <div class="qs-nav">
+      <button class="qs-submit quiz-btn" type="button" disabled>Submit Answer</button>
+    </div>
+    <div class="qs-feedback" hidden></div>
+    <div class="qs-explanation" hidden></div>
+    <div class="qs-next-nav" hidden>
+      <button class="qs-next quiz-btn quiz-btn-outline" type="button" hidden>Next →</button>
+      <button class="qs-finish quiz-btn quiz-btn-outline" type="button" hidden>See Results →</button>
+    </div>
+  </div>
+  <div class="qs-results" hidden>
+    <p class="qs-results-title">Quiz Complete</p>
+    <div class="qs-score-ring"><div class="qs-score-inner">
+      <div class="qs-score-num"></div><div class="qs-score-lbl">correct</div>
+    </div></div>
+    <div class="qs-score-pct"></div>
+    <div class="qs-review"></div>
+    <button class="qs-retry-btn quiz-btn" type="button">↺ Try Again</button>
+  </div>
 </div></div>
         
       </article>
@@ -101,11 +145,11 @@ loadQuote();</textarea>
     </footer>
   </div>
 </div>
-<script src="../nav.js?v=mnclhkj4"></script>
+<script src="../nav.js?v=mnclt8lx"></script>
+<script src="../quiz.js?v=mnclt8lx"></script>
 
 
-
-<script src="../playground.js?v=mnclhkj4"></script>
+<script src="../playground.js?v=mnclt8lx"></script>
 
 
 </body>
