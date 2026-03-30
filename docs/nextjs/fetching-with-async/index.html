@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fetching with Async — nextjs</title>
+  <title>Fetching with Async — Learn NextJS</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles.css?v=mncmei63" />
+  <link rel="stylesheet" href="../styles.css?v=mndqhes8" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
 </head>
 <body>
@@ -32,13 +32,13 @@
 <div class="app-layout">
   <aside class="site-sidebar" id="sidebar">
   <div class="sidebar-top">
-    <a class="site-logo" href="../">nextjs</a>
+    <a class="site-logo" href="../">Learn NextJS</a>
     <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
     <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
     <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
   </div>
   <nav class="sidebar-nav" aria-label="Site navigation">
-    <div class="nav-section"><div class="nav-section-title">activities</div><a href="../fetching-with-async/" class="nav-link active" title="Fetching with Async"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">Fetching with Async</span></a></div>
+    <div class="nav-section"><div class="nav-section-title">learn</div><a href="../what-is-an-api/" class="nav-link" title="What is an API?"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">What is an API?</span></a><a href="../fetching-with-async/" class="nav-link active" title="Fetching with Async"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">Fetching with Async</span></a><a href="../what-is-json/" class="nav-link" title="What is JSON?"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">What is JSON?</span></a></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../activity-1/" class="nav-link" title="Activity 1"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">Activity 1</span></a></div>
   </nav>
   <div class="sidebar-footer-note">Learning Content Management System</div>
 </aside>
@@ -49,7 +49,7 @@
       <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
       <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="../">Home</a>
-        <span class="breadcrumb-sep">›</span><span>activities</span>
+        <span class="breadcrumb-sep">›</span><span>learn</span>
         <span class="breadcrumb-sep">›</span>
         <span>Fetching with Async</span>
       </nav>
@@ -59,7 +59,7 @@
         <div class="page-header">
           <h1 class="page-title">Fetching with Async</h1>
           <div class="page-meta">
-            <span class="page-meta-tag">activities</span>
+            <span class="page-meta-tag">learn</span>
             <span>⏱ 2 min read</span>
           </div>
         </div>
@@ -67,33 +67,6 @@
 </div>
 <figure class="image-block img-loading"><img src="../assets/75a46261-a9af-4e82-b953-184b42fbb44c.png" alt="" loading="lazy" onload="this.closest('.image-block').classList.remove('img-loading')" onerror="this.closest('.image-block').classList.remove('img-loading')" /></figure>
 <div class="prose"><p>When using <code>fetch</code> with <code>async</code> and <code>await</code>, the code is written inside an <code>async</code> function. The program sends a request using <code>fetch</code>, then uses <code>await</code> to pause the function until a response is received. After the response arrives, it can be converted into usable data (such as <strong>JSON</strong>) and then used in the program. This approach keeps the code easy to read because it runs in a clear, step-by-step order.</p>
-</div>
-<div class="playground-block">
-<div class="pg-header">
-  <span class="pg-header-title">Try it yourself</span>
-  <button class="pg-run-btn" type="button">&#9654; Run</button>
-  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
-</div>
-<div class="pg-editor-wrap">
-  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
-  <div class="pg-code-area">
-    <pre class="pg-pre" aria-hidden="true"></pre>
-    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">async function loadQuote() {
-  console.log(&quot;Fetching quote..&quot;);
-
-  const response = await fetch(&quot;https://dummyjson.com/quotes/random&quot;);
-  const data = await response.json();
-
-  console.log(data.quote);
-}
-
-loadQuote();</textarea>
-  </div>
-</div>
-<div class="pg-output-wrap">
-  <div class="pg-output-label">Output</div>
-  <div class="pg-output"></div>
-</div>
 </div>
 <div class="quiz-block" data-questions='[{"id":"73ac99c6-b13a-4f57-b301-739b0797c339","question":"What does the async keyword do?","options":["It makes a function run faster","It allows a function to use await and return a Promise","It sends a request to the internet","It converts data into JSON"],"correctIndex":1,"explanation":"The async keyword allows a function to use await and automatically makes the function return a Promise."},{"id":"9d456811-2b1d-4022-bc24-ea3eaee0749e","question":"What does await do in an async function?","options":["Stops the entire program","Deletes the Promise","Pauses the function until the Promise finishes","Sends the request to the server"],"correctIndex":2,"explanation":"await pauses the function until the Promise is finished and the result is available."},{"id":"ccd060d2-e660-4313-8166-e837d8f005dc","question":"In the example below, what will be printed to the console?","options":["A random quote","The website address","The number of quotes in the database","Nothing"],"correctIndex":0,"explanation":"The code fetches a random quote and prints the text of the quote to the console.","media":{"type":"code","content":"async function loadQuote() {\n  const response = await fetch(\"https://dummyjson.com/quotes/random\");\n  const data = await response.json();\n\n  console.log(data.quote);\n}","language":"javascript"}}]' data-quiz-id="4df0bd47-db6d-4cea-adee-42f29c1f9028">
   <div class="quiz-block-header">
@@ -140,20 +113,27 @@ loadQuote();</textarea>
     <div class="qs-review"></div>
     <button class="qs-retry-btn quiz-btn" type="button">↺ Try Again</button>
   </div>
+</div>
+<div class="prose"><p>So what does this code look like in the context of <strong>JavaScript</strong>?</p>
+<p>Below you will find code that <strong>fetches (requests)</strong> a random quote from an API (dummyjson) and transforms the <strong>data (response)</strong> into JSON.</p>
 </div></div>
         
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../what-is-an-api/">← What is an API?</a>
+  <a class="pn-btn pn-next" href="../what-is-json/">What is JSON? →</a>
+</nav>
       </article>
     </main>
     <footer class="site-footer">
-      <span>Generated by LCMS</span><span>30 March 2026</span>
+      <span>Generated by LCMS</span><span>31 March 2026</span>
     </footer>
   </div>
 </div>
-<script src="../nav.js?v=mncmei63"></script>
-<script src="../quiz.js?v=mncmei63"></script>
+<script src="../nav.js?v=mndqhes8"></script>
+<script src="../quiz.js?v=mndqhes8"></script>
 
 
-<script src="../playground.js?v=mncmei63"></script>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>
 </body>

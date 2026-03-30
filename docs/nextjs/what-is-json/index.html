@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What is JSON? — Learn NextJS</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=mndqhes8" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">Learn NextJS</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">learn</div><a href="../what-is-an-api/" class="nav-link" title="What is an API?"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">What is an API?</span></a><a href="../fetching-with-async/" class="nav-link" title="Fetching with Async"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">Fetching with Async</span></a><a href="../what-is-json/" class="nav-link active" title="What is JSON?"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">What is JSON?</span></a></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../activity-1/" class="nav-link" title="Activity 1"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">Activity 1</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>learn</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>What is JSON?</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">What is JSON?</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">learn</span>
+            <span>⏱ 1 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><div class="prose"><p><strong>JavaScript Object Notation (JSON)</strong> is a lightweight data format used to store and exchange information between systems. It represents data using simple text in key-value pairs, making it easy for both humans and computers to read and write.</p>
+<p>The example below shows what a simple JSON structure might look like.</p>
+</div>
+<figure class="code-block"><div class="code-lang">json</div><pre><code class="language-json">{
+    &quot;name&quot;: &quot;John&quot;,
+    &quot;age&quot;: &quot;45&quot;
+}</code></pre></figure>
+<div class="prose"><p>The <strong>JSON</strong> example above contains several key-value pairs that represent pieces of data. In <strong>JSON</strong>, a key is the name used to identify a piece of information, and the value is the data associated with that key. </p>
+<p>The table below breaks down the example by showing each key and its corresponding value to help illustrate how <strong>JSON</strong> data is structured.</p>
+</div>
+<div class="table-block"><table><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody><tr><td>Name</td><td>John</td></tr><tr><td>Age</td><td>45</td></tr></tbody></table></div></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../fetching-with-async/">← Fetching with Async</a>
+  <a class="pn-btn pn-next" href="../activity-1/">Activity 1 →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <span>Generated by LCMS</span><span>31 March 2026</span>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mndqhes8"></script>
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>
+</body>
+</html>
