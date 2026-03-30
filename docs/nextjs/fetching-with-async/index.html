@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fetching with Async — nextjs</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=mncmei63" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">nextjs</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">activities</div><a href="../fetching-with-async/" class="nav-link active" title="Fetching with Async"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">Fetching with Async</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>activities</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Fetching with Async</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Fetching with Async</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">activities</span>
+            <span>⏱ 2 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><div class="prose"><p><strong>Fetching</strong> is the process of requesting data from another location on the internet, usually from an API. In the browser, <strong>JavaScript</strong> provides a function called <code>fetch</code> that allows a web page to send a request and receive a response, such as loading information needed for the page. Because this takes time, <code>fetch</code> returns a <code>Promise</code>, which represents a result that will arrive later, and using <code>async</code> and <code>await</code> lets your code wait for that result in a clear, step-by-step way without freezing the page.</p>
+</div>
+<figure class="image-block img-loading"><img src="../assets/75a46261-a9af-4e82-b953-184b42fbb44c.png" alt="" loading="lazy" onload="this.closest('.image-block').classList.remove('img-loading')" onerror="this.closest('.image-block').classList.remove('img-loading')" /></figure>
+<div class="prose"><p>When using <code>fetch</code> with <code>async</code> and <code>await</code>, the code is written inside an <code>async</code> function. The program sends a request using <code>fetch</code>, then uses <code>await</code> to pause the function until a response is received. After the response arrives, it can be converted into usable data (such as <strong>JSON</strong>) and then used in the program. This approach keeps the code easy to read because it runs in a clear, step-by-step order.</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Try it yourself</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">async function loadQuote() {
+  console.log(&quot;Fetching quote..&quot;);
+
+  const response = await fetch(&quot;https://dummyjson.com/quotes/random&quot;);
+  const data = await response.json();
+
+  console.log(data.quote);
+}
+
+loadQuote();</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<div class="quiz-block" data-questions='[{"id":"73ac99c6-b13a-4f57-b301-739b0797c339","question":"What does the async keyword do?","options":["It makes a function run faster","It allows a function to use await and return a Promise","It sends a request to the internet","It converts data into JSON"],"correctIndex":1,"explanation":"The async keyword allows a function to use await and automatically makes the function return a Promise."},{"id":"9d456811-2b1d-4022-bc24-ea3eaee0749e","question":"What does await do in an async function?","options":["Stops the entire program","Deletes the Promise","Pauses the function until the Promise finishes","Sends the request to the server"],"correctIndex":2,"explanation":"await pauses the function until the Promise is finished and the result is available."},{"id":"ccd060d2-e660-4313-8166-e837d8f005dc","question":"In the example below, what will be printed to the console?","options":["A random quote","The website address","The number of quotes in the database","Nothing"],"correctIndex":0,"explanation":"The code fetches a random quote and prints the text of the quote to the console.","media":{"type":"code","content":"async function loadQuote() {\n  const response = await fetch(\"https://dummyjson.com/quotes/random\");\n  const data = await response.json();\n\n  console.log(data.quote);\n}","language":"javascript"}}]' data-quiz-id="4df0bd47-db6d-4cea-adee-42f29c1f9028">
+  <div class="quiz-block-header">
+    <span class="quiz-block-header-title">Quiz</span>
+    <span class="quiz-block-header-badge">3 questions</span>
+  </div>
+  <div class="qs-start">
+    <h3 class="qs-title">Quiz</h3>
+    <p class="qs-desc">Test your understanding of how async and await work in JavaScript.</p><p class="qs-count">3 questions</p>
+    <button class="qs-start-btn quiz-btn" type="button">Start Quiz →</button>
+    <div class="qs-resume" hidden>
+      <p class="qs-resume-status"></p>
+      <div class="qs-resume-actions">
+        <button class="qs-continue-btn quiz-btn" type="button">Continue →</button>
+        <button class="qs-restart-btn quiz-btn quiz-btn-outline" type="button">↺ Start Over</button>
+      </div>
+    </div>
+  </div>
+  <div class="qs-question" hidden>
+    <div class="qs-progress-wrap">
+      <div class="qs-progress-bar"><div class="qs-progress-fill"></div></div>
+      <span class="qs-progress-text">1 / 3</span>
+    </div>
+    <div class="qs-q-text"></div>
+    <div class="qs-media" hidden></div>
+    <div class="qs-media-sep" hidden></div>
+    <ul class="qs-options" role="list"></ul>
+    <div class="qs-nav">
+      <button class="qs-submit quiz-btn" type="button" disabled>Submit Answer</button>
+    </div>
+    <div class="qs-feedback" hidden></div>
+    <div class="qs-explanation" hidden></div>
+    <div class="qs-next-nav" hidden>
+      <button class="qs-next quiz-btn quiz-btn-outline" type="button" hidden>Next →</button>
+      <button class="qs-finish quiz-btn quiz-btn-outline" type="button" hidden>See Results →</button>
+    </div>
+  </div>
+  <div class="qs-results" hidden>
+    <p class="qs-results-title">Quiz Complete</p>
+    <div class="qs-score-ring"><div class="qs-score-inner">
+      <div class="qs-score-num"></div><div class="qs-score-lbl">correct</div>
+    </div></div>
+    <div class="qs-score-pct"></div>
+    <div class="qs-review"></div>
+    <button class="qs-retry-btn quiz-btn" type="button">↺ Try Again</button>
+  </div>
+</div></div>
+        
+      </article>
+    </main>
+    <footer class="site-footer">
+      <span>Generated by LCMS</span><span>30 March 2026</span>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mncmei63"></script>
+<script src="../quiz.js?v=mncmei63"></script>
+
+
+<script src="../playground.js?v=mncmei63"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>
+</body>
+</html>
