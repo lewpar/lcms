@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { v4 as uuidv4 } from './uuid.js';
 import {
   getSites, createSite, deleteSite, renameSite,
@@ -56,8 +56,8 @@ export default function App() {
   const [editingSectionName, setEditingSectionName] = useState('');
   const [draggingPageId, setDraggingPageId] = useState(null);
   const [dragOverTarget, setDragOverTarget] = useState(undefined);
-  const [dragOverPageId, setDragOverPageId] = useState(null);
-  const [dragInsertPos, setDragInsertPos] = useState('after');
+  const [pageGhostSectionId, setPageGhostSectionId] = useState(undefined); // undefined=none, null=unsectioned, string=sectionId
+  const [pageGhostIndex, setPageGhostIndex] = useState(null);
   const renamingRef = useRef(null);
   const [deletePageDialog, setDeletePageDialog] = useState(null); // { id, title }
 
@@ -321,42 +321,12 @@ export default function App() {
 
   // ── Page ordering via drag ───────────────────────────────
 
-  const onPageDragOverPage = (e, pageId) => {
-    if (!draggingPageId || draggingPageId === pageId) return;
-    e.preventDefault();
-    e.stopPropagation();
-    const rect = e.currentTarget.getBoundingClientRect();
-    const pos = e.clientY < rect.top + rect.height / 2 ? 'before' : 'after';
-    setDragOverPageId(pageId);
-    setDragInsertPos(pos);
-  };
-
-  const onPageDropOnPage = async (e, targetPageId) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!draggingPageId || draggingPageId === targetPageId) {
-      setDragOverPageId(null);
-      return;
-    }
-    const targetPage = pages.find(p => p.id === targetPageId);
-    const sectionId = targetPage ? targetPage.section : '';
-    const sectionPages = pages.filter(p => (p.section || '') === (sectionId || ''));
-    const ids = sectionPages.map(p => p.id).filter(id => id !== draggingPageId);
-    const targetIdx = ids.indexOf(targetPageId);
-    const insertAt = dragInsertPos === 'after' ? targetIdx + 1 : targetIdx;
-    ids.splice(insertAt, 0, draggingPageId);
-    setDragOverPageId(null);
+  const cleanupPageDrag = () => {
     setDraggingPageId(null);
     setDragOverTarget(undefined);
-    try {
-      await reorderPages(siteId, ids);
-      await loadPages();
-    } catch {
-      addToast('Failed to reorder pages', 'error');
-    }
+    setPageGhostSectionId(undefined);
+    setPageGhostIndex(null);
   };
-
-  // ── Drag-to-section ──────────────────────────────────────
 
   const onPageDragStart = (e, pageId) => {
     e.stopPropagation();
@@ -364,11 +334,60 @@ export default function App() {
     e.dataTransfer.effectAllowed = 'move';
   };
 
-  const onPageDragEnd = () => {
-    setDraggingPageId(null);
-    setDragOverTarget(undefined);
-    setDragOverPageId(null);
+  const onPageDragEnd = () => cleanupPageDrag();
+
+  // Container-level drag over for each section's page list
+  const onPageListDragOver = (e, sectionId) => {
+    if (!draggingPageId) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const pageItems = [...e.currentTarget.querySelectorAll('.page-list-item')];
+    const mouseY = e.clientY;
+    let gi = 0;
+    for (let i = 0; i < pageItems.length; i++) {
+      const rect = pageItems[i].getBoundingClientRect();
+      if (mouseY > rect.top + rect.height / 2) gi = i + 1;
+      else break;
+    }
+    setPageGhostSectionId(sectionId);
+    setPageGhostIndex(gi);
+    setDragOverTarget(sectionId);
   };
+
+  const onPageListDrop = async (e, sectionId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!draggingPageId || pageGhostIndex === null) { cleanupPageDrag(); return; }
+    const fromPage = pages.find(p => p.id === draggingPageId);
+    const fromSectionId = fromPage?.section || null;
+    const normTarget = sectionId ?? null;
+    const isReorder = (fromSectionId ?? null) === normTarget;
+    try {
+      if (isReorder) {
+        const sectionPages = pages.filter(p => (p.section || null) === normTarget);
+        const fromIdx = sectionPages.findIndex(p => p.id === draggingPageId);
+        const toIdx = pageGhostIndex;
+        if (fromIdx !== toIdx && fromIdx + 1 !== toIdx) {
+          const ids = sectionPages.map(p => p.id);
+          const [removed] = ids.splice(fromIdx, 1);
+          const insertAt = fromIdx < toIdx ? toIdx - 1 : toIdx;
+          ids.splice(Math.max(0, Math.min(insertAt, ids.length)), 0, removed);
+          await reorderPages(siteId, ids);
+          await loadPages();
+        }
+      } else {
+        const targetSectionPages = pages.filter(p => (p.section || null) === normTarget);
+        const ids = targetSectionPages.map(p => p.id);
+        ids.splice(Math.max(0, Math.min(pageGhostIndex, ids.length)), 0, draggingPageId);
+        await patchPage(siteId, draggingPageId, { section: sectionId ?? '' });
+        await reorderPages(siteId, ids);
+        await loadPages();
+      }
+    } catch { addToast('Failed to move page', 'error'); }
+    cleanupPageDrag();
+  };
+
+  // ── Drag-to-section (collapsed sections / section header) ─
 
   const onSectionDragOver = (e, targetId) => {
     if (!draggingPageId) return;
@@ -384,8 +403,27 @@ export default function App() {
   const onSectionDrop = (e, targetSectionId) => {
     e.preventDefault();
     if (draggingPageId) movePageToSection(draggingPageId, targetSectionId ?? '');
-    setDraggingPageId(null);
-    setDragOverTarget(undefined);
+    cleanupPageDrag();
+  };
+
+  // ── Section reordering ───────────────────────────────────
+
+  const moveSectionUp = async (idx) => {
+    if (idx === 0) return;
+    const newSections = [...settings.sections];
+    [newSections[idx - 1], newSections[idx]] = [newSections[idx], newSections[idx - 1]];
+    const newSettings = { ...settings, sections: newSections };
+    try { await updateSiteSettings(siteId, newSettings); setSettings(newSettings); }
+    catch { addToast('Failed to reorder sections', 'error'); }
+  };
+
+  const moveSectionDown = async (idx) => {
+    if (idx >= settings.sections.length - 1) return;
+    const newSections = [...settings.sections];
+    [newSections[idx], newSections[idx + 1]] = [newSections[idx + 1], newSections[idx]];
+    const newSettings = { ...settings, sections: newSections };
+    try { await updateSiteSettings(siteId, newSettings); setSettings(newSettings); }
+    catch { addToast('Failed to reorder sections', 'error'); }
   };
 
   // ── Site selector screen ─────────────────────────────────
@@ -424,24 +462,18 @@ export default function App() {
     }
   }
 
-  const renderPageItem = (page) => {
-    const insertClass = dragOverPageId === page.id
-      ? (dragInsertPos === 'before' ? 'drag-insert-before' : 'drag-insert-after')
-      : '';
-    return (
+  const renderPageItem = (page) => (
     <div
       key={page.id}
-      className={`page-list-item ${selectedId === page.id && view === 'pages' ? 'active' : ''} ${draggingPageId === page.id ? 'dragging' : ''} ${insertClass}`}
+      className={`page-list-item ${selectedId === page.id && view === 'pages' ? 'active' : ''} ${draggingPageId === page.id ? 'dragging' : ''}`}
       onClick={() => selectPage(page.id)}
       draggable
       onDragStart={e => onPageDragStart(e, page.id)}
       onDragEnd={onPageDragEnd}
-      onDragOver={e => onPageDragOverPage(e, page.id)}
-      onDrop={e => onPageDropOnPage(e, page.id)}
     >
       <span className="page-list-item-icon">{page.icon || '📄'}</span>
       <div style={{ flex: 1, overflow: 'hidden' }}>
-        <div className="page-list-item-title">{page.title}</div>
+        <div className="page-list-item-title">{page.title || 'Untitled'}</div>
         <div className="page-list-item-slug">/{page.slug}</div>
       </div>
       <div className="page-list-actions">
@@ -450,6 +482,33 @@ export default function App() {
       </div>
     </div>
   );
+
+  // Helper for rendering a page list with ghost placeholder
+  const renderPageListWithGhost = (pagesInSection, sectionId) => {
+    const normSection = sectionId ?? null;
+    const draggingPage = draggingPageId ? pages.find(p => p.id === draggingPageId) : null;
+    const ghostLabel = draggingPage?.title || 'Page';
+    const draggingPageSectionId = draggingPage ? (draggingPage.section || null) : null;
+    const showGhostAt = (idx) => {
+      if (pageGhostSectionId === undefined || pageGhostSectionId !== normSection || pageGhostIndex !== idx || !draggingPageId) return false;
+      // Hide ghost at no-op position when reordering within same section
+      if (draggingPageSectionId === normSection) {
+        const fromIdx = pagesInSection.findIndex(p => p.id === draggingPageId);
+        if (idx === fromIdx || idx === fromIdx + 1) return false;
+      }
+      return true;
+    };
+    return (
+      <>
+        {pagesInSection.map((page, idx) => (
+          <React.Fragment key={page.id}>
+            {showGhostAt(idx) && <div className="page-ghost">{ghostLabel}</div>}
+            {renderPageItem(page)}
+          </React.Fragment>
+        ))}
+        {showGhostAt(pagesInSection.length) && <div className="page-ghost">{ghostLabel}</div>}
+      </>
+    );
   };
 
   return (
@@ -513,7 +572,7 @@ export default function App() {
             </p>
           )}
 
-          {sections.map(section => {
+          {sections.map((section, sectionIdx) => {
             const sectionPages = pagesBySection[section.id] || [];
             const collapsed = collapsedSections[section.id];
             const isEditing = editingSectionId === section.id;
@@ -554,6 +613,20 @@ export default function App() {
                     </span>
                   )}
                   <span className="sidebar-section-count">{sectionPages.length}</span>
+                  <div className="sidebar-section-move-btns">
+                    <button
+                      className="sidebar-section-move-btn"
+                      onClick={() => moveSectionUp(sectionIdx)}
+                      disabled={sectionIdx === 0}
+                      title="Move section up"
+                    >↑</button>
+                    <button
+                      className="sidebar-section-move-btn"
+                      onClick={() => moveSectionDown(sectionIdx)}
+                      disabled={sectionIdx === sections.length - 1}
+                      title="Move section down"
+                    >↓</button>
+                  </div>
                   <button
                     className="sidebar-section-add-page"
                     onClick={() => handleNewPage(section.id)}
@@ -569,13 +642,17 @@ export default function App() {
                   >✕</button>
                 </div>
                 {!collapsed && (
-                  <div className="sidebar-section-pages">
+                  <div
+                    className="sidebar-section-pages"
+                    onDragOver={e => onPageListDragOver(e, section.id)}
+                    onDrop={e => onPageListDrop(e, section.id)}
+                  >
                     {sectionPages.length === 0 ? (
                       <div className={`sidebar-section-empty${isDragOver ? ' drag-hint' : ''}`}>
                         {isDragOver ? 'Drop here' : 'No pages yet.'}
                       </div>
                     ) : (
-                      sectionPages.map(renderPageItem)
+                      renderPageListWithGhost(sectionPages, section.id)
                     )}
                   </div>
                 )}
@@ -595,8 +672,12 @@ export default function App() {
                 <span className="sidebar-section-count">{unsectionedPages.length}</span>
               </div>
             )}
-            <div className={sections.length > 0 ? 'sidebar-section-pages' : ''}>
-              {unsectionedPages.map(renderPageItem)}
+            <div
+              className={sections.length > 0 ? 'sidebar-section-pages' : ''}
+              onDragOver={e => onPageListDragOver(e, null)}
+              onDrop={e => onPageListDrop(e, null)}
+            >
+              {renderPageListWithGhost(unsectionedPages, null)}
             </div>
           </div>
 

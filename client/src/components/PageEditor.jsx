@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { getPage, updatePage } from '../api.js';
 import SplitPane from './SplitPane.jsx';
 
@@ -29,7 +29,8 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
 
   // Drag state
   const dragIndex = useRef(null);
-  const [dragOver, setDragOver] = useState(null);
+  const [ghostIndex, setGhostIndex] = useState(null);
+  const blocksListRef = useRef(null);
 
   // Auto-save timer
   const autoSaveTimer = useRef(null);
@@ -173,31 +174,40 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
   // Drag handlers
   const handleDragStart = (index) => { dragIndex.current = index; };
 
-  const handleDragOver = (e, index) => {
+  const handleContainerDragOver = (e) => {
     e.preventDefault();
-    if (dragIndex.current === null || dragIndex.current === index) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const pos = e.clientY < rect.top + rect.height / 2 ? 'before' : 'after';
-    setDragOver({ index, pos });
+    if (dragIndex.current === null) return;
+    const container = blocksListRef.current;
+    if (!container) return;
+    const blockCards = [...container.querySelectorAll('.block-card')];
+    const mouseY = e.clientY;
+    let gi = 0;
+    for (let i = 0; i < blockCards.length; i++) {
+      const rect = blockCards[i].getBoundingClientRect();
+      if (mouseY > rect.top + rect.height / 2) gi = i + 1;
+      else break;
+    }
+    setGhostIndex(gi);
   };
 
-  const handleDrop = (e, toIndex) => {
+  const handleContainerDrop = (e) => {
     e.preventDefault();
     const fromIndex = dragIndex.current;
-    if (fromIndex === null || fromIndex === toIndex) { dragIndex.current = null; setDragOver(null); return; }
-    setPage(p => {
-      const blocks = [...p.blocks];
-      const [moved] = blocks.splice(fromIndex, 1);
-      const dest = fromIndex < toIndex ? toIndex - 1 : toIndex;
-      const insertAt = dragOver?.pos === 'after' ? dest + 1 : dest;
-      blocks.splice(Math.max(0, Math.min(insertAt, blocks.length)), 0, moved);
-      return { ...p, blocks };
-    });
+    if (fromIndex === null || ghostIndex === null) { dragIndex.current = null; setGhostIndex(null); return; }
+    if (ghostIndex !== fromIndex && ghostIndex !== fromIndex + 1) {
+      setPage(p => {
+        const blocks = [...p.blocks];
+        const [moved] = blocks.splice(fromIndex, 1);
+        const insertAt = fromIndex < ghostIndex ? ghostIndex - 1 : ghostIndex;
+        blocks.splice(Math.max(0, Math.min(insertAt, blocks.length)), 0, moved);
+        return { ...p, blocks };
+      });
+    }
     dragIndex.current = null;
-    setDragOver(null);
+    setGhostIndex(null);
   };
 
-  const handleDragEnd = () => { dragIndex.current = null; setDragOver(null); };
+  const handleDragEnd = () => { dragIndex.current = null; setGhostIndex(null); };
 
   const statusLabel = { saved: '✓ Saved', unsaved: '● Unsaved', saving: '⟳ Saving…' };
   const statusColor = { saved: 'var(--success)', unsaved: 'var(--warning)', saving: 'var(--text-muted)' };
@@ -312,36 +322,43 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
             <h3>Blocks ({page.blocks.length})</h3>
           </div>
 
-          <div className="blocks-list">
-            {page.blocks.map((block, idx) => (
-              <BlockEditor
-                key={block.id}
-                block={block}
-                index={idx}
-                total={page.blocks.length}
-                expanded={expandedBlockId === block.id}
-                onToggle={() => setExpandedBlockId(expandedBlockId === block.id ? null : block.id)}
-                onChange={changes => updateBlock(block.id, changes)}
-                onRemove={() => setPendingRemoveId(block.id)}
-                onTransfer={() => openTransfer(block)}
-                onMoveUp={() => moveBlock(idx, idx - 1)}
-                onMoveDown={() => moveBlock(idx, idx + 1)}
-                onAddBelow={() => { setInsertAtIndex(idx + 1); setShowAddBlock(true); }}
-                addToast={addToast}
-                pages={pages}
-                siteId={siteId}
-                isDragging={dragIndex.current === idx}
-                dragOverClass={
-                  dragOver?.index === idx
-                    ? (dragOver.pos === 'before' ? 'drag-over-before' : 'drag-over-after')
-                    : ''
-                }
-                onDragStart={() => handleDragStart(idx)}
-                onDragOver={(e) => handleDragOver(e, idx)}
-                onDrop={(e) => handleDrop(e, idx)}
-                onDragEnd={handleDragEnd}
-              />
-            ))}
+          <div className="blocks-list" ref={blocksListRef} onDragOver={handleContainerDragOver} onDrop={handleContainerDrop}>
+            {(() => {
+              const draggedBlock = dragIndex.current !== null ? page.blocks[dragIndex.current] : null;
+              const draggedBt = draggedBlock ? BLOCK_TYPES.find(b => b.type === draggedBlock.type) : null;
+              const ghostLabel = draggedBt ? `${draggedBt.icon || ''} ${draggedBt.label}`.trim() : 'Drop here';
+              const showGhostAt = (i) => ghostIndex === i && dragIndex.current !== null
+                && ghostIndex !== dragIndex.current && ghostIndex !== dragIndex.current + 1;
+              return (
+                <>
+                  {page.blocks.map((block, idx) => (
+                    <React.Fragment key={block.id}>
+                      {showGhostAt(idx) && <div className="block-ghost">{ghostLabel}</div>}
+                      <BlockEditor
+                        block={block}
+                        index={idx}
+                        total={page.blocks.length}
+                        expanded={expandedBlockId === block.id}
+                        onToggle={() => setExpandedBlockId(expandedBlockId === block.id ? null : block.id)}
+                        onChange={changes => updateBlock(block.id, changes)}
+                        onRemove={() => setPendingRemoveId(block.id)}
+                        onTransfer={() => openTransfer(block)}
+                        onMoveUp={() => moveBlock(idx, idx - 1)}
+                        onMoveDown={() => moveBlock(idx, idx + 1)}
+                        onAddBelow={() => { setInsertAtIndex(idx + 1); setShowAddBlock(true); }}
+                        addToast={addToast}
+                        pages={pages}
+                        siteId={siteId}
+                        isDragging={dragIndex.current === idx}
+                        onDragStart={() => handleDragStart(idx)}
+                        onDragEnd={handleDragEnd}
+                      />
+                    </React.Fragment>
+                  ))}
+                  {showGhostAt(page.blocks.length) && <div className="block-ghost">{ghostLabel}</div>}
+                </>
+              );
+            })()}
 
             <button className="btn btn-secondary" style={{ alignSelf: 'flex-start' }} onClick={() => setShowAddBlock(true)}>
               + Add Block

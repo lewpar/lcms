@@ -21,7 +21,8 @@
             "Tree"
           ],
           "correctIndex": 2,
-          "explanation": "You can add an explanation here, shown after each answer."
+          "explanation": "You can add an explanation here, shown after each answer.",
+          "media": null
         },
         {
           "id": "454fc076-da76-42de-a92a-6bdfba39f3a8",
@@ -39,7 +40,7 @@
     }
   ],
   "createdAt": "2026-03-28T00:38:26.912Z",
-  "updatedAt": "2026-03-28T05:19:55.843Z",
+  "updatedAt": "2026-03-30T03:12:39.638Z",
   "icon": "🧠",
   "order": 2
 }

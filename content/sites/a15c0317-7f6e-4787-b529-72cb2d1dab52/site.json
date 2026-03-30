@@ -1,0 +1,145 @@
+{
+  "title": "james",
+  "navPages": [],
+  "sections": [],
+  "theme": {},
+  "home": {
+    "heroTitle": "",
+    "heroSubtitle": "",
+    "showPageGrid": true,
+    "blocks": [
+      {
+        "id": "5f76ec57-1518-4548-8589-1e85d046ade2",
+        "type": "difficulty",
+        "level": 4,
+        "label": ""
+      },
+      {
+        "id": "1f34e537-29c7-422f-890a-442efc6a0538",
+        "type": "markdown",
+        "content": "# yo james\n\nheres some cool blocks that are supported by the cms"
+      },
+      {
+        "id": "013c38eb-673a-4ff5-a086-4c62fa7d1637",
+        "type": "heading",
+        "level": 2,
+        "text": "headings"
+      },
+      {
+        "id": "2bf943bd-9319-47a1-b698-7f833d51fe73",
+        "type": "callout",
+        "title": "callouts",
+        "content": "woo",
+        "color": "blue"
+      },
+      {
+        "id": "70397a21-8079-443e-9f67-ab93f44f1a0d",
+        "type": "divider"
+      },
+      {
+        "id": "65c2781c-b259-4b7a-bc22-b919a146e8da",
+        "type": "image",
+        "src": "/assets/a15c0317-7f6e-4787-b529-72cb2d1dab52/11f71bc7-8883-4e74-9cb9-86c49f751f2f.gif",
+        "alt": "",
+        "caption": ""
+      },
+      {
+        "id": "fc6c15f2-cfd4-4f90-9fea-c1d6d7f44c5f",
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=1p_BvaHsgGg",
+        "caption": ""
+      },
+      {
+        "id": "0c4d8853-cda8-431a-8958-1d9842ab7df7",
+        "type": "code",
+        "language": "python",
+        "content": "def add(a, b):\n  return a + b\n\nadd(1, 2)",
+        "caption": "caption here"
+      },
+      {
+        "id": "bf632126-12d2-4538-a01e-09088b6c0c56",
+        "type": "quiz",
+        "title": "",
+        "description": "",
+        "questions": [
+          {
+            "id": "db3ce7f1-7dad-435b-aba3-601b2246fb6d",
+            "question": "how many rats do fix a lightbulb",
+            "options": [
+              "huh?",
+              "three"
+            ],
+            "correctIndex": 0,
+            "explanation": "rats arent tall enough to fix a light bulb"
+          }
+        ]
+      },
+      {
+        "id": "65d4e5cd-b781-4144-b945-051909a6bee5",
+        "type": "flashcard",
+        "title": "click the flashcard",
+        "cards": [
+          {
+            "id": "20e17417-eda2-4250-93ab-fc53652b189a",
+            "front": "guess what",
+            "back": "gottem"
+          }
+        ]
+      },
+      {
+        "id": "b10831c0-ae6e-4e49-8e44-700ad809035c",
+        "type": "fill-in-the-blank",
+        "title": "",
+        "prompt": "The name of the person who stole the ram from the lab is ___",
+        "answers": [
+          "james"
+        ],
+        "language": "plaintext"
+      },
+      {
+        "id": "86c50637-c254-4b91-988e-291d82ffe6e7",
+        "type": "accordion",
+        "items": [
+          {
+            "id": "52e699c2-3fdc-4167-bd1d-bae361ae8b9a",
+            "title": "heyo accordion",
+            "content": "some information"
+          }
+        ]
+      },
+      {
+        "id": "99fbafe5-d815-46e5-8ecf-e04fd51122b7",
+        "type": "playground",
+        "title": "write sum code",
+        "starterCode": "// Write your JavaScript here\nconsole.log('Hello, world!');"
+      },
+      {
+        "id": "b4fbdac2-ccf3-4444-9bd0-445041074c33",
+        "type": "table",
+        "caption": "hey tables",
+        "headers": [
+          "name",
+          "coolness"
+        ],
+        "rows": [
+          [
+            "lewis",
+            "high"
+          ],
+          [
+            "james",
+            "?"
+          ]
+        ]
+      },
+      {
+        "id": "e225ba9c-c92a-493e-a740-063181bda695",
+        "type": "case-study",
+        "title": "Case Study Scenario",
+        "summary": "",
+        "background": "You are a software developer working for KangaLife.",
+        "instructions": "Build a smart clock with 3 or more displays using limited access to hardware."
+      }
+    ]
+  }
+}

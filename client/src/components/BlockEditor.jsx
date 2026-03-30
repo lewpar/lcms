@@ -940,16 +940,14 @@ function DifficultyEditor({ block, onChange }) {
 export default function BlockEditor({
   block, index, total, expanded, onToggle, onChange, onRemove, onTransfer, addToast, pages, siteId,
   onMoveUp, onMoveDown, onAddBelow,
-  isDragging, dragOverClass, onDragStart, onDragOver, onDrop, onDragEnd,
+  isDragging, onDragStart, onDragEnd,
 }) {
   const bt = BLOCK_TYPES.find(b => b.type === block.type);
 
   return (
     <div
-      className={`block-card${expanded ? ' expanded' : ''}${isDragging ? ' dragging' : ''}${dragOverClass ? ` ${dragOverClass}` : ''}`}
+      className={`block-card${expanded ? ' expanded' : ''}${isDragging ? ' dragging' : ''}`}
       data-block-id={block.id}
-      onDragOver={onDragOver}
-      onDrop={onDrop}
       onDragEnd={onDragEnd}
     >
       <div className="block-header">

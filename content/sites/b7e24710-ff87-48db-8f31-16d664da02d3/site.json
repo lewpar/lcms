@@ -1,10 +1,14 @@
 {
-  "title": "anh",
+  "title": "nextjs",
   "navPages": [],
   "sections": [
     {
-      "id": "fd3c1439-8c96-48b6-b420-134599fdae0a",
-      "name": "test"
+      "id": "80159867-84c7-4930-9b4f-837a3a45ff17",
+      "name": "learn"
+    },
+    {
+      "id": "26fb9b35-fe2a-4269-8be1-30af533a8f73",
+      "name": "Activities"
     }
   ],
   "theme": {
@@ -28,6 +32,12 @@
     "heroTitle": "",
     "heroSubtitle": "",
     "showPageGrid": true,
-    "blocks": []
+    "blocks": [
+      {
+        "id": "28d79da6-84c3-4122-988d-42ad3ba6faad",
+        "type": "markdown",
+        "content": "Select a topic from the menu to begin."
+      }
+    ]
   }
 }
