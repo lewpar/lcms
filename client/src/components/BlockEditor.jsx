@@ -173,6 +173,16 @@ function QuestionEditor({ question, index, total, onChange, onRemove, addToast, 
       {open && (
         <div className="quiz-question-body">
           <div className="field">
+            <label>Question text</label>
+            <textarea
+              rows={2}
+              value={question.question || ''}
+              onChange={e => onChange({ question: e.target.value })}
+              placeholder="Enter the question"
+            />
+          </div>
+
+          <div className="field">
             <label>Media</label>
             <select value={mediaType} onChange={e => setMediaType(e.target.value)}>
               <option value="none">None</option>
@@ -188,7 +198,7 @@ function QuestionEditor({ question, index, total, onChange, onRemove, addToast, 
                 rows={3}
                 value={question.media.content || ''}
                 onChange={e => onChange({ media: { ...question.media, content: e.target.value } })}
-                placeholder="Text shown above the question"
+                placeholder="Text shown below the question"
               />
             </div>
           )}
@@ -209,7 +219,7 @@ function QuestionEditor({ question, index, total, onChange, onRemove, addToast, 
                 rows={6}
                 value={question.media.content || ''}
                 onChange={e => onChange({ media: { ...question.media, content: e.target.value } })}
-                placeholder="Code shown above the question"
+                placeholder="Code shown below the question"
                 style={{ fontFamily: 'monospace', fontSize: 12 }}
               />
             </div>
@@ -240,15 +250,6 @@ function QuestionEditor({ question, index, total, onChange, onRemove, addToast, 
             </div>
           </>)}
 
-          <div className="field">
-            <label>Question text</label>
-            <textarea
-              rows={2}
-              value={question.question || ''}
-              onChange={e => onChange({ question: e.target.value })}
-              placeholder="Enter the question"
-            />
-          </div>
 
           <div className="field">
             <label>Options — select correct answer with the radio button</label>
@@ -937,7 +938,7 @@ function DifficultyEditor({ block, onChange }) {
 /* ── Main BlockEditor ── */
 
 export default function BlockEditor({
-  block, index, total, expanded, onToggle, onChange, onRemove, addToast, pages, siteId,
+  block, index, total, expanded, onToggle, onChange, onRemove, onTransfer, addToast, pages, siteId,
   onMoveUp, onMoveDown, onAddBelow,
   isDragging, dragOverClass, onDragStart, onDragOver, onDrop, onDragEnd,
 }) {
@@ -986,6 +987,12 @@ export default function BlockEditor({
             title="Move down"
           >↓</button>
         </div>
+
+        <button
+          className="btn btn-secondary btn-icon btn-sm block-transfer-btn"
+          onClick={e => { e.stopPropagation(); onTransfer(); }}
+          title="Copy or move to another page"
+        >⇄</button>
 
         <button
           className="btn btn-danger btn-icon btn-sm block-delete-btn"

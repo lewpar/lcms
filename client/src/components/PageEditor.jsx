@@ -22,6 +22,10 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
   const [previewKey, setPreviewKey] = useState(0);
   const [pendingRemoveId, setPendingRemoveId] = useState(null);
   const [insertAtIndex, setInsertAtIndex] = useState(null);
+  const [transferBlock, setTransferBlock] = useState(null); // block being transferred
+  const [transferMode, setTransferMode] = useState('copy'); // 'copy' | 'move'
+  const [transferTargetId, setTransferTargetId] = useState('');
+  const [transferring, setTransferring] = useState(false);
 
   // Drag state
   const dragIndex = useRef(null);
@@ -39,6 +43,12 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
 
   const doSave = useCallback(async (p, silent = false) => {
     if (!p) return;
+    if (!p.slug) {
+      const generated = uuidv4().slice(0, 8);
+      p = { ...p, slug: generated };
+      setPage(p);
+      addToast(`No slug set — generated "${generated}"`, 'info');
+    }
     if (RESERVED_SLUGS.has(p.slug)) {
       addToast(`"${p.slug}" is a reserved slug and cannot be used.`, 'error');
       setSaveStatus('unsaved');
@@ -110,6 +120,32 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
   const confirmRemoveBlock = () => {
     removeBlock(pendingRemoveId);
     setPendingRemoveId(null);
+  };
+
+  const openTransfer = (block) => {
+    setTransferBlock(block);
+    setTransferMode('copy');
+    setTransferTargetId('');
+  };
+
+  const handleTransfer = async () => {
+    if (!transferTargetId || !transferBlock) return;
+    setTransferring(true);
+    try {
+      const targetPage = await getPage(siteId, transferTargetId);
+      const blockToAdd = transferMode === 'copy'
+        ? { ...transferBlock, id: uuidv4() }
+        : transferBlock;
+      await updatePage(siteId, transferTargetId, { ...targetPage, blocks: [...(targetPage.blocks || []), blockToAdd] });
+      if (transferMode === 'move') removeBlock(transferBlock.id);
+      const targetTitle = pages.find(p => p.id === transferTargetId)?.title || 'page';
+      addToast(`Block ${transferMode === 'copy' ? 'copied' : 'moved'} to "${targetTitle || 'Untitled'}"`, 'success');
+      setTransferBlock(null);
+    } catch {
+      addToast('Transfer failed', 'error');
+    } finally {
+      setTransferring(false);
+    }
   };
 
   const addBlock = (type) => {
@@ -287,6 +323,7 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
                 onToggle={() => setExpandedBlockId(expandedBlockId === block.id ? null : block.id)}
                 onChange={changes => updateBlock(block.id, changes)}
                 onRemove={() => setPendingRemoveId(block.id)}
+                onTransfer={() => openTransfer(block)}
                 onMoveUp={() => moveBlock(idx, idx - 1)}
                 onMoveDown={() => moveBlock(idx, idx + 1)}
                 onAddBelow={() => { setInsertAtIndex(idx + 1); setShowAddBlock(true); }}
@@ -335,6 +372,43 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
         onConfirm={confirmRemoveBlock}
         onCancel={() => setPendingRemoveId(null)}
       />
+
+      {transferBlock && (
+        <div className="modal-overlay" onClick={() => setTransferBlock(null)}>
+          <div className="modal-box" onClick={e => e.stopPropagation()} style={{ minWidth: 320 }}>
+            <h3 style={{ marginBottom: 16 }}>Transfer Block</h3>
+            <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
+              <button
+                className={`btn btn-sm${transferMode === 'copy' ? ' btn-primary' : ' btn-secondary'}`}
+                onClick={() => setTransferMode('copy')}
+              >Copy</button>
+              <button
+                className={`btn btn-sm${transferMode === 'move' ? ' btn-primary' : ' btn-secondary'}`}
+                onClick={() => setTransferMode('move')}
+              >Move</button>
+            </div>
+            <div className="field" style={{ marginBottom: 20 }}>
+              <label>Destination page</label>
+              <select value={transferTargetId} onChange={e => setTransferTargetId(e.target.value)}>
+                <option value="">Select a page…</option>
+                {pages.filter(p => p.id !== pageId).map(p => (
+                  <option key={p.id} value={p.id}>{p.title || 'Untitled'} — /{p.slug}</option>
+                ))}
+              </select>
+            </div>
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+              <button className="btn btn-secondary btn-sm" onClick={() => setTransferBlock(null)} disabled={transferring}>Cancel</button>
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={handleTransfer}
+                disabled={!transferTargetId || transferring}
+              >
+                {transferring ? 'Transferring…' : transferMode === 'copy' ? 'Copy to page' : 'Move to page'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <IconPickerDialog
         open={showIconPicker}

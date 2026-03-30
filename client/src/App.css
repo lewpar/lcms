@@ -549,11 +549,13 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   white-space: nowrap;
 }
 
-.block-delete-btn {
+.block-delete-btn,
+.block-transfer-btn {
   opacity: 0;
   transition: opacity 0.15s;
 }
-.block-header:hover .block-delete-btn { opacity: 1; }
+.block-header:hover .block-delete-btn,
+.block-header:hover .block-transfer-btn { opacity: 1; }
 
 .block-body {
   padding: 14px;
