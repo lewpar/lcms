@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles.css?v=mndtoj9s" />
+  <link rel="stylesheet" href="../styles.css?v=mndu9nuk" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
 </head>
 <body>
@@ -38,7 +38,7 @@
     <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
   </div>
   <nav class="sidebar-nav" aria-label="Site navigation">
-    <div class="nav-section"><div class="nav-section-title">Learn</div><a href="../what-is-json/" class="nav-link active" title="What is JSON?"><span class="nav-link-icon">📚</span><span class="nav-link-text">What is JSON?</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#nesting-objects">Nesting Objects</a></div><a href="../what-is-an-api/" class="nav-link" title="What is an API?"><span class="nav-link-icon">🌐</span><span class="nav-link-text">What is an API?</span></a><a href="../fetching-with-async/" class="nav-link" title="Fetching with Async"><span class="nav-link-icon">🗃️</span><span class="nav-link-text">Fetching with Async</span></a></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../activity-1/" class="nav-link" title="Activity 1"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">Activity 1</span></a></div>
+    <div class="nav-section"><div class="nav-section-title">Learn</div><a href="../what-is-json/" class="nav-link active" title="What is JSON?"><span class="nav-link-icon">📚</span><span class="nav-link-text">What is JSON?</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#nesting-objects">Nesting Objects</a><a class="nav-toc-link nav-toc-level-2" href="#quiz">Quiz</a></div><a href="../what-is-an-api/" class="nav-link" title="What is an API?"><span class="nav-link-icon">🌐</span><span class="nav-link-text">What is an API?</span></a><a href="../fetching-with-async/" class="nav-link" title="Fetching with Async"><span class="nav-link-icon">🗃️</span><span class="nav-link-text">Fetching with Async</span></a></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../activity-1/" class="nav-link" title="Activity 1"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">Activity 1</span></a></div>
   </nav>
   <div class="sidebar-footer-note">Learning Content Management System</div>
 </aside>
@@ -60,7 +60,7 @@
           <h1 class="page-title">What is JSON?</h1>
           <div class="page-meta">
             <span class="page-meta-tag">Learn</span>
-            <span>⏱ 1 min read</span>
+            <span>⏱ 2 min read</span>
           </div>
         </div>
         <div class="blocks"><div class="prose"><p><strong>JavaScript Object Notation (JSON)</strong> is a lightweight data format used to store and exchange information between systems. It represents data as key-value pairs inside curly braces, making it easy for both humans and computers to read and write.</p>
@@ -85,7 +85,54 @@
       &quot;age&quot;: 25
     },
     &quot;city&quot;: &quot;Melbourne&quot;
-}</code></pre></figure></div>
+}</code></pre></figure>
+<h2 id="quiz" class="block-heading">Quiz</h2>
+<div class="quiz-block" data-questions='[{"id":"6e0c3bea-1a0a-45db-b8ac-5713397be75b","question":"What symbol is used to create a JSON object?","options":["[]","{}","()","\u003c\u003e"],"correctIndex":1,"explanation":"JSON objects are always enclosed in curly braces {}. This applies whether the answer was correct or not."},{"id":"86159cdf-c474-4237-ae9d-8bc95bcd39d6","question":"In JSON, data is stored as:","options":["Values only","Keys only","Key-value pairs","Lists only"],"correctIndex":2,"explanation":"JSON organises information in key-value pairs, so each piece of data has a name (key) and a corresponding value."},{"id":"452fbe75-1ef6-4f7c-b8a2-d32370f19bb9","question":"How do you separate key-value pairs in a JSON object?","options":["With a semicolon ;","With a comma ,","With a colon :","With a period ."],"correctIndex":2,"explanation":"In JSON, key-value pairs are separated by a colon."},{"id":"a455fa82-d4e4-4703-85d4-cb5a1094f6f3","question":"Given the JSON structure below, which is a key and which is a value?","options":["Age is the key and Jane is the value","Jane is the key and 29 is the value","Name is the key and 29 is the value","Name is the key and Jane is the value"],"correctIndex":3,"explanation":"In JSON, a key identifies a piece of data and is followed by a colon :, which separates it from its value.","media":{"type":"code","content":"{\n    \"name\": \"Jane\",\n    \"age:\" \"29\"\n}","language":"javascript"}}]' data-quiz-id="86bdf6c4-73e4-441c-8206-84b97ba274e5">
+  <div class="quiz-block-header">
+    <span class="quiz-block-header-title">JSON Quiz</span>
+    <span class="quiz-block-header-badge">4 questions</span>
+  </div>
+  <div class="qs-start">
+    <h3 class="qs-title">JSON Quiz</h3>
+    <p class="qs-desc">Check your understanding on JSON</p><p class="qs-count">4 questions</p>
+    <button class="qs-start-btn quiz-btn" type="button">Start Quiz →</button>
+    <div class="qs-resume" hidden>
+      <p class="qs-resume-status"></p>
+      <div class="qs-resume-actions">
+        <button class="qs-continue-btn quiz-btn" type="button">Continue →</button>
+        <button class="qs-restart-btn quiz-btn quiz-btn-outline" type="button">↺ Start Over</button>
+      </div>
+    </div>
+  </div>
+  <div class="qs-question" hidden>
+    <div class="qs-progress-wrap">
+      <div class="qs-progress-bar"><div class="qs-progress-fill"></div></div>
+      <span class="qs-progress-text">1 / 4</span>
+    </div>
+    <div class="qs-q-text"></div>
+    <div class="qs-media" hidden></div>
+    <div class="qs-media-sep" hidden></div>
+    <ul class="qs-options" role="list"></ul>
+    <div class="qs-nav">
+      <button class="qs-submit quiz-btn" type="button" disabled>Submit Answer</button>
+    </div>
+    <div class="qs-feedback" hidden></div>
+    <div class="qs-explanation" hidden></div>
+    <div class="qs-next-nav" hidden>
+      <button class="qs-next quiz-btn quiz-btn-outline" type="button" hidden>Next →</button>
+      <button class="qs-finish quiz-btn quiz-btn-outline" type="button" hidden>See Results →</button>
+    </div>
+  </div>
+  <div class="qs-results" hidden>
+    <p class="qs-results-title">Quiz Complete</p>
+    <div class="qs-score-ring"><div class="qs-score-inner">
+      <div class="qs-score-num"></div><div class="qs-score-lbl">correct</div>
+    </div></div>
+    <div class="qs-score-pct"></div>
+    <div class="qs-review"></div>
+    <button class="qs-retry-btn quiz-btn" type="button">↺ Try Again</button>
+  </div>
+</div></div>
         
 <nav class="page-prev-next">
   <span></span>
@@ -98,8 +145,8 @@
     </footer>
   </div>
 </div>
-<script src="../nav.js?v=mndtoj9s"></script>
-
+<script src="../nav.js?v=mndu9nuk"></script>
+<script src="../quiz.js?v=mndu9nuk"></script>
 
 
 
