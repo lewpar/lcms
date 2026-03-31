@@ -64,7 +64,8 @@ function highlightCode(code, lang) {
 
   const JS_KW = new Set(['break','case','catch','class','const','continue','debugger','default','delete','do','else','export','extends','finally','for','function','if','import','in','instanceof','let','new','of','return','static','super','switch','throw','try','typeof','var','void','while','with','yield','async','await','null','undefined','true','false','this','from','as']);
   const PY_KW = new Set(['False','None','True','and','as','assert','async','await','break','class','continue','def','del','elif','else','except','finally','for','from','global','if','import','in','is','lambda','nonlocal','not','or','pass','raise','return','try','while','with','yield','print']);
-  const kw = lang === 'python' ? PY_KW : JS_KW;
+  const JSON_KW = new Set(['true','false','null']);
+  const kw = lang === 'python' ? PY_KW : lang === 'json' ? JSON_KW : JS_KW;
 
   let html = '';
   let i = 0;
@@ -77,13 +78,13 @@ function highlightCode(code, lang) {
       html += `<span class="h-cm">${esc(t)}</span>`; i += t.length;
     }
     // JS single-line comment
-    else if (lang !== 'python' && code[i] === '/' && code[i+1] === '/') {
+    else if (lang === 'javascript' && code[i] === '/' && code[i+1] === '/') {
       const end = code.indexOf('\n', i);
       const t = end === -1 ? code.slice(i) : code.slice(i, end);
       html += `<span class="h-cm">${esc(t)}</span>`; i += t.length;
     }
     // JS multi-line comment
-    else if (lang !== 'python' && code[i] === '/' && code[i+1] === '*') {
+    else if (lang === 'javascript' && code[i] === '/' && code[i+1] === '*') {
       const end = code.indexOf('*/', i + 2);
       const t = end === -1 ? code.slice(i) : code.slice(i, end + 2);
       html += `<span class="h-cm">${esc(t)}</span>`; i += t.length;
@@ -96,7 +97,7 @@ function highlightCode(code, lang) {
       html += `<span class="h-st">${esc(t)}</span>`; i = j + 1;
     }
     // JS template literal
-    else if (lang !== 'python' && code[i] === '`') {
+    else if (lang === 'javascript' && code[i] === '`') {
       let j = i + 1;
       while (j < code.length && code[j] !== '`') { if (code[j] === '\\') j++; j++; }
       const t = code.slice(i, j + 1);

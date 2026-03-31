@@ -823,6 +823,7 @@ const FITB_LANGUAGES = [
   { value: 'plaintext',  label: 'Plain Text' },
   { value: 'javascript', label: 'JavaScript / TypeScript' },
   { value: 'python',     label: 'Python' },
+  { value: 'json',       label: 'JSON' },
 ];
 
 function FillInTheBlankEditor({ block, onChange }) {

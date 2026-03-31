@@ -1,0 +1,139 @@
+{
+  "id": "c397cad2-557e-48b0-9e11-d80a2af4be1e",
+  "title": "What is JSON?",
+  "slug": "what-is-json",
+  "section": "80159867-84c7-4930-9b4f-837a3a45ff17",
+  "description": "",
+  "blocks": [
+    {
+      "id": "cd942c74-233e-49ac-8917-9db65e3d666d",
+      "type": "markdown",
+      "content": "**JavaScript Object Notation (JSON)** is a lightweight data format used to store and exchange information between systems. It represents data as key-value pairs inside curly braces, making it easy for both humans and computers to read and write.\n\nThe example below shows what a simple **JSON** structure might look like:"
+    },
+    {
+      "id": "84a28f1d-5625-477f-9780-a00be41b06a5",
+      "type": "code",
+      "language": "json",
+      "content": "{\n    \"name\": \"John\",\n    \"age\": \"45\"\n}",
+      "caption": ""
+    },
+    {
+      "id": "99939d50-952f-4217-8b80-02d74895c064",
+      "type": "markdown",
+      "content": "The **JSON** example above contains an **object** with two key-value pairs that represent pieces of data. In **JSON**, a **key** is the name used to identify a piece of information, and the **value** is the data associated with that key. \n\nThe table below breaks down the example by showing each **key** and its corresponding **value** to help illustrate how JSON data is structured."
+    },
+    {
+      "id": "f1a30f6f-ecbc-46ea-a6fc-8774d6f1c52e",
+      "type": "table",
+      "caption": "",
+      "headers": [
+        "Key",
+        "Value"
+      ],
+      "rows": [
+        [
+          "Name",
+          "John"
+        ],
+        [
+          "Age",
+          "45"
+        ]
+      ]
+    },
+    {
+      "id": "40832290-c9e2-4636-8b19-dd9a0088d79e",
+      "type": "markdown",
+      "content": "**JSON Data Types**\n\nIn JSON, **keys are always text** (strings) that identify each piece of data, and values can be of different types depending on the information being stored:\n\n* **Strings (text):** Store names, labels, or any descriptive information.\n* **Numbers:** Represent quantities, measurements, or values used in calculations.\n* **Booleans (`true` or `false`):** Indicate binary conditions such as yes/no or on/off.\n* **Objects (nested):** Group related data together in a hierarchical structure for better organization."
+    },
+    {
+      "id": "25b1351e-9065-43fc-8415-31c6cfbdc572",
+      "type": "heading",
+      "level": 2,
+      "text": "Nesting Objects"
+    },
+    {
+      "id": "b03acbf8-954c-4aac-a2ac-5ff534e20eea",
+      "type": "markdown",
+      "content": "In JSON, objects can be **nested** inside other objects to represent more complex data. This means that a value for a key can itself be another object enclosed in `{}` with its own key-value pairs. \n\nNested objects allow you to organise related information hierarchically, making it easier to group details together in a clear structure.\n\nBelow is an example of a nested object:"
+    },
+    {
+      "id": "f7d17c0a-d51a-4bed-8ca7-d9271b44287f",
+      "type": "code",
+      "language": "json",
+      "content": "{\n    \"person\": {\n      \"name\": \"Bob\",\n      \"age\": 25\n    },\n    \"city\": \"Melbourne\"\n}",
+      "caption": ""
+    },
+    {
+      "id": "0ece73c6-5c87-430d-b0f5-4d1e86f4f6da",
+      "type": "heading",
+      "level": 2,
+      "text": "Quiz"
+    },
+    {
+      "id": "86bdf6c4-73e4-441c-8206-84b97ba274e5",
+      "type": "quiz",
+      "title": "JSON Quiz",
+      "description": "Check your understanding on JSON structure",
+      "questions": [
+        {
+          "id": "6e0c3bea-1a0a-45db-b8ac-5713397be75b",
+          "question": "What symbol is used to create a JSON object?",
+          "options": [
+            "[]",
+            "{}",
+            "()",
+            "<>"
+          ],
+          "correctIndex": 1,
+          "explanation": "JSON objects are always enclosed in curly braces {}."
+        },
+        {
+          "id": "86159cdf-c474-4237-ae9d-8bc95bcd39d6",
+          "question": "In JSON, data is stored as:",
+          "options": [
+            "Values only",
+            "Keys only",
+            "Key-value pairs",
+            "Lists only"
+          ],
+          "correctIndex": 2,
+          "explanation": "JSON organises information in key-value pairs, so each piece of data has a name (key) and a corresponding value."
+        },
+        {
+          "id": "452fbe75-1ef6-4f7c-b8a2-d32370f19bb9",
+          "question": "How do you separate key-value pairs in a JSON object?",
+          "options": [
+            "With a semicolon ;",
+            "With a comma ,",
+            "With a colon :",
+            "With a period ."
+          ],
+          "correctIndex": 2,
+          "explanation": "In JSON, key-value pairs are separated by a colon."
+        },
+        {
+          "id": "a455fa82-d4e4-4703-85d4-cb5a1094f6f3",
+          "question": "Given the JSON structure below, which is a key and which is a value?",
+          "options": [
+            "Jane is the key and name is the value",
+            "Name is the key and Jane is the value",
+            "Age is the value and 45 is the key",
+            "Name is the value and Jane is the key"
+          ],
+          "correctIndex": 1,
+          "explanation": "In JSON, a key identifies a piece of data and is followed by a colon :, which separates it from its value.",
+          "media": {
+            "type": "code",
+            "content": "{\n    \"name\": \"Jane\",\n    \"age:\" \"29\"\n}",
+            "language": "javascript"
+          }
+        }
+      ]
+    }
+  ],
+  "createdAt": "2026-03-30T21:57:09.823Z",
+  "updatedAt": "2026-03-31T00:04:06.185Z",
+  "icon": "📚",
+  "order": 0
+}

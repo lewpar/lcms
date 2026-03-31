@@ -1,0 +1,26 @@
+{
+  "id": "4fce2ee3-ff46-4459-ac10-256319f22d58",
+  "title": "What is an API?",
+  "slug": "what-is-an-api",
+  "section": "80159867-84c7-4930-9b4f-837a3a45ff17",
+  "description": "",
+  "blocks": [
+    {
+      "id": "90b2d3e6-cca2-4ccf-bcd5-d8ebce99cb55",
+      "type": "markdown",
+      "content": "An **Application Programming (API)** Interface is a way for different software applications to communicate with each other. It defines a set of rules that allow one program to request data or services from another program without needing to know how it works internally.\n\n**APIs** are commonly used on the web, where applications send requests to a server and receive responses containing data. For example, a website might use an API to retrieve weather information, user data, or product details from another service."
+    },
+    {
+      "id": "867a586f-07ba-4ce3-ac1c-9896c60947f9",
+      "type": "page-link",
+      "pageId": "c397cad2-557e-48b0-9e11-d80a2af4be1e",
+      "pageSlug": "what-is-json",
+      "pageTitle": "What is JSON?",
+      "description": "This section on APIs will explain how they exchange data using JSON, and you can click here to read more about JSON structure."
+    }
+  ],
+  "createdAt": "2026-03-30T21:54:07.782Z",
+  "updatedAt": "2026-03-30T22:39:03.124Z",
+  "order": 1,
+  "icon": "🌐"
+}

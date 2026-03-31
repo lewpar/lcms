@@ -410,7 +410,7 @@ function FillInTheBlankPreview({ block }) {
   if (isCode) {
     const parts = (block.prompt || '').split('___');
     const numBlanks = parts.length - 1;
-    const hljsLang = lang === 'javascript' ? 'javascript' : lang === 'python' ? 'python' : 'plaintext';
+    const hljsLang = lang === 'javascript' ? 'javascript' : lang === 'python' ? 'python' : lang === 'json' ? 'json' : 'plaintext';
 
     return (
       <div style={{ border: '1px solid #282c34', borderRadius: 10, overflow: 'hidden' }}>
