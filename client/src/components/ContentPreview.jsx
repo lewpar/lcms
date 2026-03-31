@@ -11,10 +11,11 @@ import { previewPage } from '../api.js';
  *   refreshSignal — increment to trigger a new preview render
  */
 export default function ContentPreview({ siteId, page, refreshSignal = 0 }) {
-  const [srcDoc, setSrcDoc]     = useState('');
-  const [loading, setLoading]   = useState(true);
-  const [failed, setFailed]     = useState(false);
-  const prevSignalRef           = useRef(null);
+  const [srcDoc, setSrcDoc]       = useState('');
+  const [loading, setLoading]     = useState(true);
+  const [failed, setFailed]       = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const prevSignalRef             = useRef(null);
 
   useEffect(() => {
     // Skip if nothing has changed since last render
@@ -24,24 +25,29 @@ export default function ContentPreview({ siteId, page, refreshSignal = 0 }) {
     let cancelled = false;
     setLoading(true);
     setFailed(false);
+    if (srcDoc) setRefreshing(true);
 
     previewPage(siteId, page)
       .then(html => {
-        if (!cancelled) { setSrcDoc(html); setLoading(false); }
+        if (!cancelled) { setSrcDoc(html); setLoading(false); setRefreshing(false); }
       })
       .catch(() => {
-        if (!cancelled) { setFailed(true); setLoading(false); }
+        if (!cancelled) { setFailed(true); setLoading(false); setRefreshing(false); }
       });
 
     return () => { cancelled = true; };
   }, [refreshSignal, siteId]);
 
+  const isRefreshing = loading && !!srcDoc;
+
   return (
     <div className="site-preview-view">
       <div className="site-preview-toolbar site-preview-toolbar--label">
         <span className="site-preview-label">
-          {loading && <span className="site-preview-gen-dot" title="Generating…" />}
-          Preview
+          <span className={`site-preview-gen-dot${loading ? ' site-preview-gen-dot--visible' : ''}`} />
+          <span className={`site-preview-label-text${isRefreshing ? ' site-preview-label-text--refreshing' : ''}`}>
+            {isRefreshing ? 'Refreshing…' : 'Preview'}
+          </span>
         </span>
       </div>
 
@@ -62,7 +68,6 @@ export default function ContentPreview({ siteId, page, refreshSignal = 0 }) {
 
         {srcDoc && (
           <iframe
-            key={refreshSignal}
             srcDoc={srcDoc}
             className="site-preview-iframe site-preview-iframe--loaded"
             title="Content Preview"
@@ -70,11 +75,9 @@ export default function ContentPreview({ siteId, page, refreshSignal = 0 }) {
           />
         )}
 
-        {srcDoc && loading && (
-          <div className="site-preview-update-toast">
-            <span className="site-preview-update-spinner">⟳</span> Updating…
-          </div>
-        )}
+        <div className={`site-preview-update-toast${isRefreshing ? ' site-preview-update-toast--visible' : ''}`}>
+          <span className="site-preview-update-spinner">⟳</span> Refreshing preview…
+        </div>
       </div>
     </div>
   );

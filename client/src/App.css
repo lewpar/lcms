@@ -1515,6 +1515,12 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   border-radius: 50%;
   background: var(--accent);
   animation: pulse-dot 1s ease-in-out infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  flex-shrink: 0;
+}
+.site-preview-gen-dot--visible {
+  opacity: 1;
 }
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; transform: scale(1); }
@@ -1527,6 +1533,13 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   flex-direction: column;
   overflow: hidden;
   position: relative;
+}
+
+.site-preview-label-text {
+  transition: color 0.25s ease;
+}
+.site-preview-label-text--refreshing {
+  color: var(--accent);
 }
 
 .site-preview-update-toast {
@@ -1544,6 +1557,11 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   gap: 6px;
   pointer-events: none;
   z-index: 10;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.site-preview-update-toast--visible {
+  opacity: 1;
 }
 
 .site-preview-update-spinner {
