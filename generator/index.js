@@ -123,23 +123,34 @@ function highlightCode(code, lang) {
   return html;
 }
 
-function extractToc(blocks) {
+function extractToc(blocks, headingNums) {
   const items = [];
   for (const b of (blocks || [])) {
     if (b.type === 'heading' && b.level <= 3 && b.text) {
       // b.id_attr is a stable anchor set by the editor so heading links survive title edits
-      items.push({ text: b.text, level: b.level, id: b.id_attr || slugify(b.text) });
-    } else if (b.type === 'markdown' && b.content) {
-      for (const line of b.content.split('\n')) {
-        const m = line.match(/^(#{1,3})\s+(.+)/);
-        if (m) {
-          const text = m[2].trim();
-          items.push({ text, level: m[1].length, id: slugify(text) });
-        }
-      }
+      const num = headingNums ? headingNums.get(b.id) : undefined;
+      items.push({ text: b.text, level: b.level, id: b.id_attr || slugify(b.text), num });
     }
   }
   return items;
+}
+
+function computeHeadingNumbers(blocks) {
+  const headings = (blocks || []).filter(b => b.type === 'heading' && b.text);
+  if (!headings.length) return new Map();
+  const counters = new Array(7).fill(0);
+  const result = new Map();
+  for (const h of headings) {
+    const level = h.level || 2;
+    counters[level]++;
+    for (let l = level + 1; l <= 6; l++) counters[l] = 0;
+    const parts = [];
+    for (let l = 1; l <= level; l++) {
+      if (counters[l] > 0) parts.push(counters[l]);
+    }
+    result.set(h.id, parts.join('.'));
+  }
+  return result;
 }
 
 function normalizeQuiz(block) {
@@ -191,7 +202,9 @@ function renderBlock(block) {
     case 'heading': {
       const l = block.level || 2;
       const id = block.id_attr || slugify(block.text);
-      return `<h${l} id="${esc(id)}" class="block-heading">${esc(block.text)}</h${l}>`;
+      const numHtml = block._num ? `<span class="heading-num">${esc(block._num)}.</span> ` : '';
+      const anchorHtml = `<a class="heading-anchor" href="#${esc(id)}" aria-label="Copy link to section">#</a>`;
+      return `<h${l} id="${esc(id)}" class="block-heading">${numHtml}${esc(block.text)}${anchorHtml}</h${l}>`;
     }
 
     case 'callout': {
@@ -495,7 +508,7 @@ function buildNavHtml(navItems, currentSlug, toc) {
   }
   const tocHtml = (toc && toc.length > 0)
     ? `<div class="nav-toc">${toc.map(h =>
-        `<a class="nav-toc-link nav-toc-level-${h.level}" href="#${esc(h.id)}">${esc(h.text)}</a>`
+        `<a class="nav-toc-link nav-toc-level-${h.level}" href="#${esc(h.id)}">${h.num ? `<span class="toc-num">${esc(h.num)}.</span> ` : ''}${esc(h.text)}</a>`
       ).join('')}</div>`
     : '';
   const link = p => {
@@ -572,7 +585,7 @@ function buildCss(theme) {
   --max-w:${contentWidth}px;
   --sidebar-w:${sidebarWidth}px;
 }
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
 body{font-family:${fontCss};color:var(--text);background:var(--bg);line-height:1.7;font-size:${fontSize}px}
 a{color:var(--primary)}a:hover{text-decoration:underline}
 img{max-width:100%;height:auto;display:block}
@@ -651,7 +664,7 @@ img{max-width:100%;height:auto;display:block}
 .prose img{border-radius:6px;margin:1em 0}.prose hr{border:none;border-top:1px solid var(--border);margin:1.5em 0}
 .prose strong{font-weight:700}.prose a{color:var(--primary)}
 
-.block-heading{font-weight:700;line-height:1.3;color:var(--text)}
+.block-heading{font-weight:700;line-height:1.3;color:var(--text)}.heading-num{color:var(--primary);font-weight:700;margin-right:0.3em;font-variant-numeric:tabular-nums}.heading-anchor{opacity:0;margin-left:0.4em;color:var(--text-muted);font-weight:400;font-size:0.75em;text-decoration:none;transition:opacity .15s,color .15s;vertical-align:middle;user-select:none}.block-heading:hover .heading-anchor,.heading-anchor:focus{opacity:1}.heading-anchor:hover,.heading-anchor.copied{color:var(--primary);text-decoration:none;opacity:1}.toc-num{color:rgba(255,255,255,.85);font-weight:600;margin-right:3px}
 .callout{padding:14px 16px;border-radius:0 var(--radius) var(--radius) 0;border-left:4px solid}.callout-title{font-weight:700;margin-bottom:6px}
 .callout-body p:first-child{margin-top:0}.callout-body p:last-child{margin-bottom:0}
 .callout-blue  {background:#eff6ff;border-color:#3b82f6}.callout-blue   .callout-title{color:#1e40af}
@@ -1142,6 +1155,8 @@ const DARK_MODE_JS = `(function(){
   });
 })();`;
 
+const COPY_LINK_JS = `(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();`;
+
 // ── Accordion JS ───────────────────────────────────────
 
 const ACCORDION_JS = `
@@ -1339,7 +1354,9 @@ function renderPagePreview(page, settings) {
   const blocks  = page.blocks || [];
   const title   = page.title || '';
   previewAssetPaths = true;
-  const blocksHtml = blocks.map(renderBlock).join('\n');
+  const headingNums = computeHeadingNumbers(blocks);
+  const annotatedBlocks = blocks.map(b => b.type === 'heading' ? { ...b, _num: headingNums.get(b.id) } : b);
+  const blocksHtml = annotatedBlocks.map(renderBlock).join('\n');
   previewAssetPaths = false;
 
   const hasQuiz           = blocksHtml.includes('quiz-block');
@@ -1379,6 +1396,7 @@ ${hasFlashcard      ? `<script>${FLASHCARD_JS}</script>`  : ''}
 ${hasPlayground     ? `<script>${PLAYGROUND_JS}</script>` : ''}
 ${hasFillInTheBlank ? `<script>${FITB_JS}</script>`       : ''}
 ${hasCode ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>` : ''}
+<script>${COPY_LINK_JS}</script>
 </body>
 </html>`;
 }
@@ -1419,7 +1437,7 @@ function getFontLink(fontKey) {
   <link href="https://fonts.googleapis.com/css2?family=${q}&display=swap" rel="stylesheet">`;
 }
 
-function pageTemplate({ page, blocksHtml, settings, navItems, v }) {
+function pageTemplate({ page, blocksHtml, toc, settings, navItems, v }) {
   const { title, description, slug, section } = page;
   const hasQuiz           = blocksHtml.includes('quiz-block');
   const hasAccordion      = (page.blocks || []).some(b => b.type === 'accordion');
@@ -1427,7 +1445,6 @@ function pageTemplate({ page, blocksHtml, settings, navItems, v }) {
   const hasPlayground     = (page.blocks || []).some(b => b.type === 'playground');
   const hasFillInTheBlank = (page.blocks || []).some(b => b.type === 'fill-in-the-blank');
   const hasCode = blocksNeedHighlighting(page.blocks || []);
-  const toc = extractToc(page.blocks || []);
 
   // Build flat ordered nav list for prev/next (unsectioned first, then sectioned in order)
   const flatNav = navItems;
@@ -1464,6 +1481,7 @@ function pageTemplate({ page, blocksHtml, settings, navItems, v }) {
 </head>
 <body>
 ${showDarkMode ? `<script>${DARK_MODE_JS}</script>` : ''}
+<script>${COPY_LINK_JS}</script>
 <div class="app-layout">
   ${sidebarHtml(settings, navItems, slug, toc)}
   <div class="sidebar-overlay" id="overlay"></div>
@@ -1521,7 +1539,9 @@ function indexTemplate({ pages, settings, navItems, v }) {
   const hasPlayground     = homeBlocks.some(b => b.type === 'playground');
   const hasFillInTheBlank = homeBlocks.some(b => b.type === 'fill-in-the-blank');
   const hasCode = blocksNeedHighlighting(homeBlocks);
-  const blocksHtml = homeBlocks.map(renderBlock).join('\n');
+  const homeHeadingNums = computeHeadingNumbers(homeBlocks);
+  const annotatedHomeBlocks = homeBlocks.map(b => b.type === 'heading' ? { ...b, _num: homeHeadingNums.get(b.id) } : b);
+  const blocksHtml = annotatedHomeBlocks.map(renderBlock).join('\n');
 
   const sectionOrder = [], sectionMap = {}, unsectioned = [];
   for (const p of pages) {
@@ -1561,6 +1581,7 @@ function indexTemplate({ pages, settings, navItems, v }) {
 </head>
 <body>
 <script>${DARK_MODE_JS}</script>
+<script>${COPY_LINK_JS}</script>
 <div class="app-layout">
   ${sidebarHtml(settings, navItems, null)}
   <div class="sidebar-overlay" id="overlay"></div>
@@ -1664,9 +1685,12 @@ function generate() {
   for (const page of pages) {
     const pageDir = path.join(OUTPUT_DIR, page.slug);
     fs.mkdirSync(pageDir, { recursive: true });
-    const blocksHtml = (page.blocks || []).map(renderBlock).join('\n');
+    const headingNums = computeHeadingNumbers(page.blocks || []);
+    const annotatedBlocks = (page.blocks || []).map(b => b.type === 'heading' ? { ...b, _num: headingNums.get(b.id) } : b);
+    const blocksHtml = annotatedBlocks.map(renderBlock).join('\n');
+    const toc = extractToc(page.blocks || [], headingNums);
     const pageWithResolvedSection = { ...page, section: resolveSectionName(page.section) };
-    fs.writeFileSync(path.join(pageDir, 'index.html'), pageTemplate({ page: pageWithResolvedSection, blocksHtml, settings, navItems, v: buildVer }));
+    fs.writeFileSync(path.join(pageDir, 'index.html'), pageTemplate({ page: pageWithResolvedSection, blocksHtml, toc, settings, navItems, v: buildVer }));
   }
 
   fs.writeFileSync(path.join(OUTPUT_DIR, 'index.html'), indexTemplate({ pages: allSummaries, settings, navItems, v: buildVer }));

@@ -32,6 +32,24 @@ marked.setOptions({ gfm: true, breaks: true });
 
 function md(text) { return text ? marked.parse(text) : ''; }
 
+function computeHeadingNumbers(blocks) {
+  const headings = (blocks || []).filter(b => b.type === 'heading' && b.text);
+  if (!headings.length) return new Map();
+  const counters = new Array(7).fill(0);
+  const result = new Map();
+  for (const h of headings) {
+    const level = h.level || 2;
+    counters[level]++;
+    for (let l = level + 1; l <= 6; l++) counters[l] = 0;
+    const parts = [];
+    for (let l = 1; l <= level; l++) {
+      if (counters[l] > 0) parts.push(counters[l]);
+    }
+    result.set(h.id, parts.join('.'));
+  }
+  return result;
+}
+
 function normalizeQuiz(block) {
   if (Array.isArray(block.questions)) return block;
   return {
@@ -560,6 +578,7 @@ function BlockPreview({ block }) {
       const sizes = { 1: '2em', 2: '1.5em', 3: '1.25em', 4: '1.1em', 5: '1em', 6: '0.9em' };
       return (
         <Tag id={block.id_attr || undefined} style={{ fontSize: sizes[block.level || 2], fontWeight: 700, lineHeight: 1.25, margin: '0.5em 0 0.2em', color: '#0f172a' }}>
+          {block.num && <span style={{ color: '#6c63ff', fontWeight: 700, marginRight: '0.3em', fontVariantNumeric: 'tabular-nums' }}>{block.num}.</span>}
           {block.text || <span style={{ color: '#94a3b8' }}>(empty heading)</span>}
         </Tag>
       );
@@ -796,6 +815,7 @@ function BlockPreview({ block }) {
 
 export default function Preview({ page, pages = [] }) {
   const readTime = calcReadingTime(page.blocks || []);
+  const headingNums = computeHeadingNumbers(page.blocks || []);
 
   return (
     <div className="preview-panel">
@@ -810,7 +830,10 @@ export default function Preview({ page, pages = [] }) {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {page.blocks.map(block => (
-            <BlockPreview key={block.id} block={block} />
+            <BlockPreview
+              key={block.id}
+              block={block.type === 'heading' ? { ...block, num: headingNums.get(block.id) } : block}
+            />
           ))}
         </div>
       )}
