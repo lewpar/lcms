@@ -85,12 +85,32 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
   const q = search.trim().toLowerCase();
   const filtered = q ? sites.filter(s => s.name.toLowerCase().includes(q) || s.slug.toLowerCase().includes(q)) : sites;
 
+  const deployedCount = sites.filter(s => s.deployedGithubPages).length;
+  const baseUrl = cmsSettings.baseUrl ? cmsSettings.baseUrl.replace(/\/+$/, '') : null;
+
   return (
     <div className="site-selector">
       <div className="site-selector-header">
         <div className="site-selector-logo">LCMS</div>
-        <h1 className="site-selector-title">Your Sites</h1>
+        <h1 className="site-selector-title">Dashboard</h1>
       </div>
+
+      {sites.length > 0 && (
+        <div className="dashboard-stats">
+          <div className="dashboard-stat">
+            <span className="dashboard-stat-value">{sites.length}</span>
+            <span className="dashboard-stat-label">Sites</span>
+          </div>
+          <div className="dashboard-stat">
+            <span className="dashboard-stat-value dashboard-stat-value--live">{deployedCount}</span>
+            <span className="dashboard-stat-label">Live</span>
+          </div>
+          <div className="dashboard-stat">
+            <span className="dashboard-stat-value">{sites.length - deployedCount}</span>
+            <span className="dashboard-stat-label">Not deployed</span>
+          </div>
+        </div>
+      )}
 
       <div className="site-selector-toolbar">
         <div className="site-selector-search-wrap">
@@ -133,8 +153,26 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
               </svg>
             </div>
             <div className="site-project-info">
-              <span className="site-project-name">{site.name}</span>
-              <span className="site-project-slug">/{site.slug}</span>
+              <div className="site-project-info-top">
+                <span className="site-project-name">{site.name}</span>
+                <span className="site-project-slug">/{site.slug}</span>
+              </div>
+              {baseUrl && site.deployedGithubPages && (
+                <a
+                  className="site-deployed-url"
+                  href={`${baseUrl}/${site.slug}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={e => e.stopPropagation()}
+                >
+                  {`${baseUrl}/${site.slug}`}
+                </a>
+              )}
+            </div>
+            <div className="site-project-meta">
+              <span className={`site-deploy-badge ${site.deployedGithubPages ? 'site-deploy-badge--live' : 'site-deploy-badge--none'}`}>
+                {site.deployedGithubPages ? '● Live' : 'Not deployed'}
+              </span>
             </div>
             <div className="site-project-actions" onClick={e => e.stopPropagation()}>
               <button className="site-gear-btn" onClick={e => openGear(e, site)} title="Site settings">
