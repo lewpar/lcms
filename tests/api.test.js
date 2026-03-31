@@ -129,6 +129,19 @@ describe('POST /api/sites', () => {
     assert.equal(res.status, 200);
     assert.ok(res.body.name);
   });
+
+  test('rejects duplicate site name', async () => {
+    await createSite('Duplicate Site');
+    const res = await request(app).post('/api/sites').send({ name: 'Duplicate Site' });
+    assert.equal(res.status, 409);
+    assert.ok(res.body.error);
+  });
+
+  test('rejects duplicate site name case-insensitively', async () => {
+    await createSite('Case Site');
+    const res = await request(app).post('/api/sites').send({ name: 'CASE SITE' });
+    assert.equal(res.status, 409);
+  });
 });
 
 describe('PATCH /api/sites/:siteId', () => {
@@ -153,6 +166,20 @@ describe('PATCH /api/sites/:siteId', () => {
   test('returns 400 for invalid UUID', async () => {
     const res = await request(app).patch('/api/sites/not-a-uuid').send({ name: 'x' });
     assert.equal(res.status, 400);
+  });
+
+  test('rejects rename to an existing site name', async () => {
+    await createSite('Taken Name');
+    const other = await createSite('Other Site');
+    const res = await request(app).patch(`/api/sites/${other.id}`).send({ name: 'Taken Name' });
+    assert.equal(res.status, 409);
+    assert.ok(res.body.error);
+  });
+
+  test('allows rename to the same name (case change)', async () => {
+    const site = await createSite('My Site');
+    const res = await request(app).patch(`/api/sites/${site.id}`).send({ name: 'My Site' });
+    assert.equal(res.status, 200);
   });
 });
 

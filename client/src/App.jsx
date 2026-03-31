@@ -91,9 +91,11 @@ export default function App() {
   };
 
   const handleCreateSite = async (name) => {
-    const site = await createSite(name);
-    setSites(s => [...s, site]);
-    openSite(site);
+    try {
+      const site = await createSite(name);
+      setSites(s => [...s, site]);
+      openSite(site);
+    } catch (err) { addToast(err.message || 'Failed to create site', 'error'); }
   };
 
   const handleDeleteSite = async (siteId, { undeploy = false } = {}) => {
@@ -106,9 +108,11 @@ export default function App() {
   };
 
   const handleRenameSite = async (siteId, name) => {
-    const updated = await renameSite(siteId, name);
-    setSites(s => s.map(x => x.id === siteId ? updated : x));
-    if (selectedSite?.id === siteId) setSelectedSite(updated);
+    try {
+      const updated = await renameSite(siteId, name);
+      setSites(s => s.map(x => x.id === siteId ? updated : x));
+      if (selectedSite?.id === siteId) setSelectedSite(updated);
+    } catch (err) { addToast(err.message || 'Failed to rename site', 'error'); }
   };
 
   // ── Per-site data loading ────────────────────────────────

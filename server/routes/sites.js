@@ -16,14 +16,18 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const name = (req.body.name || 'New Site').trim().slice(0, MAX_STR.name);
+  const name  = (req.body.name || 'New Site').trim().slice(0, MAX_STR.name);
+  const sites = readSites();
+  if (sites.some(s => s.name.toLowerCase() === name.toLowerCase())) {
+    return res.status(409).json({ error: `A site named "${name}" already exists.` });
+  }
   const id   = uuidv4();
   const slug = slugify(name);
   ensureDirs(id);
   try {
     fs.writeFileSync(settingsFile(id), JSON.stringify({ title: name, navPages: [], sections: [], theme: {} }, null, 2));
     const site = { id, name, slug };
-    writeSites([...readSites(), site]);
+    writeSites([...sites, site]);
     res.json(site);
   } catch (err) { res.status(500).json({ error: safeError(err) }); }
 });
@@ -33,9 +37,12 @@ router.patch('/:siteId', requireValidSiteId, (req, res) => {
   const idx   = sites.findIndex(s => s.id === req.params.siteId);
   if (idx === -1) return res.status(404).json({ error: 'Site not found.' });
   if (req.body.name) {
+    const newName = String(req.body.name).trim().slice(0, MAX_STR.name);
+    const duplicate = sites.find(s => s.id !== req.params.siteId && s.name.toLowerCase() === newName.toLowerCase());
+    if (duplicate) return res.status(409).json({ error: `A site named "${newName}" already exists.` });
     const oldSlug = sites[idx].slug;
-    sites[idx].name = String(req.body.name).trim().slice(0, MAX_STR.name);
-    sites[idx].slug = slugify(sites[idx].name);
+    sites[idx].name = newName;
+    sites[idx].slug = slugify(newName);
     if (oldSlug !== sites[idx].slug) {
       const oldOutput = path.join(OUTPUT_DIR, oldSlug);
       if (fs.existsSync(oldOutput)) fs.renameSync(oldOutput, path.join(OUTPUT_DIR, sites[idx].slug));
