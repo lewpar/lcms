@@ -23,6 +23,64 @@
       "content": "When using `fetch` with `async` and `await`, the code is written inside an `async` function. The program sends a request using `fetch`, then uses `await` to pause the function until a response is received. After the response arrives, it can be converted into usable data (such as **JSON**) and then used in the program. This approach keeps the code easy to read because it runs in a clear, step-by-step order."
     },
     {
+      "id": "4405c0ea-9cde-4034-8889-8671aa85ffd4",
+      "type": "heading",
+      "level": 2,
+      "text": "Fetching in practice",
+      "id_attr": "fetch-in-practice"
+    },
+    {
+      "id": "4a13c9e6-1075-4da0-9e2c-134f13502a91",
+      "type": "page-link",
+      "pageId": "4fce2ee3-ff46-4459-ac10-256319f22d58",
+      "pageSlug": "what-is-an-api",
+      "pageTitle": "What is an API?",
+      "description": "This section on fetching will explain how to fetch from an API. You can click here to read more about APIs."
+    },
+    {
+      "id": "14bc302f-f50e-4257-942f-9d51210b14a7",
+      "type": "markdown",
+      "content": "Below you will find code that **fetches (requests)** a random quote from an API (dummyjson) and transforms the **data (response)** into a JavaScript object."
+    },
+    {
+      "id": "29c0152b-26bd-4b0d-8a4b-b5b42b712943",
+      "type": "playground",
+      "title": "Try it yourself",
+      "starterCode": "async function fetchData() {\n  const response = await fetch(\"https://dummyjson.com/quotes/random\");\n  const data = await response.json();\n\n  console.log(data.quote);\n}\n\nfetchData();"
+    },
+    {
+      "id": "4ab849d6-7524-47ed-aebe-658844b7c319",
+      "type": "markdown",
+      "content": "When working with data returned from an API, the properties you access in the JavaScript object must exactly match the keys defined in the JSON data. JSON stores information as key-value pairs, and when it is converted into a JavaScript object using methods like `response.json()`, those keys become the property names of the object.\n\nBelow is an example of how a JSON response is mapped in code to JavaScript object properties:"
+    },
+    {
+      "id": "4ebf1c38-e168-489e-b5fe-9c103aab4025",
+      "type": "code",
+      "language": "json",
+      "content": "{\n  \"id\": 1,\n  \"quote\": \"Life isn't about getting and having, it's about giving and being.\",\n  \"author\": \"Kevin Kruse\"\n}",
+      "caption": ""
+    },
+    {
+      "id": "75381166-1da2-47cf-9318-2d7fa012e7a9",
+      "type": "playground",
+      "title": "Try it yourself",
+      "starterCode": "async function fetchData() {\n  const response = await fetch(\"https://dummyjson.com/quotes/1\");\n  const data = await response.json();\n\n  console.log(data.id);\n  console.log(data.quote);\n}\n\nfetchData();"
+    },
+    {
+      "id": "0a490403-10dc-42e9-be68-fd63c238074b",
+      "type": "callout",
+      "title": "Wait up!",
+      "content": "Before continuing, how would you modify the code above to also print the quote authors name?",
+      "color": "red"
+    },
+    {
+      "id": "291e3ad4-86a3-486a-8baf-a28ce86596cc",
+      "type": "heading",
+      "level": 2,
+      "text": "Test your knowledge",
+      "id_attr": "test-knowledge-1"
+    },
+    {
       "id": "4df0bd47-db6d-4cea-adee-42f29c1f9028",
       "type": "quiz",
       "title": "Quiz",
@@ -68,17 +126,29 @@
             "content": "async function loadQuote() {\n  const response = await fetch(\"https://dummyjson.com/quotes/random\");\n  const data = await response.json();\n\n  console.log(data.quote);\n}",
             "language": "javascript"
           }
+        },
+        {
+          "id": "fc8ca215-2342-4e07-9789-de3789079479",
+          "question": "Given the following JSON, which is the correct method for getting the authors name?",
+          "options": [
+            "data.id",
+            "data.Name",
+            "data.name",
+            "data.quote"
+          ],
+          "correctIndex": 2,
+          "explanation": "When working with data returned from an API, the properties you access in the JavaScript object must exactly match the keys defined in the JSON data.",
+          "media": {
+            "type": "code",
+            "content": "{\n  \"id\": 1,\n  \"quote\": \"Life isn't about getting and having, it's about giving and being.\",\n  \"author\": \"Kevin Kruse\"\n}",
+            "language": "javascript"
+          }
         }
       ]
-    },
-    {
-      "id": "14bc302f-f50e-4257-942f-9d51210b14a7",
-      "type": "markdown",
-      "content": "So what does this code look like in the context of **JavaScript**?\n\nBelow you will find code that **fetches (requests)** a random quote from an API (dummyjson) and transforms the **data (response)** into JSON."
     }
   ],
   "createdAt": "2026-03-30T02:38:58.807Z",
-  "updatedAt": "2026-03-30T23:01:13.358Z",
+  "updatedAt": "2026-03-31T22:43:07.580Z",
   "order": 2,
   "icon": "🗃️"
 }

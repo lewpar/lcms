@@ -4,7 +4,7 @@
   "sections": [
     {
       "id": "80159867-84c7-4930-9b4f-837a3a45ff17",
-      "name": "Prerequisites"
+      "name": "Reading"
     },
     {
       "id": "26fb9b35-fe2a-4269-8be1-30af533a8f73",
@@ -29,7 +29,7 @@
     "showReadingTime": true
   },
   "home": {
-    "heroTitle": "",
+    "heroTitle": "Fetching with JavaScript",
     "heroSubtitle": "",
     "showPageGrid": true,
     "blocks": [

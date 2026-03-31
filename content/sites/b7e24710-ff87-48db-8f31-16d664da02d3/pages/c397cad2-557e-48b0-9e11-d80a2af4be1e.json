@@ -50,7 +50,7 @@
       "id": "25b1351e-9065-43fc-8415-31c6cfbdc572",
       "type": "heading",
       "level": 2,
-      "text": "Nesting Objects"
+      "text": "Nested Objects"
     },
     {
       "id": "b03acbf8-954c-4aac-a2ac-5ff534e20eea",
@@ -133,7 +133,7 @@
     }
   ],
   "createdAt": "2026-03-30T21:57:09.823Z",
-  "updatedAt": "2026-03-31T00:04:06.185Z",
+  "updatedAt": "2026-03-31T22:50:58.693Z",
   "icon": "📚",
   "order": 0
 }
