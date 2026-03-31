@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fetching — fetchjs</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=mnf6nqqj" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">fetchjs</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Reading</div><a href="../what-is-json/" class="nav-link" title="What is JSON?"><span class="nav-link-icon">📚</span><span class="nav-link-text">What is JSON?</span></a><a href="../what-is-an-api/" class="nav-link" title="What is an API?"><span class="nav-link-icon">🌐</span><span class="nav-link-text">What is an API?</span></a><a href="../fetching-with-async/" class="nav-link" title="Fetching with Async"><span class="nav-link-icon">🗃️</span><span class="nav-link-text">Fetching with Async</span></a></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../fetching/" class="nav-link active" title="Fetching"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">Fetching</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#what-to-expect">What to expect</a><a class="nav-toc-link nav-toc-level-2" href="#task-1-unexpected-response">Task 1: Unexpected Response</a></div></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>Activities</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Fetching</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Fetching</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">Activities</span>
+            <span>⏱ 1 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><h2 id="what-to-expect" class="block-heading">What to expect</h2>
+<div class="prose"><p>In this activity you are fixing code to assist your co-worker.</p>
+<p><strong>Instructions</strong><br>Analyse the completed code below and use it to complete the tasks in this activity.</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Try it yourself</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">async function getData() {
+  // Fetch the quote from the dummyjson API
+  const response = await fetch(&quot;https://dummyjson.com/quotes/1&quot;);
+
+  // Converts the response into a JavaScript object
+  const data = await response.json();
+
+  // Print the quote to the output
+  console.log(data.quote);
+}
+
+// Runs the function above
+getData();</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<hr class="block-divider" />
+<h2 id="task-1-unexpected-response" class="block-heading">Task 1: Unexpected Response</h2>
+<div class="prose"><p><strong>Scenario</strong><br>A co-worker is trying to fetch quote number 53 from dummyjson but is receiving an unexpected response (no output). They are unsure of what the problem is and have asked for your help.</p>
+<p><strong>Instructions</strong><br>Fix the code below so that it outputs quote 53.</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Try it yourself</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">async function getData() {
+  const response = await fetch(&quot;https://dummyjson.com/quotes53&quot;);
+
+  const data = await response.json();
+
+  console.log(data.quote);
+}
+
+// Runs the function above
+getData();</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../fetching-with-async/">← Fetching with Async</a>
+  
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <span>Generated by LCMS</span><span>1 April 2026</span>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnf6nqqj"></script>
+
+
+
+<script src="../playground.js?v=mnf6nqqj"></script>
+
+
+</body>
+</html>
