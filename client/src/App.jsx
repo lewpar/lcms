@@ -248,6 +248,7 @@ export default function App() {
     try {
       const result = await deployGithubPages(siteId, githubCommitMsg.trim() || null);
       addToast(result.message || 'Site deployed to GitHub Pages!', 'success');
+      if (result.gitWarning) addToast(`Git warning: ${result.gitWarning}`, 'warning');
       await loadSites();
       setShowGithubPanel(false);
     } catch (err) {

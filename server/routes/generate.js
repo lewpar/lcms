@@ -63,14 +63,35 @@ router.post('/github-pages', requireValidSiteId, requireSiteExists, (req, res) =
     const commitMessage = (req.body && typeof req.body.commitMessage === 'string' && req.body.commitMessage.trim())
       ? req.body.commitMessage.trim()
       : `Deploy ${site.slug} to GitHub Pages`;
-    let gitWarning = null;
+
+    // git add — fatal if it fails
     try {
       execFileSync('git', ['add', 'docs/'], { cwd: ROOT, timeout: 15000 });
+    } catch (addErr) {
+      const msg = addErr.stderr ? addErr.stderr.toString().trim() : String(addErr.message || addErr);
+      return res.status(500).json({ error: `Git staging failed: ${msg}` });
+    }
+
+    // git commit — non-fatal; "nothing to commit" is a normal outcome
+    let gitWarning = null;
+    try {
       execFileSync('git', ['commit', '-m', commitMessage], { cwd: ROOT, timeout: 15000 });
+    } catch (commitErr) {
+      const output = [
+        commitErr.stderr ? commitErr.stderr.toString() : '',
+        commitErr.stdout ? commitErr.stdout.toString() : '',
+      ].join(' ');
+      if (!output.includes('nothing to commit')) {
+        gitWarning = output.trim() || String(commitErr.message || commitErr);
+      }
+    }
+
+    // git push — fatal; if this fails the site has not been deployed to GitHub
+    try {
       execFileSync('git', ['push'], { cwd: ROOT, timeout: 30000 });
-    } catch (gitErr) {
-      // Non-fatal: the files are deployed; just warn if git operations fail
-      gitWarning = gitErr.stderr ? gitErr.stderr.toString().trim() : String(gitErr.message || gitErr);
+    } catch (pushErr) {
+      const msg = pushErr.stderr ? pushErr.stderr.toString().trim() : String(pushErr.message || pushErr);
+      return res.status(500).json({ error: `Git push failed: ${msg}` });
     }
 
     const message = out.trim() || 'Site deployed to GitHub Pages';
