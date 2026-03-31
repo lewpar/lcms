@@ -86,17 +86,6 @@ describe('PUT /api/cms-settings', () => {
   });
 });
 
-// ── Nginx status ──────────────────────────────────────────
-
-describe('GET /api/nginx/status', () => {
-  test('returns a status field', async () => {
-    const res = await request(app).get('/api/nginx/status');
-    assert.equal(res.status, 200);
-    assert.ok('status' in res.body, 'response should have a status field');
-    assert.equal(typeof res.body.status, 'string');
-  });
-});
-
 // ── Sites ─────────────────────────────────────────────────
 
 describe('GET /api/sites', () => {
@@ -116,11 +105,10 @@ describe('GET /api/sites', () => {
     assert.equal(res.body.length, 2);
   });
 
-  test('each site has deployedNginx and deployedGithubPages flags', async () => {
+  test('each site has a deployedGithubPages flag', async () => {
     await createSite('Deploy Check');
     const res = await request(app).get('/api/sites');
     const site = res.body[0];
-    assert.equal(typeof site.deployedNginx, 'boolean');
     assert.equal(typeof site.deployedGithubPages, 'boolean');
   });
 });
@@ -404,31 +392,7 @@ describe('POST /api/sites/:siteId/pages/reorder', () => {
 
 // ── Generate (preview) ────────────────────────────────────────────────────────
 
-describe('POST /api/sites/:siteId/generate/nginx', () => {
-  beforeEach(cleanupSites);
-
-  test('returns 500 when nginx web root does not exist', async () => {
-    const site = await createSite('Nginx Deploy');
-    const res = await request(app)
-      .post(`/api/sites/${site.id}/generate/nginx`);
-    // Without /var/www/html present the endpoint must fail gracefully
-    assert.equal(res.status, 500);
-    assert.ok(res.body.error);
-  });
-});
-
 // ── Undeploy routes (filesystem not present — should still respond) ──────────
-
-describe('DELETE /api/sites/:siteId/deploy/nginx', () => {
-  beforeEach(cleanupSites);
-
-  test('returns success even when directory does not exist', async () => {
-    const site = await createSite('Undeploy Nginx');
-    const res = await request(app).delete(`/api/sites/${site.id}/deploy/nginx`);
-    assert.equal(res.status, 200);
-    assert.equal(res.body.success, true);
-  });
-});
 
 describe('DELETE /api/sites/:siteId/deploy/github-pages', () => {
   beforeEach(cleanupSites);

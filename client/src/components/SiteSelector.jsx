@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { getNginxStatus } from '../api.js';
 
 const FOCUS_DELAY = 30;
 
@@ -10,10 +9,6 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
   const [showCmsSettings, setShowCmsSettings] = useState(false);
   const [baseUrlInput, setBaseUrlInput] = useState('');
   const [savingCms, setSavingCms] = useState(false);
-
-  // Nginx status
-  const [nginxStatus, setNginxStatus] = useState(null); // null | 'active' | 'inactive' | 'failed' | 'unknown'
-  const [nginxLoading, setNginxLoading] = useState(false);
 
   // New site dialog
   const [newDialog, setNewDialog] = useState(false);
@@ -39,17 +34,9 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
     if (gearView === 'delete') { setUndeployOnDelete(true); setTimeout(() => deleteInputRef.current?.focus(), FOCUS_DELAY); }
   }, [gearView]);
 
-  const fetchNginxStatus = useCallback(async () => {
-    setNginxLoading(true);
-    try { const d = await getNginxStatus(); setNginxStatus(d.status); }
-    catch { setNginxStatus('unknown'); }
-    finally { setNginxLoading(false); }
-  }, []);
-
   const openCmsSettings = () => {
     setBaseUrlInput(cmsSettings.baseUrl || '');
     setShowCmsSettings(true);
-    fetchNginxStatus();
   };
 
   const saveCmsSettings = async () => {
@@ -211,20 +198,6 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
                   : 'Set a base URL to track deployment links for each site.'}
               </span>
             </div>
-            <div className="cms-settings-nginx">
-              <div className="cms-settings-nginx-header">
-                <span className="cms-settings-nginx-label">Nginx</span>
-                <span className={`cms-settings-nginx-badge cms-settings-nginx-badge--${nginxStatus || 'unknown'}`}>
-                  {nginxLoading ? '…' : (nginxStatus || '—')}
-                </span>
-                <button
-                  className="btn btn-secondary btn-sm"
-                  onClick={fetchNginxStatus}
-                  disabled={nginxLoading}
-                  title="Refresh nginx status"
-                >↻</button>
-              </div>
-            </div>
             <div className="site-dialog-actions">
               <button className="btn btn-secondary btn-sm" onClick={() => setShowCmsSettings(false)}>Cancel</button>
               <button className="btn btn-primary btn-sm" onClick={saveCmsSettings} disabled={savingCms}>
@@ -297,7 +270,7 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
                     checked={undeployOnDelete}
                     onChange={e => setUndeployOnDelete(e.target.checked)}
                   />
-                  <span>Also undeploy site (nginx &amp; GitHub Pages)</span>
+                  <span>Also undeploy site (GitHub Pages)</span>
                 </label>
                 <p className="site-dialog-body">Type <strong>{gearSite.name}</strong> to confirm.</p>
                 <div className="field">

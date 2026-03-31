@@ -30,15 +30,6 @@ export async function updateCmsSettings(data) {
   return res.json();
 }
 
-// ── Nginx ─────────────────────────────────────────────────
-
-export async function getNginxStatus() {
-  const res = await fetch(`${BASE}/nginx/status`);
-  if (!res.ok) await apiError(res, 'Failed to fetch nginx status');
-  return res.json();
-}
-
-
 // ── Sites ────────────────────────────────────────────────
 
 export async function getSites() {
@@ -70,12 +61,6 @@ export async function renameSite(siteId, name) {
 export async function deleteSite(siteId) {
   const res = await fetch(`${BASE}/sites/${siteId}`, { method: 'DELETE' });
   if (!res.ok) await apiError(res, 'Failed to delete site');
-  return res.json();
-}
-
-export async function undeployNginx(siteId) {
-  const res = await fetch(`${BASE}/sites/${siteId}/deploy/nginx`, { method: 'DELETE' });
-  if (!res.ok) await apiError(res, 'Failed to undeploy from nginx');
   return res.json();
 }
 
@@ -195,12 +180,6 @@ export async function previewPage(siteId, page) {
   });
   if (!res.ok) throw new Error('Preview failed');
   return res.text();
-}
-
-export async function deployToNginx(siteId) {
-  const res = await fetch(`${BASE}/sites/${siteId}/generate/nginx`, { method: 'POST' });
-  if (!res.ok) await apiError(res, 'Nginx deployment failed');
-  return res.json();
 }
 
 export async function getSiteSettings(siteId) {

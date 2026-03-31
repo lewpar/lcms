@@ -5,7 +5,7 @@ const path = require('path');
 const { execFileSync, spawnSync } = require('child_process');
 const router = require('express').Router({ mergeParams: true });
 
-const { readSites, ROOT, OUTPUT_DIR, DOCS_DIR, NGINX_WEB_ROOT } = require('../lib/paths');
+const { readSites, ROOT, OUTPUT_DIR, DOCS_DIR } = require('../lib/paths');
 const { requireValidSiteId, requireSiteExists, safeError } = require('../lib/validate');
 
 function generate(siteId, slug) {
@@ -49,21 +49,6 @@ router.post('/', requireValidSiteId, requireSiteExists, (req, res) => {
   try {
     const out = generate(site.id, site.slug);
     res.json({ success: true, message: out.trim() || 'Site generated', siteSlug: site.slug });
-  } catch (err) { res.status(500).json({ error: safeError(err) }); }
-});
-
-// Deploy to nginx (/var/www/html/<slug>/)
-router.post('/nginx', requireValidSiteId, requireSiteExists, (req, res) => {
-  const site = readSites().find(s => s.id === req.params.siteId);
-  try {
-    const out = generate(site.id, site.slug);
-
-    if (!fs.existsSync(NGINX_WEB_ROOT)) {
-      return res.status(500).json({ error: `Nginx web root not found: ${NGINX_WEB_ROOT}` });
-    }
-
-    deployToDir(site.slug, NGINX_WEB_ROOT);
-    res.json({ success: true, message: out.trim() || 'Site deployed to nginx', siteSlug: site.slug });
   } catch (err) { res.status(500).json({ error: safeError(err) }); }
 });
 

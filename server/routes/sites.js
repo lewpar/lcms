@@ -4,13 +4,12 @@ const fs      = require('fs');
 const path    = require('path');
 const { v4: uuidv4 } = require('uuid');
 const router  = require('express').Router();
-const { readSites, writeSites, siteDir, settingsFile, ensureDirs, slugify, OUTPUT_DIR, DOCS_DIR, NGINX_WEB_ROOT } = require('../lib/paths');
+const { readSites, writeSites, siteDir, settingsFile, ensureDirs, slugify, OUTPUT_DIR, DOCS_DIR } = require('../lib/paths');
 const { requireValidSiteId, requireSiteExists, safeError, MAX_STR } = require('../lib/validate');
 
 router.get('/', (req, res) => {
   const sites = readSites().map(s => ({
     ...s,
-    deployedNginx:       fs.existsSync(path.join(NGINX_WEB_ROOT, s.slug, 'index.html')),
     deployedGithubPages: fs.existsSync(path.join(DOCS_DIR, s.slug, 'index.html')),
   }));
   res.json(sites);
@@ -34,8 +33,15 @@ router.patch('/:siteId', requireValidSiteId, (req, res) => {
   const idx   = sites.findIndex(s => s.id === req.params.siteId);
   if (idx === -1) return res.status(404).json({ error: 'Site not found.' });
   if (req.body.name) {
+    const oldSlug = sites[idx].slug;
     sites[idx].name = String(req.body.name).trim().slice(0, MAX_STR.name);
     sites[idx].slug = slugify(sites[idx].name);
+    if (oldSlug !== sites[idx].slug) {
+      const oldOutput = path.join(OUTPUT_DIR, oldSlug);
+      if (fs.existsSync(oldOutput)) fs.renameSync(oldOutput, path.join(OUTPUT_DIR, sites[idx].slug));
+      const oldDocs = path.join(DOCS_DIR, oldSlug);
+      if (fs.existsSync(oldDocs)) fs.renameSync(oldDocs, path.join(DOCS_DIR, sites[idx].slug));
+    }
     const fp = settingsFile(req.params.siteId);
     if (fs.existsSync(fp)) {
       try {
@@ -47,15 +53,6 @@ router.patch('/:siteId', requireValidSiteId, (req, res) => {
   try {
     writeSites(sites);
     res.json(sites[idx]);
-  } catch (err) { res.status(500).json({ error: safeError(err) }); }
-});
-
-router.delete('/:siteId/deploy/nginx', requireValidSiteId, requireSiteExists, (req, res) => {
-  const site = readSites().find(s => s.id === req.params.siteId);
-  try {
-    const deployDir = path.join(NGINX_WEB_ROOT, site.slug);
-    if (fs.existsSync(deployDir)) fs.rmSync(deployDir, { recursive: true });
-    res.json({ success: true });
   } catch (err) { res.status(500).json({ error: safeError(err) }); }
 });
 

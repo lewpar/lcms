@@ -3,9 +3,9 @@ import { v4 as uuidv4 } from './uuid.js';
 import {
   getSites, createSite, deleteSite, renameSite,
   getPages, createPage, deletePage, duplicatePage, generateSite,
-  deployToNginx, deployGithubPages, undeployNginx, undeployGithubPages,
+  deployGithubPages, undeployGithubPages,
   getSiteSettings, updateSiteSettings, patchPage, reorderPages,
-  getCmsSettings, updateCmsSettings, getNginxStatus,
+  getCmsSettings, updateCmsSettings,
 } from './api.js';
 import PageEditor from './components/PageEditor.jsx';
 import HomeEditor from './components/HomeEditor.jsx';
@@ -39,16 +39,12 @@ export default function App() {
   const [view, setView] = useState('pages');
   const [toasts, setToasts] = useState([]);
   const [showDeployPicker, setShowDeployPicker] = useState(false);
-  const [showNginxPanel, setShowNginxPanel] = useState(false);
-  const [nginxView, setNginxView] = useState('main'); // 'main' | 'confirm-deploy' | 'confirm-undeploy'
   const [showGithubPanel, setShowGithubPanel] = useState(false);
   const [githubView, setGithubView] = useState('main'); // 'main' | 'confirm-deploy' | 'confirm-undeploy'
   const [undeployInput, setUndeployInput] = useState('');
   const [githubCommitMsg, setGithubCommitMsg] = useState('');
   const [deploying, setDeploying] = useState(false);
   const [undeploying, setUndeploying] = useState(false);
-  const [nginxStatus, setNginxStatus] = useState(null);
-  const [nginxStatusLoading, setNginxStatusLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [search, setSearch] = useState('');
   const [collapsedSections, setCollapsedSections] = useState({});
@@ -76,7 +72,6 @@ export default function App() {
   useEffect(() => {
     loadSites();
     getCmsSettings().then(setCmsSettings).catch(() => {});
-    getNginxStatus().then(d => setNginxStatus(d.status)).catch(() => setNginxStatus('unknown'));
   }, []);
 
   const openSite = (site) => {
@@ -103,7 +98,7 @@ export default function App() {
 
   const handleDeleteSite = async (siteId, { undeploy = false } = {}) => {
     if (undeploy) {
-      await Promise.allSettled([undeployNginx(siteId), undeployGithubPages(siteId)]);
+      await Promise.allSettled([undeployGithubPages(siteId)]);
     }
     await deleteSite(siteId);
     setSites(s => s.filter(x => x.id !== siteId));
@@ -237,52 +232,11 @@ export default function App() {
     } catch { addToast('Failed to delete page', 'error'); }
   };
 
-  const fetchNginxStatus = useCallback(async () => {
-    setNginxStatusLoading(true);
-    try { const d = await getNginxStatus(); setNginxStatus(d.status); }
-    catch { setNginxStatus('unknown'); }
-    finally { setNginxStatusLoading(false); }
-  }, []);
-
-  const openNginxPanel = () => {
-    setShowDeployPicker(false);
-    setShowNginxPanel(true);
-    setNginxView('main');
-    setUndeployInput('');
-    fetchNginxStatus();
-  };
-
   const openGithubPanel = () => {
     setShowDeployPicker(false);
     setShowGithubPanel(true);
     setGithubView('main');
     setUndeployInput('');
-  };
-
-  const handleDeployNginx = async () => {
-    setDeploying(true);
-    try {
-      const result = await deployToNginx(siteId);
-      addToast(result.message || 'Site deployed to nginx!', 'success');
-      await loadSites();
-      setShowNginxPanel(false);
-    } catch (err) {
-      addToast(err.message, 'error');
-      setNginxView('main');
-    } finally { setDeploying(false); }
-  };
-
-  const handleUndeployNginx = async () => {
-    setUndeploying(true);
-    try {
-      await undeployNginx(siteId);
-      addToast('Site undeployed from nginx', 'success');
-      await loadSites();
-      setShowNginxPanel(false);
-    } catch (err) {
-      addToast(err.message, 'error');
-      setNginxView('main');
-    } finally { setUndeploying(false); }
   };
 
   const handleDeployGithub = async () => {
@@ -771,92 +725,6 @@ export default function App() {
         )}
       </main>
 
-      {showNginxPanel && (
-        <div className="modal-overlay" onClick={() => setShowNginxPanel(false)}>
-          <div className="modal-box" onClick={e => e.stopPropagation()}>
-
-            {nginxView === 'main' && (<>
-              <h3 style={{ marginBottom: 16 }}>Nginx</h3>
-
-              <div className="nginx-panel-status">
-                <span className="nginx-panel-status-label">Status</span>
-                <span className={`cms-settings-nginx-badge cms-settings-nginx-badge--${nginxStatus || 'unknown'}`}>
-                  {nginxStatusLoading ? '…' : (nginxStatus || '—')}
-                </span>
-                <button className="btn btn-secondary btn-sm" onClick={fetchNginxStatus} disabled={nginxStatusLoading} title="Refresh">↻</button>
-                </div>
-
-              <div className="nginx-panel-divider" />
-
-              <div className="nginx-panel-site">
-                <div className="nginx-panel-site-name">{selectedSite.name}</div>
-                <div className="nginx-panel-site-status">
-                  {selectedSite.deployedNginx
-                    ? <span className="nginx-panel-deployed">Deployed</span>
-                    : <span className="nginx-panel-undeployed">Not deployed</span>}
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-                <button className="btn btn-success btn-sm" onClick={() => setNginxView('confirm-deploy')}>
-                  ⬆ Deploy
-                </button>
-                {selectedSite.deployedNginx && (
-                  <button className="btn btn-danger btn-sm" onClick={() => { setUndeployInput(''); setNginxView('confirm-undeploy'); }}>
-                    ⬇ Undeploy
-                  </button>
-                )}
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
-                <button className="btn btn-secondary btn-sm" onClick={() => setShowNginxPanel(false)}>Close</button>
-              </div>
-            </>)}
-
-            {nginxView === 'confirm-deploy' && (<>
-              <h3 style={{ marginBottom: 8 }}>Deploy site?</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 20 }}>
-                This will build and publish <strong>{selectedSite.name}</strong> to <code>/var/www/html/{selectedSite.slug}</code>.
-              </p>
-              <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                <button className="btn btn-secondary btn-sm" onClick={() => setNginxView('main')} disabled={deploying}>Back</button>
-                <button className="btn btn-success btn-sm" onClick={handleDeployNginx} disabled={deploying}>
-                  {deploying ? 'Deploying…' : 'Deploy'}
-                </button>
-              </div>
-            </>)}
-
-            {nginxView === 'confirm-undeploy' && (<>
-              <h3 style={{ marginBottom: 8 }}>Undeploy site?</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>
-                This will <strong>delete</strong> <code>/var/www/html/{selectedSite.slug}</code>. The site will go offline immediately.
-              </p>
-              <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 12 }}>
-                Type <strong>{selectedSite.name}</strong> to confirm.
-              </p>
-              <input
-                className="site-dialog-input"
-                type="text"
-                value={undeployInput}
-                onChange={e => setUndeployInput(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && undeployInput === selectedSite.name) handleUndeployNginx(); if (e.key === 'Escape') setNginxView('main'); }}
-                placeholder={selectedSite.name}
-                autoFocus
-                autoComplete="off"
-                style={{ marginBottom: 16 }}
-              />
-              <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                <button className="btn btn-secondary btn-sm" onClick={() => setNginxView('main')} disabled={undeploying}>Back</button>
-                <button className="btn btn-danger btn-sm" onClick={handleUndeployNginx} disabled={undeploying || undeployInput !== selectedSite.name}>
-                  {undeploying ? 'Undeploying…' : 'Undeploy'}
-                </button>
-              </div>
-            </>)}
-
-          </div>
-        </div>
-      )}
-
       {showDeployPicker && (
         <div className="modal-overlay" onClick={() => setShowDeployPicker(false)}>
           <div className="modal-box" onClick={e => e.stopPropagation()}>
@@ -865,19 +733,6 @@ export default function App() {
               Choose a deployment target for <strong>{selectedSite.name}</strong>.
             </p>
             <div className="deploy-picker-options">
-              <button
-                className="deploy-picker-option"
-                onClick={nginxStatus === 'active' ? openNginxPanel : undefined}
-                disabled={nginxStatus !== 'active'}
-              >
-                <span className="deploy-picker-icon">⬡</span>
-                <span className="deploy-picker-label">
-                  Nginx
-                  {nginxStatus !== 'active' && <span className="deploy-picker-unavailable"> — not detected</span>}
-                </span>
-                <span className="deploy-picker-desc">Copy to /var/www/html on this server</span>
-                {selectedSite.deployedNginx && nginxStatus === 'active' && <span className="deploy-picker-badge">Deployed</span>}
-              </button>
               <button className="deploy-picker-option" onClick={openGithubPanel}>
                 <span className="deploy-picker-icon">⎇</span>
                 <span className="deploy-picker-label">GitHub Pages</span>
