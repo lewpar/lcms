@@ -294,7 +294,16 @@ function renderBlock(block) {
           ? `../assets/${block.src.slice(ASSETS_URL_PREFIX.length)}`
           : block.src.startsWith('/assets/') ? `../assets/${block.src.split('/').pop()}` : esc(block.src);
       const cap = block.caption ? `<figcaption>${esc(block.caption)}</figcaption>` : '';
-      return `<figure class="image-block img-loading"><img src="${src}" alt="${esc(block.alt||'')}" loading="lazy" onload="this.closest('.image-block').classList.remove('img-loading')" onerror="this.closest('.image-block').classList.remove('img-loading')" />${cap}</figure>`;
+      const validAlign = ['left', 'center', 'right'].includes(block.align) ? block.align : null;
+      const imgStyles = [
+        block.width  ? `width:${esc(block.width)};max-width:100%` : '',
+        block.height ? `height:${esc(block.height)}` : '',
+        validAlign === 'left'  ? 'float:left'                       : '',
+        validAlign === 'right' ? 'float:right'                      : '',
+        validAlign === 'center'? 'display:block;margin-left:auto;margin-right:auto' : '',
+      ].filter(Boolean).join(';');
+      const imgStyle = imgStyles ? ` style="${imgStyles}"` : '';
+      return `<figure class="image-block img-loading"><img src="${src}" alt="${esc(block.alt||'')}"${imgStyle} loading="lazy" onload="this.closest('.image-block').classList.remove('img-loading')" onerror="this.closest('.image-block').classList.remove('img-loading')" />${cap}</figure>`;
     }
 
     case 'case-study': {

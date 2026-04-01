@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { getAssets, deleteAsset, uploadAsset } from '../api.js';
 
 function formatSize(bytes) {
@@ -12,6 +13,7 @@ export default function MediaManager({ siteId, mode = 'full', onSelect, onClose,
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null); // filename to confirm delete
+  const [pickerSelected, setPickerSelected] = useState(null); // { filename, url }
   const fileRef = useRef();
 
   const loadAssets = async () => {
@@ -70,8 +72,8 @@ export default function MediaManager({ siteId, mode = 'full', onSelect, onClose,
         assets.map(asset => (
           <div
             key={asset.filename}
-            className="media-item"
-            onClick={mode === 'picker' ? () => onSelect({ filename: asset.filename, url: asset.url }) : undefined}
+            className={`media-item${mode === 'picker' && pickerSelected?.filename === asset.filename ? ' media-item--selected' : ''}`}
+            onClick={mode === 'picker' ? () => setPickerSelected({ filename: asset.filename, url: asset.url }) : undefined}
             style={mode === 'picker' ? { cursor: 'pointer' } : undefined}
           >
             <img className="media-item-img" src={asset.url} alt={asset.filename} />
@@ -115,7 +117,7 @@ export default function MediaManager({ siteId, mode = 'full', onSelect, onClose,
   );
 
   if (mode === 'picker') {
-    return (
+    return createPortal(
       <>
         <div className="media-picker-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
           <div className="media-picker-dialog">
@@ -137,10 +139,24 @@ export default function MediaManager({ siteId, mode = 'full', onSelect, onClose,
               {assets.length} image{assets.length !== 1 ? 's' : ''}
             </p>
             {grid}
+            <div className="media-picker-footer">
+              <span className="media-picker-selection">
+                {pickerSelected ? pickerSelected.filename : 'No image selected'}
+              </span>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button className="btn btn-secondary btn-sm" onClick={onClose}>Cancel</button>
+                <button
+                  className="btn btn-primary btn-sm"
+                  disabled={!pickerSelected}
+                  onClick={() => { onSelect(pickerSelected); }}
+                >Select</button>
+              </div>
+            </div>
           </div>
         </div>
         {deleteDialog}
-      </>
+      </>,
+      document.body
     );
   }
 

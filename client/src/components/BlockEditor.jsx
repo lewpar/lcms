@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { uploadAsset } from '../api.js';
 import { v4 as uuidv4 } from '../uuid.js';
 import MediaManager from './MediaManager.jsx';
@@ -409,6 +409,54 @@ function CaseStudyEditor({ block, onChange }) {
   );
 }
 
+function parseSizeValue(css) {
+  if (!css) return { num: '', unit: 'px' };
+  const m = css.match(/^(\d*\.?\d+)(px|%)$/);
+  return m ? { num: m[1], unit: m[2] } : { num: css.replace(/px|%/g, ''), unit: 'px' };
+}
+
+function ImageSizeOverride({ label, value, onChange }) {
+  const enabled = !!value;
+  const { num, unit } = parseSizeValue(value);
+  const [draft, setDraft] = useState(num);
+
+  useEffect(() => { setDraft(num); }, [value]);
+
+  const toggle = (checked) => onChange(checked ? `100${unit}` : '');
+  const handleNumChange = (raw) => {
+    setDraft(raw);
+    if (raw && Number(raw) > 0) onChange(`${raw}${unit}`);
+  };
+  const handleUnitChange = (newUnit) => {
+    if (draft && Number(draft) > 0) onChange(`${draft}${newUnit}`);
+  };
+
+  return (
+    <label className="image-override-row">
+      <input type="checkbox" checked={enabled} onChange={e => toggle(e.target.checked)} />
+      <span className="image-override-label">{label}</span>
+      <input
+        type="number"
+        min="1"
+        className="image-override-input"
+        value={draft}
+        disabled={!enabled}
+        onChange={e => handleNumChange(e.target.value)}
+        placeholder="—"
+      />
+      <select
+        className="image-override-unit"
+        value={unit}
+        disabled={!enabled}
+        onChange={e => handleUnitChange(e.target.value)}
+      >
+        <option value="px">px</option>
+        <option value="%">%</option>
+      </select>
+    </label>
+  );
+}
+
 function ImageEditor({ block, onChange, addToast, siteId }) {
   const fileRef = useRef();
   const [showPicker, setShowPicker] = useState(false);
@@ -457,6 +505,25 @@ function ImageEditor({ block, onChange, addToast, siteId }) {
         <div className="field">
           <label>Caption</label>
           <input type="text" value={block.caption || ''} onChange={e => onChange({ caption: e.target.value })} placeholder="Optional caption" />
+        </div>
+      </div>
+      <div className="image-overrides">
+        <span className="image-overrides-title">Overrides</span>
+        <ImageSizeOverride label="Width"  value={block.width}  onChange={w => onChange({ width: w })} />
+        <ImageSizeOverride label="Height" value={block.height} onChange={h => onChange({ height: h })} />
+        <div className="image-override-row">
+          <input type="checkbox" checked={!!block.align} onChange={e => onChange({ align: e.target.checked ? 'center' : '' })} />
+          <span className="image-override-label">Align</span>
+          <div style={{ display: 'flex', gap: 4 }}>
+            {['left', 'center', 'right'].map(a => (
+              <button
+                key={a}
+                className={`btn btn-sm ${block.align === a ? 'btn-primary' : 'btn-secondary'}`}
+                disabled={!block.align}
+                onClick={() => onChange({ align: a })}
+              >{a}</button>
+            ))}
+          </div>
         </div>
       </div>
       {showPicker && (
