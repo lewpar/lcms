@@ -515,8 +515,8 @@ function buildNavHtml(navItems, currentSlug, toc) {
     const isActive = p.slug === currentSlug;
     const href = currentSlug ? `../${esc(p.slug)}/` : `${esc(p.slug)}/`;
     const icon = p.icon || '';
-    const iconClass = ['nav-link-icon', !icon ? 'nav-link-icon-default' : '', p.iconCollapsedOnly ? 'nav-link-icon-collapsed-only' : ''].filter(Boolean).join(' ');
-    return `<a href="${href}" class="nav-link${isActive ? ' active' : ''}" title="${esc(p.title)}"><span class="${iconClass}">${icon || '📄'}</span><span class="nav-link-text">${esc(p.title)}</span></a>`
+    const iconClass = ['nav-link-icon', p.iconCollapsedOnly ? 'nav-link-icon-collapsed-only' : ''].filter(Boolean).join(' ');
+    return `<a href="${href}" class="nav-link${isActive ? ' active' : ''}" title="${esc(p.title)}">${icon ? `<span class="${iconClass}">${icon}</span>` : ''}<span class="nav-link-text">${esc(p.title)}</span></a>`
       + (isActive ? tocHtml : '');
   };
   let html = '';

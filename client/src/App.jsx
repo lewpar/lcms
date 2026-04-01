@@ -430,7 +430,7 @@ export default function App() {
       onDragStart={e => onPageDragStart(e, page.id)}
       onDragEnd={onPageDragEnd}
     >
-      <span className="page-list-item-icon">{page.icon || '📄'}</span>
+      {page.icon && <span className="page-list-item-icon">{page.icon}</span>}
       <div style={{ flex: 1, overflow: 'hidden' }}>
         <div className="page-list-item-title">{page.title || 'Untitled'}</div>
         <div className="page-list-item-slug">/{page.slug}</div>
