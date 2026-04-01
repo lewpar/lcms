@@ -757,48 +757,45 @@ export default function App() {
           <div className="modal-box" onClick={e => e.stopPropagation()}>
 
             {githubView === 'main' && (<>
-              <h3 style={{ marginBottom: 16 }}>GitHub Pages</h3>
-              <div className="nginx-panel-site">
-                <div className="nginx-panel-site-name">{selectedSite.name}</div>
-                <div className="nginx-panel-site-status">
-                  {selectedSite.deployedGithubPages
-                    ? <span className="nginx-panel-deployed">Deployed</span>
-                    : <span className="nginx-panel-undeployed">Not deployed</span>}
-                </div>
+              <h3 className="github-panel-title">GitHub Pages</h3>
+              <div className="github-panel-site-card">
+                <div className="github-panel-site-name">{selectedSite.name}</div>
+                {selectedSite.deployedGithubPages
+                  ? <span className="github-panel-badge github-panel-badge--deployed">Deployed</span>
+                  : <span className="github-panel-badge github-panel-badge--undeployed">Not deployed</span>}
               </div>
-              <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-                <button className="btn btn-success btn-sm" onClick={() => setGithubView('confirm-deploy')}>
+              <div className="github-panel-actions">
+                <button className="btn btn-success btn-sm github-panel-btn" onClick={() => setGithubView('confirm-deploy')}>
                   ⬆ Deploy
                 </button>
                 {selectedSite.deployedGithubPages && (
-                  <button className="btn btn-danger btn-sm" onClick={() => { setUndeployInput(''); setGithubView('confirm-undeploy'); }}>
+                  <button className="btn btn-danger btn-sm github-panel-btn" onClick={() => { setUndeployInput(''); setGithubView('confirm-undeploy'); }}>
                     ⬇ Undeploy
                   </button>
                 )}
               </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
+              <div className="github-panel-footer">
                 <button className="btn btn-secondary btn-sm" onClick={() => setShowGithubPanel(false)}>Close</button>
               </div>
             </>)}
 
             {githubView === 'confirm-deploy' && (<>
-              <h3 style={{ marginBottom: 8 }}>Deploy to GitHub Pages?</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 12 }}>
-                This will build <strong>{selectedSite.name}</strong> and copy it to <code>docs/{selectedSite.slug}/</code>.
+              <h3 className="github-panel-title">Deploy to GitHub Pages</h3>
+              <p className="github-panel-desc">
+                Builds <strong>{selectedSite.name}</strong> and copies it to <code>docs/{selectedSite.slug}/</code>, then commits and pushes.
               </p>
-              <input
-                type="text"
-                className="input"
+              <label className="github-panel-label">Commit message</label>
+              <textarea
+                className="input github-panel-textarea"
                 placeholder={`Deploy ${selectedSite.slug} to GitHub Pages`}
                 value={githubCommitMsg}
                 onChange={e => setGithubCommitMsg(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && !deploying) handleDeployGithub(); if (e.key === 'Escape') setGithubView('main'); }}
+                onKeyDown={e => { if (e.key === 'Escape') setGithubView('main'); }}
                 disabled={deploying}
                 autoFocus
                 autoComplete="off"
-                style={{ width: '100%', marginBottom: 16 }}
               />
-              <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+              <div className="github-panel-footer">
                 <button className="btn btn-secondary btn-sm" onClick={() => setGithubView('main')} disabled={deploying}>Back</button>
                 <button className="btn btn-success btn-sm" onClick={handleDeployGithub} disabled={deploying}>
                   {deploying ? 'Deploying…' : 'Deploy'}
@@ -807,15 +804,13 @@ export default function App() {
             </>)}
 
             {githubView === 'confirm-undeploy' && (<>
-              <h3 style={{ marginBottom: 8 }}>Undeploy from GitHub Pages?</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>
-                This will <strong>delete</strong> <code>docs/{selectedSite.slug}/</code>.
+              <h3 className="github-panel-title">Undeploy from GitHub Pages</h3>
+              <p className="github-panel-desc">
+                This will <strong>delete</strong> <code>docs/{selectedSite.slug}/</code> and push the removal.
               </p>
-              <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 12 }}>
-                Type <strong>{selectedSite.name}</strong> to confirm.
-              </p>
+              <label className="github-panel-label">Type <strong>{selectedSite.name}</strong> to confirm</label>
               <input
-                className="site-dialog-input"
+                className="input github-panel-confirm-input"
                 type="text"
                 value={undeployInput}
                 onChange={e => setUndeployInput(e.target.value)}
@@ -823,9 +818,8 @@ export default function App() {
                 placeholder={selectedSite.name}
                 autoFocus
                 autoComplete="off"
-                style={{ marginBottom: 16 }}
               />
-              <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+              <div className="github-panel-footer">
                 <button className="btn btn-secondary btn-sm" onClick={() => setGithubView('main')} disabled={undeploying}>Back</button>
                 <button className="btn btn-danger btn-sm" onClick={handleUndeployGithub} disabled={undeploying || undeployInput !== selectedSite.name}>
                   {undeploying ? 'Undeploying…' : 'Undeploy'}

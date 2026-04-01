@@ -1070,6 +1070,75 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   color: var(--text-muted);
 }
 
+/* ── GitHub Pages panel ───────────────────────────────────────────── */
+.github-panel-title {
+  margin: 0 0 16px;
+}
+.github-panel-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0 0 16px;
+  line-height: 1.5;
+}
+.github-panel-site-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+.github-panel-site-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+.github-panel-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+.github-panel-badge--deployed   { background: #1a3d2b; color: #4ade80; }
+.github-panel-badge--undeployed { background: var(--surface3); color: var(--text-muted); }
+.github-panel-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.github-panel-btn {
+  flex: 1;
+}
+.github-panel-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.github-panel-textarea {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+  margin-bottom: 16px;
+  font-family: inherit;
+  line-height: 1.5;
+}
+.github-panel-confirm-input {
+  width: 100%;
+  margin-bottom: 16px;
+}
+.github-panel-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 /* ── Nginx panel (per-site modal) ─────────────────────────────────── */
 .nginx-panel-status {
   display: flex;
