@@ -436,7 +436,7 @@ function renderBlock(block) {
         return `<div class="fitb-block fitb-block--code" data-answers='${answersJson}'>
   <div class="fitb-header">${headerTitle}</div>
   <div class="fitb-code-body">
-    <pre class="fitb-code-pre"><code>${codeHtml}</code></pre>
+    <pre class="fitb-code-pre"><code data-highlighted="yes">${codeHtml}</code></pre>
     <div class="fitb-footer fitb-code-footer">
       <button class="fitb-check-btn" type="button">Check Answers</button>
       <span class="fitb-result" hidden></span>
