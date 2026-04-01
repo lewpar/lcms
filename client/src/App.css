@@ -949,6 +949,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .site-project-url--undeployed { color: var(--text-muted); font-style: italic; }
 .site-deployed-url {
   display: block;
+  align-self: flex-start;
   font-size: 10px;
   color: var(--accent);
   text-decoration: none;
