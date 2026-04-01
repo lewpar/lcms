@@ -742,7 +742,7 @@ export default function App() {
                 <span className="deploy-picker-icon">⎇</span>
                 <span className="deploy-picker-label">GitHub Pages</span>
                 <span className="deploy-picker-desc">Copy to docs/ folder for GitHub Pages</span>
-                {selectedSite.deployedGithubPages && <span className="deploy-picker-badge">Deployed</span>}
+                {selectedSite.deployedGithubPages && <span className="deploy-picker-badge deploy-picker-badge--below">Deployed</span>}
               </button>
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 16 }}>
