@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles.css?v=mnfn9xee" />
+  <link rel="stylesheet" href="../styles.css?v=mnfqypc7" />
   
 </head>
 <body>
@@ -39,7 +39,7 @@
     <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
   </div>
   <nav class="sidebar-nav" aria-label="Site navigation">
-    <div class="nav-section"><div class="nav-section-title">Reading</div><a href="../what-is-json/" class="nav-link" title="What is JSON?"><span class="nav-link-icon">📚</span><span class="nav-link-text">What is JSON?</span></a><a href="../what-is-an-api/" class="nav-link" title="What is an API?"><span class="nav-link-icon">🌐</span><span class="nav-link-text">What is an API?</span></a><a href="../fetching-with-async/" class="nav-link" title="Fetching with Async"><span class="nav-link-icon">🗃️</span><span class="nav-link-text">Fetching with Async</span></a></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../fetching/" class="nav-link active" title="Fetching"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">Fetching</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#what-to-expect"><span class="toc-num">1.</span> What to expect</a><a class="nav-toc-link nav-toc-level-2" href="#task-1-unexpected-response"><span class="toc-num">2.</span> Task 1: Unexpected Response</a></div></div>
+    <div class="nav-section"><div class="nav-section-title">Reading</div><a href="../what-is-json/" class="nav-link" title="What is JSON?"><span class="nav-link-icon">📚</span><span class="nav-link-text">What is JSON?</span></a><a href="../what-is-an-api/" class="nav-link" title="What is an API?"><span class="nav-link-icon">🌐</span><span class="nav-link-text">What is an API?</span></a><a href="../fetching-with-async/" class="nav-link" title="Fetching with Async"><span class="nav-link-icon">🗃️</span><span class="nav-link-text">Fetching with Async</span></a></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../fetching/" class="nav-link active" title="Fetching"><span class="nav-link-text">Fetching</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#what-to-expect"><span class="toc-num">1.</span> What to expect</a><a class="nav-toc-link nav-toc-level-2" href="#task-1-route-53"><span class="toc-num">2.</span> Task 1: Route 53</a></div></div>
   </nav>
   <div class="sidebar-footer-note">Learning Content Management System</div>
 </aside>
@@ -99,9 +99,16 @@ getData();</textarea>
 </div>
 </div>
 <hr class="block-divider" />
-<h2 id="task-1-unexpected-response" class="block-heading"><span class="heading-num">2.</span> Task 1: Unexpected Response<a class="heading-anchor" href="#task-1-unexpected-response" aria-label="Copy link to section">#</a></h2>
-<div class="prose"><p><strong>Scenario</strong><br>A co-worker is trying to fetch quote number 53 from dummyjson but is receiving an unexpected response (no output). They are unsure of what the problem is and have asked for your help.</p>
-<p><strong>Instructions</strong><br>Fix the code below so that it outputs quote 53.</p>
+<h2 id="task-1-route-53" class="block-heading"><span class="heading-num">2.</span> Task 1: Route 53<a class="heading-anchor" href="#task-1-route-53" aria-label="Copy link to section">#</a></h2>
+<div class="case-study">
+  <div class="cs-header">
+    <div class="cs-eyebrow">Case Study</div>
+    
+    
+  </div>
+  <div class="cs-body"><div class="cs-section"><div class="cs-section-label" style="color:#0ea5e9">Background</div><div class="cs-section-body prose"><p>A co-worker is trying to fetch quote number 53 from dummyjson but is receiving an unexpected output. They are unsure of what the problem is and have asked for your help.</p>
+</div></div><div class="cs-section"><div class="cs-section-label" style="color:#8b5cf6">Instructions</div><div class="cs-section-body prose"><p>Fix the code below so that it outputs the 53rd quote.</p>
+</div></div></div>
 </div>
 <div class="playground-block">
 <div class="pg-header">
@@ -114,9 +121,9 @@ getData();</textarea>
   <div class="pg-code-area">
     <pre class="pg-pre" aria-hidden="true"></pre>
     <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">async function getData() {
-  const response = await fetch(&quot;https://dummyjson.com/quotes53&quot;);
+  const response = fetch(&quot;https://dummyjson.com/quotes53&quot;);
 
-  const data = await response.json();
+  const data = response.json();
 
   console.log(data.quote);
 }
@@ -142,11 +149,11 @@ getData();</textarea>
     </footer>
   </div>
 </div>
-<script src="../nav.js?v=mnfn9xee"></script>
+<script src="../nav.js?v=mnfqypc7"></script>
 
 
 
-<script src="../playground.js?v=mnfn9xee"></script>
+<script src="../playground.js?v=mnfqypc7"></script>
 
 
 </body>
