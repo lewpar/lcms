@@ -1,4 +1,26 @@
 {
   "baseUrl": "https://learn.cyberbilby.com",
+  "themes": [
+    {
+      "id": "default",
+      "name": "Default",
+      "shared": true,
+      "primary": "#6c63ff",
+      "sidebarBg": "#1e293b",
+      "contentBg": "#ffffff",
+      "textColor": "#1e293b",
+      "darkPrimary": "#7c74ff",
+      "darkSidebarBg": "#131925",
+      "darkContentBg": "#0f172a",
+      "darkTextColor": "#e2e8f0",
+      "radius": 8,
+      "font": "inter",
+      "fontSize": 16,
+      "contentWidth": 800,
+      "sidebarWidth": 240,
+      "showBreadcrumbs": true,
+      "showReadingTime": true
+    }
+  ],
   "outputPath": "/home/lewis/lcms/output"
 }
