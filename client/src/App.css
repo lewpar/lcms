@@ -145,9 +145,7 @@ body {
 .page-list-item.active { background: var(--accent-dim); border-color: var(--accent); }
 
 .home-page-item {
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 6px;
-  padding-bottom: 2px;
+  margin: 0.5rem;
 }
 
 .page-list-item-icon {
@@ -190,7 +188,7 @@ body {
 
 /* ── Sidebar search ── */
 .sidebar-search {
-  padding: 0 8px 8px;
+  padding: 8px 8px 8px;
   position: relative;
   flex-shrink: 0;
 }
@@ -464,6 +462,11 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.blocks-empty-hint {
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
 /* ── Block card ── */
@@ -1339,6 +1342,16 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   display: flex;
   justify-content: flex-end;
   gap: 8px;
+}
+
+.section-delete-pages-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  cursor: pointer;
 }
 
 .modal-box {

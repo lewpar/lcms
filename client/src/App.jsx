@@ -56,6 +56,8 @@ export default function App() {
   const [pageGhostIndex, setPageGhostIndex] = useState(null);
   const renamingRef = useRef(null);
   const [deletePageDialog, setDeletePageDialog] = useState(null); // { id, title }
+  const [deleteSectionDialog, setDeleteSectionDialog] = useState(null); // { id, name, pageCount }
+  const [deleteSectionPages, setDeleteSectionPages] = useState(false);
 
   const addToast = useCallback((message, type = 'info') => {
     const id = uuidv4();
@@ -170,16 +172,29 @@ export default function App() {
     setEditingSectionId(null);
   };
 
-  const deleteSection = async (id) => {
+  const deleteSection = async (id, deletePages) => {
     const pagesInSection = pages.filter(p => p.section === id);
     try {
-      await Promise.all(pagesInSection.map(p => patchPage(siteId, p.id, { section: '' })));
+      if (deletePages) {
+        await Promise.all(pagesInSection.map(p => deletePage(siteId, p.id)));
+        if (pagesInSection.some(p => p.id === selectedId)) setSelectedId(null);
+      } else {
+        await Promise.all(pagesInSection.map(p => patchPage(siteId, p.id, { section: '' })));
+      }
       const newSections = settings.sections.filter(s => s.id !== id);
       const newSettings = { ...settings, sections: newSections };
       await updateSiteSettings(siteId, newSettings);
       setSettings(newSettings);
       await loadPages();
     } catch { addToast('Failed to delete section', 'error'); }
+  };
+
+  const confirmDeleteSection = async () => {
+    const { id } = deleteSectionDialog;
+    const doDeletePages = deleteSectionPages;
+    setDeleteSectionDialog(null);
+    setDeleteSectionPages(false);
+    await deleteSection(id, doDeletePages);
   };
 
   const movePageToSection = async (pageId, sectionId) => {
@@ -593,10 +608,7 @@ export default function App() {
                   >+ Page</button>
                   <button
                     className="sidebar-section-delete"
-                    onClick={() => {
-                      if (sectionPages.length > 0 && !confirm(`Delete "${section.name}"? Pages will be moved to no section.`)) return;
-                      deleteSection(section.id);
-                    }}
+                    onClick={() => { setDeleteSectionPages(false); setDeleteSectionDialog({ id: section.id, name: section.name, pageCount: sectionPages.length }); }}
                     title="Delete section"
                   >✕</button>
                 </div>
@@ -839,6 +851,31 @@ export default function App() {
         onConfirm={confirmDeletePage}
         onCancel={() => setDeletePageDialog(null)}
       />
+
+      {deleteSectionDialog && (
+        <div className="cdialog-backdrop" onClick={() => setDeleteSectionDialog(null)}>
+          <div className="cdialog" role="dialog" aria-modal="true" onClick={e => e.stopPropagation()}>
+            <h3 className="cdialog-title">Delete section?</h3>
+            <p className="cdialog-message">
+              <strong>{deleteSectionDialog.name}</strong> will be permanently deleted.
+            </p>
+            {deleteSectionDialog.pageCount > 0 && (
+              <label className="section-delete-pages-label">
+                <input
+                  type="checkbox"
+                  checked={deleteSectionPages}
+                  onChange={e => setDeleteSectionPages(e.target.checked)}
+                />
+                Also delete {deleteSectionDialog.pageCount} page{deleteSectionDialog.pageCount !== 1 ? 's' : ''} in this section
+              </label>
+            )}
+            <div className="cdialog-actions">
+              <button className="btn btn-secondary" onClick={() => setDeleteSectionDialog(null)}>Cancel</button>
+              <button className="btn btn-danger" onClick={confirmDeleteSection}>Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Toast toasts={toasts} />
     </div>

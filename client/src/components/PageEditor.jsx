@@ -360,6 +360,10 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
               );
             })()}
 
+            {page.blocks.length === 0 && (
+              <p className="blocks-empty-hint">No blocks yet. Add a block to start building this page.</p>
+            )}
+
             <button className="btn btn-secondary" style={{ alignSelf: 'flex-start' }} onClick={() => setShowAddBlock(true)}>
               + Add Block
             </button>
