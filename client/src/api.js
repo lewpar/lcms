@@ -30,6 +30,41 @@ export async function updateCmsSettings(data) {
   return res.json();
 }
 
+// ── Themes ───────────────────────────────────────────────
+
+export async function getThemes(siteId) {
+  const qs = siteId ? `?siteId=${encodeURIComponent(siteId)}` : '';
+  const res = await fetch(`${BASE}/cms-settings/themes${qs}`);
+  if (!res.ok) await apiError(res, 'Failed to fetch themes');
+  return res.json();
+}
+
+export async function createTheme(data) {
+  const res = await fetch(`${BASE}/cms-settings/themes`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) await apiError(res, 'Failed to create theme');
+  return res.json();
+}
+
+export async function updateTheme(id, data) {
+  const res = await fetch(`${BASE}/cms-settings/themes/${encodeURIComponent(id)}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) await apiError(res, 'Failed to update theme');
+  return res.json();
+}
+
+export async function deleteTheme(id) {
+  const res = await fetch(`${BASE}/cms-settings/themes/${encodeURIComponent(id)}`, { method: 'DELETE' });
+  if (!res.ok) await apiError(res, 'Failed to delete theme');
+  return res.json();
+}
+
 // ── Sites ────────────────────────────────────────────────
 
 export async function getSites() {

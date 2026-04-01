@@ -308,11 +308,12 @@ function renderBlock(block) {
 
     case 'case-study': {
       const backgroundHtml = block.background
-        ? `<div class="cs-section"><div class="cs-section-label" style="color:#0ea5e9">Background</div><div class="cs-section-body">${md(block.background)}</div></div>` : '';
+        ? `<div class="cs-section"><div class="cs-section-label" style="color:#0ea5e9">Background</div><div class="cs-section-body prose">${md(block.background)}</div></div>` : '';
       const instructionsHtml = block.instructions
-        ? `<div class="cs-section"><div class="cs-section-label" style="color:#8b5cf6">Instructions</div><div class="cs-section-body">${md(block.instructions)}</div></div>` : '';
+        ? `<div class="cs-section"><div class="cs-section-label" style="color:#8b5cf6">Instructions</div><div class="cs-section-body prose">${md(block.instructions)}</div></div>` : '';
       return `<div class="case-study">
   <div class="cs-header">
+    <div class="cs-eyebrow">Case Study</div>
     ${block.title ? `<div class="cs-title">${esc(block.title)}</div>` : ''}
     ${block.summary ? `<div class="cs-summary">${esc(block.summary)}</div>` : ''}
   </div>
@@ -702,18 +703,17 @@ img{max-width:100%;height:auto;display:block}
 .pn-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light)}
 .pn-prev{margin-right:auto}.pn-next{margin-left:auto}
 
-.case-study{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-.cs-header{background:var(--surface);padding:20px 24px;border-bottom:1px solid var(--border)}
-.cs-title{font-size:1.12em;font-weight:700;color:var(--text);margin-bottom:4px}
-.cs-summary{font-size:.9em;color:var(--text-muted)}
+.case-study{border:1px solid var(--border);border-top:3px solid var(--primary);border-radius:var(--radius);overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.cs-header{background:linear-gradient(135deg,var(--surface) 0%,var(--primary-light) 100%);padding:20px 24px;border-bottom:1px solid var(--border)}
+.cs-eyebrow{font-size:.68em;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--primary);margin-bottom:6px}
+.cs-title{font-size:1.15em;font-weight:800;color:var(--text);margin-bottom:5px;line-height:1.3}
+.cs-summary{font-size:.9em;color:var(--text-muted);line-height:1.5}
 .cs-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .cs-tag{background:var(--primary-light);color:var(--primary);font-size:.68em;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 9px;border-radius:20px}
-.cs-body{display:grid;grid-template-columns:1fr 1fr}
+.cs-body{display:flex;flex-direction:column}
 .cs-section{padding:18px 24px;border-top:1px solid var(--border)}
-.cs-section:nth-child(odd){border-right:1px solid var(--border)}
 .cs-section-label{font-size:.66em;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
 .cs-section-body p:first-child{margin-top:0}.cs-section-body p:last-child{margin-bottom:0}
-@media(max-width:600px){.cs-body{grid-template-columns:1fr}.cs-section:nth-child(odd){border-right:none}}
 
 .quiz-block{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--bg);box-shadow:0 2px 12px rgba(0,0,0,.06)}
 .quiz-block-header{background:var(--primary);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
