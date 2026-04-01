@@ -16,9 +16,11 @@ cd client && npm install && cd ..
 
 | Script | Description |
 |--------|-------------|
-| `./start.sh` | Start in development mode — API on `:3001`, CMS on `:5173` (Vite HMR) |
-| `./start-prod.sh` | Build the client then start a single production server on `:3001` |
-| `./stop.sh` | Stop whichever mode is running |
+| `./start-api-dev.sh` | Start the API server on `:3001` |
+| `./start-client-dev.sh` | Start the Vite dev server on `:5173` (HMR) |
+| `./start-prod.sh` | Build the client then start a single production server |
+
+Run `start-api-dev.sh` and `start-client-dev.sh` in separate terminals for development.
 
 ## What it does
 
@@ -99,7 +101,6 @@ lcms/
 | `multer` | Multipart file upload handling (asset uploads) |
 | `marked` | Markdown → HTML in the static site generator |
 | `uuid` | Generating unique IDs for sites, pages, and blocks |
-| `concurrently` | Running server and Vite dev server in parallel |
 
 **Client** (`client/package.json`)
 

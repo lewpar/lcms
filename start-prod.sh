@@ -3,11 +3,6 @@ set -e
 
 cd "$(dirname "$0")"
 
-if [ -f .lcms.pid ]; then
-  echo "LCMS appears to already be running (found .lcms.pid). Run stop.sh first."
-  exit 1
-fi
-
 read -rp "Port to bind to [3001]: " INPUT_PORT
 PORT=${INPUT_PORT:-3001}
 
@@ -21,15 +16,4 @@ cd client
 npx vite build
 cd ..
 
-mkdir -p logs
-echo "Starting LCMS (production)..."
-
-SERVE_CLIENT=1 PORT=$PORT node server/index.js >> logs/server.log 2>&1 &
-SERVER_PID=$!
-disown $SERVER_PID
-
-echo "$SERVER_PID" > .lcms.pid
-
-echo "Server running (PID $SERVER_PID) on http://localhost:$PORT"
-echo "Logs: logs/server.log"
-echo "Run ./stop.sh to stop."
+SERVE_CLIENT=1 PORT=$PORT node server/index.js
