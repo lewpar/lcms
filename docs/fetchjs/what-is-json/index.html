@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles.css?v=mnf7s6xy" />
+  <link rel="stylesheet" href="../styles.css?v=mnfn9xee" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
 </head>
 <body>
@@ -29,6 +29,7 @@
     });
   });
 })();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
 <div class="app-layout">
   <aside class="site-sidebar" id="sidebar">
   <div class="sidebar-top">
@@ -38,7 +39,7 @@
     <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
   </div>
   <nav class="sidebar-nav" aria-label="Site navigation">
-    <div class="nav-section"><div class="nav-section-title">Reading</div><a href="../what-is-json/" class="nav-link active" title="What is JSON?"><span class="nav-link-icon">📚</span><span class="nav-link-text">What is JSON?</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#nested-objects">Nested Objects</a><a class="nav-toc-link nav-toc-level-2" href="#quiz">Quiz</a></div><a href="../what-is-an-api/" class="nav-link" title="What is an API?"><span class="nav-link-icon">🌐</span><span class="nav-link-text">What is an API?</span></a><a href="../fetching-with-async/" class="nav-link" title="Fetching with Async"><span class="nav-link-icon">🗃️</span><span class="nav-link-text">Fetching with Async</span></a></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../fetching/" class="nav-link" title="Fetching"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">Fetching</span></a></div>
+    <div class="nav-section"><div class="nav-section-title">Reading</div><a href="../what-is-json/" class="nav-link active" title="What is JSON?"><span class="nav-link-icon">📚</span><span class="nav-link-text">What is JSON?</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#data-types"><span class="toc-num">1.</span> Data Types</a><a class="nav-toc-link nav-toc-level-2" href="#nested-objects"><span class="toc-num">2.</span> Nested Objects</a><a class="nav-toc-link nav-toc-level-2" href="#quiz"><span class="toc-num">3.</span> Quiz</a></div><a href="../what-is-an-api/" class="nav-link" title="What is an API?"><span class="nav-link-icon">🌐</span><span class="nav-link-text">What is an API?</span></a><a href="../fetching-with-async/" class="nav-link" title="Fetching with Async"><span class="nav-link-icon">🗃️</span><span class="nav-link-text">Fetching with Async</span></a></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../fetching/" class="nav-link" title="Fetching"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">Fetching</span></a></div>
   </nav>
   <div class="sidebar-footer-note">Learning Content Management System</div>
 </aside>
@@ -74,8 +75,8 @@
 <p>The table below breaks down the example by showing each <strong>key</strong> and its corresponding <strong>value</strong> to help illustrate how JSON data is structured.</p>
 </div>
 <div class="table-block"><table><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody><tr><td>Name</td><td>John</td></tr><tr><td>Age</td><td>45</td></tr></tbody></table></div>
-<div class="prose"><p><strong>JSON Data Types</strong></p>
-<p>In JSON, <strong>keys are always text</strong> (strings) that identify each piece of data, and values can be of different types depending on the information being stored:</p>
+<h2 id="data-types" class="block-heading"><span class="heading-num">1.</span> Data Types<a class="heading-anchor" href="#data-types" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>In JSON, <strong>keys are always text</strong> (strings) that identify each piece of data, and values can be of different types depending on the information being stored:</p>
 <ul>
 <li><strong>Strings (text):</strong> Store names, labels, or any descriptive information.</li>
 <li><strong>Numbers:</strong> Represent quantities, measurements, or values used in calculations.</li>
@@ -83,7 +84,7 @@
 <li><strong>Objects (nested):</strong> Group related data together in a hierarchical structure for better organization.</li>
 </ul>
 </div>
-<h2 id="nested-objects" class="block-heading">Nested Objects</h2>
+<h2 id="nested-objects" class="block-heading"><span class="heading-num">2.</span> Nested Objects<a class="heading-anchor" href="#nested-objects" aria-label="Copy link to section">#</a></h2>
 <div class="prose"><p>In JSON, objects can be <strong>nested</strong> inside other objects to represent more complex data. This means that a value for a key can itself be another object enclosed in <code>{}</code> with its own key-value pairs. </p>
 <p>Nested objects allow you to organise related information hierarchically, making it easier to group details together in a clear structure.</p>
 <p>Below is an example of a nested object:</p>
@@ -95,7 +96,7 @@
     },
     &quot;city&quot;: &quot;Melbourne&quot;
 }</code></pre></figure>
-<h2 id="quiz" class="block-heading">Quiz</h2>
+<h2 id="quiz" class="block-heading"><span class="heading-num">3.</span> Quiz<a class="heading-anchor" href="#quiz" aria-label="Copy link to section">#</a></h2>
 <div class="quiz-block" data-questions='[{"id":"6e0c3bea-1a0a-45db-b8ac-5713397be75b","question":"What symbol is used to create a JSON object?","options":["[]","{}","()","\u003c\u003e"],"correctIndex":1,"explanation":"JSON objects are always enclosed in curly braces {}."},{"id":"86159cdf-c474-4237-ae9d-8bc95bcd39d6","question":"In JSON, data is stored as:","options":["Values only","Keys only","Key-value pairs","Lists only"],"correctIndex":2,"explanation":"JSON organises information in key-value pairs, so each piece of data has a name (key) and a corresponding value."},{"id":"452fbe75-1ef6-4f7c-b8a2-d32370f19bb9","question":"How do you separate key-value pairs in a JSON object?","options":["With a semicolon ;","With a comma ,","With a colon :","With a period ."],"correctIndex":2,"explanation":"In JSON, key-value pairs are separated by a colon."},{"id":"a455fa82-d4e4-4703-85d4-cb5a1094f6f3","question":"Given the JSON structure below, which is a key and which is a value?","options":["Jane is the key and name is the value","Name is the key and Jane is the value","Age is the value and 45 is the key","Name is the value and Jane is the key"],"correctIndex":1,"explanation":"In JSON, a key identifies a piece of data and is followed by a colon :, which separates it from its value.","media":{"type":"code","content":"{\n    \"name\": \"Jane\",\n    \"age:\" \"29\"\n}","language":"javascript"}}]' data-quiz-id="86bdf6c4-73e4-441c-8206-84b97ba274e5">
   <div class="quiz-block-header">
     <span class="quiz-block-header-title">JSON Quiz</span>
@@ -154,8 +155,8 @@
     </footer>
   </div>
 </div>
-<script src="../nav.js?v=mnf7s6xy"></script>
-<script src="../quiz.js?v=mnf7s6xy"></script>
+<script src="../nav.js?v=mnfn9xee"></script>
+<script src="../quiz.js?v=mnfn9xee"></script>
 
 
 

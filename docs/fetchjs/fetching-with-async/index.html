@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles.css?v=mnf7s6xy" />
+  <link rel="stylesheet" href="../styles.css?v=mnfn9xee" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
 </head>
 <body>
@@ -29,6 +29,7 @@
     });
   });
 })();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
 <div class="app-layout">
   <aside class="site-sidebar" id="sidebar">
   <div class="sidebar-top">
@@ -38,7 +39,7 @@
     <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
   </div>
   <nav class="sidebar-nav" aria-label="Site navigation">
-    <div class="nav-section"><div class="nav-section-title">Reading</div><a href="../what-is-json/" class="nav-link" title="What is JSON?"><span class="nav-link-icon">📚</span><span class="nav-link-text">What is JSON?</span></a><a href="../what-is-an-api/" class="nav-link" title="What is an API?"><span class="nav-link-icon">🌐</span><span class="nav-link-text">What is an API?</span></a><a href="../fetching-with-async/" class="nav-link active" title="Fetching with Async"><span class="nav-link-icon">🗃️</span><span class="nav-link-text">Fetching with Async</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#fetch-in-practice">Fetching in practice</a><a class="nav-toc-link nav-toc-level-2" href="#test-knowledge-1">Test your knowledge</a></div></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../fetching/" class="nav-link" title="Fetching"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">Fetching</span></a></div>
+    <div class="nav-section"><div class="nav-section-title">Reading</div><a href="../what-is-json/" class="nav-link" title="What is JSON?"><span class="nav-link-icon">📚</span><span class="nav-link-text">What is JSON?</span></a><a href="../what-is-an-api/" class="nav-link" title="What is an API?"><span class="nav-link-icon">🌐</span><span class="nav-link-text">What is an API?</span></a><a href="../fetching-with-async/" class="nav-link active" title="Fetching with Async"><span class="nav-link-icon">🗃️</span><span class="nav-link-text">Fetching with Async</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#fetch-in-practice"><span class="toc-num">1.</span> Fetching in practice</a><a class="nav-toc-link nav-toc-level-2" href="#test-knowledge-1"><span class="toc-num">2.</span> Test your knowledge</a></div></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../fetching/" class="nav-link" title="Fetching"><span class="nav-link-icon nav-link-icon-default">📄</span><span class="nav-link-text">Fetching</span></a></div>
   </nav>
   <div class="sidebar-footer-note">Learning Content Management System</div>
 </aside>
@@ -68,7 +69,7 @@
 <figure class="image-block img-loading"><img src="../assets/75a46261-a9af-4e82-b953-184b42fbb44c.png" alt="" loading="lazy" onload="this.closest('.image-block').classList.remove('img-loading')" onerror="this.closest('.image-block').classList.remove('img-loading')" /></figure>
 <div class="prose"><p>When using <code>fetch</code> with <code>async</code> and <code>await</code>, the code is written inside an <code>async</code> function. The program sends a request using <code>fetch</code>, then uses <code>await</code> to pause the function until a response is received. After the response arrives, it can be converted into usable data (such as <strong>JSON</strong>) and then used in the program. This approach keeps the code easy to read because it runs in a clear, step-by-step order.</p>
 </div>
-<h2 id="fetch-in-practice" class="block-heading">Fetching in practice</h2>
+<h2 id="fetch-in-practice" class="block-heading"><span class="heading-num">1.</span> Fetching in practice<a class="heading-anchor" href="#fetch-in-practice" aria-label="Copy link to section">#</a></h2>
 <a class="page-link-card" href="../what-is-an-api/">
   <div class="pl-content">
     <div class="pl-title">What is an API?</div>
@@ -139,7 +140,7 @@ fetchData();</textarea>
 </div>
 <div class="callout callout-red"><div class="callout-title">Wait up!</div><div class="callout-body"><p>Before continuing, how would you modify the code above to also print the quote authors name?</p>
 </div></div>
-<h2 id="test-knowledge-1" class="block-heading">Test your knowledge</h2>
+<h2 id="test-knowledge-1" class="block-heading"><span class="heading-num">2.</span> Test your knowledge<a class="heading-anchor" href="#test-knowledge-1" aria-label="Copy link to section">#</a></h2>
 <div class="quiz-block" data-questions='[{"id":"73ac99c6-b13a-4f57-b301-739b0797c339","question":"What does the async keyword do?","options":["It makes a function run faster","It allows a function to use await and return a Promise","It sends a request to the internet","It converts data into JSON"],"correctIndex":1,"explanation":"The async keyword allows a function to use await and automatically makes the function return a Promise."},{"id":"9d456811-2b1d-4022-bc24-ea3eaee0749e","question":"What does await do in an async function?","options":["Stops the entire program","Deletes the Promise","Pauses the function until the Promise finishes","Sends the request to the server"],"correctIndex":2,"explanation":"await pauses the function until the Promise is finished and the result is available."},{"id":"ccd060d2-e660-4313-8166-e837d8f005dc","question":"In the example below, what will be printed to the console?","options":["A random quote","The website address","The number of quotes in the database","Nothing"],"correctIndex":0,"explanation":"The code fetches a random quote and prints the text of the quote to the console.","media":{"type":"code","content":"async function loadQuote() {\n  const response = await fetch(\"https://dummyjson.com/quotes/random\");\n  const data = await response.json();\n\n  console.log(data.quote);\n}","language":"javascript"}},{"id":"fc8ca215-2342-4e07-9789-de3789079479","question":"Given the following JSON, which is the correct method for getting the authors name?","options":["data.id","data.Name","data.name","data.quote"],"correctIndex":2,"explanation":"When working with data returned from an API, the properties you access in the JavaScript object must exactly match the keys defined in the JSON data.","media":{"type":"code","content":"{\n  \"id\": 1,\n  \"quote\": \"Life isn\u0027t about getting and having, it\u0027s about giving and being.\",\n  \"author\": \"Kevin Kruse\"\n}","language":"javascript"}}]' data-quiz-id="4df0bd47-db6d-4cea-adee-42f29c1f9028">
   <div class="quiz-block-header">
     <span class="quiz-block-header-title">Quiz</span>
@@ -198,11 +199,11 @@ fetchData();</textarea>
     </footer>
   </div>
 </div>
-<script src="../nav.js?v=mnf7s6xy"></script>
-<script src="../quiz.js?v=mnf7s6xy"></script>
+<script src="../nav.js?v=mnfn9xee"></script>
+<script src="../quiz.js?v=mnfn9xee"></script>
 
 
-<script src="../playground.js?v=mnf7s6xy"></script>
+<script src="../playground.js?v=mnfn9xee"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>
 </body>
