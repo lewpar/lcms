@@ -92,9 +92,9 @@ export default function App() {
     setView('pages');
   };
 
-  const handleCreateSite = async (name) => {
+  const handleCreateSite = async (name, slug) => {
     try {
-      const site = await createSite(name);
+      const site = await createSite(name, slug);
       setSites(s => [...s, site]);
       openSite(site);
     } catch (err) { addToast(err.message || 'Failed to create site', 'error'); }
@@ -109,9 +109,9 @@ export default function App() {
     if (selectedSite?.id === siteId) closeSite();
   };
 
-  const handleRenameSite = async (siteId, name) => {
+  const handleRenameSite = async (siteId, { name, slug }) => {
     try {
-      const updated = await renameSite(siteId, name);
+      const updated = await renameSite(siteId, { name, slug });
       setSites(s => s.map(x => x.id === siteId ? updated : x));
       if (selectedSite?.id === siteId) setSelectedSite(updated);
     } catch (err) { addToast(err.message || 'Failed to rename site', 'error'); }

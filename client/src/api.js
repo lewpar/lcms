@@ -38,21 +38,21 @@ export async function getSites() {
   return res.json();
 }
 
-export async function createSite(name) {
+export async function createSite(name, slug) {
   const res = await fetch(`${BASE}/sites`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name }),
+    body: JSON.stringify({ name, slug }),
   });
   if (!res.ok) await apiError(res, 'Failed to create site');
   return res.json();
 }
 
-export async function renameSite(siteId, name) {
+export async function renameSite(siteId, { name, slug }) {
   const res = await fetch(`${BASE}/sites/${siteId}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name }),
+    body: JSON.stringify({ name, slug }),
   });
   if (!res.ok) await apiError(res, 'Failed to rename site');
   return res.json();

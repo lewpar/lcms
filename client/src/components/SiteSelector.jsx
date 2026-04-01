@@ -13,6 +13,8 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
   // New site dialog
   const [newDialog, setNewDialog] = useState(false);
   const [newName, setNewName] = useState('');
+  const [newSlug, setNewSlug] = useState('');
+  const [newSlugTouched, setNewSlugTouched] = useState(false);
   const [creating, setCreating] = useState(false);
   const newInputRef = useRef(null);
 
@@ -20,6 +22,7 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
   const [gearSite, setGearSite] = useState(null); // site object
   const [gearView, setGearView] = useState('menu'); // 'menu' | 'rename' | 'delete'
   const [renameName, setRenameName] = useState('');
+  const [renameSlug, setRenameSlug] = useState('');
   const [deleteInput, setDeleteInput] = useState('');
   const [undeployOnDelete, setUndeployOnDelete] = useState(true);
   const renameRef = useRef(null);
@@ -45,11 +48,15 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
     finally { setSavingCms(false); setShowCmsSettings(false); }
   };
 
+  const slugify = (str) =>
+    str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
   const openGear = (e, site) => {
     e.stopPropagation();
     setGearSite(site);
     setGearView('menu');
     setRenameName(site.name);
+    setRenameSlug(site.slug);
     setDeleteInput('');
   };
 
@@ -58,11 +65,14 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
   const handleCreate = async (e) => {
     e.preventDefault();
     const name = newName.trim();
-    if (!name) return;
+    const slug = newSlug.trim() || slugify(name);
+    if (!name || !slug) return;
     setCreating(true);
     try {
-      await onCreate(name);
+      await onCreate(name, slug);
       setNewName('');
+      setNewSlug('');
+      setNewSlugTouched(false);
       setNewDialog(false);
     } finally {
       setCreating(false);
@@ -71,7 +81,9 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
 
   const commitRename = async () => {
     const name = renameName.trim();
-    if (name && name !== gearSite.name) await onRename(gearSite.id, name);
+    const slug = renameSlug.trim();
+    if (!name || !slug) return;
+    if (name !== gearSite.name || slug !== gearSite.slug) await onRename(gearSite.id, { name, slug });
     closeGear();
   };
 
@@ -128,7 +140,7 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
             <button className="site-selector-search-clear" onClick={() => setSearch('')} aria-label="Clear search">✕</button>
           )}
         </div>
-        <button className="btn btn-primary btn-sm site-selector-new-btn" onClick={() => { setNewName(''); setNewDialog(true); }}>
+        <button className="btn btn-primary btn-sm site-selector-new-btn" onClick={() => { setNewName(''); setNewSlug(''); setNewSlugTouched(false); setNewDialog(true); }}>
           + New
         </button>
         <button className="btn btn-secondary btn-sm btn-icon" onClick={openCmsSettings} title="CMS settings">
@@ -199,13 +211,27 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
                   className="site-dialog-input"
                   placeholder="e.g. My Learning Site"
                   value={newName}
-                  onChange={e => setNewName(e.target.value)}
+                  onChange={e => {
+                    setNewName(e.target.value);
+                    if (!newSlugTouched) setNewSlug(slugify(e.target.value));
+                  }}
+                  onKeyDown={e => e.key === 'Escape' && setNewDialog(false)}
+                />
+              </div>
+              <div className="field">
+                <label>Slug</label>
+                <input
+                  type="text"
+                  className="site-dialog-input"
+                  placeholder="e.g. my-learning-site"
+                  value={newSlug}
+                  onChange={e => { setNewSlugTouched(true); setNewSlug(e.target.value); }}
                   onKeyDown={e => e.key === 'Escape' && setNewDialog(false)}
                 />
               </div>
               <div className="site-dialog-actions">
                 <button type="button" className="btn btn-secondary btn-sm" onClick={() => setNewDialog(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary btn-sm" disabled={creating || !newName.trim()}>
+                <button type="submit" className="btn btn-primary btn-sm" disabled={creating || !newName.trim() || !newSlug.trim()}>
                   {creating ? 'Creating…' : 'Create Site'}
                 </button>
               </div>
@@ -273,9 +299,9 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
 
             {gearView === 'rename' && (
               <>
-                <h3 className="site-dialog-title">Rename Site</h3>
+                <h3 className="site-dialog-title">Edit Site</h3>
                 <div className="field">
-                  <label>New name</label>
+                  <label>Site name</label>
                   <input
                     ref={renameRef}
                     type="text"
@@ -288,9 +314,22 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
                     }}
                   />
                 </div>
+                <div className="field">
+                  <label>Slug</label>
+                  <input
+                    type="text"
+                    className="site-dialog-input"
+                    value={renameSlug}
+                    onChange={e => setRenameSlug(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') commitRename();
+                      if (e.key === 'Escape') setGearView('menu');
+                    }}
+                  />
+                </div>
                 <div className="site-dialog-actions">
                   <button className="btn btn-secondary btn-sm" onClick={() => setGearView('menu')}>Back</button>
-                  <button className="btn btn-primary btn-sm" onClick={commitRename} disabled={!renameName.trim()}>Save</button>
+                  <button className="btn btn-primary btn-sm" onClick={commitRename} disabled={!renameName.trim() || !renameSlug.trim()}>Save</button>
                 </div>
               </>
             )}
