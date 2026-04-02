@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles.css?v=mni0ear7" />
+  <link rel="stylesheet" href="../styles.css?v=mni13w5k" />
   
 </head>
 <body>
@@ -66,8 +66,9 @@
         </div>
         <div class="blocks"><h2 id="what-to-expect" class="block-heading"><span class="heading-num">1.</span> What to expect<a class="heading-anchor" href="#what-to-expect" aria-label="Copy link to section">#</a></h2>
 <div class="prose"><p>In this activity you will analyse and fix code to help out a co-worker.</p>
-<p><strong>Instructions</strong><br>Analyse the completed code below and use it to complete the tasks in this activity.</p>
 </div>
+<div class="callout callout-purple"><div class="callout-title">Instructions</div><div class="callout-body"><p>Analyse the completed code below and use it to complete the tasks in this activity.</p>
+</div></div>
 <div class="playground-block">
 <div class="pg-header">
   <span class="pg-header-title">Try it yourself</span>
@@ -100,16 +101,10 @@ getData();</textarea>
 </div>
 <hr class="block-divider" />
 <h2 id="task-1-route-53" class="block-heading"><span class="heading-num">2.</span> Task 1: Route 53<a class="heading-anchor" href="#task-1-route-53" aria-label="Copy link to section">#</a></h2>
-<div class="case-study">
-  <div class="cs-header">
-    <div class="cs-eyebrow">Case Study</div>
-    
-    
-  </div>
-  <div class="cs-body"><div class="cs-section"><div class="cs-section-label" style="color:#0ea5e9">Background</div><div class="cs-section-body prose"><p>A co-worker is trying to fetch quote number 53 from dummyjson but is receiving an unexpected output. They are unsure of what the problem is and have asked for your help.</p>
-</div></div><div class="cs-section"><div class="cs-section-label" style="color:#8b5cf6">Instructions</div><div class="cs-section-body prose"><p>Fix the code below so that it outputs the 53rd quote.</p>
-</div></div></div>
-</div>
+<div class="callout callout-blue"><div class="callout-title">Background</div><div class="callout-body"><p>A co-worker is trying to fetch quote number 53 from dummyjson but is receiving an unexpected output. They are unsure of what the problem is and have asked for your help.</p>
+</div></div>
+<div class="callout callout-purple"><div class="callout-title">Instructions</div><div class="callout-body"><p>Analyse and fix the code below so that it outputs the 53rd quote.</p>
+</div></div>
 <div class="playground-block">
 <div class="pg-header">
   <span class="pg-header-title">Try it yourself</span>
@@ -121,9 +116,9 @@ getData();</textarea>
   <div class="pg-code-area">
     <pre class="pg-pre" aria-hidden="true"></pre>
     <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">async function getData() {
-  const response = fetch(&quot;https://dummyjson.com/quotes53&quot;);
+  const response = await fetch(&quot;https://dummyjson.com/quotes53&quot;);
 
-  const data = response.json();
+  const data = await response.json();
 
   console.log(data.quote);
 }
@@ -136,6 +131,17 @@ getData();</textarea>
   <div class="pg-output-label">Output</div>
   <div class="pg-output"></div>
 </div>
+</div>
+<div class="hint-block">
+  <div class="hint-header">
+    <span class="hint-title">Hint</span>
+    <span class="hint-reveal-label">Click to reveal</span>
+  </div>
+  <div class="hint-body">
+    <div class="hint-body-inner prose"><p>Analyse the route being fetched</p>
+</div>
+    <div class="hint-overlay">Click to reveal</div>
+  </div>
 </div></div>
         
 <nav class="page-prev-next">
@@ -149,12 +155,13 @@ getData();</textarea>
     </footer>
   </div>
 </div>
-<script src="../nav.js?v=mni0ear7"></script>
+<script src="../nav.js?v=mni13w5k"></script>
 
 
 
-<script src="../playground.js?v=mni0ear7"></script>
+<script src="../playground.js?v=mni13w5k"></script>
 
+<script src="../hint.js?v=mni13w5k"></script>
 
 </body>
 </html>
