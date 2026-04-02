@@ -26,6 +26,7 @@ export const BLOCK_TYPES = [
   { type: 'flashcard',         icon: '🃏', label: 'Flashcard',         group: 'Interactive' },
   { type: 'fill-in-the-blank', icon: '✍️', label: 'Fill in the Blank', group: 'Interactive' },
   { type: 'accordion',         icon: '☰',  label: 'Accordion',         group: 'Interactive' },
+  { type: 'hint',              icon: '💭', label: 'Hint',              group: 'Interactive' },
   { type: 'playground',        icon: '▶',  label: 'Playground',        group: 'Interactive' },
   { type: 'table',             icon: '⊞',  label: 'Table',             group: 'Structure' },
   { type: 'page-link',         icon: '→',  label: 'Page Link',         group: 'Structure' },
@@ -48,6 +49,7 @@ export function defaultBlock(type) {
     case 'flashcard':   return { id, type, title: '', cards: [{ id: uuidv4(), front: '', back: '' }] };
     case 'table':       return { id, type, caption: '', headers: ['Column 1', 'Column 2'], rows: [['', '']] };
     case 'accordion':   return { id, type, items: [{ id: uuidv4(), title: '', content: '' }] };
+    case 'hint':        return { id, type, title: '', body: '' };
     case 'embed':             return { id, type, src: '', height: 400, caption: '' };
     case 'playground':        return { id, type, title: 'Try it yourself', starterCode: '// Write your JavaScript here\nconsole.log(\'Hello, world!\');' };
     case 'fill-in-the-blank': return { id, type, title: '', prompt: '', answers: [], language: 'plaintext' };

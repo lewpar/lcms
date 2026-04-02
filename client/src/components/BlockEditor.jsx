@@ -32,6 +32,7 @@ function blockSummary(block) {
       const n = block.items?.length ?? 0;
       return `${n} item${n !== 1 ? 's' : ''}`;
     }
+    case 'hint': return block.title || block.body?.slice(0, 40) || '(empty)';
     case 'embed':             return block.src || '(no URL)';
     case 'playground':        return block.title || block.starterCode?.slice(0, 50) || '(empty)';
     case 'fill-in-the-blank': {
@@ -806,6 +807,33 @@ function AccordionEditor({ block, onChange }) {
   );
 }
 
+/* ── Hint editor ── */
+
+function HintEditor({ block, onChange }) {
+  return (
+    <>
+      <div className="field">
+        <label>Title (leave blank to use "Hint")</label>
+        <input
+          type="text"
+          value={block.title || ''}
+          onChange={e => onChange({ title: e.target.value })}
+          placeholder="Hint"
+        />
+      </div>
+      <div className="field">
+        <label>Body (markdown supported)</label>
+        <textarea
+          rows={4}
+          value={block.body || ''}
+          onChange={e => onChange({ body: e.target.value })}
+          placeholder="Enter the hint content here..."
+        />
+      </div>
+    </>
+  );
+}
+
 /* ── Embed editor ── */
 
 function EmbedEditor({ block, onChange }) {
@@ -1081,6 +1109,7 @@ export default function BlockEditor({
           {block.type === 'flashcard'  && <FlashcardEditor  block={block} onChange={onChange} />}
           {block.type === 'table'      && <TableEditor      block={block} onChange={onChange} />}
           {block.type === 'accordion'  && <AccordionEditor  block={block} onChange={onChange} />}
+          {block.type === 'hint'       && <HintEditor       block={block} onChange={onChange} />}
           {block.type === 'embed'             && <EmbedEditor          block={block} onChange={onChange} />}
           {block.type === 'playground'       && <PlaygroundEditor     block={block} onChange={onChange} />}
           {block.type === 'fill-in-the-blank' && <FillInTheBlankEditor block={block} onChange={onChange} />}

@@ -392,6 +392,21 @@ function renderBlock(block) {
       return `<div class="accordion-block">${itemsHtml}</div>`;
     }
 
+    case 'hint': {
+      const title = esc(block.title || 'Hint');
+      const body = md(block.body || '');
+      return `<div class="hint-block">
+  <div class="hint-header">
+    <span class="hint-title">${title}</span>
+    <span class="hint-reveal-label">Click to reveal</span>
+  </div>
+  <div class="hint-body">
+    <div class="hint-body-inner prose">${body}</div>
+    <div class="hint-overlay">Click to reveal</div>
+  </div>
+</div>`;
+    }
+
     case 'embed': {
       if (!block.src) return '';
       const height = Number(block.height) || 400;
@@ -815,6 +830,18 @@ img{max-width:100%;height:auto;display:block}
 .acc-body{display:none;padding:0 18px}.acc-item.open>.acc-body{display:block}
 .acc-body-inner{padding:14px 0 18px}
 
+.hint-block{border:1px solid #f59e0b;border-radius:var(--radius);overflow:hidden;cursor:pointer;user-select:none}
+.hint-header{display:flex;align-items:center;gap:8px;padding:12px 18px;background:#fffbeb;border-bottom:1px solid #fde68a}
+.hint-title{flex:1;font-weight:600;font-size:.95em;color:#92400e}
+.hint-reveal-label{font-size:.8em;color:#b45309;font-weight:400;transition:opacity .2s}
+.hint-block.revealed .hint-reveal-label{opacity:0}
+.hint-block.revealed{cursor:default}
+.hint-body{padding:14px 18px 18px;background:var(--bg);position:relative}
+.hint-body-inner{filter:blur(6px);transition:filter .35s ease;pointer-events:none;user-select:none}
+.hint-block.revealed .hint-body-inner{filter:none;pointer-events:auto;user-select:auto}
+.hint-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.875em;color:var(--text-muted);pointer-events:none;transition:opacity .35s ease}
+.hint-block.revealed .hint-overlay{opacity:0}
+
 .embed-block{margin:0}.embed-block iframe{display:block;width:100%;border-radius:var(--radius);border:1px solid var(--border)}.embed-block figcaption{margin-top:8px;font-size:.83em;color:var(--text-muted);text-align:center;font-style:italic}
 
 .playground-block{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
@@ -1187,6 +1214,19 @@ const ACCORDION_JS = `
   });
 })();`;
 
+// ── Hint JS ─────────────────────────────────────────────
+
+const HINT_JS = `
+(function(){
+  document.addEventListener('DOMContentLoaded',function(){
+    document.querySelectorAll('.hint-block').forEach(function(el){
+      el.addEventListener('click',function(){
+        el.classList.add('revealed');
+      });
+    });
+  });
+})();`;
+
 // ── Flashcard JS ────────────────────────────────────────
 
 const FLASHCARD_JS = `
@@ -1373,6 +1413,7 @@ function renderPagePreview(page, settings) {
   const hasFlashcard      = blocks.some(b => b.type === 'flashcard');
   const hasPlayground     = blocks.some(b => b.type === 'playground');
   const hasFillInTheBlank = blocks.some(b => b.type === 'fill-in-the-blank');
+  const hasHint           = blocks.some(b => b.type === 'hint');
   const hasCode           = blocksNeedHighlighting(blocks);
 
   const css = buildCss(settings.theme || {});
@@ -1404,6 +1445,7 @@ ${hasAccordion      ? `<script>${ACCORDION_JS}</script>`  : ''}
 ${hasFlashcard      ? `<script>${FLASHCARD_JS}</script>`  : ''}
 ${hasPlayground     ? `<script>${PLAYGROUND_JS}</script>` : ''}
 ${hasFillInTheBlank ? `<script>${FITB_JS}</script>`       : ''}
+${hasHint           ? `<script>${HINT_JS}</script>`       : ''}
 ${hasCode ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>` : ''}
 <script>${COPY_LINK_JS}</script>
 </body>
@@ -1453,6 +1495,7 @@ function pageTemplate({ page, blocksHtml, toc, settings, navItems, v }) {
   const hasFlashcard      = (page.blocks || []).some(b => b.type === 'flashcard');
   const hasPlayground     = (page.blocks || []).some(b => b.type === 'playground');
   const hasFillInTheBlank = (page.blocks || []).some(b => b.type === 'fill-in-the-blank');
+  const hasHint           = (page.blocks || []).some(b => b.type === 'hint');
   const hasCode = blocksNeedHighlighting(page.blocks || []);
 
   // Build flat ordered nav list for prev/next (unsectioned first, then sectioned in order)
@@ -1529,6 +1572,7 @@ ${hasAccordion      ? `<script src="../accordion.js?v=${v}"></script>`  : ''}
 ${hasFlashcard      ? `<script src="../flashcard.js?v=${v}"></script>`  : ''}
 ${hasPlayground     ? `<script src="../playground.js?v=${v}"></script>` : ''}
 ${hasFillInTheBlank ? `<script src="../fitb.js?v=${v}"></script>`       : ''}
+${hasHint           ? `<script src="../hint.js?v=${v}"></script>`       : ''}
 ${hasCode ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>` : ''}
 </body>
 </html>`;
@@ -1547,6 +1591,7 @@ function indexTemplate({ pages, settings, navItems, v }) {
   const hasFlashcard      = homeBlocks.some(b => b.type === 'flashcard');
   const hasPlayground     = homeBlocks.some(b => b.type === 'playground');
   const hasFillInTheBlank = homeBlocks.some(b => b.type === 'fill-in-the-blank');
+  const hasHint           = homeBlocks.some(b => b.type === 'hint');
   const hasCode = blocksNeedHighlighting(homeBlocks);
   const homeHeadingNums = computeHeadingNumbers(homeBlocks);
   const annotatedHomeBlocks = homeBlocks.map(b => b.type === 'heading' ? { ...b, _num: homeHeadingNums.get(b.id) } : b);
@@ -1624,6 +1669,7 @@ ${hasAccordion      ? `<script src="accordion.js?v=${v}"></script>`  : ''}
 ${hasFlashcard      ? `<script src="flashcard.js?v=${v}"></script>`  : ''}
 ${hasPlayground     ? `<script src="playground.js?v=${v}"></script>` : ''}
 ${hasFillInTheBlank ? `<script src="fitb.js?v=${v}"></script>`       : ''}
+${hasHint           ? `<script src="hint.js?v=${v}"></script>`       : ''}
 ${hasCode ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>` : ''}
 </body>
 </html>`;
@@ -1654,6 +1700,7 @@ function generate() {
   fs.writeFileSync(path.join(OUTPUT_DIR, 'flashcard.js'), FLASHCARD_JS);
   fs.writeFileSync(path.join(OUTPUT_DIR, 'playground.js'), PLAYGROUND_JS);
   fs.writeFileSync(path.join(OUTPUT_DIR, 'fitb.js'), FITB_JS);
+  fs.writeFileSync(path.join(OUTPUT_DIR, 'hint.js'), HINT_JS);
 
   let pages = [];
   if (fs.existsSync(PAGES_DIR)) {
