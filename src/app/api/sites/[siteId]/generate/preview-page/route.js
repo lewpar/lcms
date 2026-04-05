@@ -13,7 +13,7 @@ export async function POST(request, { params }) {
   const { page } = body;
   if (!page) return NextResponse.json({ error: 'page is required' }, { status: 400 });
 
-  const result = spawnSync('node', ['generator/index.js', '--preview', siteId], {
+  const result = spawnSync('node', ['src/generator/index.js', '--preview', siteId], {
     input: JSON.stringify({ page }),
     cwd: ROOT,
     encoding: 'utf-8',

@@ -6,7 +6,7 @@ import { readSites, ROOT, OUTPUT_DIR, DOCS_DIR } from '../../../../../../lib/pat
 import { isValidId, safeError } from '../../../../../../lib/validate.js';
 
 function generate(siteId, slug) {
-  return execFileSync('node', ['generator/index.js', siteId, slug], {
+  return execFileSync('node', ['src/generator/index.js', siteId, slug], {
     cwd: ROOT, encoding: 'utf-8', timeout: 30000,
   });
 }

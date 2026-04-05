@@ -25,7 +25,7 @@ if (!siteId || (!previewMode && !siteSlug)) {
   process.exit(1);
 }
 
-const ROOT          = path.join(__dirname, '..');
+const ROOT          = path.join(__dirname, '../..');
 const PAGES_DIR     = path.join(ROOT, 'content', 'sites', siteId, 'pages');
 const ASSETS_DIR    = path.join(ROOT, 'content', 'sites', siteId, 'assets');
 const SETTINGS_FILE = path.join(ROOT, 'content', 'sites', siteId, 'site.json');
