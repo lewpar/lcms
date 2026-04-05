@@ -1,6 +1,6 @@
 {
   "id": "c397cad2-557e-48b0-9e11-d80a2af4be1e",
-  "title": "What is JSON?",
+  "title": "JSON",
   "slug": "what-is-json",
   "section": "80159867-84c7-4930-9b4f-837a3a45ff17",
   "description": "",
@@ -133,7 +133,7 @@
     }
   ],
   "createdAt": "2026-03-30T21:57:09.823Z",
-  "updatedAt": "2026-03-31T23:33:19.897Z",
-  "icon": "📚",
+  "updatedAt": "2026-04-05T08:44:42.798Z",
+  "icon": "",
   "order": 0
 }

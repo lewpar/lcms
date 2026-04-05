@@ -1,7 +1,7 @@
 {
   "id": "6c9dd567-7f49-4827-b072-d6d3a318e97c",
-  "title": "Fetching with Async",
-  "slug": "fetching-with-async",
+  "title": "Fetching",
+  "slug": "what-is-fetching",
   "section": "80159867-84c7-4930-9b4f-837a3a45ff17",
   "description": "",
   "blocks": [
@@ -150,7 +150,7 @@
     }
   ],
   "createdAt": "2026-03-30T02:38:58.807Z",
-  "updatedAt": "2026-04-01T23:25:38.789Z",
+  "updatedAt": "2026-04-05T08:45:05.128Z",
   "order": 2,
-  "icon": "🗃️"
+  "icon": ""
 }
