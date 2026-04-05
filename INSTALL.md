@@ -17,7 +17,6 @@ cd lcms
 
 ```bash
 npm install
-cd client && npm install && cd ..
 ```
 
 ## 3. Allow LCMS to deploy to the nginx web root
@@ -47,26 +46,20 @@ who owns them.
 
 ## 4. Start the server
 
-**Development** (API + Vite dev server):
+**Development** (Next.js dev server — UI + API on one port):
 
 ```bash
-./start.sh
+npm run dev
+# or: ./start-api-dev.sh
 ```
 
-**Production** (builds the client, serves everything from Node):
+Runs on http://localhost:3000 by default.
+
+**Production** (builds then starts Next.js):
 
 ```bash
 ./start-prod.sh
 ```
-
-To stop:
-
-```bash
-./stop.sh
-```
-
-Logs are written to `logs/server.log` (production) or `logs/client.log` /
-`logs/server.log` (development).
 
 ## 5. Configure CMS settings
 
