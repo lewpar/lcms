@@ -103,7 +103,7 @@ export default function SitePreview({ siteId, siteSlug, addToast, pageSlug = '',
           </div>
         )}
 
-        {!everGenerated && failed && (
+        {failed && (
           <div className="site-preview-loading">
             <div style={{ fontSize: 32 }}>⚠</div>
             <div>Generation failed.</div>
@@ -111,7 +111,7 @@ export default function SitePreview({ siteId, siteSlug, addToast, pageSlug = '',
           </div>
         )}
 
-        {everGenerated && (
+        {everGenerated && !failed && (
           <iframe
             key={`${iframeVersion}:${currentSlug}`}
             ref={iframeRef}
@@ -122,7 +122,7 @@ export default function SitePreview({ siteId, siteSlug, addToast, pageSlug = '',
           />
         )}
 
-        {everGenerated && generating && (
+        {everGenerated && !failed && generating && (
           <div className="site-preview-update-toast">
             <span className="site-preview-update-spinner">⟳</span> Updating…
           </div>

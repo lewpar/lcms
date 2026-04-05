@@ -2,29 +2,9 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { pagesDir, readSites } from '../../../../../../../lib/paths.js';
-import { isValidId, assertWithinDir, safeError } from '../../../../../../../lib/validate.js';
-
-function safePagePath(siteId, filename) {
-  const base = pagesDir(siteId);
-  const fp = path.join(base, filename);
-  if (!assertWithinDir(fp, base)) return null;
-  return fp;
-}
-
-function slugExists(siteId, slug, excludeId = null) {
-  const dir = pagesDir(siteId);
-  if (!fs.existsSync(dir)) return false;
-  return fs.readdirSync(dir)
-    .filter(f => f.endsWith('.json'))
-    .some(f => {
-      if (excludeId && f === `${excludeId}.json`) return false;
-      try {
-        const d = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8'));
-        return d.slug === slug;
-      } catch { return false; }
-    });
-}
+import { pagesDir, isReservedSlug, readSites } from '../../../../../../../lib/paths.js';
+import { isValidId, safeError } from '../../../../../../../lib/validate.js';
+import { safePagePath, slugExists } from '../../../../../../../lib/pages.js';
 
 export async function POST(request, { params }) {
   const { siteId, id } = params;
@@ -43,7 +23,7 @@ export async function POST(request, { params }) {
     const baseSlug = existing.slug + '-copy';
     let slug = baseSlug;
     let counter = 2;
-    while (slugExists(siteId, slug)) {
+    while (isReservedSlug(slug) || slugExists(siteId, slug)) {
       slug = `${baseSlug}-${counter++}`;
     }
     const copy = { ...existing, id: newId, title: existing.title + ' (copy)', slug, createdAt: now, updatedAt: now };

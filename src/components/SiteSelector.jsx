@@ -35,7 +35,7 @@ export default function SiteSelector({ sites, loading = false, onCreate, onOpen,
 
   useEffect(() => {
     if (gearView === 'rename') setTimeout(() => renameRef.current?.select(), FOCUS_DELAY);
-    if (gearView === 'delete') { setUndeployOnDelete(true); setTimeout(() => deleteInputRef.current?.focus(), FOCUS_DELAY); }
+    if (gearView === 'delete') { setUndeployOnDelete(gearSite?.deployedGithubPages ?? false); setTimeout(() => deleteInputRef.current?.focus(), FOCUS_DELAY); }
   }, [gearView]);
 
   const openCmsSettings = () => {
@@ -346,14 +346,16 @@ export default function SiteSelector({ sites, loading = false, onCreate, onOpen,
                   This action <strong>cannot be undone</strong>. This will permanently delete{' '}
                   <strong>{gearSite.name}</strong> and all its pages.
                 </p>
-                <label className="theme-toggle-row" style={{ marginBottom: 12 }}>
-                  <input
-                    type="checkbox"
-                    checked={undeployOnDelete}
-                    onChange={e => setUndeployOnDelete(e.target.checked)}
-                  />
-                  <span>Also undeploy site (GitHub Pages)</span>
-                </label>
+                {gearSite.deployedGithubPages && (
+                  <label className="theme-toggle-row" style={{ marginBottom: 12 }}>
+                    <input
+                      type="checkbox"
+                      checked={undeployOnDelete}
+                      onChange={e => setUndeployOnDelete(e.target.checked)}
+                    />
+                    <span>Also undeploy site (GitHub Pages)</span>
+                  </label>
+                )}
                 <p className="site-dialog-body">Type <strong>{gearSite.name}</strong> to confirm.</p>
                 <div className="field">
                   <input

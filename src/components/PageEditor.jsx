@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { getPage, updatePage } from '../api.js';
+import { getPage, patchPage } from '../api.js';
 import SplitPane from './SplitPane.jsx';
 
 // Keep stable refs so the unmount cleanup can fire without stale closures
@@ -58,7 +58,7 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
     }
     setSaveStatus('saving');
     try {
-      await updatePage(siteId, p.id, p);
+      await patchPage(siteId, p.id, p);
       setSaveStatus('saved');
       setPreviewKey(k => k + 1);
       onSaved(silent);
@@ -89,7 +89,7 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
     return () => {
       if (latestSaveStatus.current === 'unsaved' && latestPageRef.current) {
         clearTimeout(autoSaveTimer.current);
-        updatePage(siteId, latestPageRef.current.id, latestPageRef.current).catch(() => {});
+        patchPage(siteId, latestPageRef.current.id, latestPageRef.current).catch(() => {});
       }
     };
   }, [siteId]);
@@ -138,7 +138,7 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
       const blockToAdd = transferMode === 'copy'
         ? { ...transferBlock, id: uuidv4() }
         : transferBlock;
-      await updatePage(siteId, transferTargetId, { ...targetPage, blocks: [...(targetPage.blocks || []), blockToAdd] });
+      await patchPage(siteId, transferTargetId, { ...targetPage, blocks: [...(targetPage.blocks || []), blockToAdd] });
       if (transferMode === 'move') removeBlock(transferBlock.id);
       const targetTitle = pages.find(p => p.id === transferTargetId)?.title || 'page';
       addToast(`Block ${transferMode === 'copy' ? 'copied' : 'moved'} to "${targetTitle || 'Untitled'}"`, 'success');

@@ -41,9 +41,13 @@ export async function PUT(request, { params }) {
     try { body = await request.json(); } catch {}
     const { id: _id, ...updates } = body;
     const updated = { ...themes[idx], ...updates, id };
-    if (typeof updated.name === 'string') updated.name = updated.name.trim().slice(0, 100) || updated.name;
+    if (typeof updated.name === 'string') {
+      const trimmed = updated.name.trim().slice(0, 100);
+      updated.name = trimmed || themes[idx].name; // fall back to existing name, not raw input
+    }
     themes[idx] = updated;
-    write({ ...settings, themes });
+    // Only persist non-default themes; the default theme is always derived at read time
+    write({ ...settings, themes: themes.filter(t => t.id !== 'default') });
     return NextResponse.json(updated);
   } catch (err) { return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
 }
@@ -54,7 +58,7 @@ export async function DELETE(request, { params }) {
     if (id === 'default') return NextResponse.json({ error: 'Cannot delete the default theme' }, { status: 400 });
     const settings = read();
     const themes = allThemes(settings).filter(t => t.id !== id);
-    write({ ...settings, themes });
+    write({ ...settings, themes: themes.filter(t => t.id !== 'default') });
     return NextResponse.json({ ok: true });
   } catch (err) { return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
 }

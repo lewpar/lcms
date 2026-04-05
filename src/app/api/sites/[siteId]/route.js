@@ -41,7 +41,11 @@ export async function PATCH(request, { params }) {
       try {
         const s = JSON.parse(fs.readFileSync(fp, 'utf-8'));
         fs.writeFileSync(fp, JSON.stringify({ ...s, title: newName }, null, 2));
-      } catch (err) { console.error('Failed to update settings title on rename:', err.message); }
+      } catch (err) {
+        // Settings title update is non-critical but surface it so callers are aware
+        console.error('Failed to update settings title on rename:', err.message);
+        return NextResponse.json({ error: `Site renamed but settings title could not be updated: ${err.message}` }, { status: 207 });
+      }
     }
   }
 
@@ -80,6 +84,8 @@ export async function DELETE(request, { params }) {
     if (fs.existsSync(contentDir)) fs.rmSync(contentDir, { recursive: true });
     const outputDir = path.join(OUTPUT_DIR, site.slug);
     if (fs.existsSync(outputDir)) fs.rmSync(outputDir, { recursive: true });
+    const docsDir = path.join(DOCS_DIR, site.slug);
+    if (fs.existsSync(docsDir)) fs.rmSync(docsDir, { recursive: true });
     writeSites(sites.filter(s => s.id !== siteId));
     return NextResponse.json({ success: true });
   } catch (err) { return NextResponse.json({ error: safeError(err) }, { status: 500 }); }

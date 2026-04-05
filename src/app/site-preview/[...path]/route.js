@@ -61,8 +61,8 @@ export async function GET(request, { params }) {
   if (ext === '.html') {
     const basePath = `/site-preview/${pathParts.join('/')}/`;
     const html = fs.readFileSync(filePath, 'utf-8').replace(
-      '<head>',
-      `<head>\n  <base href="${basePath}">`
+      /(<head[^>]*>)/i,
+      `$1\n  <base href="${basePath}">`
     );
     return new Response(html, {
       headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' },

@@ -1404,10 +1404,14 @@ function renderPagePreview(page, siteId, root) {
   const blocks  = page.blocks || [];
   const title   = page.title || '';
   previewAssetPaths = true;
-  const headingNums = computeHeadingNumbers(blocks);
-  const annotatedBlocks = blocks.map(b => b.type === 'heading' ? { ...b, _num: headingNums.get(b.id) } : b);
-  const blocksHtml = annotatedBlocks.map(renderBlock).join('\n');
-  previewAssetPaths = false;
+  let blocksHtml;
+  try {
+    const headingNums = computeHeadingNumbers(blocks);
+    const annotatedBlocks = blocks.map(b => b.type === 'heading' ? { ...b, _num: headingNums.get(b.id) } : b);
+    blocksHtml = annotatedBlocks.map(renderBlock).join('\n');
+  } finally {
+    previewAssetPaths = false;
+  }
 
   const hasQuiz           = blocksHtml.includes('quiz-block');
   const hasAccordion      = blocks.some(b => b.type === 'accordion');

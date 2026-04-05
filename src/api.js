@@ -139,16 +139,6 @@ export async function createPage(siteId, data) {
   return res.json();
 }
 
-export async function updatePage(siteId, id, data) {
-  const res = await fetch(`${BASE}/sites/${siteId}/pages/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) await apiError(res, 'Failed to update page');
-  return res.json();
-}
-
 export async function patchPage(siteId, id, changes) {
   const res = await fetch(`${BASE}/sites/${siteId}/pages/${id}`, {
     method: 'PUT',

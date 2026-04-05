@@ -88,6 +88,7 @@ export default function App() {
     setSelectedId(null);
     setView('pages');
     setPages([]);
+    setPagesLoading(false);
     setSettings(DEFAULT_SETTINGS);
     setSearch('');
     setCollapsedSections({});
@@ -108,12 +109,12 @@ export default function App() {
   };
 
   const handleDeleteSite = async (siteId, { undeploy = false } = {}) => {
-    if (undeploy) {
-      await Promise.allSettled([undeployGithubPages(siteId)]);
-    }
-    await deleteSite(siteId);
-    setSites(s => s.filter(x => x.id !== siteId));
-    if (selectedSite?.id === siteId) closeSite();
+    try {
+      if (undeploy) await undeployGithubPages(siteId);
+      await deleteSite(siteId);
+      setSites(s => s.filter(x => x.id !== siteId));
+      if (selectedSite?.id === siteId) closeSite();
+    } catch (err) { addToast(err.message || 'Failed to delete site', 'error'); }
   };
 
   const handleRenameSite = async (siteId, { name, slug }) => {
@@ -141,7 +142,9 @@ export default function App() {
     try {
       const s = await getSiteSettings(siteId);
       setSettings({ ...DEFAULT_SETTINGS, ...s, sections: s.sections || [] });
-    } catch { /* non-fatal */ }
+    } catch (err) {
+      console.warn('Failed to load site settings:', err?.message);
+    }
   }, [siteId]);
 
   useEffect(() => {

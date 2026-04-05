@@ -2,16 +2,10 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { pagesDir, readSites } from '../../../../../../lib/paths.js';
-import { isValidId, assertWithinDir, safeError } from '../../../../../../lib/validate.js';
+import { isValidId, safeError } from '../../../../../../lib/validate.js';
+import { safePagePath } from '../../../../../../lib/pages.js';
 
 const MAX_REORDER_IDS = 1000;
-
-function safePagePath(siteId, filename) {
-  const base = pagesDir(siteId);
-  const fp = path.join(base, filename);
-  if (!assertWithinDir(fp, base)) return null;
-  return fp;
-}
 
 export async function POST(request, { params }) {
   const { siteId } = params;
@@ -28,7 +22,9 @@ export async function POST(request, { params }) {
   try {
     for (let i = 0; i < ids.length; i++) {
       const fp = safePagePath(siteId, `${ids[i]}.json`);
-      if (!fp || !fs.existsSync(fp)) continue;
+      if (!fp || !fs.existsSync(fp)) {
+        return NextResponse.json({ error: `Page not found: ${ids[i]}` }, { status: 400 });
+      }
       const page = JSON.parse(fs.readFileSync(fp, 'utf-8'));
       page.order = i;
       fs.writeFileSync(fp, JSON.stringify(page, null, 2));
