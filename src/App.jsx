@@ -31,10 +31,12 @@ const DEFAULT_SETTINGS = { title: 'My Site', navPages: [], sections: [], theme: 
 
 export default function App() {
   const [sites, setSites] = useState([]);
+  const [sitesLoading, setSitesLoading] = useState(true);
   const [cmsSettings, setCmsSettings] = useState({ baseUrl: '' });
   const [selectedSite, setSelectedSite] = useState(null);
 
   const [pages, setPages] = useState([]);
+  const [pagesLoading, setPagesLoading] = useState(false);
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [selectedId, setSelectedId] = useState(null);
   const [view, setView] = useState('pages');
@@ -69,7 +71,11 @@ export default function App() {
   // ── Site selection ───────────────────────────────────────
 
   const loadSites = useCallback(() => {
-    getSites().then(setSites).catch(() => addToast('Failed to load sites', 'error'));
+    setSitesLoading(true);
+    getSites()
+      .then(setSites)
+      .catch(() => addToast('Failed to load sites', 'error'))
+      .finally(() => setSitesLoading(false));
   }, [addToast]);
 
   useEffect(() => {
@@ -124,8 +130,10 @@ export default function App() {
 
   const loadPages = useCallback(async () => {
     if (!siteId) return;
+    setPagesLoading(true);
     try { setPages(await getPages(siteId)); }
     catch { addToast('Failed to load pages', 'error'); }
+    finally { setPagesLoading(false); }
   }, [siteId, addToast]);
 
   const loadSettings = useCallback(async () => {
@@ -408,6 +416,7 @@ export default function App() {
       <>
         <SiteSelector
           sites={sites}
+          loading={sitesLoading}
           onCreate={handleCreateSite}
           onOpen={openSite}
           onDelete={handleDeleteSite}
@@ -541,13 +550,18 @@ export default function App() {
         </div>
 
         <div className="page-list">
-          {filteredPages.length === 0 && (
+          {pagesLoading ? (
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '24px 0' }}>
+              <span className="site-preview-spinner" style={{ fontSize: 20 }}>⟳</span>
+            </div>
+          ) : filteredPages.length === 0 && (
             <p style={{ padding: '8px 4px', fontSize: '12px', color: 'var(--text-muted)' }}>
               {search ? 'No pages match.' : sections.length === 0 ? 'No section yet.' : 'No pages yet.'}
             </p>
           )}
 
           {sections.map((section, sectionIdx) => {
+            if (pagesLoading) return null;
             const sectionPages = pagesBySection[section.id] || [];
             const collapsed = collapsedSections[section.id];
             const isEditing = editingSectionId === section.id;
@@ -632,7 +646,7 @@ export default function App() {
             );
           })}
 
-          <div
+          {!pagesLoading && <div
             className={`${sections.length > 0 ? 'sidebar-section' : ''} ${dragOverTarget === null && draggingPageId ? 'drag-over' : ''}`}
             onDragOver={e => onSectionDragOver(e, null)}
             onDragLeave={onSectionDragLeave}
@@ -651,7 +665,7 @@ export default function App() {
             >
               {renderPageListWithGhost(unsectionedPages, null)}
             </div>
-          </div>
+          </div>}
 
           <button className="btn btn-secondary btn-sm sidebar-add-section-btn" onClick={addSection}>
             + Add Section

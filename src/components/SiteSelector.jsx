@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 
 const FOCUS_DELAY = 30;
 
-export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRename, cmsSettings = {}, onUpdateCmsSettings }) {
+export default function SiteSelector({ sites, loading = false, onCreate, onOpen, onDelete, onRename, cmsSettings = {}, onUpdateCmsSettings }) {
   const [search, setSearch] = useState('');
 
   // CMS-wide settings dialog
@@ -108,7 +108,7 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
         <h1 className="site-selector-title">Dashboard</h1>
       </div>
 
-      {sites.length > 0 && (
+      {!loading && sites.length > 0 && (
         <div className="dashboard-stats">
           <div className="dashboard-stat">
             <span className="dashboard-stat-value">{sites.length}</span>
@@ -151,13 +151,17 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
         </button>
       </div>
 
-      {filtered.length === 0 && (
+      {loading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '48px 0' }}>
+          <span className="site-preview-spinner" style={{ fontSize: 28 }}>⟳</span>
+        </div>
+      ) : filtered.length === 0 && (
         <div className="site-selector-empty">
           {q ? `No sites match "${search}"` : 'No sites yet. Create your first one.'}
         </div>
       )}
 
-      <div className="site-project-list">
+      {!loading && <div className="site-project-list">
         {filtered.map(site => (
           <div key={site.id} className="site-project-row" onClick={() => onOpen(site)}>
             <div className="site-project-icon">
@@ -196,7 +200,7 @@ export default function SiteSelector({ sites, onCreate, onOpen, onDelete, onRena
             </div>
           </div>
         ))}
-      </div>
+      </div>}
 
       {/* New site dialog */}
       {newDialog && (
