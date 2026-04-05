@@ -60,7 +60,7 @@ function clampString(val, max) {
 // Strip unknown keys and apply length limits to string fields
 function sanitiseSettings(raw) {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
-  const allowed = ['title', 'description', 'navPages', 'sections', 'theme', 'header', 'footer', 'home'];
+  const allowed = ['title', 'description', 'navPages', 'sections', 'theme', 'header', 'footer', 'home', 'disableNav', 'floatingDarkMode'];
   const out = {};
   for (const key of allowed) {
     if (!(key in raw)) continue;
@@ -68,6 +68,8 @@ function sanitiseSettings(raw) {
     else if (key === 'description') { out.description = clampString(raw.description, MAX_STR.description) ?? ''; }
     else if (key === 'header') { out.header       = clampString(raw.header, MAX_STR.header) ?? ''; }
     else if (key === 'footer') { out.footer       = clampString(raw.footer, MAX_STR.footer) ?? ''; }
+    else if (key === 'disableNav') { out.disableNav = !!raw.disableNav; }
+    else if (key === 'floatingDarkMode') { out.floatingDarkMode = !!raw.floatingDarkMode; }
     else                       { out[key]         = raw[key]; }
   }
   return out;

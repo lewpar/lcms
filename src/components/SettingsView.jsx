@@ -74,6 +74,39 @@ export default function SettingsView({ settings, onSave, addToast, siteId, siteS
             </div>
           </div>
 
+          {/* Navigation */}
+          <div className="settings-section">
+            <h3>Navigation</h3>
+            <div className="field">
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={!!local.disableNav}
+                  onChange={e => setLocal(s => ({ ...s, disableNav: e.target.checked }))}
+                  style={{ width: 'auto', margin: 0 }}
+                />
+                Disable navigation sidebar
+              </label>
+              <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 3 }}>
+                Hides the sidebar and top bar. Useful for single-page sites that only use the home page.
+              </span>
+            </div>
+            <div className="field">
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={!!local.floatingDarkMode}
+                  onChange={e => setLocal(s => ({ ...s, floatingDarkMode: e.target.checked }))}
+                  style={{ width: 'auto', margin: 0 }}
+                />
+                Show floating dark mode button
+              </label>
+              <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 3 }}>
+                Adds a fixed dark/light mode toggle button in the corner of the exported site.
+              </span>
+            </div>
+          </div>
+
           {/* Custom Header */}
           <div className="settings-section">
             <h3>Custom Header</h3>
