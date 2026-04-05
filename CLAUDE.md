@@ -90,15 +90,71 @@ content/
 ```
 
 **UUID rules — critical:**
-- Generate a fresh UUID v4 for the site, for each section, and for each page.
+- Generate a fresh UUID v4 for the site, for each section, each page, and each block.
 - The site UUID must appear in **three** places identically: the `id` field in `sites.json`, the folder name `content/sites/<uuid>/`, and nothing else.
 - Each page UUID must appear in **two** places identically: the `id` field inside the page JSON, and the filename `<uuid>.json`.
 - Each section UUID in `site.json` must be copied exactly into the `section` field of every page that belongs to that section.
+- Each block must have an `"id"` field set to a UUID v4, unique across the entire project.
 
 **To register a site**, append an object to `content/sites.json`:
 ```json
 { "id": "e1c9bcd9-ef68-475b-99b8-fa8b799afee7", "name": "Site Name", "slug": "site-slug" }
 ```
+
+### `content/sites.json` — entry schema
+
+Each entry in the array is an object:
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `id` | ✅ | UUID v4. Must match the folder name `content/sites/<id>/` exactly. |
+| `name` | ✅ | Human-readable site title. Must be unique across all sites. |
+| `slug` | ✅ | URL-safe, lowercase, hyphens only. Must be unique. Avoid reserved words (`api`, `admin`, `assets`, `static`, `public`, `media`, `auth`, `login`, `logout`, `dashboard`, `settings`, `profile`, `account`, `upload`, `uploads`, `files`, `images`, `img`, `js`, `css`, `fonts`, `favicon`, `robots`, `sitemap`, `feed`, `rss`, `atom`, `register`). |
+| `deployedGithubPages` | ❌ | Boolean. Set to `true` after a GitHub Pages deploy. Omit when creating. |
+
+### `content/sites/<id>/site.json` — schema
+
+Controls the site title, theme, sections (sidebar groups), header/footer HTML, and home page content.
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `title` | ✅ | Site title shown in the header and browser tab. |
+| `description` | ❌ | Short description of the site (used in meta tags / home page). |
+| `navPages` | ✅ | Array of page UUIDs pinned to the top nav. Use `[]` if none. |
+| `sections` | ✅ | Array of `{ "id": "<uuid>", "name": "Section Name" }` objects. Each is a sidebar group heading. At least one section is required. |
+| `theme` | ✅ | Object — see theme fields table below. |
+| `header` | ❌ | HTML string injected into the site header area. Omit or set to `""` for none. |
+| `footer` | ❌ | HTML string injected into the site footer area. Omit or set to `""` for none. |
+| `home` | ✅ | Object controlling the home page — see home fields table below. |
+
+**`theme` fields** (all required when `theme` is present):
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `primary` | hex string | Accent/link colour (light mode). |
+| `sidebarBg` | hex string | Sidebar background (light mode). |
+| `contentBg` | hex string | Main content background (light mode). |
+| `textColor` | hex string | Body text colour (light mode). |
+| `darkPrimary` | hex string | Accent/link colour (dark mode). |
+| `darkSidebarBg` | hex string | Sidebar background (dark mode). |
+| `darkContentBg` | hex string | Main content background (dark mode). |
+| `darkTextColor` | hex string | Body text colour (dark mode). |
+| `radius` | number | Border radius in px for cards/buttons. |
+| `font` | string | `"inter"`, `"system"`, `"serif"`, or `"mono"`. |
+| `fontSize` | number | Base font size in px (typically 15–17). |
+| `contentWidth` | number | Max width of content area in px. |
+| `sidebarWidth` | number | Sidebar width in px. |
+| `showBreadcrumbs` | boolean | Show breadcrumb trail above page title. |
+| `showReadingTime` | boolean | Estimate reading time shown in sidebar. |
+
+**`home` fields:**
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `heroTitle` | ✅ | Large title displayed in the home page hero section. |
+| `heroSubtitle` | ❌ | Subtitle shown below the hero title. Use `""` for none. |
+| `showPageGrid` | ❌ | Boolean. If `true`, displays a grid of all pages on the home page. |
+| `blocks` | ✅ | Array of content blocks for the home page body. Can be `[]`. |
 
 **Each page file** is named `<page-uuid>.json` and must contain an `"id"` field equal to that UUID. Pages also need: `title`, `slug`, `section` (UUID from site.json), `description`, `icon`, `order`, `createdAt`, `updatedAt`, and `blocks`.
 

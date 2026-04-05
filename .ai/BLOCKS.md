@@ -1,7 +1,7 @@
 # LCMS — Block Types Reference
 
 Every block must have:
-- `"id"` — a unique string within the page (e.g. `"intro-1"`, `"q-heading"`)
+- `"id"` — a UUID v4, unique across the entire project (generate a fresh one for every block)
 - `"type"` — one of the types below
 
 ---
@@ -11,11 +11,13 @@ Freeform Markdown text. Supports bold, italic, inline code, bullet lists, number
 
 ```json
 {
-  "id": "b-1",
+  "id": "a1b2c3d4-0001-0000-0000-000000000000",
   "type": "markdown",
   "content": "**Bold**, *italic*, `code`, and [links](https://example.com).\n\n- Bullet\n- List"
 }
 ```
+
+**Required:** `id`, `type`, `content`
 
 ---
 
@@ -24,7 +26,7 @@ A section heading rendered as `<h2>` or `<h3>`. Also appears in the page's table
 
 ```json
 {
-  "id": "b-2",
+  "id": "a1b2c3d4-0002-0000-0000-000000000000",
   "type": "heading",
   "level": 2,
   "text": "Heading Text",
@@ -32,7 +34,8 @@ A section heading rendered as `<h2>` or `<h3>`. Also appears in the page's table
 }
 ```
 
-`level` can be `2` or `3`. `id_attr` is the HTML anchor id — use a slugified version of `text` (lowercase, hyphens).
+**Required:** `id`, `type`, `level` (must be `2` or `3`), `text`  
+**Optional:** `id_attr` — the HTML anchor `id`; defaults to a slugified version of `text` (lowercase, hyphens). Set explicitly when you need a stable anchor link.
 
 ---
 
@@ -41,7 +44,7 @@ A syntax-highlighted, read-only code block.
 
 ```json
 {
-  "id": "b-3",
+  "id": "a1b2c3d4-0003-0000-0000-000000000000",
   "type": "code",
   "language": "javascript",
   "content": "const x = 1;\nconsole.log(x);",
@@ -49,7 +52,8 @@ A syntax-highlighted, read-only code block.
 }
 ```
 
-Common `language` values: `javascript`, `typescript`, `python`, `html`, `css`, `json`, `bash`, `sql`, `markdown`.
+**Required:** `id`, `type`, `content`  
+**Optional:** `language` — enables syntax highlighting; common values: `javascript`, `typescript`, `python`, `html`, `css`, `json`, `bash`, `sql`, `markdown`. `caption` — short label displayed below the block.
 
 ---
 
@@ -58,7 +62,7 @@ A highlighted notice box.
 
 ```json
 {
-  "id": "b-4",
+  "id": "a1b2c3d4-0004-0000-0000-000000000000",
   "type": "callout",
   "title": "Note",
   "content": "This is important information.",
@@ -66,7 +70,8 @@ A highlighted notice box.
 }
 ```
 
-`color` options: `"blue"`, `"yellow"`, `"red"`, `"green"`, `"purple"`.
+**Required:** `id`, `type`, `content`  
+**Optional:** `title` — bold heading inside the callout. `color` — defaults to `"blue"`; options: `"blue"`, `"green"`, `"yellow"`, `"red"`, `"purple"`, `"gray"`.
 
 ---
 
@@ -75,16 +80,19 @@ A data table.
 
 ```json
 {
-  "id": "b-5",
+  "id": "a1b2c3d4-0005-0000-0000-000000000000",
   "type": "table",
-  "caption": "Optional table caption",
   "headers": ["Column A", "Column B", "Column C"],
   "rows": [
     ["row1-col1", "row1-col2", "row1-col3"],
     ["row2-col1", "row2-col2", "row2-col3"]
-  ]
+  ],
+  "caption": "Optional table caption"
 }
 ```
+
+**Required:** `id`, `type`, `headers` (array of column heading strings), `rows` (array of arrays, each inner array must have the same length as `headers`)  
+**Optional:** `caption` — displayed above the table.
 
 ---
 
@@ -93,18 +101,19 @@ An image from a URL or uploaded asset.
 
 ```json
 {
-  "id": "b-6",
+  "id": "a1b2c3d4-0006-0000-0000-000000000000",
   "type": "image",
   "src": "https://example.com/image.png",
   "alt": "Description of the image",
   "caption": "Optional caption",
   "align": "center",
   "width": "100%",
-  "height": ""
+  "height": "400px"
 }
 ```
 
-`align` options: `"left"`, `"center"`, `"right"`. `width` and `height` accept CSS values (e.g. `"600px"`, `"100%"`). Both are optional.
+**Required:** `id`, `type`, `src`  
+**Optional:** `alt` — screen-reader description (strongly recommended). `caption` — text shown below the image. `align` — `"left"`, `"center"` (default), or `"right"`. `width` / `height` — any CSS value (e.g. `"600px"`, `"100%"`); omit to use the image's natural size.
 
 ---
 
@@ -113,14 +122,15 @@ An embedded YouTube video.
 
 ```json
 {
-  "id": "b-7",
+  "id": "a1b2c3d4-0007-0000-0000-000000000000",
   "type": "video",
   "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
   "caption": "Optional caption"
 }
 ```
 
-`url` must be a valid YouTube URL. The video ID is extracted automatically.
+**Required:** `id`, `type`, `url` — must be a valid YouTube URL; the video ID is extracted automatically.  
+**Optional:** `caption` — displayed below the video.
 
 ---
 
@@ -129,7 +139,7 @@ A generic iframe embed (e.g. CodePen, Google Slides, interactive demo).
 
 ```json
 {
-  "id": "b-8",
+  "id": "a1b2c3d4-0008-0000-0000-000000000000",
   "type": "embed",
   "src": "https://codepen.io/username/embed/abcdef",
   "height": 400,
@@ -137,7 +147,8 @@ A generic iframe embed (e.g. CodePen, Google Slides, interactive demo).
 }
 ```
 
-`height` is in pixels (default 400).
+**Required:** `id`, `type`, `src`  
+**Optional:** `height` — iframe height in pixels; defaults to `400`. `caption` — displayed below the iframe.
 
 ---
 
@@ -146,45 +157,47 @@ An interactive JavaScript code editor. The learner can edit and run the code in 
 
 ```json
 {
-  "id": "b-9",
+  "id": "a1b2c3d4-0009-0000-0000-000000000000",
   "type": "playground",
-  "title": "Try it yourself",
-  "starterCode": "async function run() {\n  const res = await fetch('https://dummyjson.com/quotes/1');\n  const data = await res.json();\n  console.log(data.quote);\n}\n\nrun();"
+  "starterCode": "async function run() {\n  const res = await fetch('https://dummyjson.com/quotes/1');\n  const data = await res.json();\n  console.log(data.quote);\n}\n\nrun();",
+  "title": "Try it yourself"
 }
 ```
 
-`title` is optional. `starterCode` is the initial code shown in the editor.
+**Required:** `id`, `type`, `starterCode` — the initial code shown in the editor.  
+**Optional:** `title` — heading displayed above the editor; defaults to `"Interactive Playground"`.
 
 ---
 
 ### `fill-in-the-blank`
 An interactive exercise where learners type missing words or code. Use `___` (three underscores) as the blank placeholder in `prompt`. The `answers` array maps positionally to each blank.
 
-**Plain text mode:**
+**Plain text mode** (`language` omitted or `"plaintext"`):
 ```json
 {
-  "id": "b-10",
+  "id": "a1b2c3d4-0010-0000-0000-000000000000",
   "type": "fill-in-the-blank",
-  "title": "Complete the sentence",
-  "language": "plaintext",
   "prompt": "The ___ statement is used to handle errors in JavaScript.\nThe ___ block runs if no error occurs.",
-  "answers": ["try", "try"]
+  "answers": ["try", "finally"],
+  "title": "Complete the sentence",
+  "language": "plaintext"
 }
 ```
 
-**Code mode** (set `language` to a code language):
+**Code mode** (set `language` to any code language — the prompt is syntax-highlighted with inputs rendered inline):
 ```json
 {
-  "id": "b-11",
+  "id": "a1b2c3d4-0011-0000-0000-000000000000",
   "type": "fill-in-the-blank",
-  "title": "Fill in the blanks",
-  "language": "javascript",
   "prompt": "async function load() {\n  const response = await ___(url);\n  const data = await response.___();\n  console.log(data);\n}",
-  "answers": ["fetch", "json"]
+  "answers": ["fetch", "json"],
+  "title": "Fill in the blanks",
+  "language": "javascript"
 }
 ```
 
-In code mode the prompt is syntax-highlighted with inputs rendered inline.
+**Required:** `id`, `type`, `prompt`, `answers` (array of strings, one per `___` in `prompt`)  
+**Optional:** `language` — defaults to `"plaintext"`; set to a code language (e.g. `"javascript"`) to enable syntax-highlighted code mode. `title` — heading above the exercise; defaults to `"Fill in the Blanks"`.
 
 ---
 
@@ -193,13 +206,11 @@ A multiple-choice quiz with one or more questions.
 
 ```json
 {
-  "id": "b-12",
+  "id": "a1b2c3d4-0012-0000-0000-000000000000",
   "type": "quiz",
-  "title": "Quiz Title",
-  "description": "Optional subtitle shown above the questions.",
   "questions": [
     {
-      "id": "q-1",
+      "id": "a1b2c3d4-0012-0001-0000-000000000000",
       "question": "What does fetch() return?",
       "options": ["A string", "A Promise", "A number", "undefined"],
       "correctIndex": 1,
@@ -210,16 +221,22 @@ A multiple-choice quiz with one or more questions.
         "content": "const p = fetch('https://example.com');\nconsole.log(p);"
       }
     }
-  ]
+  ],
+  "title": "Quiz Title",
+  "description": "Optional subtitle shown above the questions."
 }
 ```
 
-- `correctIndex` — 0-based index of the correct answer in `options`.
-- `explanation` — shown after the learner answers.
-- `media` — optional. Shows content above the question. Supported types:
-  - `{ "type": "code", "language": "...", "content": "..." }` — a code block
-  - `{ "type": "image", "src": "...", "alt": "..." }` — an image
-  - Omit `media` entirely (or set to `null`) if not needed.
+**Required:** `id`, `type`, `questions` (non-empty array)  
+**Optional:** `title` — heading above the quiz; defaults to `"Quiz"`. `description` — subtitle shown below the title.
+
+Each question object:  
+**Required:** `id` (UUID), `question`, `options` (array of strings, min 2), `correctIndex` (0-based index of the correct option)  
+**Optional:** `explanation` — shown after the learner answers. `media` — content displayed above the question; supported shapes:
+- `{ "type": "code", "language": "...", "content": "..." }`
+- `{ "type": "image", "src": "...", "alt": "..." }`
+
+Omit `media` entirely if not needed.
 
 ---
 
@@ -228,15 +245,18 @@ A flippable flashcard deck. Learners click each card to reveal the back.
 
 ```json
 {
-  "id": "b-13",
+  "id": "a1b2c3d4-0013-0000-0000-000000000000",
   "type": "flashcard",
-  "title": "Key Terms",
   "cards": [
     { "front": "What is a Promise?", "back": "An object representing the eventual result of an async operation." },
     { "front": "What does async/await do?", "back": "It lets you write asynchronous code in a synchronous style." }
-  ]
+  ],
+  "title": "Key Terms"
 }
 ```
+
+**Required:** `id`, `type`, `cards` (non-empty array of objects each with `front` and `back` strings)  
+**Optional:** `title` — heading displayed above the deck.
 
 ---
 
@@ -245,7 +265,7 @@ A set of collapsible sections. The first item is expanded by default. Content su
 
 ```json
 {
-  "id": "b-14",
+  "id": "a1b2c3d4-0014-0000-0000-000000000000",
   "type": "accordion",
   "items": [
     {
@@ -260,6 +280,9 @@ A set of collapsible sections. The first item is expanded by default. Content su
 }
 ```
 
+**Required:** `id`, `type`, `items` (non-empty array of objects)  
+Each item: **Required:** `title`, `content` (supports Markdown)
+
 ---
 
 ### `case-study`
@@ -267,7 +290,7 @@ A structured scenario block with a background context and instructions.
 
 ```json
 {
-  "id": "b-15",
+  "id": "a1b2c3d4-0015-0000-0000-000000000000",
   "type": "case-study",
   "title": "Building a Weather Dashboard",
   "summary": "Apply your fetch skills to load and display real weather data.",
@@ -276,7 +299,8 @@ A structured scenario block with a background context and instructions.
 }
 ```
 
-`background` and `instructions` both support Markdown.
+**Required:** `id`, `type`  
+**Optional:** `title` — bold heading at the top of the block. `summary` — short description below the title. `background` — scenario context (supports Markdown). `instructions` — task steps (supports Markdown). At least one of `background` or `instructions` should be provided or the block will render empty.
 
 ---
 
@@ -285,7 +309,7 @@ A prominent card that links to another page within the same site.
 
 ```json
 {
-  "id": "b-16",
+  "id": "a1b2c3d4-0016-0000-0000-000000000000",
   "type": "page-link",
   "pageSlug": "handling-errors",
   "pageTitle": "Handling Errors",
@@ -293,7 +317,8 @@ A prominent card that links to another page within the same site.
 }
 ```
 
-`pageSlug` must match the `slug` of an existing page in the same site. `pageTitle` and `description` are display-only labels.
+**Required:** `id`, `type`, `pageSlug` — must match the `slug` of an existing page in the same site.  
+**Optional:** `pageTitle` — display name for the link card; defaults to the value of `pageSlug`. `description` — short text shown below the title.
 
 ---
 
@@ -302,14 +327,15 @@ A collapsed block that the learner can click to reveal. Useful in activities.
 
 ```json
 {
-  "id": "b-17",
+  "id": "a1b2c3d4-0017-0000-0000-000000000000",
   "type": "hint",
-  "title": "Hint",
-  "body": "Check that you are using `await` in the right places."
+  "body": "Check that you are using `await` in the right places.",
+  "title": "Hint"
 }
 ```
 
-`body` supports Markdown.
+**Required:** `id`, `type`, `body` — the hidden content; supports Markdown.  
+**Optional:** `title` — label on the collapsed button; defaults to `"Hint"`.
 
 ---
 
@@ -318,14 +344,15 @@ A visual difficulty indicator shown at the top of an activity or page.
 
 ```json
 {
-  "id": "b-18",
+  "id": "a1b2c3d4-0018-0000-0000-000000000000",
   "type": "difficulty",
   "level": 2,
   "label": "Medium"
 }
 ```
 
-`level` is `1`–`4` (Easy / Medium / Hard / Very Hard). `label` overrides the default label text if provided.
+**Required:** `id`, `type`, `level` — integer `1`–`4` (1 = Easy, 2 = Medium, 3 = Hard, 4 = Very Hard).  
+**Optional:** `label` — overrides the default label text for the chosen level.
 
 ---
 
@@ -334,7 +361,9 @@ A horizontal rule separating sections of content.
 
 ```json
 {
-  "id": "b-19",
+  "id": "a1b2c3d4-0019-0000-0000-000000000000",
   "type": "divider"
 }
 ```
+
+**Required:** `id`, `type`

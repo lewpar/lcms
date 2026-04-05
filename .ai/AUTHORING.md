@@ -6,7 +6,7 @@ Step-by-step instructions for building a complete learning site by writing JSON 
 
 ## UUIDs — the single most important rule
 
-**Every site, every section, and every page has a UUID (version 4) as its identifier.**
+**Every site, every section, every page, and every block has a UUID (version 4) as its identifier.**
 
 - Generate a fresh UUID v4 for each of these things before you start writing files.
 - UUIDs must be unique across the **entire project** — not just within one site.
@@ -47,6 +47,7 @@ Before writing any files, generate and note down all the UUIDs you will need:
 - **1 site UUID** — used in `sites.json`, and as the folder name under `content/sites/`
 - **1 UUID per section** — used in `site.json` and referenced by pages
 - **1 UUID per page** — used as the filename and as the `id` field inside the file
+- **1 UUID per block** — used as the `id` field of every block in `site.json` and page files
 
 ---
 
