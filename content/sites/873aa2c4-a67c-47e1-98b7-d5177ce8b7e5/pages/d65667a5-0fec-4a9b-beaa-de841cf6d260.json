@@ -1,0 +1,147 @@
+{
+  "id": "d65667a5-0fec-4a9b-beaa-de841cf6d260",
+  "title": "Your First Multi-Page Website",
+  "slug": "first-website",
+  "section": "069b290a-9f5d-4271-a8bf-e71df7f1c1da",
+  "description": "Build a complete multi-page website with HTML and CSS",
+  "icon": "✨",
+  "order": 4,
+  "createdAt": "2026-04-05T11:52:08.392Z",
+  "updatedAt": "2026-04-05T12:02:21.163Z",
+  "blocks": [
+    {
+      "id": "52ce5689-62ac-4700-9721-0b35e23756f1",
+      "type": "heading",
+      "level": 2,
+      "content": "Building a Multi-Page Website"
+    },
+    {
+      "id": "a0ecce5d-9c14-4166-8a3c-d224267f5315",
+      "type": "markdown",
+      "content": "Now that you know HTML and CSS basics, let's build a complete website with multiple pages. A multi-page website is just several HTML files linked together.\n\nWe'll create a simple portfolio website with:\n- Home page\n- About page\n- Projects page\n- Contact page"
+    },
+    {
+      "id": "e5583446-ab1a-4f07-b5ee-c96b882f36b2",
+      "type": "heading",
+      "level": 2,
+      "content": "Project Setup"
+    },
+    {
+      "id": "74a7696a-3585-46f4-a87e-1f5cb5e46def",
+      "type": "markdown",
+      "content": "Create a folder structure like this:\n\n```\nmy-website/\n├── index.html\n├── about.html\n├── projects.html\n├── contact.html\n└── styles.css\n```\n\nAll files go in the same folder. The CSS file is shared by all pages."
+    },
+    {
+      "id": "32aada1c-4b38-403f-b618-c243b4cd2331",
+      "type": "heading",
+      "level": 2,
+      "content": "Shared CSS File"
+    },
+    {
+      "id": "7822b9b1-845b-4001-89d2-75d802c8d2cd",
+      "type": "markdown",
+      "content": "Create `styles.css` - This file will be used by all pages:"
+    },
+    {
+      "id": "dcaf76a3-8718-418a-a46f-9467e9facf3",
+      "type": "code",
+      "language": "css",
+      "content": "* {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n}\n\nbody {\n    font-family: 'Arial', sans-serif;\n    line-height: 1.6;\n    color: #333;\n    background-color: #f4f4f4;\n}\n\nheader {\n    background-color: #2c3e50;\n    color: white;\n    padding: 1rem 0;\n    text-align: center;\n}\n\nnav {\n    background-color: #34495e;\n    padding: 1rem;\n}\n\nnav a {\n    color: white;\n    text-decoration: none;\n    margin: 0 15px;\n    font-weight: bold;\n}\n\nnav a:hover {\n    color: #3498db;\n}\n\nmain {\n    max-width: 900px;\n    margin: 2rem auto;\n    padding: 0 20px;\n    background-color: white;\n    padding: 2rem;\n    border-radius: 5px;\n    box-shadow: 0 2px 5px rgba(0,0,0,0.1);\n}\n\nh1 {\n    color: #2c3e50;\n    margin-bottom: 1rem;\n    border-bottom: 3px solid #3498db;\n    padding-bottom: 0.5rem;\n}\n\nh2 {\n    color: #34495e;\n    margin-top: 2rem;\n    margin-bottom: 1rem;\n}\n\np {\n    margin-bottom: 1rem;\n    text-align: justify;\n}\n\nul, ol {\n    margin: 1rem 0 1rem 2rem;\n}\n\nli {\n    margin-bottom: 0.5rem;\n}\n\n.project {\n    background-color: #ecf0f1;\n    padding: 1rem;\n    margin: 1rem 0;\n    border-left: 4px solid #3498db;\n    border-radius: 3px;\n}\n\n.project h3 {\n    color: #2c3e50;\n    margin-bottom: 0.5rem;\n}\n\nfooter {\n    background-color: #2c3e50;\n    color: white;\n    text-align: center;\n    padding: 2rem;\n    margin-top: 2rem;\n}"
+    },
+    {
+      "id": "5b44d9ea-90ef-48d9-8095-18f929156e65",
+      "type": "markdown",
+      "content": "Here's a live preview of what the finished home page looks like with that CSS applied:"
+    },
+    {
+      "id": "37275753-e494-4d8c-b59d-ea9ccc092f90",
+      "type": "iframe",
+      "mode": "html",
+      "html": "<!DOCTYPE html><html><head><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;line-height:1.6;color:#333;background:#f4f4f4}header{background:#2c3e50;color:white;padding:1rem;text-align:center}nav{background:#34495e;padding:.75rem 1rem}nav a{color:white;text-decoration:none;margin:0 12px;font-weight:bold;font-size:.95em}main{max-width:860px;margin:1.5rem auto;padding:1.5rem;background:white;border-radius:5px;box-shadow:0 2px 5px rgba(0,0,0,.1)}h1{color:#2c3e50;margin-bottom:1rem;border-bottom:3px solid #3498db;padding-bottom:.5rem}h2{color:#34495e;margin-top:1.5rem;margin-bottom:.75rem}p{margin-bottom:.75rem}footer{background:#2c3e50;color:white;text-align:center;padding:1.5rem;margin-top:1.5rem}</style></head><body><header><h1>Welcome to My Portfolio</h1></header><nav><a href=\"#\">Home</a><a href=\"#\">About</a><a href=\"#\">Projects</a><a href=\"#\">Contact</a></nav><main><h1>Hello! 👋</h1><p>Welcome to my portfolio. I'm learning web development and excited to share my projects with you.</p><h2>What I Do</h2><p>I create websites using HTML and CSS. I'm passionate about learning and building cool projects.</p><h2>Get Started</h2><p>Explore my <a href=\"#\">projects</a> or <a href=\"#\">learn more about me</a>.</p></main><footer><p>&copy; 2026 My Portfolio. All rights reserved.</p></footer></body></html>",
+      "height": 440,
+      "caption": "Live preview: the finished portfolio home page"
+    },
+    {
+      "id": "208fc4fd-aea7-4a82-8fc1-7072f6c3b0b",
+      "type": "heading",
+      "level": 2,
+      "content": "Page 1: Home (index.html)"
+    },
+    {
+      "id": "f4aa23f2-a4f3-469e-8a66-e521b91b6fb2",
+      "type": "code",
+      "language": "html",
+      "content": "<!DOCTYPE html>\n<html>\n<head>\n    <title>My Portfolio</title>\n    <link rel=\"stylesheet\" href=\"styles.css\">\n</head>\n<body>\n    <header>\n        <h1>Welcome to My Portfolio</h1>\n    </header>\n    \n    <nav>\n        <a href=\"index.html\">Home</a>\n        <a href=\"about.html\">About</a>\n        <a href=\"projects.html\">Projects</a>\n        <a href=\"contact.html\">Contact</a>\n    </nav>\n    \n    <main>\n        <h1>Hello! 👋</h1>\n        <p>Welcome to my portfolio. I'm learning web development and excited to share my projects with you.</p>\n        \n        <h2>What I Do</h2>\n        <p>I create websites using HTML and CSS. I'm passionate about learning and building cool projects.</p>\n        \n        <h2>Get Started</h2>\n        <p>Explore my <a href=\"projects.html\">projects</a> or <a href=\"about.html\">learn more about me</a>.</p>\n    </main>\n    \n    <footer>\n        <p>&copy; 2026 My Portfolio. All rights reserved.</p>\n    </footer>\n</body>\n</html>"
+    },
+    {
+      "id": "cdded5ae-edb7-4476-81c0-1e6931440498",
+      "type": "heading",
+      "level": 2,
+      "content": "Page 2: About (about.html)"
+    },
+    {
+      "id": "5bfe7a6d-72bc-48d3-9158-c414b33ae1d5",
+      "type": "code",
+      "language": "html",
+      "content": "<!DOCTYPE html>\n<html>\n<head>\n    <title>About - My Portfolio</title>\n    <link rel=\"stylesheet\" href=\"styles.css\">\n</head>\n<body>\n    <header>\n        <h1>About Me</h1>\n    </header>\n    \n    <nav>\n        <a href=\"index.html\">Home</a>\n        <a href=\"about.html\">About</a>\n        <a href=\"projects.html\">Projects</a>\n        <a href=\"contact.html\">Contact</a>\n    </nav>\n    \n    <main>\n        <h1>About Me</h1>\n        \n        <h2>My Journey</h2>\n        <p>I started learning web development a few months ago and fell in love with it. I enjoy creating beautiful and functional websites.</p>\n        \n        <h2>Skills</h2>\n        <ul>\n            <li>HTML5</li>\n            <li>CSS3</li>\n            <li>Web Design</li>\n            <li>Problem Solving</li>\n        </ul>\n        \n        <h2>Goals</h2>\n        <p>My goal is to become a full-stack web developer and build amazing websites that help people.</p>\n    </main>\n    \n    <footer>\n        <p>&copy; 2026 My Portfolio. All rights reserved.</p>\n    </footer>\n</body>\n</html>"
+    },
+    {
+      "id": "0c76df4e-dfbb-46b1-8f0b-a967e2eb22f1",
+      "type": "heading",
+      "level": 2,
+      "content": "Page 3: Projects (projects.html)"
+    },
+    {
+      "id": "32d91694-f8a3-4343-b1c6-b91ed4c56328",
+      "type": "code",
+      "language": "html",
+      "content": "<!DOCTYPE html>\n<html>\n<head>\n    <title>Projects - My Portfolio</title>\n    <link rel=\"stylesheet\" href=\"styles.css\">\n</head>\n<body>\n    <header>\n        <h1>My Projects</h1>\n    </header>\n    \n    <nav>\n        <a href=\"index.html\">Home</a>\n        <a href=\"about.html\">About</a>\n        <a href=\"projects.html\">Projects</a>\n        <a href=\"contact.html\">Contact</a>\n    </nav>\n    \n    <main>\n        <h1>My Projects</h1>\n        <p>Here are some projects I've worked on while learning web development.</p>\n        \n        <div class=\"project\">\n            <h3>Project 1: Personal Blog</h3>\n            <p>A simple blog website built with HTML and CSS. Features multiple pages and a clean design.</p>\n        </div>\n        \n        <div class=\"project\">\n            <h3>Project 2: Portfolio Website</h3>\n            <p>My portfolio website showcasing my projects and skills. Fully responsive design.</p>\n        </div>\n        \n        <div class=\"project\">\n            <h3>Project 3: Business Website</h3>\n            <p>A website for a local business with contact form and product showcase.</p>\n        </div>\n    </main>\n    \n    <footer>\n        <p>&copy; 2026 My Portfolio. All rights reserved.</p>\n    </footer>\n</body>\n</html>"
+    },
+    {
+      "id": "f9b4a190-a281-4c34-9acd-1df8d41cb71b",
+      "type": "heading",
+      "level": 2,
+      "content": "Page 4: Contact (contact.html)"
+    },
+    {
+      "id": "1ec382f2-fb04-409f-ba31-4b2aa326ce7b",
+      "type": "code",
+      "language": "html",
+      "content": "<!DOCTYPE html>\n<html>\n<head>\n    <title>Contact - My Portfolio</title>\n    <link rel=\"stylesheet\" href=\"styles.css\">\n</head>\n<body>\n    <header>\n        <h1>Contact Me</h1>\n    </header>\n    \n    <nav>\n        <a href=\"index.html\">Home</a>\n        <a href=\"about.html\">About</a>\n        <a href=\"projects.html\">Projects</a>\n        <a href=\"contact.html\">Contact</a>\n    </nav>\n    \n    <main>\n        <h1>Get In Touch</h1>\n        <p>I'd love to hear from you! Reach out using any of the methods below.</p>\n        \n        <h2>Contact Information</h2>\n        <ul>\n            <li><strong>Email:</strong> your.email@example.com</li>\n            <li><strong>Phone:</strong> (123) 456-7890</li>\n            <li><strong>Location:</strong> Your City, Your Country</li>\n        </ul>\n        \n        <h2>Social Media</h2>\n        <ul>\n            <li><a href=\"https://github.com\">GitHub</a></li>\n            <li><a href=\"https://twitter.com\">Twitter</a></li>\n            <li><a href=\"https://linkedin.com\">LinkedIn</a></li>\n        </ul>\n    </main>\n    \n    <footer>\n        <p>&copy; 2026 My Portfolio. All rights reserved.</p>\n    </footer>\n</body>\n</html>"
+    },
+    {
+      "id": "e02568f0-4d36-459a-a3ca-75b6824c9fe5",
+      "type": "heading",
+      "level": 2,
+      "content": "Key Concepts"
+    },
+    {
+      "id": "8649b9f3-ae89-4178-a065-88531165b1e9",
+      "type": "markdown",
+      "content": "**Navigation Links**\nNotice how each page links to the others:\n```html\n<a href=\"index.html\">Home</a>\n<a href=\"about.html\">About</a>\n```\nJust use the filename to link to other pages in the same folder.\n\n**Shared CSS**\nAll pages link to the same `styles.css` file. This means:\n- Changes to CSS apply to all pages automatically\n- Pages look consistent\n- You only need to update one file"
+    },
+    {
+      "id": "29866daa-dfae-4955-8a52-dd14a3086a14",
+      "type": "heading",
+      "level": 2,
+      "content": "Try It Yourself"
+    },
+    {
+      "id": "da6d8781-b124-4472-9380-03a3b16aa131",
+      "type": "markdown",
+      "content": "1. Create a folder called `my-website`\n2. Create the four HTML files and one CSS file above\n3. Copy the code into each file\n4. Open `index.html` in your browser\n5. Click the navigation links to move between pages\n6. Try modifying the CSS to change colors, fonts, or layouts\n7. Add your own content to each page"
+    },
+    {
+      "id": "ecb4f716-7113-4472-9ce5-d6204f847abc",
+      "type": "callout",
+      "calloutType": "tip",
+      "content": "💡 **Pro Tip**: Use relative links like `about.html` for pages in the same folder. This makes your website work offline and is easier to move between folders."
+    },
+    {
+      "id": "6912624d-a672-49e0-97bd-85f44fbf610e",
+      "type": "callout",
+      "calloutType": "success",
+      "content": "🎉 **Congratulations!** You now know enough HTML and CSS to build a complete website. Keep practicing and building projects to improve your skills!"
+    }
+  ]
+}

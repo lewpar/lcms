@@ -424,6 +424,27 @@ function renderBlock(block) {
 </figure>`;
     }
 
+    case 'iframe': {
+      const height = Number(block.height) || 300;
+      const cap = block.caption ? `<figcaption>${esc(block.caption)}</figcaption>` : '';
+      const mode = block.mode || 'url';
+      if (mode === 'html') {
+        if (!block.html) return '';
+        // srcdoc uses HTML attribute encoding — replace & first, then quotes
+        const srcdoc = block.html.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+        return `<figure class="iframe-block">
+  <iframe srcdoc="${srcdoc}" height="${height}" frameborder="0" sandbox="allow-scripts" title="${esc(block.caption || 'HTML preview')}"></iframe>
+  ${cap}
+</figure>`;
+      } else {
+        if (!block.src) return '';
+        return `<figure class="iframe-block">
+  <iframe src="${esc(block.src)}" height="${height}" frameborder="0" allowfullscreen loading="lazy" title="${esc(block.caption || 'Embedded page')}"></iframe>
+  ${cap}
+</figure>`;
+      }
+    }
+
     case 'playground': {
       const code = block.starterCode || '';
       const titleText = block.title || 'Interactive Playground';
@@ -904,6 +925,8 @@ img{max-width:100%;height:auto;display:block}
 .hint-block.revealed .hint-overlay{opacity:0}
 
 .embed-block{margin:0}.embed-block iframe{display:block;width:100%;border-radius:var(--radius);border:1px solid var(--border)}.embed-block figcaption{margin-top:8px;font-size:.83em;color:var(--text-muted);text-align:center;font-style:italic}
+
+.iframe-block{margin:0}.iframe-block iframe{display:block;width:100%;border-radius:var(--radius);border:1px solid var(--border);background:#fff}.iframe-block figcaption{margin-top:8px;font-size:.83em;color:var(--text-muted);text-align:center;font-style:italic}
 
 .playground-block{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
 .pg-header{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#1e293b}

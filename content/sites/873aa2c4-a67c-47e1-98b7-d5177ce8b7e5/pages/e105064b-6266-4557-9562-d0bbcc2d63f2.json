@@ -1,0 +1,74 @@
+{
+  "id": "e105064b-6266-4557-9562-d0bbcc2d63f2",
+  "title": "Getting Started",
+  "slug": "getting-started",
+  "section": "0a9ad83f-e6cc-415f-b441-983c3ba4ef4a",
+  "description": "Set up your environment and learn what you need to get started",
+  "icon": "🚀",
+  "order": 1,
+  "createdAt": "2026-04-05T11:52:08.392Z",
+  "updatedAt": "2026-04-05T11:52:08.392Z",
+  "blocks": [
+    {
+      "id": "e5583446-ab1a-4f07-b5ee-c96b882f36b1",
+      "type": "heading",
+      "level": 2,
+      "content": "Before You Begin"
+    },
+    {
+      "id": "74a7696a-3585-46f4-a87e-1f5cb5e46def",
+      "type": "markdown",
+      "content": "To create web pages with HTML and CSS, you only need two things:\n\n1. **A Text Editor** - Software where you write code\n2. **A Web Browser** - Software to view your web pages\n\nThat's it! You don't need anything fancy or expensive."
+    },
+    {
+      "id": "32aada1c-4b38-403f-b618-c243b4cd2330",
+      "type": "heading",
+      "level": 3,
+      "content": "Recommended Text Editors"
+    },
+    {
+      "id": "7822b9b1-845b-4001-89d2-75d802c8d2cc",
+      "type": "markdown",
+      "content": "- **Visual Studio Code** (Free, powerful, beginner-friendly) - https://code.visualstudio.com\n- **Notepad++** (Windows only, lightweight)\n- **Sublime Text** (Cross-platform, simple)\n- Even your computer's built-in notepad works!\n\nWe recommend VS Code for beginners - it has great features that help you learn."
+    },
+    {
+      "id": "dcaf76a3-8718-418a-a46f-9467e9facf2c",
+      "type": "heading",
+      "level": 3,
+      "content": "Web Browsers"
+    },
+    {
+      "id": "208fc4fd-aea7-4a82-8fc1-7072f6c3b0a8",
+      "type": "markdown",
+      "content": "Any modern browser works great:\n- **Google Chrome**\n- **Firefox**\n- **Safari** (Mac)\n- **Edge** (Windows)\n\nChrome is recommended for beginners because it has excellent developer tools."
+    },
+    {
+      "id": "f4aa23f2-a4f3-469e-8a66-e521b91b6fb1",
+      "type": "heading",
+      "level": 2,
+      "content": "How This Course Works"
+    },
+    {
+      "id": "cdded5ae-edb7-4476-81c0-1e6931440497",
+      "type": "markdown",
+      "content": "Each lesson includes:\n- **Explanations** of concepts\n- **Code examples** you can study\n- **Try it yourself** sections where you write code\n- **Tips and tricks** to help you learn faster\n\nWe start with the basics and gradually build up to creating a complete multi-page website."
+    },
+    {
+      "id": "5bfe7a6d-72bc-48d3-9158-c414b33ae1d4",
+      "type": "callout",
+      "calloutType": "tip",
+      "content": "**Pro Tip**: Code along with every example. Don't just read - actually type the code yourself. This helps your brain learn faster!"
+    },
+    {
+      "id": "0c76df4e-dfbb-46b1-8f0b-a967e2eb22ff",
+      "type": "heading",
+      "level": 2,
+      "content": "What You'll Learn"
+    },
+    {
+      "id": "32d91694-f8a3-4343-b1c6-b91ed4c56327",
+      "type": "markdown",
+      "content": "By the end of this course, you'll be able to:\n\n✅ Write basic HTML to create web page structure  \n✅ Use CSS to style your pages with colors, fonts, and layouts  \n✅ Create a multi-page website  \n✅ Understand how the web works  \n✅ Build projects from scratch\n\nLet's get started! Head over to the HTML Basics page to begin your journey."
+    }
+  ]
+}

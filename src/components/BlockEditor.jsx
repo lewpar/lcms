@@ -36,6 +36,7 @@ function blockSummary(block) {
     }
     case 'hint': return block.title || block.body?.slice(0, 40) || '(empty)';
     case 'embed':             return block.src || '(no URL)';
+    case 'iframe':            return block.mode === 'html' ? (block.html?.slice(0, 50) || '(no HTML)') : (block.src || '(no URL)');
     case 'playground':        return block.title || block.starterCode?.slice(0, 50) || '(empty)';
     case 'fill-in-the-blank': {
       const count = (block.prompt || '').split('___').length - 1;
@@ -896,6 +897,72 @@ function EmbedEditor({ block, onChange }) {
   );
 }
 
+/* ── iFrame editor ── */
+
+function IframeEditor({ block, onChange }) {
+  const mode = block.mode || 'url';
+  return (
+    <>
+      <div className="field">
+        <label>Source Mode</label>
+        <select value={mode} onChange={e => onChange({ mode: e.target.value })}>
+          <option value="url">URL — embed a webpage by link</option>
+          <option value="html">HTML — write inline HTML to render</option>
+        </select>
+      </div>
+      {mode === 'url' ? (
+        <div className="field">
+          <label>URL</label>
+          <input
+            type="text"
+            value={block.src || ''}
+            onChange={e => onChange({ src: e.target.value })}
+            placeholder="https://example.com"
+          />
+          <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 3 }}>
+            The page must allow being embedded (not all sites do).
+          </span>
+        </div>
+      ) : (
+        <div className="field">
+          <label>HTML Content</label>
+          <textarea
+            value={block.html || ''}
+            onChange={e => onChange({ html: e.target.value })}
+            placeholder={'<!DOCTYPE html>\n<html>\n<body>\n  <p>Hello!</p>\n</body>\n</html>'}
+            rows={10}
+            style={{ fontFamily: 'monospace', fontSize: 12 }}
+          />
+          <span style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 3 }}>
+            Write full HTML to render directly inside the iframe.
+          </span>
+        </div>
+      )}
+      <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 10 }}>
+        <div className="field">
+          <label>Height (px)</label>
+          <input
+            type="number"
+            min={100}
+            max={2000}
+            value={block.height || 300}
+            onChange={e => onChange({ height: Number(e.target.value) })}
+          />
+        </div>
+        <div className="field">
+          <label>Caption (optional)</label>
+          <input
+            type="text"
+            value={block.caption || ''}
+            onChange={e => onChange({ caption: e.target.value })}
+            placeholder="Optional caption"
+          />
+        </div>
+      </div>
+    </>
+  );
+}
+
 /* ── Playground editor ── */
 
 function PlaygroundEditor({ block, onChange }) {
@@ -1301,6 +1368,7 @@ export default function BlockEditor({
           {block.type === 'accordion'  && <AccordionEditor  block={block} onChange={onChange} />}
           {block.type === 'hint'       && <HintEditor       block={block} onChange={onChange} />}
           {block.type === 'embed'             && <EmbedEditor          block={block} onChange={onChange} />}
+          {block.type === 'iframe'            && <IframeEditor         block={block} onChange={onChange} />}
           {block.type === 'playground'       && <PlaygroundEditor     block={block} onChange={onChange} />}
           {block.type === 'fill-in-the-blank' && <FillInTheBlankEditor block={block} onChange={onChange} />}
           {block.type === 'difficulty'        && <DifficultyEditor     block={block} onChange={onChange} />}

@@ -18,5 +18,10 @@
     "id": "2c0b194f-56a1-4665-b57d-1c7959bc5aa2",
     "name": "Easy Beginner Recipes",
     "slug": "beginner-recipes"
+  },
+  {
+    "id": "873aa2c4-a67c-47e1-98b7-d5177ce8b7e5",
+    "name": "HTML & CSS Basics for Beginners",
+    "slug": "html-css-basics"
   }
 ]
