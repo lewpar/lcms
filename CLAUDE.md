@@ -71,3 +71,32 @@ docs/                 # GitHub Pages deployments (tracked in git)
 - All HTML served from `/site-preview/` has a `<base href="...">` tag injected
   so relative asset URLs resolve correctly regardless of trailing slash behaviour
 - The `docs/` folder is what GitHub Pages serves; `output/` is local only
+
+---
+
+## Creating a new site
+
+**When asked to create a new site, always do so by writing JSON files in the `content/` directory. Do NOT create HTML, CSS, JavaScript, React, or Next.js files — the CMS and generator handle all of that.**
+
+A site is made up of three things in `content/`:
+
+```
+content/
+  sites.json              ← append one entry to register the site
+  sites/<uuid>/
+    site.json             ← title, theme, sections, home page blocks
+    pages/<uuid>.json     ← one file per page, each with a blocks array
+    assets/               ← leave empty unless uploading images
+```
+
+**To register a site**, append an object to `content/sites.json`:
+```json
+{ "id": "<uuid-v4>", "name": "Site Name", "slug": "site-slug" }
+```
+
+**Each page file** is named `<uuid>.json` and contains a `blocks` array. Pages belong to a section via a `section` UUID defined in `site.json`. Pages are ordered by an `order` integer.
+
+**Blocks** are the content units on a page. Available types: `markdown`, `heading`, `code`, `callout`, `table`, `image`, `video`, `embed`, `playground`, `fill-in-the-blank`, `quiz`, `flashcard`, `accordion`, `case-study`, `page-link`, `hint`, `difficulty`, `divider`. If you need the full schema and examples for each block type, read **[.ai/BLOCKS.md](./.ai/BLOCKS.md)**.
+
+For the complete step-by-step authoring guide including full JSON schemas, theme options, and a worked example, read **[.ai/AUTHORING.md](./.ai/AUTHORING.md)**.
+
