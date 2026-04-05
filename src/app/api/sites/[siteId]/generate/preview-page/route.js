@@ -1,7 +1,7 @@
-import { spawnSync } from 'child_process';
 import { readSites, ROOT } from '../../../../../../lib/paths.js';
 import { isValidId } from '../../../../../../lib/validate.js';
 import { NextResponse } from 'next/server';
+import { renderPagePreview } from '../../../../../../generator/index.js';
 
 export async function POST(request, { params }) {
   const { siteId } = params;
@@ -13,16 +13,10 @@ export async function POST(request, { params }) {
   const { page } = body;
   if (!page) return NextResponse.json({ error: 'page is required' }, { status: 400 });
 
-  const result = spawnSync('node', ['src/generator/index.js', '--preview', siteId], {
-    input: JSON.stringify({ page }),
-    cwd: ROOT,
-    encoding: 'utf-8',
-    timeout: 10000,
-  });
-
-  if (result.error || result.status !== 0) {
-    return NextResponse.json({ error: result.stderr || 'Preview generation failed' }, { status: 500 });
+  try {
+    const html = renderPagePreview(page, siteId, ROOT);
+    return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+  } catch (e) {
+    return NextResponse.json({ error: e.message || 'Preview generation failed' }, { status: 500 });
   }
-
-  return new Response(result.stdout, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
 }

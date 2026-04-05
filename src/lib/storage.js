@@ -3,8 +3,9 @@
 const fs   = require('fs');
 const path = require('path');
 
-// LCMS_DATA_DIR mirrors the override in paths.js — both must agree on location.
-const CONTENT_DIR = process.env.LCMS_DATA_DIR || path.join(__dirname, '..', '..', 'content');
+// process.cwd() is always the project root in Next.js; __dirname is unreliable
+// in compiled output.
+const CONTENT_DIR = process.env.LCMS_DATA_DIR || path.join(process.cwd(), 'content');
 const SITES_INDEX = path.join(CONTENT_DIR, 'sites.json');
 
 function readSites()       { try { return JSON.parse(fs.readFileSync(SITES_INDEX, 'utf-8')); } catch { return []; } }

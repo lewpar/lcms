@@ -3,7 +3,9 @@
 const fs   = require('fs');
 const path = require('path');
 
-const ROOT             = path.join(__dirname, '..', '..');
+// process.cwd() is always the project root in Next.js (reliable across dev,
+// build, and start). __dirname points into .next/server/ after compilation.
+const ROOT             = process.cwd();
 // LCMS_DATA_DIR overrides the content directory — used by tests to isolate data.
 const CONTENT_DIR      = process.env.LCMS_DATA_DIR || path.join(ROOT, 'content');
 const SITES_DIR        = path.join(CONTENT_DIR, 'sites');

@@ -4,12 +4,7 @@ import path from 'path';
 import { execFileSync } from 'child_process';
 import { readSites, ROOT, OUTPUT_DIR, DOCS_DIR } from '../../../../../../lib/paths.js';
 import { isValidId, safeError } from '../../../../../../lib/validate.js';
-
-function generate(siteId, slug) {
-  return execFileSync('node', ['src/generator/index.js', siteId, slug], {
-    cwd: ROOT, encoding: 'utf-8', timeout: 30000,
-  });
-}
+import { generate } from '../../../../../../generator/index.js';
 
 function deployToDir(slug, destRoot) {
   const srcDir = path.join(OUTPUT_DIR, slug);
@@ -28,7 +23,7 @@ export async function POST(request, { params }) {
   try { body = await request.json(); } catch {}
 
   try {
-    const out = generate(site.id, site.slug);
+    const out = generate(site.id, site.slug, ROOT);
     deployToDir(site.slug, DOCS_DIR);
 
     const commitMessage = (typeof body.commitMessage === 'string' && body.commitMessage.trim())

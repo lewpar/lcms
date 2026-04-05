@@ -14,26 +14,22 @@ mdRenderer.heading = function(text, level) {
 };
 marked.setOptions({ gfm: true, breaks: true });
 
-const args        = process.argv.slice(2);
-const previewMode = args[0] === '--preview';
-const siteId      = previewMode ? args[1] : args[0];
-const siteSlug    = previewMode ? null    : args[1];
-
-if (!siteId || (!previewMode && !siteSlug)) {
-  console.error('Usage: node generator/index.js <siteId> <siteSlug>');
-  console.error('       node generator/index.js --preview <siteId>');
-  process.exit(1);
-}
-
-const ROOT          = path.join(__dirname, '../..');
-const PAGES_DIR     = path.join(ROOT, 'content', 'sites', siteId, 'pages');
-const ASSETS_DIR    = path.join(ROOT, 'content', 'sites', siteId, 'assets');
-const SETTINGS_FILE = path.join(ROOT, 'content', 'sites', siteId, 'site.json');
-const OUTPUT_DIR    = siteSlug ? path.join(ROOT, 'output', siteSlug) : null;
-const ASSETS_URL_PREFIX = `/assets/${siteId}/`;
-
-// When true, renderBlock keeps asset paths as absolute server URLs (used in preview mode)
+// Mutable context — reset at the start of each generate / renderPagePreview call.
+// Safe because both functions are fully synchronous and Node.js is single-threaded.
+let PAGES_DIR        = '';
+let ASSETS_DIR       = '';
+let SETTINGS_FILE    = '';
+let OUTPUT_DIR       = '';
+let ASSETS_URL_PREFIX = '';
 let previewAssetPaths = false;
+
+function _setContext(siteId, siteSlug, root) {
+  PAGES_DIR        = path.join(root, 'content', 'sites', siteId, 'pages');
+  ASSETS_DIR       = path.join(root, 'content', 'sites', siteId, 'assets');
+  SETTINGS_FILE    = path.join(root, 'content', 'sites', siteId, 'site.json');
+  OUTPUT_DIR       = siteSlug ? path.join(root, 'output', siteSlug) : null;
+  ASSETS_URL_PREFIX = `/assets/${siteId}/`;
+}
 
 // ── Color helpers ──────────────────────────────────────
 
@@ -1399,7 +1395,12 @@ function blocksNeedHighlighting(blocks) {
   );
 }
 
-function renderPagePreview(page, settings) {
+function renderPagePreview(page, siteId, root) {
+  _setContext(siteId, null, root);
+  let settings = { theme: {} };
+  if (fs.existsSync(SETTINGS_FILE)) {
+    try { settings = { ...settings, ...JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf-8')) }; } catch {}
+  }
   const blocks  = page.blocks || [];
   const title   = page.title || '';
   previewAssetPaths = true;
@@ -1677,7 +1678,8 @@ ${hasCode ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11
 
 // ── Main ───────────────────────────────────────────────
 
-function generate() {
+function generate(siteId, siteSlug, root) {
+  _setContext(siteId, siteSlug, root);
   const buildVer = Date.now().toString(36);
 
   let settings = { title: 'My Learning Site', sections: [], navPages: [], theme: {} };
@@ -1756,23 +1758,35 @@ function generate() {
   return msg;
 }
 
-if (previewMode) {
-  let raw = '';
-  process.stdin.setEncoding('utf-8');
-  process.stdin.on('data', chunk => { raw += chunk; });
-  process.stdin.on('end', () => {
-    try {
-      const { page } = JSON.parse(raw);
-      let settings = { theme: {} };
-      if (fs.existsSync(SETTINGS_FILE)) {
-        try { settings = { ...settings, ...JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf-8')) }; } catch {}
+module.exports = { generate, renderPagePreview };
+
+if (require.main === module) {
+  const args        = process.argv.slice(2);
+  const previewMode = args[0] === '--preview';
+  const siteId      = previewMode ? args[1] : args[0];
+  const siteSlug    = previewMode ? null    : args[1];
+  const ROOT        = process.cwd();
+
+  if (!siteId || (!previewMode && !siteSlug)) {
+    console.error('Usage: node generator/index.js <siteId> <siteSlug>');
+    console.error('       node generator/index.js --preview <siteId>');
+    process.exit(1);
+  }
+
+  if (previewMode) {
+    let raw = '';
+    process.stdin.setEncoding('utf-8');
+    process.stdin.on('data', chunk => { raw += chunk; });
+    process.stdin.on('end', () => {
+      try {
+        const { page } = JSON.parse(raw);
+        process.stdout.write(renderPagePreview(page, siteId, ROOT));
+      } catch (e) {
+        process.stderr.write(e.message + '\n');
+        process.exit(1);
       }
-      process.stdout.write(renderPagePreview(page, settings));
-    } catch (e) {
-      process.stderr.write(e.message + '\n');
-      process.exit(1);
-    }
-  });
-} else {
-  generate();
+    });
+  } else {
+    generate(siteId, siteSlug, ROOT);
+  }
 }
