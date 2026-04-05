@@ -22,11 +22,11 @@
   ],
   "theme": {
     "primary": "#3b82f6",
-    "sidebarBg": "#f3f4f6",
+    "sidebarBg": "#1e293b",
     "contentBg": "#ffffff",
     "textColor": "#1f2937",
     "darkPrimary": "#60a5fa",
-    "darkSidebarBg": "#1f2937",
+    "darkSidebarBg": "#0f172a",
     "darkContentBg": "#111827",
     "darkTextColor": "#f3f4f6",
     "radius": 12,
