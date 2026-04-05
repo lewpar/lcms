@@ -82,19 +82,25 @@ A site is made up of three things in `content/`:
 
 ```
 content/
-  sites.json              ← append one entry to register the site
-  sites/<uuid>/
-    site.json             ← title, theme, sections, home page blocks
-    pages/<uuid>.json     ← one file per page, each with a blocks array
-    assets/               ← leave empty unless uploading images
+  sites.json                   ← append one entry to register the site
+  sites/<site-uuid>/           ← folder name must equal the site's UUID
+    site.json                  ← title, theme, sections, home page blocks
+    pages/<page-uuid>.json     ← filename must equal the page's UUID
+    assets/                    ← leave empty unless uploading images
 ```
+
+**UUID rules — critical:**
+- Generate a fresh UUID v4 for the site, for each section, and for each page.
+- The site UUID must appear in **three** places identically: the `id` field in `sites.json`, the folder name `content/sites/<uuid>/`, and nothing else.
+- Each page UUID must appear in **two** places identically: the `id` field inside the page JSON, and the filename `<uuid>.json`.
+- Each section UUID in `site.json` must be copied exactly into the `section` field of every page that belongs to that section.
 
 **To register a site**, append an object to `content/sites.json`:
 ```json
-{ "id": "<uuid-v4>", "name": "Site Name", "slug": "site-slug" }
+{ "id": "e1c9bcd9-ef68-475b-99b8-fa8b799afee7", "name": "Site Name", "slug": "site-slug" }
 ```
 
-**Each page file** is named `<uuid>.json` and contains a `blocks` array. Pages belong to a section via a `section` UUID defined in `site.json`. Pages are ordered by an `order` integer.
+**Each page file** is named `<page-uuid>.json` and must contain an `"id"` field equal to that UUID. Pages also need: `title`, `slug`, `section` (UUID from site.json), `description`, `icon`, `order`, `createdAt`, `updatedAt`, and `blocks`.
 
 **Blocks** are the content units on a page. Available types: `markdown`, `heading`, `code`, `callout`, `table`, `image`, `video`, `embed`, `playground`, `fill-in-the-blank`, `quiz`, `flashcard`, `accordion`, `case-study`, `page-link`, `hint`, `difficulty`, `divider`. If you need the full schema and examples for each block type, read **[.ai/BLOCKS.md](./.ai/BLOCKS.md)**.
 

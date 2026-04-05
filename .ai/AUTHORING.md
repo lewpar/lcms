@@ -4,29 +4,60 @@ Step-by-step instructions for building a complete learning site by writing JSON 
 
 ---
 
+## UUIDs — the single most important rule
+
+**Every site, every section, and every page has a UUID (version 4) as its identifier.**
+
+- Generate a fresh UUID v4 for each of these things before you start writing files.
+- UUIDs must be unique across the **entire project** — not just within one site.
+- A UUID looks like: `e1c9bcd9-ef68-475b-99b8-fa8b799afee7`
+
+These three things must all share the **same UUID**:
+1. The `"id"` field in `content/sites.json` for a site
+2. The folder name `content/sites/<uuid>/`
+3. Nothing else — they must match exactly
+
+For pages, these two things must share the **same UUID**:
+1. The `"id"` field inside the page JSON file
+2. The filename `<uuid>.json`
+
+For sections, the UUID in `site.json` sections array must match the `"section"` field in every page that belongs to that section.
+
+---
+
 ## Directory structure for a site
 
 ```
 content/
   sites.json                        ← master registry of all sites
   sites/
-    <uuid>/
+    <site-uuid>/                    ← folder name = site UUID (matches sites.json id)
       site.json                     ← site settings, theme, sections, home page
       pages/
-        <uuid>.json                 ← one file per page
+        <page-uuid>.json            ← filename = page UUID (matches id field inside)
       assets/                       ← uploaded images (leave empty if none)
 ```
 
 ---
 
-## Step 1 — Register the site in `content/sites.json`
+## Step 1 — Generate all UUIDs up front
+
+Before writing any files, generate and note down all the UUIDs you will need:
+
+- **1 site UUID** — used in `sites.json`, and as the folder name under `content/sites/`
+- **1 UUID per section** — used in `site.json` and referenced by pages
+- **1 UUID per page** — used as the filename and as the `id` field inside the file
+
+---
+
+## Step 2 — Register the site in `content/sites.json`
 
 `sites.json` is an array of site descriptor objects. Append a new entry:
 
 ```json
 [
   {
-    "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "id": "e1c9bcd9-ef68-475b-99b8-fa8b799afee7",
     "name": "My Course Title",
     "slug": "my-course-title"
   }
@@ -35,25 +66,25 @@ content/
 
 | Field  | Rules |
 |--------|-------|
-| `id`   | A UUID v4. Generate one — must be unique across all sites. |
+| `id`   | The site UUID you generated. Must be unique across all sites. The folder `content/sites/<id>/` must use this exact value as its name. |
 | `name` | Human-readable title. Must be unique across all sites. |
 | `slug` | URL-safe, lowercase, hyphens only. Must be unique. Avoid reserved words: `assets`, `api`, `admin`, `static`, `public`, `media`, `upload`, `uploads`, `files`, `images`, `img`, `js`, `css`, `fonts`, `favicon`, `robots`, `sitemap`, `feed`, `rss`, `atom`, `auth`, `login`, `logout`, `signup`, `register`, `dashboard`, `settings`, `profile`, `account`. |
 
 ---
 
-## Step 2 — Create the site directory
+## Step 3 — Create the site directory
 
-Create these folders (assets can be empty):
+The directory name **must exactly match** the `id` in `sites.json`:
 
 ```
-content/sites/<id>/
-content/sites/<id>/pages/
-content/sites/<id>/assets/
+content/sites/e1c9bcd9-ef68-475b-99b8-fa8b799afee7/
+content/sites/e1c9bcd9-ef68-475b-99b8-fa8b799afee7/pages/
+content/sites/e1c9bcd9-ef68-475b-99b8-fa8b799afee7/assets/
 ```
 
 ---
 
-## Step 3 — Write `content/sites/<id>/site.json`
+## Step 4 — Write `content/sites/<site-uuid>/site.json`
 
 Controls the site title, description, sections (sidebar groups), navigation, theme, and home page content.
 
@@ -63,8 +94,8 @@ Controls the site title, description, sections (sidebar groups), navigation, the
   "description": "A short description of what this site teaches.",
   "navPages": [],
   "sections": [
-    { "id": "<uuid>", "name": "Reading" },
-    { "id": "<uuid>", "name": "Activities" }
+    { "id": "a3f1c2d4-0000-0000-0000-000000000001", "name": "Reading" },
+    { "id": "a3f1c2d4-0000-0000-0000-000000000002", "name": "Activities" }
   ],
   "theme": {
     "primary": "#6c63ff",
@@ -99,7 +130,9 @@ Controls the site title, description, sections (sidebar groups), navigation, the
 ```
 
 ### `sections`
-Each section is a sidebar group heading. Pages are assigned to sections by their section UUID. Generate a fresh UUID v4 for each section and note them — you will reference them in page files.
+Each section is a sidebar group heading. Pages are assigned to sections by matching their `section` field to a section `id`.
+
+**Critical:** Every section `id` must be a UUID v4 that you generate. You will copy this UUID exactly into the `section` field of every page that belongs to that section.
 
 `navPages` can be left as `[]`; the sidebar is built automatically from the pages directory.
 
@@ -121,16 +154,16 @@ Each section is a sidebar group heading. Pages are assigned to sections by their
 
 ---
 
-## Step 4 — Write page files in `content/sites/<id>/pages/<page-uuid>.json`
+## Step 5 — Write page files in `content/sites/<site-uuid>/pages/<page-uuid>.json`
 
-Each file is one page. The filename must match the `id` field inside.
+Each file is one page. **The filename and the `id` field inside must be the same UUID.**
 
 ```json
 {
-  "id": "<uuid>",
+  "id": "f4a7b3c2-1234-5678-abcd-ef0123456789",
   "title": "Page Title",
   "slug": "page-slug",
-  "section": "<section-uuid-from-site.json>",
+  "section": "a3f1c2d4-0000-0000-0000-000000000001",
   "description": "One-sentence summary shown in the page grid.",
   "icon": "📄",
   "order": 0,
@@ -142,11 +175,12 @@ Each file is one page. The filename must match the `id` field inside.
 
 | Field | Rules |
 |-------|-------|
-| `id` | UUID v4. Filename must be `<id>.json`. |
-| `slug` | URL-safe, hyphens only, unique within the site. |
-| `section` | UUID of the section from `site.json`. Must match exactly. |
+| `id` | UUID v4. **Must match the filename exactly**: `f4a7b3c2-1234-5678-abcd-ef0123456789.json` |
+| `slug` | URL-safe, lowercase, hyphens only. Must be unique within the site. |
+| `section` | UUID of the section from `site.json`. **Must match a section `id` exactly — copy-paste, don't retype.** |
 | `icon` | An emoji. Optional but recommended. |
-| `order` | Integer. Pages sort ascending by `order` within a section. |
+| `order` | Integer. Pages sort ascending by `order` within a section. Start at 0 or 1. |
+| `createdAt` / `updatedAt` | ISO 8601 timestamps. Use the current time. |
 | `blocks` | Array of content blocks. For full block type reference see [BLOCKS.md](./BLOCKS.md). |
 
 ---
@@ -307,11 +341,22 @@ A minimal but complete site with two sections and two pages. Replace all UUIDs w
 
 ## Checklist before saving
 
-- [ ] All UUIDs are unique across the entire project (not just within one site)
-- [ ] The `id` field inside each page file matches its filename (`<id>.json`)
-- [ ] Every page's `section` field matches a section `id` in `site.json`
-- [ ] Slugs are lowercase, contain only letters, digits, and hyphens
+### UUID integrity (most common source of bugs)
+- [ ] `content/sites.json` entry `id` = `content/sites/<that-id>/` folder name (they must be the same string)
+- [ ] Every page file's `id` field = its filename without `.json` (e.g. `"id": "f4a7b3c2-..."` → file is `f4a7b3c2-....json`)
+- [ ] Every page's `section` field is copied exactly from a section `id` in `site.json`
+- [ ] No two sites, sections, or pages share a UUID
+
+### Slugs
+- [ ] All slugs are lowercase with only letters, digits, and hyphens
 - [ ] No slug clashes within the same site
+- [ ] Site slug does not use a reserved word (see Step 2 table)
+
+### Content
 - [ ] `correctIndex` in quiz questions is 0-based and within bounds of `options`
-- [ ] `answers` in fill-in-the-blank has one entry per `___` in `prompt`
+- [ ] `fill-in-the-blank` blocks have a non-empty `prefix` or `suffix` (not both empty)
+- [ ] `fill-in-the-blank` blocks have a non-empty `correctAnswer`
+
+### JSON validity
 - [ ] `sites.json` is valid JSON (no trailing commas)
+- [ ] All page and site JSON files are valid (no trailing commas, strings are quoted)
