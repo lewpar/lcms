@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-cd "$(dirname "$0")/client"
+cd "$(dirname "$0")"
 
-npx vite
+# Alias for start-api-dev.sh — Next.js serves both the UI and API
+npm run dev

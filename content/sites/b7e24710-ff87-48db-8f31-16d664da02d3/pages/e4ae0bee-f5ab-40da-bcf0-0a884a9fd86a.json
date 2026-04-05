@@ -15,7 +15,14 @@
     {
       "id": "b5ad122a-b27d-4213-8733-1cbdf3d45ef1",
       "type": "markdown",
-      "content": "In this activity you are fixing code to assist your co-worker.\n\n**Instructions**\nAnalyse the completed code below and use it to complete the tasks in this activity."
+      "content": "In this activity you will analyse and fix code to help out a co-worker."
+    },
+    {
+      "id": "dafa6f85-e9d4-49de-b400-5f53cf1cdbb6",
+      "type": "callout",
+      "title": "Instructions",
+      "content": "Analyse the completed code below and use it to complete the tasks in this activity.",
+      "color": "purple"
     },
     {
       "id": "b13b31d6-adc8-4583-b3ac-149b83f2cafe",
@@ -35,20 +42,32 @@
       "id_attr": "task-1-route-53"
     },
     {
-      "id": "342f4793-7fc4-4af3-869e-7dd28db96bb0",
-      "type": "case-study",
-      "title": "",
-      "summary": "",
-      "background": "A co-worker is trying to fetch quote number 53 from dummyjson but is receiving an unexpected output. They are unsure of what the problem is and have asked for your help.",
-      "instructions": "Fix the code below so that it outputs the 53rd quote."
+      "id": "f99eaffb-0d26-4985-8d5e-45bc4648186b",
+      "type": "callout",
+      "title": "Background",
+      "content": "A co-worker is trying to fetch quote number 53 from dummyjson but is receiving an unexpected output. They are unsure of what the problem is and have asked for your help.",
+      "color": "blue"
+    },
+    {
+      "id": "3b61145e-5799-4c0d-9938-c077c52797e2",
+      "type": "callout",
+      "title": "Instructions",
+      "content": "Analyse and fix the code below so that it outputs the 53rd quote.",
+      "color": "purple"
     },
     {
       "id": "b516a81d-3ad3-4281-b08e-ed16ef47af0e",
       "type": "playground",
       "title": "Try it yourself",
-      "starterCode": "async function getData() {\n  const response = fetch(\"https://dummyjson.com/quotes53\");\n\n  const data = response.json();\n\n  console.log(data.quote);\n}\n\n// Runs the function above\ngetData();"
+      "starterCode": "async function getData() {\n  const response = await fetch(\"https://dummyjson.com/quotes53\");\n\n  const data = await response.json();\n\n  console.log(data.quote);\n}\n\n// Runs the function above\ngetData();"
+    },
+    {
+      "id": "fc13005c-e5d8-4e78-9f85-113020198342",
+      "type": "hint",
+      "title": "",
+      "body": "Analyse the route being fetched"
     }
   ],
   "createdAt": "2026-03-30T03:38:09.433Z",
-  "updatedAt": "2026-04-01T07:51:06.743Z"
+  "updatedAt": "2026-04-02T22:10:49.755Z"
 }
