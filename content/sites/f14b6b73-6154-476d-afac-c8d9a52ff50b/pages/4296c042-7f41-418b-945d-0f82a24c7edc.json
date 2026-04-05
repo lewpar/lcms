@@ -1,0 +1,96 @@
+{
+  "id": "4296c042-7f41-418b-945d-0f82a24c7edc",
+  "title": "If / Else Statements",
+  "slug": "if-else",
+  "section": "be1b4fbc-7bed-4adc-86d6-6b7ac07bf5ed",
+  "description": "Make decisions in your code with conditionals",
+  "icon": "🔀",
+  "order": 1,
+  "createdAt": "2026-04-05T10:09:39.895Z",
+  "updatedAt": "2026-04-05T10:09:39.895Z",
+  "blocks": [
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "If / Else Statements"
+    },
+    {
+      "type": "markdown",
+      "content": "Conditionals let your code make decisions. Use `if` and `else` statements to run different code depending on whether a condition is true or false."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "If Statements"
+    },
+    {
+      "type": "markdown",
+      "content": "An `if` statement runs code only when a condition is true."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "code": "if (age >= 18) {\n  console.log(\"You are an adult.\");\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "If / Else"
+    },
+    {
+      "type": "markdown",
+      "content": "Use `else` to run different code when the condition is false."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "code": "let score = 75;\n\nif (score >= 70) {\n  console.log(\"You passed!\");\n} else {\n  console.log(\"You didn't pass. Try again!\");\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "If / Else If / Else"
+    },
+    {
+      "type": "markdown",
+      "content": "Use `else if` to check multiple conditions."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "code": "let grade = 85;\n\nif (grade >= 90) {\n  console.log(\"A\");\n} else if (grade >= 80) {\n  console.log(\"B\");\n} else if (grade >= 70) {\n  console.log(\"C\");\n} else {\n  console.log(\"F\");\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Nested Conditionals"
+    },
+    {
+      "type": "markdown",
+      "content": "You can put `if` statements inside other `if` statements for more complex logic."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "code": "let age = 20;\nlet hasLicense = true;\n\nif (age >= 18) {\n  if (hasLicense) {\n    console.log(\"You can drive!\");\n  } else {\n    console.log(\"You need a license.\");\n  }\n} else {\n  console.log(\"You're too young to drive.\");\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "The Ternary Operator"
+    },
+    {
+      "type": "markdown",
+      "content": "A quick way to write simple if/else in one line. Syntax: `condition ? valueIfTrue : valueIfFalse`"
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "code": "let age = 20;\nlet status = age >= 18 ? \"adult\" : \"minor\";\nconsole.log(status); // \"adult\"\n\n// Equivalent to:\n// if (age >= 18) {\n//   status = \"adult\";\n// } else {\n//   status = \"minor\";\n// }"
+    },
+    {
+      "type": "hint",
+      "content": "Use the ternary operator for simple choices. For more complex decisions, use if/else for clarity."
+    }
+  ]
+}

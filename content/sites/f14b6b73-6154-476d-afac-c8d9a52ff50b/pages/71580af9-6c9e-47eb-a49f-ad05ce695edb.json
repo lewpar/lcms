@@ -1,0 +1,105 @@
+{
+  "id": "71580af9-6c9e-47eb-a49f-ad05ce695edb",
+  "title": "Functions",
+  "slug": "functions",
+  "section": "ebc7fae4-9201-43e5-9c6c-b37ab472ab95",
+  "description": "Write reusable blocks of code with functions",
+  "icon": "⚙️",
+  "order": 1,
+  "createdAt": "2026-04-05T10:09:39.895Z",
+  "updatedAt": "2026-04-05T10:09:39.895Z",
+  "blocks": [
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Functions"
+    },
+    {
+      "type": "markdown",
+      "content": "A function is a reusable block of code that performs a specific task. Instead of writing the same code multiple times, you write it once in a function and call it whenever you need it."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Declaring Functions"
+    },
+    {
+      "type": "markdown",
+      "content": "Use the `function` keyword to declare a function. After the function name, write the code block inside curly braces."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "code": "// Declare a function\nfunction greet() {\n  console.log(\"Hello, World!\");\n}\n\n// Call the function\ngreet(); // Prints: Hello, World!\ngreet(); // Prints: Hello, World!"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Parameters and Arguments"
+    },
+    {
+      "type": "markdown",
+      "content": "Functions can accept **parameters** (variables in the function definition) to customize their behavior. When you call the function, you pass **arguments** (actual values)."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "code": "// Function with parameters\nfunction add(num1, num2) {\n  return num1 + num2;\n}\n\n// Calling with arguments\nlet result = add(5, 3);\nconsole.log(result); // 8\n\n// Another example\nfunction greetUser(name) {\n  console.log(`Hello, ${name}!`);\n}\n\ngreetUser(\"Alice\");   // Hello, Alice!\ngreetUser(\"Bob\");     // Hello, Bob!"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Return Values"
+    },
+    {
+      "type": "markdown",
+      "content": "Use `return` to send a value back from the function. Once `return` is executed, the function stops."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "code": "function multiply(a, b) {\n  return a * b;\n}\n\nlet product = multiply(4, 5);\nconsole.log(product); // 20\n\n// Function that checks if number is positive\nfunction isPositive(num) {\n  if (num > 0) {\n    return true;\n  } else {\n    return false;\n  }\n}\n\nconsole.log(isPositive(5));   // true\nconsole.log(isPositive(-3));  // false"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Arrow Functions"
+    },
+    {
+      "type": "markdown",
+      "content": "A shorter way to write functions using the `=>` syntax. Useful for simple functions."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "code": "// Traditional function\nfunction square(x) {\n  return x * x;\n}\n\n// Arrow function\nconst square = (x) => {\n  return x * x;\n};\n\n// Shorthand (one line)\nconst square = (x) => x * x;\n\nconsole.log(square(5)); // 25\n\n// Arrow function with no parameters\nconst sayHi = () => {\n  console.log(\"Hi!\");\n};\n\nsayHi(); // Hi!"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Default Parameters"
+    },
+    {
+      "type": "markdown",
+      "content": "You can set default values for parameters. If the caller doesn't provide a value, the default is used."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "code": "function greet(name = \"Friend\") {\n  console.log(`Hello, ${name}!`);\n}\n\ngreet(\"Alice\"); // Hello, Alice!\ngreet();        // Hello, Friend! (uses default)"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Why Use Functions?"
+    },
+    {
+      "type": "markdown",
+      "content": "- **Reusability**: Write once, use multiple times\n- **Organization**: Group related code together\n- **Easier debugging**: Fix a bug in one place\n- **Readability**: Give code a meaningful name\n- **Modularity**: Break complex tasks into smaller pieces"
+    },
+    {
+      "type": "hint",
+      "content": "Good function names describe what the function does. Use verbs like `calculateTotal`, `isValid`, `fetchUser`, or `processData`."
+    }
+  ]
+}

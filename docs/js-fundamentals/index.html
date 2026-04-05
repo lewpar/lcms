@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JavaScript Fundamentals</title>
+  
+  <link rel="stylesheet" href="styles.css?v=mnllrz4q" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="./">JavaScript Fundamentals</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Basics</div><a href="variables/" class="nav-link" title="Variables"><span class="nav-link-icon">📦</span><span class="nav-link-text">Variables</span></a><a href="data-types/" class="nav-link" title="Data Types"><span class="nav-link-icon">🔢</span><span class="nav-link-text">Data Types</span></a><a href="operators/" class="nav-link" title="Operators"><span class="nav-link-icon">➕</span><span class="nav-link-text">Operators</span></a></div><div class="nav-section"><div class="nav-section-title">Control Flow</div><a href="if-else/" class="nav-link" title="If / Else Statements"><span class="nav-link-icon">🔀</span><span class="nav-link-text">If / Else Statements</span></a><a href="loops/" class="nav-link" title="Loops"><span class="nav-link-icon">🔁</span><span class="nav-link-text">Loops</span></a></div><div class="nav-section"><div class="nav-section-title">Functions</div><a href="functions/" class="nav-link" title="Functions"><span class="nav-link-icon">⚙️</span><span class="nav-link-text">Functions</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <span>Home</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="home-hero">
+          <h1>JavaScript Fundamentals</h1>
+          <p>Learn the core concepts of JavaScript: variables, data types, operators, control flow, and functions.</p>
+        </div>
+        
+        <div class="home-page-grid"><div class="section-group"><div class="section-group-title">Basics</div><div class="page-grid">
+<a class="page-card" href="variables/">
+  <div class="page-card-section">Basics</div>
+  <div class="page-card-title">Variables</div>
+  <div class="page-card-desc">Learn how to create and use variables to store data</div>
+</a>
+<a class="page-card" href="data-types/">
+  <div class="page-card-section">Basics</div>
+  <div class="page-card-title">Data Types</div>
+  <div class="page-card-desc">Understand the different kinds of data in JavaScript</div>
+</a>
+<a class="page-card" href="operators/">
+  <div class="page-card-section">Basics</div>
+  <div class="page-card-title">Operators</div>
+  <div class="page-card-desc">Perform calculations and comparisons with operators</div>
+</a></div></div><div class="section-group"><div class="section-group-title">Control Flow</div><div class="page-grid">
+<a class="page-card" href="if-else/">
+  <div class="page-card-section">Control Flow</div>
+  <div class="page-card-title">If / Else Statements</div>
+  <div class="page-card-desc">Make decisions in your code with conditionals</div>
+</a>
+<a class="page-card" href="loops/">
+  <div class="page-card-section">Control Flow</div>
+  <div class="page-card-title">Loops</div>
+  <div class="page-card-desc">Repeat code with for and while loops</div>
+</a></div></div><div class="section-group"><div class="section-group-title">Functions</div><div class="page-grid">
+<a class="page-card" href="functions/">
+  <div class="page-card-section">Functions</div>
+  <div class="page-card-title">Functions</div>
+  <div class="page-card-desc">Write reusable blocks of code with functions</div>
+</a></div></div></div>
+        
+      </article>
+    </main>
+    <footer class="site-footer">
+      <span>Generated by LCMS</span><span>5 April 2026</span>
+    </footer>
+  </div>
+</div>
+<script src="nav.js?v=mnllrz4q"></script>
+
+
+
+
+
+
+
+</body>
+</html>

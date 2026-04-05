@@ -1,0 +1,93 @@
+{
+  "id": "5c67e04d-7abd-43ff-8644-8637a66790d7",
+  "title": "Loops",
+  "slug": "loops",
+  "section": "be1b4fbc-7bed-4adc-86d6-6b7ac07bf5ed",
+  "description": "Repeat code with for and while loops",
+  "icon": "🔁",
+  "order": 2,
+  "createdAt": "2026-04-05T10:09:39.895Z",
+  "updatedAt": "2026-04-05T10:09:39.895Z",
+  "blocks": [
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Loops"
+    },
+    {
+      "type": "markdown",
+      "content": "Loops let you repeat code multiple times without writing it over and over. Use them to process lists of items, count, or repeat an action."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "For Loops"
+    },
+    {
+      "type": "markdown",
+      "content": "A `for` loop repeats code a specific number of times. It tracks a counter variable that changes each iteration."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "code": "// Syntax: for (initialize; condition; increment) { code }\n\nfor (let i = 0; i < 5; i++) {\n  console.log(i);\n}\n// Prints: 0, 1, 2, 3, 4\n\n// Another example: count from 1 to 10\nfor (let count = 1; count <= 10; count++) {\n  console.log(`Count: ${count}`);\n}"
+    },
+    {
+      "type": "callout",
+      "type": "info",
+      "title": "Breaking Down the For Loop",
+      "content": "- **Initialize** `let i = 0`: Create and start a counter at 0\n- **Condition** `i < 5`: Keep looping while this is true\n- **Increment** `i++`: Add 1 to i after each iteration"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "While Loops"
+    },
+    {
+      "type": "markdown",
+      "content": "A `while` loop repeats code as long as a condition is true. Use it when you don't know how many times to loop in advance."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "code": "let count = 0;\n\nwhile (count < 5) {\n  console.log(count);\n  count++;\n}\n// Prints: 0, 1, 2, 3, 4\n\n// Another example: keep asking until user says yes\nlet response = \"no\";\nwhile (response !== \"yes\") {\n  response = prompt(\"Do you want to continue?\");\n}"
+    },
+    {
+      "type": "warning",
+      "title": "Infinite Loops",
+      "content": "Be careful! If your loop condition is always true and never changes, the loop will run forever and freeze your program."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Break and Continue"
+    },
+    {
+      "type": "markdown",
+      "content": "- `break` stops the loop immediately\n- `continue` skips to the next iteration"
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "code": "// Using break\nfor (let i = 0; i < 10; i++) {\n  if (i === 5) {\n    break; // Exit the loop\n  }\n  console.log(i);\n}\n// Prints: 0, 1, 2, 3, 4\n\n// Using continue\nfor (let i = 0; i < 5; i++) {\n  if (i === 2) {\n    continue; // Skip this iteration\n  }\n  console.log(i);\n}\n// Prints: 0, 1, 3, 4"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "For...Of Loop"
+    },
+    {
+      "type": "markdown",
+      "content": "An easy way to loop through items in an array without managing a counter."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "code": "let fruits = [\"apple\", \"banana\", \"cherry\"];\n\nfor (let fruit of fruits) {\n  console.log(fruit);\n}\n// Prints: apple, banana, cherry"
+    },
+    {
+      "type": "hint",
+      "content": "Choose the right loop: Use `for` when you know the number of iterations. Use `while` when the condition is more complex. Use `for...of` for arrays."
+    }
+  ]
+}

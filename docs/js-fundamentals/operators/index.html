@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Operators — JavaScript Fundamentals</title>
+  <meta name="description" content="Perform calculations and comparisons with operators" />
+  
+  <link rel="stylesheet" href="../styles.css?v=mnllrz4q" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">JavaScript Fundamentals</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Basics</div><a href="../variables/" class="nav-link" title="Variables"><span class="nav-link-icon">📦</span><span class="nav-link-text">Variables</span></a><a href="../data-types/" class="nav-link" title="Data Types"><span class="nav-link-icon">🔢</span><span class="nav-link-text">Data Types</span></a><a href="../operators/" class="nav-link active" title="Operators"><span class="nav-link-icon">➕</span><span class="nav-link-text">Operators</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-1" href="#operators"><span class="toc-num">1.4.</span> Operators</a><a class="nav-toc-link nav-toc-level-2" href="#arithmetic-operators"><span class="toc-num">1.4.</span> Arithmetic Operators</a><a class="nav-toc-link nav-toc-level-2" href="#comparison-operators"><span class="toc-num">1.4.</span> Comparison Operators</a><a class="nav-toc-link nav-toc-level-2" href="#logical-operators"><span class="toc-num">1.4.</span> Logical Operators</a><a class="nav-toc-link nav-toc-level-2" href="#assignment-operators"><span class="toc-num">1.4.</span> Assignment Operators</a></div></div><div class="nav-section"><div class="nav-section-title">Control Flow</div><a href="../if-else/" class="nav-link" title="If / Else Statements"><span class="nav-link-icon">🔀</span><span class="nav-link-text">If / Else Statements</span></a><a href="../loops/" class="nav-link" title="Loops"><span class="nav-link-icon">🔁</span><span class="nav-link-text">Loops</span></a></div><div class="nav-section"><div class="nav-section-title">Functions</div><a href="../functions/" class="nav-link" title="Functions"><span class="nav-link-icon">⚙️</span><span class="nav-link-text">Functions</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>Basics</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Operators</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Operators</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">Basics</span>
+            <span>⏱ 1 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><h1 id="operators" class="block-heading"><span class="heading-num">1.4.</span> Operators<a class="heading-anchor" href="#operators" aria-label="Copy link to section">#</a></h1>
+<div class="prose"><p>Operators are symbols that tell JavaScript to perform an operation on one or more values. Common types include arithmetic, comparison, and logical operators.</p>
+</div>
+<h2 id="arithmetic-operators" class="block-heading"><span class="heading-num">1.4.</span> Arithmetic Operators<a class="heading-anchor" href="#arithmetic-operators" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Use these to perform math:</p>
+<ul>
+<li><code>+</code> Addition</li>
+<li><code>-</code> Subtraction</li>
+<li><code>*</code> Multiplication</li>
+<li><code>/</code> Division</li>
+<li><code>%</code> Modulus (remainder)</li>
+<li><code>**</code> Exponentiation (power)</li>
+</ul>
+</div>
+<figure class="code-block"><div class="code-lang">javascript</div><pre><code class="language-javascript"></code></pre></figure>
+<h2 id="comparison-operators" class="block-heading"><span class="heading-num">1.4.</span> Comparison Operators<a class="heading-anchor" href="#comparison-operators" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>These compare values and return <code>true</code> or <code>false</code>:</p>
+<ul>
+<li><code>==</code> Equal to (loose equality)</li>
+<li><code>===</code> Equal to (strict equality, recommended)</li>
+<li><code>!=</code> Not equal to</li>
+<li><code>!==</code> Not equal to (strict)</li>
+<li><code>&gt;</code> Greater than</li>
+<li><code>&lt;</code> Less than</li>
+<li><code>&gt;=</code> Greater than or equal</li>
+<li><code>&lt;=</code> Less than or equal</li>
+</ul>
+</div>
+<figure class="code-block"><div class="code-lang">javascript</div><pre><code class="language-javascript"></code></pre></figure>
+
+<h2 id="logical-operators" class="block-heading"><span class="heading-num">1.4.</span> Logical Operators<a class="heading-anchor" href="#logical-operators" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>These combine boolean values:</p>
+<ul>
+<li><code>&amp;&amp;</code> AND (true only if both are true)</li>
+<li><code>||</code> OR (true if at least one is true)</li>
+<li><code>!</code> NOT (flips true to false and vice versa)</li>
+</ul>
+</div>
+<figure class="code-block"><div class="code-lang">javascript</div><pre><code class="language-javascript"></code></pre></figure>
+<h2 id="assignment-operators" class="block-heading"><span class="heading-num">1.4.</span> Assignment Operators<a class="heading-anchor" href="#assignment-operators" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>These assign or update values:</p>
+<ul>
+<li><code>=</code> Assign</li>
+<li><code>+=</code> Add and assign</li>
+<li><code>-=</code> Subtract and assign</li>
+<li><code>*=</code> Multiply and assign</li>
+<li><code>/=</code> Divide and assign</li>
+</ul>
+</div>
+<figure class="code-block"><div class="code-lang">javascript</div><pre><code class="language-javascript"></code></pre></figure></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../data-types/">← Data Types</a>
+  <a class="pn-btn pn-next" href="../if-else/">If / Else Statements →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <span>Generated by LCMS</span><span>5 April 2026</span>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnllrz4q"></script>
+
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>
+</body>
+</html>

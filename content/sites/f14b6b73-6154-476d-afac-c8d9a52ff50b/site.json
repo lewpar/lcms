@@ -1,0 +1,63 @@
+{
+  "title": "JavaScript Fundamentals",
+  "slug": "js-fundamentals",
+  "description": "Learn the core concepts of JavaScript: variables, data types, operators, control flow, and functions.",
+  "theme": "default",
+  "sections": [
+    {
+      "id": "840c615c-2179-4210-ba5b-4f3c8dd0c36b",
+      "name": "Basics",
+      "description": "Getting started with variables and data types",
+      "order": 1
+    },
+    {
+      "id": "be1b4fbc-7bed-4adc-86d6-6b7ac07bf5ed",
+      "name": "Control Flow",
+      "description": "Make decisions and repeat code with if/else and loops",
+      "order": 2
+    },
+    {
+      "id": "ebc7fae4-9201-43e5-9c6c-b37ab472ab95",
+      "name": "Functions",
+      "description": "Write reusable blocks of code",
+      "order": 3
+    }
+  ],
+  "navigation": {
+    "home": "c780383c-c08e-45f2-9252-a95320d6fc89"
+  },
+  "blocks": [
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Welcome to JavaScript Fundamentals"
+    },
+    {
+      "type": "markdown",
+      "content": "This course teaches you the core concepts of JavaScript, from variables to functions. Each lesson includes explanations, code examples, and practice exercises.\n\nNo prior programming experience needed—just a willingness to learn!"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What You'll Learn"
+    },
+    {
+      "type": "markdown",
+      "content": "- **Variables & Data Types**: Store and work with different kinds of information\n- **Operators**: Perform calculations and comparisons\n- **Control Flow**: Make decisions with if/else and repeat code with loops\n- **Functions**: Write reusable blocks of code"
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Start Learning"
+    },
+    {
+      "type": "markdown",
+      "content": "Use the navigation menu on the left to jump to any lesson. We recommend starting with **Variables** to build a solid foundation."
+    }
+  ],
+  "createdAt": "2026-04-05T10:09:39.895Z",
+  "updatedAt": "2026-04-05T10:09:39.895Z"
+}

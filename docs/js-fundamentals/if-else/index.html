@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>If / Else Statements — JavaScript Fundamentals</title>
+  <meta name="description" content="Make decisions in your code with conditionals" />
+  
+  <link rel="stylesheet" href="../styles.css?v=mnllrz4q" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">JavaScript Fundamentals</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Basics</div><a href="../variables/" class="nav-link" title="Variables"><span class="nav-link-icon">📦</span><span class="nav-link-text">Variables</span></a><a href="../data-types/" class="nav-link" title="Data Types"><span class="nav-link-icon">🔢</span><span class="nav-link-text">Data Types</span></a><a href="../operators/" class="nav-link" title="Operators"><span class="nav-link-icon">➕</span><span class="nav-link-text">Operators</span></a></div><div class="nav-section"><div class="nav-section-title">Control Flow</div><a href="../if-else/" class="nav-link active" title="If / Else Statements"><span class="nav-link-icon">🔀</span><span class="nav-link-text">If / Else Statements</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-1" href="#if-else-statements"><span class="toc-num">1.5.</span> If / Else Statements</a><a class="nav-toc-link nav-toc-level-2" href="#if-statements"><span class="toc-num">1.5.</span> If Statements</a><a class="nav-toc-link nav-toc-level-2" href="#if-else"><span class="toc-num">1.5.</span> If / Else</a><a class="nav-toc-link nav-toc-level-2" href="#if-else-if-else"><span class="toc-num">1.5.</span> If / Else If / Else</a><a class="nav-toc-link nav-toc-level-2" href="#nested-conditionals"><span class="toc-num">1.5.</span> Nested Conditionals</a><a class="nav-toc-link nav-toc-level-2" href="#the-ternary-operator"><span class="toc-num">1.5.</span> The Ternary Operator</a></div><a href="../loops/" class="nav-link" title="Loops"><span class="nav-link-icon">🔁</span><span class="nav-link-text">Loops</span></a></div><div class="nav-section"><div class="nav-section-title">Functions</div><a href="../functions/" class="nav-link" title="Functions"><span class="nav-link-icon">⚙️</span><span class="nav-link-text">Functions</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>Control Flow</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>If / Else Statements</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">If / Else Statements</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">Control Flow</span>
+            <span>⏱ 1 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><h1 id="if-else-statements" class="block-heading"><span class="heading-num">1.5.</span> If / Else Statements<a class="heading-anchor" href="#if-else-statements" aria-label="Copy link to section">#</a></h1>
+<div class="prose"><p>Conditionals let your code make decisions. Use <code>if</code> and <code>else</code> statements to run different code depending on whether a condition is true or false.</p>
+</div>
+<h2 id="if-statements" class="block-heading"><span class="heading-num">1.5.</span> If Statements<a class="heading-anchor" href="#if-statements" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>An <code>if</code> statement runs code only when a condition is true.</p>
+</div>
+<figure class="code-block"><div class="code-lang">javascript</div><pre><code class="language-javascript"></code></pre></figure>
+<h2 id="if-else" class="block-heading"><span class="heading-num">1.5.</span> If / Else<a class="heading-anchor" href="#if-else" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Use <code>else</code> to run different code when the condition is false.</p>
+</div>
+<figure class="code-block"><div class="code-lang">javascript</div><pre><code class="language-javascript"></code></pre></figure>
+<h2 id="if-else-if-else" class="block-heading"><span class="heading-num">1.5.</span> If / Else If / Else<a class="heading-anchor" href="#if-else-if-else" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Use <code>else if</code> to check multiple conditions.</p>
+</div>
+<figure class="code-block"><div class="code-lang">javascript</div><pre><code class="language-javascript"></code></pre></figure>
+<h2 id="nested-conditionals" class="block-heading"><span class="heading-num">1.5.</span> Nested Conditionals<a class="heading-anchor" href="#nested-conditionals" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>You can put <code>if</code> statements inside other <code>if</code> statements for more complex logic.</p>
+</div>
+<figure class="code-block"><div class="code-lang">javascript</div><pre><code class="language-javascript"></code></pre></figure>
+<h2 id="the-ternary-operator" class="block-heading"><span class="heading-num">1.5.</span> The Ternary Operator<a class="heading-anchor" href="#the-ternary-operator" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>A quick way to write simple if/else in one line. Syntax: <code>condition ? valueIfTrue : valueIfFalse</code></p>
+</div>
+<figure class="code-block"><div class="code-lang">javascript</div><pre><code class="language-javascript"></code></pre></figure>
+<div class="hint-block">
+  <div class="hint-header">
+    <span class="hint-title">Hint</span>
+    <span class="hint-reveal-label">Click to reveal</span>
+  </div>
+  <div class="hint-body">
+    <div class="hint-body-inner prose"></div>
+    <div class="hint-overlay">Click to reveal</div>
+  </div>
+</div></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../operators/">← Operators</a>
+  <a class="pn-btn pn-next" href="../loops/">Loops →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <span>Generated by LCMS</span><span>5 April 2026</span>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnllrz4q"></script>
+
+
+
+
+
+<script src="../hint.js?v=mnllrz4q"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>
+</body>
+</html>

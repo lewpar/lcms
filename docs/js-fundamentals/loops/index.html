@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loops — JavaScript Fundamentals</title>
+  <meta name="description" content="Repeat code with for and while loops" />
+  
+  <link rel="stylesheet" href="../styles.css?v=mnllrz4q" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">JavaScript Fundamentals</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Basics</div><a href="../variables/" class="nav-link" title="Variables"><span class="nav-link-icon">📦</span><span class="nav-link-text">Variables</span></a><a href="../data-types/" class="nav-link" title="Data Types"><span class="nav-link-icon">🔢</span><span class="nav-link-text">Data Types</span></a><a href="../operators/" class="nav-link" title="Operators"><span class="nav-link-icon">➕</span><span class="nav-link-text">Operators</span></a></div><div class="nav-section"><div class="nav-section-title">Control Flow</div><a href="../if-else/" class="nav-link" title="If / Else Statements"><span class="nav-link-icon">🔀</span><span class="nav-link-text">If / Else Statements</span></a><a href="../loops/" class="nav-link active" title="Loops"><span class="nav-link-icon">🔁</span><span class="nav-link-text">Loops</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-1" href="#loops"><span class="toc-num">1.4.</span> Loops</a><a class="nav-toc-link nav-toc-level-2" href="#for-loops"><span class="toc-num">1.4.</span> For Loops</a><a class="nav-toc-link nav-toc-level-2" href="#while-loops"><span class="toc-num">1.4.</span> While Loops</a><a class="nav-toc-link nav-toc-level-2" href="#break-and-continue"><span class="toc-num">1.4.</span> Break and Continue</a><a class="nav-toc-link nav-toc-level-2" href="#for-of-loop"><span class="toc-num">1.4.</span> For...Of Loop</a></div></div><div class="nav-section"><div class="nav-section-title">Functions</div><a href="../functions/" class="nav-link" title="Functions"><span class="nav-link-icon">⚙️</span><span class="nav-link-text">Functions</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>Control Flow</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Loops</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Loops</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">Control Flow</span>
+            <span>⏱ 1 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><h1 id="loops" class="block-heading"><span class="heading-num">1.4.</span> Loops<a class="heading-anchor" href="#loops" aria-label="Copy link to section">#</a></h1>
+<div class="prose"><p>Loops let you repeat code multiple times without writing it over and over. Use them to process lists of items, count, or repeat an action.</p>
+</div>
+<h2 id="for-loops" class="block-heading"><span class="heading-num">1.4.</span> For Loops<a class="heading-anchor" href="#for-loops" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>A <code>for</code> loop repeats code a specific number of times. It tracks a counter variable that changes each iteration.</p>
+</div>
+<figure class="code-block"><div class="code-lang">javascript</div><pre><code class="language-javascript"></code></pre></figure>
+
+<h2 id="while-loops" class="block-heading"><span class="heading-num">1.4.</span> While Loops<a class="heading-anchor" href="#while-loops" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>A <code>while</code> loop repeats code as long as a condition is true. Use it when you don&#39;t know how many times to loop in advance.</p>
+</div>
+<figure class="code-block"><div class="code-lang">javascript</div><pre><code class="language-javascript"></code></pre></figure>
+
+<h2 id="break-and-continue" class="block-heading"><span class="heading-num">1.4.</span> Break and Continue<a class="heading-anchor" href="#break-and-continue" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><ul>
+<li><code>break</code> stops the loop immediately</li>
+<li><code>continue</code> skips to the next iteration</li>
+</ul>
+</div>
+<figure class="code-block"><div class="code-lang">javascript</div><pre><code class="language-javascript"></code></pre></figure>
+<h2 id="for-of-loop" class="block-heading"><span class="heading-num">1.4.</span> For...Of Loop<a class="heading-anchor" href="#for-of-loop" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>An easy way to loop through items in an array without managing a counter.</p>
+</div>
+<figure class="code-block"><div class="code-lang">javascript</div><pre><code class="language-javascript"></code></pre></figure>
+<div class="hint-block">
+  <div class="hint-header">
+    <span class="hint-title">Hint</span>
+    <span class="hint-reveal-label">Click to reveal</span>
+  </div>
+  <div class="hint-body">
+    <div class="hint-body-inner prose"></div>
+    <div class="hint-overlay">Click to reveal</div>
+  </div>
+</div></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../if-else/">← If / Else Statements</a>
+  <a class="pn-btn pn-next" href="../functions/">Functions →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <span>Generated by LCMS</span><span>5 April 2026</span>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnllrz4q"></script>
+
+
+
+
+
+<script src="../hint.js?v=mnllrz4q"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>
+</body>
+</html>
