@@ -78,6 +78,8 @@ docs/                 # GitHub Pages deployments (tracked in git)
 
 **When asked to create a new site, always do so by writing JSON files in the `content/` directory. Do NOT create HTML, CSS, JavaScript, React, or Next.js files — the CMS and generator handle all of that.**
 
+**Do NOT run `npm run generate` or any generate command after creating a site.** The user will generate and preview the site themselves via the CMS UI. Running the generator is unnecessary and should be skipped.
+
 A site is made up of three things in `content/`:
 
 ```
