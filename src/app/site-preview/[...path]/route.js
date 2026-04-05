@@ -52,9 +52,24 @@ export async function GET(request, { params }) {
     return NextResponse.json({ error: 'Invalid path.' }, { status: 400 });
   }
 
-  const data = fs.readFileSync(filePath);
   const ext = path.extname(filePath).toLowerCase();
   const mimeType = MIME_TYPES[ext] || 'application/octet-stream';
+
+  // Inject <base> into HTML files so relative asset URLs (styles.css, nav.js,
+  // etc.) resolve correctly regardless of whether the browser URL has a
+  // trailing slash or not.
+  if (ext === '.html') {
+    const basePath = `/site-preview/${pathParts.join('/')}/`;
+    const html = fs.readFileSync(filePath, 'utf-8').replace(
+      '<head>',
+      `<head>\n  <base href="${basePath}">`
+    );
+    return new Response(html, {
+      headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' },
+    });
+  }
+
+  const data = fs.readFileSync(filePath);
 
   return new Response(data, {
     headers: {
