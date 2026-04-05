@@ -12,7 +12,7 @@ This guide covers every file you must touch when adding a new block type to the 
 | CMS editor | `src/components/BlockEditor.jsx` | Summary text; editor form component; render wire-up | Block appears in picker but shows no editing controls |
 | CMS inline preview | `src/components/Preview.jsx` | Inline React rendering in `BlockPreview` switch | Block renders as a grey `[type]` placeholder in the editor preview panel |
 | Static site generator | `src/generator/index.js` | HTML rendering in `renderBlock()`; CSS in `cssFor()` | Block renders as nothing (empty string) in the generated/previewed site |
-| AI authoring docs | `.ai/BLOCKS.md` | Full schema with required / optional field tables | AI does not know the block exists and will not use it when generating sites |
+| AI authoring docs | `.github/BLOCKS.md` | Full schema with required / optional field tables | AI does not know the block exists and will not use it when generating sites |
 | AI context | `CLAUDE.md` | Add type name to the blocks list | AI does not know the block exists and will not use it when generating sites |
 
 ---
@@ -178,7 +178,7 @@ The `cssFor()` function returns the full CSS string for generated sites. Add you
 
 ---
 
-## Step 5 — `.ai/BLOCKS.md`
+## Step 5 — `.github/BLOCKS.md`
 
 Add a new section documenting the block for AI-assisted site creation. Follow the established format exactly.
 
@@ -233,5 +233,5 @@ Add the new type name to the comma-separated block types list in the "Blocks" pa
 - [ ] `src/generator/index.js` — case in `renderBlock()`
 - [ ] `src/generator/index.js` — light mode CSS in `cssFor()`
 - [ ] `src/generator/index.js` — dark mode CSS in `darkModeVars`
-- [ ] `.ai/BLOCKS.md` — schema documented with required / optional fields
+- [ ] `.github/BLOCKS.md` — schema documented with required / optional fields
 - [ ] `CLAUDE.md` — type name added to block types list

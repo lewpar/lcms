@@ -148,9 +148,9 @@ Controls the site title, theme, sections (sidebar groups), header/footer HTML, a
 
 **Each page file** is named `<page-uuid>.json` and must contain an `"id"` field equal to that UUID. Pages also need: `title`, `slug`, `section` (UUID from site.json), `description`, `icon`, `order`, `createdAt`, `updatedAt`, and `blocks`.
 
-**Blocks** are the content units on a page. Available types: `markdown`, `heading`, `code`, `callout`, `tip`, `table`, `image`, `video`, `embed`, `iframe`, `playground`, `fill-in-the-blank`, `quiz`, `flashcard`, `accordion`, `case-study`, `page-link`, `hint`, `difficulty`, `divider`, `steps`, `recipe-detail`. If you need the full schema and examples for each block type, read **[.ai/BLOCKS.md](./.ai/BLOCKS.md)**.
+**Blocks** are the content units on a page. Available types: `markdown`, `heading`, `code`, `callout`, `tip`, `table`, `image`, `video`, `embed`, `iframe`, `playground`, `fill-in-the-blank`, `quiz`, `flashcard`, `accordion`, `case-study`, `page-link`, `hint`, `difficulty`, `divider`, `steps`, `recipe-detail`. If you need the full schema and examples for each block type, read **[.github/BLOCKS.md](.github/BLOCKS.md)**.
 
-For the complete step-by-step authoring guide including full JSON schemas, theme options, and a worked example, read **[.ai/AUTHORING.md](./.ai/AUTHORING.md)**.
+For the complete step-by-step authoring guide including full JSON schemas, theme options, and a worked example, read **[.github/AUTHORING.md](.github/AUTHORING.md)**.
 
 > **Single-page sites** — if the user asks for a site with no sidebar and all content on the home page, you **must** set all three of these together: `"disableNav": true`, `"floatingDarkMode": true`, and `"sections": []`. Also create an empty `pages/` directory. Read the "Single-page sites" section of AUTHORING.md before authoring.
 
@@ -158,7 +158,7 @@ For the complete step-by-step authoring guide including full JSON schemas, theme
 
 ## Creating a new CMS block
 
-When asked to add a new block type, you must touch **six files** in order. Skipping any one leaves the block broken in a specific way. The full step-by-step guide (with code examples for every step) is in **[.ai/CREATE-BLOCK.md](./.ai/CREATE-BLOCK.md)** — read it before starting.
+When asked to add a new block type, you must touch **six files** in order. Skipping any one leaves the block broken in a specific way. The full step-by-step guide (with code examples for every step) is in **[.github/CREATE-BLOCK.md](.github/CREATE-BLOCK.md)** — read it before starting.
 
 ### Files to touch and what to add
 
@@ -168,7 +168,7 @@ When asked to add a new block type, you must touch **six files** in order. Skipp
 | 2 | `src/components/BlockEditor.jsx` | Case in `blockSummary()` for the collapsed card text; an editor form component `MyBlockEditor({ block, onChange })`; a render line in the block dispatch inside `{expanded && ...}` |
 | 3 | `src/components/Preview.jsx` | Case in the `BlockPreview` switch returning inline-styled JSX (no CSS classes — inline styles only) |
 | 4 | `src/generator/index.js` | Case in `renderBlock()` returning an HTML string; light-mode CSS in `cssFor()`; dark-mode overrides in `darkModeVars` |
-| 5 | `.ai/BLOCKS.md` | A new section documenting the block schema (required/optional fields, allowed values, full JSON example) |
+| 5 | `.github/BLOCKS.md` | A new section documenting the block schema (required/optional fields, allowed values, full JSON example) |
 | 6 | `CLAUDE.md` | Type name added to the block types list in the "Creating a new site" section above |
 
 ### Key conventions
@@ -177,7 +177,7 @@ When asked to add a new block type, you must touch **six files** in order. Skipp
 - **`BlockEditor.jsx`** — the editor component receives `block` (current data) and `onChange(patch)` (call with a partial object to merge). Use `<div className="field">` + `<label>` for every input pair.
 - **`Preview.jsx`** — inline styles only. If a live preview is not meaningful, return a grey italic placeholder string.
 - **`generator/index.js`** — always `esc()` user strings, `md()` for markdown fields. Use CSS variables (`var(--primary)`, `var(--border)`, `var(--radius)`, `var(--surface)`, `var(--text)`) for theme-aware colour. Add both light **and** dark mode CSS.
-- **`.ai/BLOCKS.md`** — document every field. State defaults. List all allowed enum values. Include a realistic full JSON example.
+- **`.github/BLOCKS.md`** — document every field. State defaults. List all allowed enum values. Include a realistic full JSON example.
 
 ### Checklist
 
@@ -189,6 +189,6 @@ Before considering a new block done, verify all of the following:
 - [ ] Renders correctly in the inline editor preview panel (Step 3)
 - [ ] Renders correctly in the generated/previewed static site (Step 4)
 - [ ] Looks correct in dark mode (Step 4 — dark CSS)
-- [ ] Schema documented in `.ai/BLOCKS.md` (Step 5)
+- [ ] Schema documented in `.github/BLOCKS.md` (Step 5)
 - [ ] Type name added to the block list in `CLAUDE.md` (Step 6)
 
