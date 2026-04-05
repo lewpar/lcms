@@ -1,7 +1,8 @@
 'use strict';
 
 const path = require('path');
-const { readSites } = require('./storage');
+const { readSites } = require('./paths');
+const { NextResponse } = require('next/server');
 
 // ── ID / filename format checks ────────────────────────
 
@@ -90,28 +91,39 @@ function sanitisePage(raw) {
   return out;
 }
 
-// ── Express middleware ─────────────────────────────────
+// ── Slug validation ────────────────────────────────────
 
-function requireValidSiteId(req, res, next) {
-  if (!isValidId(req.params.siteId)) return res.status(400).json({ error: 'Invalid site ID.' });
-  next();
+// Shared across all site routes; avoids duplicate definitions per route.
+const SLUG_RE = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/;
+
+// Lazy-loaded to avoid circular dependency (paths → storage → [no deps])
+let _isReservedSlug;
+function isReservedSlug(slug) {
+  if (!_isReservedSlug) _isReservedSlug = require('./paths').isReservedSlug;
+  return _isReservedSlug(slug);
 }
 
-function requireValidId(req, res, next) {
-  if (!isValidId(req.params.id)) return res.status(400).json({ error: 'Invalid page ID.' });
-  next();
+function validateSlug(slug) {
+  if (!slug) return 'Slug is required.';
+  if (!SLUG_RE.test(slug)) return 'Slug may only contain lowercase letters, numbers, and hyphens.';
+  if (isReservedSlug(slug)) return `"${slug}" is a reserved slug.`;
+  return null;
 }
 
-function requireSiteExists(req, res, next) {
-  if (!readSites().find(s => s.id === req.params.siteId)) {
-    return res.status(404).json({ error: 'Site not found.' });
-  }
-  next();
+// ── Site resolution helper ─────────────────────────────
+
+// Returns [site, null] on success or [null, errorResponse] on failure.
+// Usage: const [site, err] = resolveSite(siteId); if (err) return err;
+function resolveSite(siteId) {
+  if (!isValidId(siteId)) return [null, NextResponse.json({ error: 'Invalid site ID.' }, { status: 400 })];
+  const site = readSites().find(s => s.id === siteId);
+  if (!site) return [null, NextResponse.json({ error: 'Site not found.' }, { status: 404 })];
+  return [site, null];
 }
 
 module.exports = {
   isValidId, isSafeFilename, assertWithinDir, safeError,
   sanitiseSettings, sanitisePage,
-  requireValidSiteId, requireValidId, requireSiteExists,
+  SLUG_RE, validateSlug, resolveSite,
   MAX_STR,
 };

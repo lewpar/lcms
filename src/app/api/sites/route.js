@@ -2,17 +2,8 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { readSites, writeSites, settingsFile, ensureDirs, slugify, isReservedSlug, DOCS_DIR } from '../../../lib/paths.js';
-import { safeError, MAX_STR } from '../../../lib/validate.js';
-
-const SLUG_RE = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/;
-
-function validateSlug(slug) {
-  if (!slug) return 'Slug is required.';
-  if (!SLUG_RE.test(slug)) return 'Slug may only contain lowercase letters, numbers, and hyphens.';
-  if (isReservedSlug(slug)) return `"${slug}" is a reserved slug.`;
-  return null;
-}
+import { readSites, writeSites, settingsFile, ensureDirs, slugify, DOCS_DIR } from '../../../lib/paths.js';
+import { safeError, validateSlug, MAX_STR } from '../../../lib/validate.js';
 
 export async function GET() {
   const sites = readSites().map(s => ({
@@ -44,5 +35,5 @@ export async function POST(request) {
     const site = { id, name, slug: rawSlug };
     writeSites([...sites, site]);
     return NextResponse.json(site);
-  } catch (err) { return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
+  } catch (err) { console.error(err); return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
 }

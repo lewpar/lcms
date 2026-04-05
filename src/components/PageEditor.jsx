@@ -9,7 +9,7 @@ import ContentPreview from './ContentPreview.jsx';
 import ConfirmDialog from './ConfirmDialog.jsx';
 import AddBlockDialog from './AddBlockDialog.jsx';
 import IconPickerDialog from './IconPickerDialog.jsx';
-import { v4 as uuidv4 } from '../uuid.js';
+import { v4 as uuidv4 } from 'uuid';
 import { BLOCK_TYPES, defaultBlock } from '../blockTypes.js';
 import { slugify, RESERVED_SLUGS, AUTOSAVE_DELAY_MS } from '../utils.js';
 
@@ -72,7 +72,7 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
     getPage(siteId, pageId)
       .then(p => { setPage(p); isFirstLoad.current = true; })
       .catch(() => addToast('Failed to load page', 'error'));
-  }, [pageId]);
+  }, [pageId, siteId, addToast]);
 
   // Auto-save on changes (2s debounce)
   useEffect(() => {
@@ -106,8 +106,6 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [page, doSave]);
-
-  if (!page) return <div className="empty-state"><p>Loading…</p></div>;
 
   const updateMeta = (field, value) => setPage(p => ({ ...p, [field]: value }));
 
@@ -216,12 +214,12 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
   return (
     <div className="editor">
       <div className="editor-toolbar">
-        <h2>{page.title || 'Untitled'}</h2>
+        <h2>{page?.title || 'Untitled'}</h2>
         <span style={{ fontSize: 11, color: statusColor[saveStatus] }}>{statusLabel[saveStatus]}</span>
         <button
           className="btn btn-primary btn-sm"
           onClick={() => { clearTimeout(autoSaveTimer.current); doSave(page, false); }}
-          disabled={saveStatus === 'saving'}
+          disabled={!page || saveStatus === 'saving'}
           title="Save (Ctrl+S)"
         >
           Save
@@ -240,7 +238,7 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
               <span>Page Settings</span>
               <span className="meta-card-toggle-icon">{metaOpen ? '▾' : '▸'}</span>
             </button>
-            {metaOpen && <div className="meta-card-body"><>
+            {page && metaOpen && <div className="meta-card-body"><>
               <div className="field">
                 <label>Icon</label>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -320,11 +318,15 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
 
           {/* Blocks */}
           <div className="blocks-header">
-            <h3>Blocks ({page.blocks.length})</h3>
+            <h3>Blocks{page ? ` (${page.blocks.length})` : ''}</h3>
           </div>
 
           <div className="blocks-list" ref={blocksListRef} onDragOver={handleContainerDragOver} onDrop={handleContainerDrop}>
-            {(() => {
+            {!page ? (
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '32px 0' }}>
+                <span className="site-preview-spinner" style={{ fontSize: 24 }}>⟳</span>
+              </div>
+            ) : (() => {
               const draggedBlock = dragIndex.current !== null ? page.blocks[dragIndex.current] : null;
               const draggedBt = draggedBlock ? BLOCK_TYPES.find(b => b.type === draggedBlock.type) : null;
               const ghostLabel = draggedBt ? `${draggedBt.icon || ''} ${draggedBt.label}`.trim() : 'Drop here';
@@ -332,40 +334,39 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
                 && ghostIndex !== dragIndex.current && ghostIndex !== dragIndex.current + 1;
               return (
                 <>
-                  {page.blocks.map((block, idx) => (
-                    <React.Fragment key={block.id}>
-                      {showGhostAt(idx) && <div className="block-ghost">{ghostLabel}</div>}
-                      <BlockEditor
-                        block={block}
-                        index={idx}
-                        total={page.blocks.length}
-                        expanded={expandedBlockId === block.id}
-                        onToggle={() => setExpandedBlockId(expandedBlockId === block.id ? null : block.id)}
-                        onChange={changes => updateBlock(block.id, changes)}
-                        onRemove={() => setPendingRemoveId(block.id)}
-                        onTransfer={() => openTransfer(block)}
-                        onMoveUp={() => moveBlock(idx, idx - 1)}
-                        onMoveDown={() => moveBlock(idx, idx + 1)}
-                        onAddBelow={() => { setInsertAtIndex(idx + 1); setShowAddBlock(true); }}
-                        addToast={addToast}
-                        pages={pages}
-                        siteId={siteId}
-                        isDragging={dragIndex.current === idx}
-                        onDragStart={() => handleDragStart(idx)}
-                        onDragEnd={handleDragEnd}
-                      />
-                    </React.Fragment>
-                  ))}
+                  {page.blocks.map((block, idx) => {
+                    const blockProps = {
+                      block, index: idx, total: page.blocks.length,
+                      expanded: expandedBlockId === block.id,
+                      onToggle:   () => setExpandedBlockId(expandedBlockId === block.id ? null : block.id),
+                      onChange:   changes => updateBlock(block.id, changes),
+                      onRemove:   () => setPendingRemoveId(block.id),
+                      onTransfer: () => openTransfer(block),
+                      onMoveUp:   () => moveBlock(idx, idx - 1),
+                      onMoveDown: () => moveBlock(idx, idx + 1),
+                      onAddBelow: () => { setInsertAtIndex(idx + 1); setShowAddBlock(true); },
+                      addToast, pages, siteId,
+                      isDragging:  dragIndex.current === idx,
+                      onDragStart: () => handleDragStart(idx),
+                      onDragEnd:   handleDragEnd,
+                    };
+                    return (
+                      <React.Fragment key={block.id}>
+                        {showGhostAt(idx) && <div className="block-ghost">{ghostLabel}</div>}
+                        <BlockEditor {...blockProps} />
+                      </React.Fragment>
+                    );
+                  })}
                   {showGhostAt(page.blocks.length) && <div className="block-ghost">{ghostLabel}</div>}
                 </>
               );
             })()}
 
-            {page.blocks.length === 0 && (
+            {page && page.blocks.length === 0 && (
               <p className="blocks-empty-hint">No blocks yet. Add a block to start building this page.</p>
             )}
 
-            <button className="btn btn-secondary" style={{ alignSelf: 'flex-start' }} onClick={() => setShowAddBlock(true)}>
+            <button className="btn btn-secondary" style={{ alignSelf: 'flex-start' }} onClick={() => setShowAddBlock(true)} disabled={!page}>
               + Add Block
             </button>
 
@@ -378,11 +379,25 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
           </div>
         </div>}
         right={<div className="editor-preview">
-          <ContentPreview
-            siteId={siteId}
-            page={page}
-            refreshSignal={previewKey}
-          />
+          {page ? (
+            <ContentPreview
+              siteId={siteId}
+              page={page}
+              refreshSignal={previewKey}
+            />
+          ) : (
+            <div className="site-preview-view">
+              <div className="site-preview-toolbar site-preview-toolbar--label">
+                <span className="site-preview-label">Preview</span>
+              </div>
+              <div className="site-preview-content">
+                <div className="site-preview-loading">
+                  <div className="site-preview-spinner">⟳</div>
+                  <div>Loading…</div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>}
       />
 
@@ -434,7 +449,7 @@ export default function PageEditor({ siteId, siteSlug, pageId, onSaved, addToast
 
       <IconPickerDialog
         open={showIconPicker}
-        current={page.icon || ''}
+        current={page?.icon || ''}
         onSelect={icon => updateMeta('icon', icon)}
         onClose={() => setShowIconPicker(false)}
       />

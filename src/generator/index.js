@@ -6,7 +6,9 @@ const path = require('path');
 const { marked } = require('marked');
 
 const mdRenderer = new marked.Renderer();
-const _origHeading = mdRenderer.heading.bind(mdRenderer);
+// Custom heading renderer adds id attributes for anchor links.
+// `text` here is already-processed HTML from marked (inline formatting applied),
+// so it must not be escaped — doing so would break e.g. **bold** headings.
 mdRenderer.heading = function(text, level) {
   const plain = String(text || '').replace(/<[^>]*>/g, '');
   const id = slugify(plain);
@@ -34,6 +36,7 @@ function _setContext(siteId, siteSlug, root) {
 // ── Color helpers ──────────────────────────────────────
 
 function hexToRgb(hex) {
+  if (!hex || !/^#?[0-9a-fA-F]{6}$/.test(hex)) return [0, 0, 0];
   const h = hex.replace('#', '');
   return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
 }
@@ -147,6 +150,14 @@ function computeHeadingNumbers(blocks) {
     result.set(h.id, parts.join('.'));
   }
   return result;
+}
+
+// Annotates heading blocks with computed section numbers then renders to HTML.
+// Returns { html, headingNums } so callers that need TOC can reuse headingNums.
+function annotateAndRender(blocks) {
+  const headingNums = computeHeadingNumbers(blocks);
+  const annotated = blocks.map(b => b.type === 'heading' ? { ...b, _num: headingNums.get(b.id) } : b);
+  return { html: annotated.map(renderBlock).join('\n'), headingNums };
 }
 
 function normalizeQuiz(block) {
@@ -1406,9 +1417,7 @@ function renderPagePreview(page, siteId, root) {
   previewAssetPaths = true;
   let blocksHtml;
   try {
-    const headingNums = computeHeadingNumbers(blocks);
-    const annotatedBlocks = blocks.map(b => b.type === 'heading' ? { ...b, _num: headingNums.get(b.id) } : b);
-    blocksHtml = annotatedBlocks.map(renderBlock).join('\n');
+    ({ html: blocksHtml } = annotateAndRender(blocks));
   } finally {
     previewAssetPaths = false;
   }
@@ -1519,6 +1528,7 @@ function pageTemplate({ page, blocksHtml, toc, settings, navItems, v }) {
   const showReadingTime = (settings.theme || {}).showReadingTime !== false;
 
   const showDarkMode = true;
+  // header/footer are user-authored raw HTML for the generated static site — intentional injection
   const customHeader = settings.header
     ? `<div class="custom-site-header">${settings.header}</div>` : '';
   const footerContent = settings.footer
@@ -1599,8 +1609,7 @@ function indexTemplate({ pages, settings, navItems, v }) {
   const hasHint           = homeBlocks.some(b => b.type === 'hint');
   const hasCode = blocksNeedHighlighting(homeBlocks);
   const homeHeadingNums = computeHeadingNumbers(homeBlocks);
-  const annotatedHomeBlocks = homeBlocks.map(b => b.type === 'heading' ? { ...b, _num: homeHeadingNums.get(b.id) } : b);
-  const blocksHtml = annotatedHomeBlocks.map(renderBlock).join('\n');
+  const { html: blocksHtml } = annotateAndRender(homeBlocks);
 
   const sectionOrder = [], sectionMap = {}, unsectioned = [];
   for (const p of pages) {
@@ -1623,6 +1632,7 @@ function indexTemplate({ pages, settings, navItems, v }) {
     gridHtml += `<div class="section-group"><div class="section-group-title">${esc(sec)}</div><div class="page-grid">${sectionMap[sec].map(renderCard).join('')}</div></div>`;
   }
 
+  // header/footer are user-authored raw HTML for the generated static site — intentional injection
   const customHeaderIdx = settings.header
     ? `<div class="custom-site-header">${settings.header}</div>` : '';
   const footerContentIdx = settings.footer
@@ -1747,9 +1757,7 @@ function generate(siteId, siteSlug, root) {
   for (const page of pages) {
     const pageDir = path.join(OUTPUT_DIR, page.slug);
     fs.mkdirSync(pageDir, { recursive: true });
-    const headingNums = computeHeadingNumbers(page.blocks || []);
-    const annotatedBlocks = (page.blocks || []).map(b => b.type === 'heading' ? { ...b, _num: headingNums.get(b.id) } : b);
-    const blocksHtml = annotatedBlocks.map(renderBlock).join('\n');
+    const { html: blocksHtml, headingNums } = annotateAndRender(page.blocks || []);
     const toc = extractToc(page.blocks || [], headingNums);
     const pageWithResolvedSection = { ...page, section: resolveSectionName(page.section) };
     fs.writeFileSync(path.join(pageDir, 'index.html'), pageTemplate({ page: pageWithResolvedSection, blocksHtml, toc, settings, navItems, v: buildVer }));

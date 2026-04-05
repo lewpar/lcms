@@ -49,7 +49,8 @@ export default function SitePreview({ siteId, siteSlug, addToast, pageSlug = '',
 
   // ── Effects ────────────────────────────────────────────
 
-  // Initial generation when site changes
+  // Runs only when siteId changes (not every dependency) — generateRef.current always holds
+  // the latest generate callback so calling it here avoids a dependency that would re-trigger on every render.
   useEffect(() => {
     if (prevSiteIdRef.current === siteId) return;
     prevSiteIdRef.current = siteId;
@@ -62,6 +63,7 @@ export default function SitePreview({ siteId, siteSlug, addToast, pageSlug = '',
   }, [siteId]);
 
   // Regenerate when parent signals a save (skip initial render)
+  // Only refreshSignal is a dep — generateRef.current avoids stale-closure issues.
   useEffect(() => {
     if (prevSignalRef.current === null) {
       prevSignalRef.current = refreshSignal;
@@ -73,7 +75,8 @@ export default function SitePreview({ siteId, siteSlug, addToast, pageSlug = '',
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshSignal]);
 
-  // Navigate when pageSlug prop changes
+  // Navigate when pageSlug prop changes — currentSlug is intentionally omitted from
+  // deps to avoid an infinite loop (this effect is the only thing that sets currentSlug).
   useEffect(() => {
     if (currentSlug === pageSlug) return;
     setCurrentSlug(pageSlug);

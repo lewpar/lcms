@@ -27,11 +27,9 @@ export default function HomeEditor({ settings, onSave, addToast, siteId, siteSlu
   const didSync = useRef(!!settings.home); // true if settings were already loaded on mount
   const onSaveRef = useRef(onSave);
   const settingsRef = useRef(settings);
-  const latestHomeRef = useRef(home);
 
   useEffect(() => { onSaveRef.current = onSave; }, [onSave]);
   useEffect(() => { settingsRef.current = settings; }, [settings]);
-  useEffect(() => { latestHomeRef.current = home; }, [home]);
 
   // Sync home state when settings load asynchronously after mount
   useEffect(() => {
@@ -49,7 +47,7 @@ export default function HomeEditor({ settings, onSave, addToast, siteId, siteSlu
     clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(async () => {
       try {
-        await onSaveRef.current({ ...settingsRef.current, home: latestHomeRef.current });
+        await onSaveRef.current({ ...settingsRef.current, home });
         setSaveStatus('saved');
         setPreviewKey(k => k + 1);
       } catch {
@@ -181,34 +179,23 @@ export default function HomeEditor({ settings, onSave, addToast, siteId, siteSlu
         </div>
 
         <div className="blocks-list">
-          {home.blocks.map((block, idx) => (
-            <BlockEditor
-              key={block.id}
-              block={block}
-              index={idx}
-              total={home.blocks.length}
-              expanded={expandedBlockId === block.id}
-              onToggle={() => setExpandedBlockId(expandedBlockId === block.id ? null : block.id)}
-              onChange={changes => updateBlock(block.id, changes)}
-              onRemove={() => setPendingRemoveId(block.id)}
-              onMoveUp={() => moveBlock(idx, idx - 1)}
-              onMoveDown={() => moveBlock(idx, idx + 1)}
-              onAddBelow={() => { setInsertAtIndex(idx + 1); setShowAddBlock(true); }}
-              addToast={addToast}
-              pages={pages}
-              siteId={siteId}
-              isDragging={dragIndex.current === idx}
-              dragOverClass={
-                dragOver?.index === idx
-                  ? (dragOver.pos === 'before' ? 'drag-over-before' : 'drag-over-after')
-                  : ''
-              }
-              onDragStart={() => handleDragStart(idx)}
-              onDragOver={e => handleDragOver(e, idx)}
-              onDrop={e => handleDrop(e, idx)}
-              onDragEnd={handleDragEnd}
-            />
-          ))}
+          {home.blocks.map((block, idx) => {
+            const blockProps = {
+              block, index: idx, total: home.blocks.length,
+              expanded: expandedBlockId === block.id,
+              onToggle:   () => setExpandedBlockId(expandedBlockId === block.id ? null : block.id),
+              onChange:   changes => updateBlock(block.id, changes),
+              onRemove:   () => setPendingRemoveId(block.id),
+              onMoveUp:   () => moveBlock(idx, idx - 1),
+              onMoveDown: () => moveBlock(idx, idx + 1),
+              onAddBelow: () => { setInsertAtIndex(idx + 1); setShowAddBlock(true); },
+              addToast, pages, siteId,
+              isDragging:  dragIndex.current === idx,
+              onDragStart: () => handleDragStart(idx),
+              onDragEnd:   handleDragEnd,
+            };
+            return <BlockEditor key={block.id} {...blockProps} />;
+          })}
 
           <button className="btn btn-secondary" style={{ alignSelf: 'flex-start' }} onClick={() => setShowAddBlock(true)}>
             + Add Block

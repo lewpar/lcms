@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { assetsDir, readSites } from '../../../../../lib/paths.js';
-import { isValidId, safeError } from '../../../../../lib/validate.js';
+import { assetsDir } from '../../../../../lib/paths.js';
+import { safeError, resolveSite } from '../../../../../lib/validate.js';
 
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif']);
 
 export async function GET(request, { params }) {
+  const [, err] = resolveSite(params.siteId);
+  if (err) return err;
   const { siteId } = params;
-  if (!isValidId(siteId)) return NextResponse.json({ error: 'Invalid site ID.' }, { status: 400 });
-  if (!readSites().find(s => s.id === siteId)) return NextResponse.json({ error: 'Site not found.' }, { status: 404 });
 
   const dir = assetsDir(siteId);
   if (!fs.existsSync(dir)) return NextResponse.json([]);
@@ -23,5 +23,5 @@ export async function GET(request, { params }) {
       })
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     return NextResponse.json(files);
-  } catch (err) { return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
+  } catch (err) { console.error(err); return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
 }

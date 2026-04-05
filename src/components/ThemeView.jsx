@@ -4,6 +4,7 @@ import SitePreview from './SitePreview.jsx';
 import SplitPane from './SplitPane.jsx';
 import ConfirmDialog from './ConfirmDialog.jsx';
 import { getThemes, createTheme, updateTheme, deleteTheme } from '../api.js';
+import { FOCUS_DELAY_MS } from '../utils.js';
 
 const DEFAULT_THEME_VALUES = {
   primary: '#6c63ff', sidebarBg: '#1e293b', contentBg: '#ffffff', textColor: '#1e293b',
@@ -125,9 +126,12 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
       })
       .catch(() => addToast('Failed to load themes', 'error'))
       .finally(() => setLoading(false));
+  // addToast and settings are intentionally omitted — they would cause the theme list to
+  // reload on every render; siteId is the only meaningful trigger for fetching themes.
   }, [siteId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-save on theme change (1s debounce)
+  const THEME_AUTOSAVE_MS = 1000;
   useEffect(() => {
     if (isFirstLoad.current) { isFirstLoad.current = false; return; }
     setSaveStatus('saving');
@@ -148,8 +152,10 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
         addToast('Failed to save theme', 'error');
         setSaveStatus('error');
       }
-    }, 1000);
+    }, THEME_AUTOSAVE_MS);
     return () => clearTimeout(saveTimer.current);
+  // theme is the only dep — onSaveRef/settingsRef/latestThemeRef/selectedIdRef are refs
+  // so they never invalidate the debounce, yet always hold the latest values when the timer fires.
   }, [theme]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const selectTheme = (t) => {
@@ -165,7 +171,7 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
     setNewName('');
     setNewShared(true);
     setDialogOpen(true);
-    setTimeout(() => nameInputRef.current?.focus(), 50);
+    setTimeout(() => nameInputRef.current?.focus(), FOCUS_DELAY_MS);
   };
 
   const closeDialog = () => {
@@ -376,9 +382,9 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
 
       {/* Create Theme dialog */}
       {dialogOpen && (
-        <div className="cdialog-backdrop" onClick={closeDialog}>
-          <div className="cdialog" role="dialog" aria-modal="true" aria-labelledby="create-theme-title" onClick={e => e.stopPropagation()} style={{ width: 360 }}>
-            <h3 id="create-theme-title" className="cdialog-title">Create Theme</h3>
+        <div className="modal-backdrop" onClick={closeDialog}>
+          <div className="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="create-theme-title" onClick={e => e.stopPropagation()} style={{ width: 360 }}>
+            <h3 id="create-theme-title" className="modal-dialog-title">Create Theme</h3>
             <div className="field" style={{ marginBottom: 12 }}>
               <label>Theme name</label>
               <input
@@ -398,7 +404,7 @@ export default function ThemeView({ settings, onSave, addToast, siteId, siteSlug
             <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '0 0 20px', lineHeight: 1.5 }}>
               When enabled, this theme will be available across all sites in this CMS.
             </p>
-            <div className="cdialog-actions">
+            <div className="modal-dialog-actions">
               <button className="btn btn-secondary" onClick={closeDialog} disabled={creating}>Cancel</button>
               <button className="btn btn-primary" onClick={handleCreate} disabled={creating || !newName.trim()}>
                 {creating ? 'Creating…' : 'Create Theme'}

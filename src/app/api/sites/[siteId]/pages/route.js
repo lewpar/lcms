@@ -2,14 +2,14 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { pagesDir, ensureDirs, isReservedSlug, readSites } from '../../../../../lib/paths.js';
-import { isValidId, safeError, sanitisePage } from '../../../../../lib/validate.js';
+import { pagesDir, ensureDirs, isReservedSlug } from '../../../../../lib/paths.js';
+import { safeError, sanitisePage, resolveSite } from '../../../../../lib/validate.js';
 import { safePagePath, slugExists } from '../../../../../lib/pages.js';
 
 export async function GET(request, { params }) {
+  const [, err] = resolveSite(params.siteId);
+  if (err) return err;
   const { siteId } = params;
-  if (!isValidId(siteId)) return NextResponse.json({ error: 'Invalid site ID.' }, { status: 400 });
-  if (!readSites().find(s => s.id === siteId)) return NextResponse.json({ error: 'Site not found.' }, { status: 404 });
 
   const dir = pagesDir(siteId);
   if (!fs.existsSync(dir)) return NextResponse.json([]);
@@ -32,13 +32,13 @@ export async function GET(request, { params }) {
         return new Date(b.updatedAt) - new Date(a.updatedAt);
       });
     return NextResponse.json(pages);
-  } catch (err) { return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
+  } catch (err) { console.error(err); return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
 }
 
 export async function POST(request, { params }) {
+  const [, err] = resolveSite(params.siteId);
+  if (err) return err;
   const { siteId } = params;
-  if (!isValidId(siteId)) return NextResponse.json({ error: 'Invalid site ID.' }, { status: 400 });
-  if (!readSites().find(s => s.id === siteId)) return NextResponse.json({ error: 'Site not found.' }, { status: 404 });
 
   ensureDirs(siteId);
   let rawBody = {};
@@ -55,5 +55,5 @@ export async function POST(request, { params }) {
   try {
     fs.writeFileSync(path.join(pagesDir(siteId), `${id}.json`), JSON.stringify(page, null, 2));
     return NextResponse.json(page);
-  } catch (err) { return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
+  } catch (err) { console.error(err); return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
 }

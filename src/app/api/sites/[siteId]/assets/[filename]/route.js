@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { assetsDir, readSites } from '../../../../../../lib/paths.js';
-import { isValidId, isSafeFilename, assertWithinDir, safeError } from '../../../../../../lib/validate.js';
+import { assetsDir } from '../../../../../../lib/paths.js';
+import { isSafeFilename, assertWithinDir, safeError, resolveSite } from '../../../../../../lib/validate.js';
 
 export async function DELETE(request, { params }) {
   const { siteId, filename } = params;
-  if (!isValidId(siteId)) return NextResponse.json({ error: 'Invalid site ID.' }, { status: 400 });
-  if (!readSites().find(s => s.id === siteId)) return NextResponse.json({ error: 'Site not found.' }, { status: 404 });
+  const [, err] = resolveSite(siteId);
+  if (err) return err;
 
   if (!isSafeFilename(filename)) {
     return NextResponse.json({ error: 'Invalid filename.' }, { status: 400 });
@@ -17,5 +17,5 @@ export async function DELETE(request, { params }) {
   if (!assertWithinDir(fp, dir)) return NextResponse.json({ error: 'Invalid filename.' }, { status: 400 });
   if (!fs.existsSync(fp)) return NextResponse.json({ error: 'Not found.' }, { status: 404 });
   try { fs.unlinkSync(fp); return NextResponse.json({ success: true }); }
-  catch (err) { return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
+  catch (err) { console.error(err); return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
 }

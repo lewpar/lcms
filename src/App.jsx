@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { v4 as uuidv4 } from './uuid.js';
+import { v4 as uuidv4 } from 'uuid';
+import { TOAST_DURATION_MS, FOCUS_DELAY_MS } from './utils.js';
 import {
   getSites, createSite, deleteSite, renameSite,
   getPages, createPage, deletePage, duplicatePage, generateSite,
@@ -54,7 +55,7 @@ export default function App() {
   const [editingSectionId, setEditingSectionId] = useState(null);
   const [editingSectionName, setEditingSectionName] = useState('');
   const [draggingPageId, setDraggingPageId] = useState(null);
-  const [dragOverTarget, setDragOverTarget] = useState(undefined);
+  const [dragOverSectionId, setDragOverTarget] = useState(undefined);
   const [pageGhostSectionId, setPageGhostSectionId] = useState(undefined); // undefined=none, null=unsectioned, string=sectionId
   const [pageGhostIndex, setPageGhostIndex] = useState(null);
   const renamingRef = useRef(null);
@@ -65,7 +66,7 @@ export default function App() {
   const addToast = useCallback((message, type = 'info') => {
     const id = uuidv4();
     setToasts(t => [...t, { id, message, type }]);
-    setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 3000);
+    setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), TOAST_DURATION_MS);
   }, []);
 
   // ── Site selection ───────────────────────────────────────
@@ -142,8 +143,8 @@ export default function App() {
     try {
       const s = await getSiteSettings(siteId);
       setSettings({ ...DEFAULT_SETTINGS, ...s, sections: s.sections || [] });
-    } catch (err) {
-      console.warn('Failed to load site settings:', err?.message);
+    } catch {
+      // Settings load failure is non-fatal; component falls back to DEFAULT_SETTINGS
     }
   }, [siteId]);
 
@@ -168,7 +169,7 @@ export default function App() {
       setSettings(newSettings);
       setEditingSectionId(id);
       setEditingSectionName(name);
-      setTimeout(() => renamingRef.current?.select(), 50);
+      setTimeout(() => renamingRef.current?.select(), FOCUS_DELAY_MS);
     } catch { addToast('Failed to add section', 'error'); }
   };
 
@@ -568,7 +569,7 @@ export default function App() {
             const sectionPages = pagesBySection[section.id] || [];
             const collapsed = collapsedSections[section.id];
             const isEditing = editingSectionId === section.id;
-            const isDragOver = dragOverTarget === section.id && draggingPageId;
+            const isDragOver = dragOverSectionId === section.id && draggingPageId;
 
             return (
               <div
@@ -650,7 +651,7 @@ export default function App() {
           })}
 
           {!pagesLoading && <div
-            className={`${sections.length > 0 ? 'sidebar-section' : ''} ${dragOverTarget === null && draggingPageId ? 'drag-over' : ''}`}
+            className={`${sections.length > 0 ? 'sidebar-section' : ''} ${dragOverSectionId === null && draggingPageId ? 'drag-over' : ''}`}
             onDragOver={e => onSectionDragOver(e, null)}
             onDragLeave={onSectionDragLeave}
             onDrop={e => onSectionDrop(e, null)}
@@ -709,7 +710,7 @@ export default function App() {
               href={`${cmsSettings.baseUrl}/${selectedSite.slug}`}
               target="_blank"
               rel="noopener noreferrer"
-              className={selectedSite.deployed ? 'site-deployed-url' : 'site-not-deployed'}
+              className={selectedSite.deployedGithubPages ? 'site-deployed-url' : 'site-not-deployed'}
               style={{ display: 'block', marginTop: 6, fontSize: 11, wordBreak: 'break-all' }}
             >
               {cmsSettings.baseUrl}/{selectedSite.slug}
@@ -730,7 +731,7 @@ export default function App() {
             siteSlug={selectedSite.slug}
             siteId={siteId}
             addToast={addToast}
-            initialSlug={pages.find(p => p.id === selectedId)?.slug || ''}
+            pageSlug={pages.find(p => p.id === selectedId)?.slug || ''}
           />
         ) : view === 'home' ? (
           <HomeEditor
@@ -871,10 +872,10 @@ export default function App() {
       />
 
       {deleteSectionDialog && (
-        <div className="cdialog-backdrop" onClick={() => setDeleteSectionDialog(null)}>
-          <div className="cdialog" role="dialog" aria-modal="true" onClick={e => e.stopPropagation()}>
-            <h3 className="cdialog-title">Delete section?</h3>
-            <p className="cdialog-message">
+        <div className="modal-backdrop" onClick={() => setDeleteSectionDialog(null)}>
+          <div className="modal-dialog" role="dialog" aria-modal="true" onClick={e => e.stopPropagation()}>
+            <h3 className="modal-dialog-title">Delete section?</h3>
+            <p className="modal-dialog-message">
               <strong>{deleteSectionDialog.name}</strong> will be permanently deleted.
             </p>
             {deleteSectionDialog.pageCount > 0 && (
@@ -887,7 +888,7 @@ export default function App() {
                 Also delete {deleteSectionDialog.pageCount} page{deleteSectionDialog.pageCount !== 1 ? 's' : ''} in this section
               </label>
             )}
-            <div className="cdialog-actions">
+            <div className="modal-dialog-actions">
               <button className="btn btn-secondary" onClick={() => setDeleteSectionDialog(null)}>Cancel</button>
               <button className="btn btn-danger" onClick={confirmDeleteSection}>Delete</button>
             </div>

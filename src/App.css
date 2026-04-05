@@ -1351,7 +1351,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 }
 
 /* ── Confirm dialog ── */
-.cdialog-backdrop {
+.modal-backdrop {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
@@ -1362,7 +1362,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   animation: fadeInFast 0.12s ease both;
 }
 
-.cdialog {
+.modal-dialog {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -1378,21 +1378,21 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   to   { transform: translateY(0);    opacity: 1; }
 }
 
-.cdialog-title {
+.modal-dialog-title {
   margin: 0 0 8px;
   font-size: 16px;
   font-weight: 700;
   color: var(--text);
 }
 
-.cdialog-message {
+.modal-dialog-message {
   margin: 0 0 20px;
   font-size: 14px;
   color: var(--text-muted);
   line-height: 1.5;
 }
 
-.cdialog-actions {
+.modal-dialog-actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
@@ -2132,12 +2132,15 @@ code {
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
 /* ── View-level fade-in animations ── */
-.editor          { animation: fadeIn 0.18s ease both; }
+.editor          { animation: fadeInFast 0.3s ease both; }
 .empty-state     { animation: fadeIn 0.22s ease both; }
 .settings-view   { animation: fadeIn 0.18s ease both; }
 .split-pane      { animation: fadeIn 0.18s ease both; }
 .media-manager   { animation: fadeIn 0.18s ease both; }
 .site-preview-view { animation: fadeIn 0.18s ease both; }
+
+/* Prevent double-animation when split-pane is nested inside the editor */
+.editor .split-pane { animation: none; }
 
 .block-card      { animation: fadeIn 0.15s ease both; }
 .page-list-item  { animation: fadeIn 0.12s ease both; }

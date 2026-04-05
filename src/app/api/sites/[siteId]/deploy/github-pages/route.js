@@ -2,15 +2,13 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { execFileSync } from 'child_process';
-import { readSites, writeSites, DOCS_DIR, ROOT } from '../../../../../../lib/paths.js';
-import { isValidId, safeError } from '../../../../../../lib/validate.js';
+import { writeSites, readSites, DOCS_DIR, ROOT } from '../../../../../../lib/paths.js';
+import { safeError, resolveSite } from '../../../../../../lib/validate.js';
 
 export async function DELETE(request, { params }) {
+  const [site, err] = resolveSite(params.siteId);
+  if (err) return err;
   const { siteId } = params;
-  if (!isValidId(siteId)) return NextResponse.json({ error: 'Invalid site ID.' }, { status: 400 });
-  const sites = readSites();
-  const site = sites.find(s => s.id === siteId);
-  if (!site) return NextResponse.json({ error: 'Site not found.' }, { status: 404 });
 
   try {
     const deployDir = path.join(DOCS_DIR, site.slug);
@@ -46,8 +44,8 @@ export async function DELETE(request, { params }) {
     }
 
     // Mark site as no longer deployed
-    writeSites(sites.map(s => s.id === siteId ? { ...s, deployedGithubPages: false } : s));
+    writeSites(readSites().map(s => s.id === siteId ? { ...s, deployedGithubPages: false } : s));
 
     return NextResponse.json({ success: true, ...(gitWarning ? { gitWarning } : {}) });
-  } catch (err) { return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
+  } catch (err) { console.error(err); return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
 }

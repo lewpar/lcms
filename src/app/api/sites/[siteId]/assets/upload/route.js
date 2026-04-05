@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { assetsDir, ensureDirs, readSites } from '../../../../../../lib/paths.js';
-import { isValidId, safeError } from '../../../../../../lib/validate.js';
+import { assetsDir, ensureDirs } from '../../../../../../lib/paths.js';
+import { safeError, resolveSite } from '../../../../../../lib/validate.js';
 
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif']);
 const MAX_FILE_SIZE = 8 * 1024 * 1024; // 8 MB
@@ -30,9 +30,9 @@ function validateMagicBytes(buffer, ext) {
 }
 
 export async function POST(request, { params }) {
+  const [, err] = resolveSite(params.siteId);
+  if (err) return err;
   const { siteId } = params;
-  if (!isValidId(siteId)) return NextResponse.json({ error: 'Invalid site ID.' }, { status: 400 });
-  if (!readSites().find(s => s.id === siteId)) return NextResponse.json({ error: 'Site not found.' }, { status: 404 });
 
   ensureDirs(siteId);
 
@@ -66,5 +66,5 @@ export async function POST(request, { params }) {
   try {
     fs.writeFileSync(filePath, buffer);
     return NextResponse.json({ url: `/assets/${siteId}/${filename}` });
-  } catch (err) { return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
+  } catch (err) { console.error(err); return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
 }

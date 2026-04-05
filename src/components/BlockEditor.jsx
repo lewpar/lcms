@@ -1,7 +1,7 @@
 'use client';
 import { useRef, useState, useEffect } from 'react';
 import { uploadAsset } from '../api.js';
-import { v4 as uuidv4 } from '../uuid.js';
+import { v4 as uuidv4 } from 'uuid';
 import MediaManager from './MediaManager.jsx';
 import { BLOCK_TYPES, CALLOUT_COLORS, DIFFICULTY_LABELS, DIFFICULTY_COLORS } from '../blockTypes.js';
 

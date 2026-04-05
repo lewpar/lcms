@@ -1,18 +1,6 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import { CMS_SETTINGS_FILE } from '../../../lib/paths.js';
+import { read, write } from '../../../lib/cms-settings.js';
 import { safeError } from '../../../lib/validate.js';
-
-const DEFAULTS = { baseUrl: '', themes: [] };
-
-function read() {
-  try { return { ...DEFAULTS, ...JSON.parse(fs.readFileSync(CMS_SETTINGS_FILE, 'utf-8')) }; }
-  catch { return { ...DEFAULTS }; }
-}
-
-function write(data) {
-  fs.writeFileSync(CMS_SETTINGS_FILE, JSON.stringify(data, null, 2));
-}
 
 export async function GET() {
   return NextResponse.json(read());
@@ -29,5 +17,5 @@ export async function PUT(request) {
     const updated = { ...existing, baseUrl };
     write(updated);
     return NextResponse.json(updated);
-  } catch (err) { return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
+  } catch (err) { console.error(err); return NextResponse.json({ error: safeError(err) }, { status: 500 }); }
 }

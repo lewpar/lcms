@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from './uuid.js';
+import { v4 as uuidv4 } from 'uuid';
 
 export const CALLOUT_COLORS = {
   blue:   { bg: '#eff6ff', border: '#3b82f6', text: '#1e40af' },

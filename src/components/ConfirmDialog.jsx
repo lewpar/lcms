@@ -35,11 +35,11 @@ export default function ConfirmDialog({
   if (!open) return null;
 
   return (
-    <div className="cdialog-backdrop" onClick={onCancel}>
-      <div className="cdialog" role="dialog" aria-modal="true" aria-labelledby="cdialog-title" onClick={e => e.stopPropagation()}>
-        <h3 id="cdialog-title" className="cdialog-title">{title}</h3>
-        {message && <p className="cdialog-message">{message}</p>}
-        <div className="cdialog-actions">
+    <div className="modal-backdrop" onClick={onCancel}>
+      <div className="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-dialog-title" onClick={e => e.stopPropagation()}>
+        <h3 id="modal-dialog-title" className="modal-dialog-title">{title}</h3>
+        {message && <p className="modal-dialog-message">{message}</p>}
+        <div className="modal-dialog-actions">
           <button className="btn btn-secondary" onClick={onCancel}>Cancel</button>
           <button
             ref={confirmRef}
