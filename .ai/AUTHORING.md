@@ -134,6 +134,120 @@ Set `"floatingDarkMode": true` to add a fixed floating dark/light mode toggle bu
 
 ---
 
+## Single-page sites
+
+If the user asks for a single-page site — one that has no sidebar, no page links, and presents all its content on the home screen — follow the pattern below instead of the standard multi-page flow.
+
+### What changes
+
+| Concern | Multi-page site | Single-page site |
+|---------|----------------|-----------------|
+| Content lives in | `pages/<uuid>.json` files | `site.json` → `home.blocks` |
+| Sidebar / top nav | Shown | Hidden (`disableNav: true`) |
+| Dark-mode toggle | In top nav bar | Floating button (`floatingDarkMode: true`) |
+| `sections` array | One or more sections | Empty array `[]` |
+| `pages/` directory | Required | Create the folder but leave it empty |
+| `showPageGrid` | Usually `true` | Set to `false` (there are no pages to grid) |
+
+### `site.json` for a single-page site
+
+```json
+{
+  "title": "My Single-Page Site",
+  "description": "A concise description.",
+  "navPages": [],
+  "sections": [],
+  "disableNav": true,
+  "floatingDarkMode": true,
+  "home": {
+    "heroTitle": "My Single-Page Site",
+    "heroSubtitle": "A subtitle shown beneath the hero title.",
+    "showPageGrid": false,
+    "blocks": [
+      {
+        "id": "sp-block-1",
+        "type": "markdown",
+        "content": "All site content goes here as blocks, exactly as you would write them on a normal page."
+      }
+    ]
+  }
+}
+```
+
+Add as many blocks to `home.blocks` as needed — every block type available in [BLOCKS.md](./BLOCKS.md) works here.
+
+### What to skip
+
+- **Do not create any page JSON files.** The `pages/` directory should exist but be empty.
+- **Do not add any sections** to the `sections` array — they would be unused.
+- **Do not set `navPages`** to anything other than `[]`.
+
+### Worked example — single-page reference card
+
+#### `content/sites.json` (append)
+```json
+{
+  "id": "dddddddd-0000-0000-0000-000000000001",
+  "name": "Python Quick Reference",
+  "slug": "python-quick-ref"
+}
+```
+
+#### `content/sites/dddddddd-0000-0000-0000-000000000001/site.json`
+```json
+{
+  "title": "Python Quick Reference",
+  "description": "A single-page cheat sheet for Python syntax.",
+  "navPages": [],
+  "sections": [],
+  "disableNav": true,
+  "floatingDarkMode": true,
+  "home": {
+    "heroTitle": "Python Quick Reference",
+    "heroSubtitle": "Everything you need on one page.",
+    "showPageGrid": false,
+    "blocks": [
+      {
+        "id": "sp-1",
+        "type": "heading",
+        "level": 2,
+        "text": "Variables"
+      },
+      {
+        "id": "sp-2",
+        "type": "code",
+        "language": "python",
+        "content": "x = 42\nname = \"Alice\"\npi = 3.14",
+        "caption": "Basic variable assignment"
+      },
+      {
+        "id": "sp-3",
+        "type": "heading",
+        "level": 2,
+        "text": "Control Flow"
+      },
+      {
+        "id": "sp-4",
+        "type": "code",
+        "language": "python",
+        "content": "if x > 0:\n    print(\"positive\")\nelif x == 0:\n    print(\"zero\")\nelse:\n    print(\"negative\")",
+        "caption": "if / elif / else"
+      }
+    ]
+  }
+}
+```
+
+The `pages/` and `assets/` directories still need to exist:
+```
+content/sites/dddddddd-0000-0000-0000-000000000001/
+  site.json
+  pages/          ← empty
+  assets/         ← empty
+```
+
+---
+
 ## Step 5 — Write page files in `content/sites/<site-uuid>/pages/<page-uuid>.json`
 
 Each file is one page. **The filename and the `id` field inside must be the same UUID.**
@@ -314,6 +428,14 @@ A minimal but complete site with two sections and two pages. Replace all UUIDs w
 - [ ] All slugs are lowercase with only letters, digits, and hyphens
 - [ ] No slug clashes within the same site
 - [ ] Site slug does not use a reserved word (see Step 2 table)
+
+### Single-page sites
+- [ ] `disableNav: true` is set in `site.json`
+- [ ] `floatingDarkMode: true` is set in `site.json`
+- [ ] `sections` is `[]`
+- [ ] `showPageGrid` is `false`
+- [ ] No page JSON files have been created (pages/ directory is empty)
+- [ ] All content is in `home.blocks`
 
 ### Content
 - [ ] `correctIndex` in quiz questions is 0-based and within bounds of `options`
