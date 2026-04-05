@@ -31,7 +31,7 @@ export async function POST(request, { params }) {
       : `Deploy ${site.slug} to GitHub Pages`;
 
     try {
-      execFileSync('git', ['add', 'docs/'], { cwd: ROOT, timeout: 15000 });
+      execFileSync('git', ['add', 'docs/', 'content/'], { cwd: ROOT, timeout: 15000 });
     } catch (addErr) {
       const msg = addErr.stderr ? addErr.stderr.toString().trim() : String(addErr.message || addErr);
       return NextResponse.json({ error: `Git staging failed: ${msg}` }, { status: 500 });
