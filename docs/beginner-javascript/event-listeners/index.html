@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Event Listeners &amp; Interactivity — Beginner JavaScript</title>
+  <meta name="description" content="Learn how to respond to user interactions like clicks and keyboard input." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=mnlmml01" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">Beginner JavaScript</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Fundamentals</div><a href="../variables-and-data-types/" class="nav-link" title="Variables &amp; Data Types"><span class="nav-link-icon">📦</span><span class="nav-link-text">Variables &amp; Data Types</span></a><a href="../operators-and-expressions/" class="nav-link" title="Operators &amp; Expressions"><span class="nav-link-icon">➕</span><span class="nav-link-text">Operators &amp; Expressions</span></a></div><div class="nav-section"><div class="nav-section-title">Control Flow</div><a href="../if-statements/" class="nav-link" title="If Statements &amp; Control Flow"><span class="nav-link-icon">🎯</span><span class="nav-link-text">If Statements &amp; Control Flow</span></a><a href="../loops/" class="nav-link" title="Loops - Repeating Code"><span class="nav-link-icon">🔁</span><span class="nav-link-text">Loops - Repeating Code</span></a></div><div class="nav-section"><div class="nav-section-title">Functions &amp; Objects</div><a href="../functions/" class="nav-link" title="Functions - Reusable Code"><span class="nav-link-icon">⚙️</span><span class="nav-link-text">Functions - Reusable Code</span></a><a href="../arrays/" class="nav-link" title="Arrays - Working with Lists"><span class="nav-link-icon">📋</span><span class="nav-link-text">Arrays - Working with Lists</span></a><a href="../objects/" class="nav-link" title="Objects - Structured Data"><span class="nav-link-icon">🏗️</span><span class="nav-link-text">Objects - Structured Data</span></a></div><div class="nav-section"><div class="nav-section-title">DOM &amp; Events</div><a href="../dom-basics/" class="nav-link" title="Selecting &amp; Manipulating DOM"><span class="nav-link-icon">🎨</span><span class="nav-link-text">Selecting &amp; Manipulating DOM</span></a><a href="../event-listeners/" class="nav-link active" title="Event Listeners &amp; Interactivity"><span class="nav-link-icon">🖱️</span><span class="nav-link-text">Event Listeners &amp; Interactivity</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#what-are-events"><span class="toc-num">1.</span> What are Events?</a><a class="nav-toc-link nav-toc-level-2" href="#adding-event-listeners"><span class="toc-num">2.</span> Adding Event Listeners</a><a class="nav-toc-link nav-toc-level-2" href="#the-event-object"><span class="toc-num">3.</span> The Event Object</a><a class="nav-toc-link nav-toc-level-2" href="#combining-events-and-dom-changes"><span class="toc-num">4.</span> Combining Events and DOM Changes</a></div><a href="../creating-elements/" class="nav-link" title="Creating &amp; Removing Elements"><span class="nav-link-icon">🔧</span><span class="nav-link-text">Creating &amp; Removing Elements</span></a></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../student-manager-activity/" class="nav-link" title="Build a Student Manager"><span class="nav-link-icon">👨‍🎓</span><span class="nav-link-text">Build a Student Manager</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    <div class="custom-site-header"><h1 style="margin:0; font-size:24px; color:#3b82f6;">📚 Beginner JavaScript</h1></div>
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>DOM &amp; Events</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Event Listeners &amp; Interactivity</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Event Listeners &amp; Interactivity</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">DOM &amp; Events</span>
+            <span>⏱ 2 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><h2 id="what-are-events" class="block-heading"><span class="heading-num">1.</span> What are Events?<a class="heading-anchor" href="#what-are-events" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>An <strong>event</strong> is something the user does on a web page, like:</p>
+<ul>
+<li>Clicking a button</li>
+<li>Typing in a text field</li>
+<li>Hovering over an element</li>
+<li>Pressing a key</li>
+<li>Scrolling the page</li>
+</ul>
+<p>With <strong>event listeners</strong>, you can detect when these things happen and run code in response.</p>
+<p><strong>Common Events:</strong></p>
+<ul>
+<li><code>click</code> - User clicks an element</li>
+<li><code>input</code> - User types in a text field</li>
+<li><code>keypress</code> - User presses a key</li>
+<li><code>mouseover</code> - Mouse moves over element</li>
+<li><code>mouseout</code> - Mouse leaves element</li>
+<li><code>submit</code> - Form is submitted</li>
+</ul>
+</div>
+<h2 id="adding-event-listeners" class="block-heading"><span class="heading-num">2.</span> Adding Event Listeners<a class="heading-anchor" href="#adding-event-listeners" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Use the <code>addEventListener()</code> method to respond to events:</p>
+<pre><code class="language-javascript">let button = document.querySelector(&quot;button&quot;);
+
+button.addEventListener(&quot;click&quot;, function() {
+  console.log(&quot;Button was clicked!&quot;);
+});
+</code></pre>
+<p>Or with arrow functions (modern way):</p>
+<pre><code class="language-javascript">let button = document.querySelector(&quot;button&quot;);
+
+button.addEventListener(&quot;click&quot;, () =&gt; {
+  console.log(&quot;Button was clicked!&quot;);
+});
+</code></pre>
+<p><strong>Syntax</strong>: <code>element.addEventListener(eventType, function)</code></p>
+<ul>
+<li><code>eventType</code> - The event to listen for (as a string, no quotes around function)</li>
+<li><code>function</code> - The code to run when the event happens</li>
+</ul>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Simple Click Handler</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Example: Click event listener
+let button = document.querySelector(&quot;button&quot;);
+
+if (button) {
+  button.addEventListener(&quot;click&quot;, () =&gt; {
+    console.log(&quot;You clicked the button!&quot;);
+  });
+}
+
+// Example: Input event listener
+let input = document.querySelector(&quot;input&quot;);
+
+if (input) {
+  input.addEventListener(&quot;input&quot;, (event) =&gt; {
+    console.log(&quot;User typed: &quot; + event.target.value);
+  });
+}
+
+// The &#x27;event&#x27; parameter contains info about what happened
+console.log(&quot;Event listeners are ready!&quot;);</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h2 id="the-event-object" class="block-heading"><span class="heading-num">3.</span> The Event Object<a class="heading-anchor" href="#the-event-object" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>When an event happens, JavaScript passes an <strong>event object</strong> to your function. This object contains useful information:</p>
+<pre><code class="language-javascript">let button = document.querySelector(&quot;button&quot;);
+
+button.addEventListener(&quot;click&quot;, (event) =&gt; {
+  console.log(event.type);     // &quot;click&quot;
+  console.log(event.target);   // The button element
+});
+
+let input = document.querySelector(&quot;input&quot;);
+
+input.addEventListener(&quot;input&quot;, (event) =&gt; {
+  console.log(event.target.value);  // What the user typed
+});
+
+let form = document.querySelector(&quot;form&quot;);
+
+form.addEventListener(&quot;submit&quot;, (event) =&gt; {
+  event.preventDefault();  // Stop form from submitting
+  console.log(&quot;Form prevented from submitting!&quot;);
+});
+</code></pre>
+<p><strong>Useful properties:</strong></p>
+<ul>
+<li><code>event.target</code> - The element that triggered the event</li>
+<li><code>event.type</code> - The type of event (click, input, etc.)</li>
+<li><code>event.target.value</code> - The current value (for inputs)</li>
+<li><code>event.preventDefault()</code> - Stops default behavior</li>
+</ul>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Using the Event Object</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Example: Use event object to get the clicked element
+let boxes = document.querySelectorAll(&quot;.box&quot;);
+
+for (let box of boxes) {
+  box.addEventListener(&quot;click&quot;, (event) =&gt; {
+    console.log(&quot;Clicked element:&quot;, event.target);
+    console.log(&quot;Event type:&quot;, event.type);
+  });
+}
+
+// Example: Get input value
+let searchInput = document.querySelector(&quot;#search&quot;);
+
+if (searchInput) {
+  searchInput.addEventListener(&quot;input&quot;, (event) =&gt; {
+    let userInput = event.target.value;
+    console.log(&quot;User is typing: &quot; + userInput);
+  });
+}
+
+console.log(&quot;Try clicking elements or typing in the input!&quot;);</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h2 id="combining-events-and-dom-changes" class="block-heading"><span class="heading-num">4.</span> Combining Events and DOM Changes<a class="heading-anchor" href="#combining-events-and-dom-changes" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>The real power comes when you <strong>respond to events by changing the DOM</strong>:</p>
+<pre><code class="language-javascript">let button = document.querySelector(&quot;#toggleButton&quot;);
+let message = document.querySelector(&quot;#message&quot;);
+
+button.addEventListener(&quot;click&quot;, () =&gt; {
+  message.textContent = &quot;You clicked the button!&quot;;
+  message.style.color = &quot;green&quot;;
+});
+</code></pre>
+<p>You can create interactive features:</p>
+<ul>
+<li>Toggle elements on/off</li>
+<li>Update text based on user input</li>
+<li>Change colors/styles on interaction</li>
+<li>Add/remove elements dynamically</li>
+</ul>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Interactive Button Example</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Create an interactive button system
+let clickCount = 0;
+let button = document.querySelector(&quot;button&quot;);
+let display = document.querySelector(&quot;#display&quot;);
+
+if (button) {
+  button.addEventListener(&quot;click&quot;, () =&gt; {
+    clickCount++;
+    
+    // Update the display
+    if (display) {
+      display.textContent = &quot;Clicks: &quot; + clickCount;
+    }
+    
+    // Change color based on count
+    if (clickCount &gt; 5) {
+      button.style.backgroundColor = &quot;gold&quot;;
+    } else if (clickCount &gt; 2) {
+      button.style.backgroundColor = &quot;lightblue&quot;;
+    }
+    
+    console.log(&quot;Total clicks: &quot; + clickCount);
+  });
+}
+
+console.log(&quot;Click the button to test!&quot;);</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../dom-basics/">← Selecting &amp; Manipulating DOM</a>
+  <a class="pn-btn pn-next" href="../creating-elements/">Creating &amp; Removing Elements →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="custom-footer-html"><div style="text-align:center; color:#6b7280; font-size:14px;">Learn to code with interactive lessons and challenges</div></div>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnlmml01"></script>
+
+
+
+<script src="../playground.js?v=mnlmml01"></script>
+
+
+
+</body>
+</html>

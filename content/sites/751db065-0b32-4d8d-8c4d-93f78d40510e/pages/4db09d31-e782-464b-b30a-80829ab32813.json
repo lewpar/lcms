@@ -1,0 +1,131 @@
+{
+  "id": "4db09d31-e782-464b-b30a-80829ab32813",
+  "title": "Build a Student Manager",
+  "slug": "student-manager-activity",
+  "section": "9bd02994-7b95-47a9-b60d-246773370a0f",
+  "description": "Practice arrays and objects by building a student manager. Complete multiple exercises that all use the same core skill: managing a collection of data.",
+  "icon": "👨‍🎓",
+  "order": 0,
+  "blocks": [
+    {
+      "id": "act-heading-1",
+      "type": "heading",
+      "level": 2,
+      "text": "Activity: Building a Student Manager"
+    },
+    {
+      "id": "act-markdown-1",
+      "type": "markdown",
+      "content": "In this activity, you'll practice **managing collections of data** by building a student manager system. Each exercise below focuses on the same core skill—storing and manipulating information about multiple students—but in different ways.\n\n**Learning Goal**: Master how to create arrays of objects, loop through them, and manipulate the data.\n\nStart with **Exercise 1** below and work your way through all exercises. Each one repeats the same concept in a new context!"
+    },
+    {
+      "id": "act-heading-2",
+      "type": "heading",
+      "level": 3,
+      "text": "Exercise 1: Create and Display Students"
+    },
+    {
+      "id": "act-markdown-2",
+      "type": "markdown",
+      "content": "Start by creating an array of student objects and displaying them. Each student should have: `name`, `grade`, and `gpa`.\n\n**Goal**: Practice creating arrays of objects and accessing their properties."
+    },
+    {
+      "id": "act-playground-1",
+      "type": "playground",
+      "title": "Exercise 1: Create and Display Students",
+      "starterCode": "// TODO: Create an array called 'students' with at least 3 student objects\n// Each student should have: name, grade, gpa\nlet students = [\n  // Add your students here\n];\n\n// TODO: Loop through the array and display each student's info\n// Format: \"Name: Alice, Grade: 10, GPA: 3.8\"\nfor (let student of students) {\n  // Write your code here\n}\n\n// Hint: Use console.log with template literals or string concatenation"
+    },
+    {
+      "id": "act-heading-3",
+      "type": "heading",
+      "level": 3,
+      "text": "Exercise 2: Find Students by Grade"
+    },
+    {
+      "id": "act-markdown-3",
+      "type": "markdown",
+      "content": "Use the same student data, but now **filter** to find all students in a specific grade.\n\n**Goal**: Practice filtering arrays of objects based on a condition."
+    },
+    {
+      "id": "act-playground-2",
+      "type": "playground",
+      "title": "Exercise 2: Find Students by Grade",
+      "starterCode": "// Same student data from Exercise 1\nlet students = [\n  { name: \"Alice\", grade: 10, gpa: 3.8 },\n  { name: \"Bob\", grade: 11, gpa: 3.5 },\n  { name: \"Charlie\", grade: 10, gpa: 3.9 },\n  { name: \"Diana\", grade: 11, gpa: 3.2 }\n];\n\n// TODO: Create a function that finds all students in a specific grade\nfunction findByGrade(grade) {\n  // Write your code here\n  // Use filter() or a loop with an if statement\n}\n\n// TODO: Test it! Find all grade 10 students\nlet grade10Students = findByGrade(10);\nconsole.log(grade10Students);\n\n// TODO: Test it! Find all grade 11 students\nlet grade11Students = findByGrade(11);\nconsole.log(grade11Students);"
+    },
+    {
+      "id": "act-heading-4",
+      "type": "heading",
+      "level": 3,
+      "text": "Exercise 3: Add and Remove Students"
+    },
+    {
+      "id": "act-markdown-4",
+      "type": "markdown",
+      "content": "Practice **modifying** the student list by adding and removing students.\n\n**Goal**: Practice using array methods (push, pop, shift, splice) on arrays of objects."
+    },
+    {
+      "id": "act-playground-3",
+      "type": "playground",
+      "title": "Exercise 3: Add and Remove Students",
+      "starterCode": "let students = [\n  { name: \"Alice\", grade: 10, gpa: 3.8 },\n  { name: \"Bob\", grade: 11, gpa: 3.5 },\n  { name: \"Charlie\", grade: 10, gpa: 3.9 }\n];\n\nconsole.log(\"Starting count: \" + students.length);\n\n// TODO: Add a new student to the list\nlet newStudent = { name: \"Diana\", grade: 11, gpa: 3.2 };\n// Use push() to add the student\n\nconsole.log(\"After adding: \" + students.length);\n\n// TODO: Remove the first student from the list\n// Use shift() to remove from the beginning\n\nconsole.log(\"After removing first: \" + students.length);\n\n// TODO: Display all remaining students\nfor (let student of students) {\n  console.log(student.name);\n}"
+    },
+    {
+      "id": "act-heading-5",
+      "type": "heading",
+      "level": 3,
+      "text": "Exercise 4: Calculate Class Statistics"
+    },
+    {
+      "id": "act-markdown-5",
+      "type": "markdown",
+      "content": "Now use the student data to **calculate statistics** about the class.\n\n**Goal**: Practice working with arrays of objects to extract and compute values."
+    },
+    {
+      "id": "act-playground-4",
+      "type": "playground",
+      "title": "Exercise 4: Calculate Class Statistics",
+      "starterCode": "let students = [\n  { name: \"Alice\", grade: 10, gpa: 3.8 },\n  { name: \"Bob\", grade: 11, gpa: 3.5 },\n  { name: \"Charlie\", grade: 10, gpa: 3.9 },\n  { name: \"Diana\", grade: 11, gpa: 3.2 }\n];\n\n// TODO: Find the highest GPA\nlet highest = students[0].gpa;\nfor (let student of students) {\n  // Compare and update highest\n}\nconsole.log(\"Highest GPA: \" + highest);\n\n// TODO: Find the lowest GPA\nlet lowest = students[0].gpa;\n// Write your code here\nconsole.log(\"Lowest GPA: \" + lowest);\n\n// TODO: Calculate the average GPA\nlet total = 0;\nfor (let student of students) {\n  // Add each student's GPA to total\n}\nlet average = total / students.length;\nconsole.log(\"Average GPA: \" + average);"
+    },
+    {
+      "id": "act-heading-6",
+      "type": "heading",
+      "level": 3,
+      "text": "Exercise 5: Search and Update Students"
+    },
+    {
+      "id": "act-markdown-6",
+      "type": "markdown",
+      "content": "Combine searching and updating: **find a student and update their information**.\n\n**Goal**: Practice finding specific objects in an array and modifying them."
+    },
+    {
+      "id": "act-playground-5",
+      "type": "playground",
+      "title": "Exercise 5: Search and Update Students",
+      "starterCode": "let students = [\n  { name: \"Alice\", grade: 10, gpa: 3.8 },\n  { name: \"Bob\", grade: 11, gpa: 3.5 },\n  { name: \"Charlie\", grade: 10, gpa: 3.9 },\n  { name: \"Diana\", grade: 11, gpa: 3.2 }\n];\n\n// TODO: Create a function that finds a student by name\nfunction findStudent(name) {\n  for (let student of students) {\n    if (student.name === name) {\n      return student;\n    }\n  }\n  return null;  // Not found\n}\n\n// TODO: Create a function that updates a student's GPA\nfunction updateGPA(name, newGPA) {\n  let student = findStudent(name);\n  if (student) {\n    student.gpa = newGPA;\n    return true;  // Success\n  }\n  return false;  // Student not found\n}\n\n// Test: Update Alice's GPA to 3.9\nupdateGPA(\"Alice\", 3.9);\n\n// Display all students to verify\nfor (let student of students) {\n  console.log(student.name + \": \" + student.gpa);\n}"
+    },
+    {
+      "id": "act-heading-7",
+      "type": "heading",
+      "level": 3,
+      "text": "Challenge: Combine Everything"
+    },
+    {
+      "id": "act-markdown-7",
+      "type": "markdown",
+      "content": "Ready for the final challenge? Combine all the skills from exercises 1-5 into one complete system!"
+    },
+    {
+      "id": "act-playground-6",
+      "type": "playground",
+      "title": "Challenge: Student Manager System",
+      "starterCode": "// Create a complete student manager with all operations\nlet students = [\n  { name: \"Alice\", grade: 10, gpa: 3.8 },\n  { name: \"Bob\", grade: 11, gpa: 3.5 },\n  { name: \"Charlie\", grade: 10, gpa: 3.9 }\n];\n\n// Function 1: Display all students\nfunction displayStudents() {\n  console.log(\"=== All Students ===\");\n  for (let student of students) {\n    console.log(student.name + \" (Grade \" + student.grade + \", GPA \" + student.gpa + \")\");\n  }\n}\n\n// Function 2: Add a student\nfunction addStudent(name, grade, gpa) {\n  students.push({ name, grade, gpa });\n  console.log(\"Added \" + name);\n}\n\n// Function 3: Get average GPA\nfunction getAverageGPA() {\n  let total = 0;\n  for (let student of students) {\n    total += student.gpa;\n  }\n  return (total / students.length).toFixed(2);\n}\n\n// Function 4: Find top student by GPA\nfunction getTopStudent() {\n  let top = students[0];\n  for (let student of students) {\n    if (student.gpa > top.gpa) {\n      top = student;\n    }\n  }\n  return top;\n}\n\n// TODO: Use all these functions to manage your students\ndisplayStudents();\naddStudent(\"Diana\", 11, 3.2);\nconsole.log(\"Average GPA: \" + getAverageGPA());\nconsole.log(\"Top student: \" + getTopStudent().name);\n\n// TODO: Try adding more students and calling the functions!"
+    },
+    {
+      "id": "act-markdown-8",
+      "type": "markdown",
+      "content": "## Great Job! 🎉\n\nYou've completed all exercises! You've now practiced **managing collections of data** using:\n- Creating arrays of objects\n- Looping through data\n- Filtering and searching\n- Adding and removing items\n- Calculating statistics\n- Updating values\n\nThese are the core skills you'll use when working with real data in JavaScript. Practice these patterns and you'll be ready for anything!"
+    }
+  ],
+  "createdAt": "2026-04-05T10:30:00.000Z",
+  "updatedAt": "2026-04-05T10:30:00.000Z"
+}

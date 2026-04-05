@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build a Student Manager — Beginner JavaScript</title>
+  <meta name="description" content="Practice arrays and objects by building a student manager. Complete multiple exercises that all use the same core skill: managing a collection of data." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=mnlmml01" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">Beginner JavaScript</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Fundamentals</div><a href="../variables-and-data-types/" class="nav-link" title="Variables &amp; Data Types"><span class="nav-link-icon">📦</span><span class="nav-link-text">Variables &amp; Data Types</span></a><a href="../operators-and-expressions/" class="nav-link" title="Operators &amp; Expressions"><span class="nav-link-icon">➕</span><span class="nav-link-text">Operators &amp; Expressions</span></a></div><div class="nav-section"><div class="nav-section-title">Control Flow</div><a href="../if-statements/" class="nav-link" title="If Statements &amp; Control Flow"><span class="nav-link-icon">🎯</span><span class="nav-link-text">If Statements &amp; Control Flow</span></a><a href="../loops/" class="nav-link" title="Loops - Repeating Code"><span class="nav-link-icon">🔁</span><span class="nav-link-text">Loops - Repeating Code</span></a></div><div class="nav-section"><div class="nav-section-title">Functions &amp; Objects</div><a href="../functions/" class="nav-link" title="Functions - Reusable Code"><span class="nav-link-icon">⚙️</span><span class="nav-link-text">Functions - Reusable Code</span></a><a href="../arrays/" class="nav-link" title="Arrays - Working with Lists"><span class="nav-link-icon">📋</span><span class="nav-link-text">Arrays - Working with Lists</span></a><a href="../objects/" class="nav-link" title="Objects - Structured Data"><span class="nav-link-icon">🏗️</span><span class="nav-link-text">Objects - Structured Data</span></a></div><div class="nav-section"><div class="nav-section-title">DOM &amp; Events</div><a href="../dom-basics/" class="nav-link" title="Selecting &amp; Manipulating DOM"><span class="nav-link-icon">🎨</span><span class="nav-link-text">Selecting &amp; Manipulating DOM</span></a><a href="../event-listeners/" class="nav-link" title="Event Listeners &amp; Interactivity"><span class="nav-link-icon">🖱️</span><span class="nav-link-text">Event Listeners &amp; Interactivity</span></a><a href="../creating-elements/" class="nav-link" title="Creating &amp; Removing Elements"><span class="nav-link-icon">🔧</span><span class="nav-link-text">Creating &amp; Removing Elements</span></a></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../student-manager-activity/" class="nav-link active" title="Build a Student Manager"><span class="nav-link-icon">👨‍🎓</span><span class="nav-link-text">Build a Student Manager</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#activity-building-a-student-manager"><span class="toc-num">1.</span> Activity: Building a Student Manager</a><a class="nav-toc-link nav-toc-level-3" href="#exercise-1-create-and-display-students"><span class="toc-num">1.1.</span> Exercise 1: Create and Display Students</a><a class="nav-toc-link nav-toc-level-3" href="#exercise-2-find-students-by-grade"><span class="toc-num">1.2.</span> Exercise 2: Find Students by Grade</a><a class="nav-toc-link nav-toc-level-3" href="#exercise-3-add-and-remove-students"><span class="toc-num">1.3.</span> Exercise 3: Add and Remove Students</a><a class="nav-toc-link nav-toc-level-3" href="#exercise-4-calculate-class-statistics"><span class="toc-num">1.4.</span> Exercise 4: Calculate Class Statistics</a><a class="nav-toc-link nav-toc-level-3" href="#exercise-5-search-and-update-students"><span class="toc-num">1.5.</span> Exercise 5: Search and Update Students</a><a class="nav-toc-link nav-toc-level-3" href="#challenge-combine-everything"><span class="toc-num">1.6.</span> Challenge: Combine Everything</a></div></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    <div class="custom-site-header"><h1 style="margin:0; font-size:24px; color:#3b82f6;">📚 Beginner JavaScript</h1></div>
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>Activities</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Build a Student Manager</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Build a Student Manager</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">Activities</span>
+            <span>⏱ 2 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><h2 id="activity-building-a-student-manager" class="block-heading"><span class="heading-num">1.</span> Activity: Building a Student Manager<a class="heading-anchor" href="#activity-building-a-student-manager" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>In this activity, you&#39;ll practice <strong>managing collections of data</strong> by building a student manager system. Each exercise below focuses on the same core skill—storing and manipulating information about multiple students—but in different ways.</p>
+<p><strong>Learning Goal</strong>: Master how to create arrays of objects, loop through them, and manipulate the data.</p>
+<p>Start with <strong>Exercise 1</strong> below and work your way through all exercises. Each one repeats the same concept in a new context!</p>
+</div>
+<h3 id="exercise-1-create-and-display-students" class="block-heading"><span class="heading-num">1.1.</span> Exercise 1: Create and Display Students<a class="heading-anchor" href="#exercise-1-create-and-display-students" aria-label="Copy link to section">#</a></h3>
+<div class="prose"><p>Start by creating an array of student objects and displaying them. Each student should have: <code>name</code>, <code>grade</code>, and <code>gpa</code>.</p>
+<p><strong>Goal</strong>: Practice creating arrays of objects and accessing their properties.</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Exercise 1: Create and Display Students</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// TODO: Create an array called &#x27;students&#x27; with at least 3 student objects
+// Each student should have: name, grade, gpa
+let students = [
+  // Add your students here
+];
+
+// TODO: Loop through the array and display each student&#x27;s info
+// Format: &quot;Name: Alice, Grade: 10, GPA: 3.8&quot;
+for (let student of students) {
+  // Write your code here
+}
+
+// Hint: Use console.log with template literals or string concatenation</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h3 id="exercise-2-find-students-by-grade" class="block-heading"><span class="heading-num">1.2.</span> Exercise 2: Find Students by Grade<a class="heading-anchor" href="#exercise-2-find-students-by-grade" aria-label="Copy link to section">#</a></h3>
+<div class="prose"><p>Use the same student data, but now <strong>filter</strong> to find all students in a specific grade.</p>
+<p><strong>Goal</strong>: Practice filtering arrays of objects based on a condition.</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Exercise 2: Find Students by Grade</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Same student data from Exercise 1
+let students = [
+  { name: &quot;Alice&quot;, grade: 10, gpa: 3.8 },
+  { name: &quot;Bob&quot;, grade: 11, gpa: 3.5 },
+  { name: &quot;Charlie&quot;, grade: 10, gpa: 3.9 },
+  { name: &quot;Diana&quot;, grade: 11, gpa: 3.2 }
+];
+
+// TODO: Create a function that finds all students in a specific grade
+function findByGrade(grade) {
+  // Write your code here
+  // Use filter() or a loop with an if statement
+}
+
+// TODO: Test it! Find all grade 10 students
+let grade10Students = findByGrade(10);
+console.log(grade10Students);
+
+// TODO: Test it! Find all grade 11 students
+let grade11Students = findByGrade(11);
+console.log(grade11Students);</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h3 id="exercise-3-add-and-remove-students" class="block-heading"><span class="heading-num">1.3.</span> Exercise 3: Add and Remove Students<a class="heading-anchor" href="#exercise-3-add-and-remove-students" aria-label="Copy link to section">#</a></h3>
+<div class="prose"><p>Practice <strong>modifying</strong> the student list by adding and removing students.</p>
+<p><strong>Goal</strong>: Practice using array methods (push, pop, shift, splice) on arrays of objects.</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Exercise 3: Add and Remove Students</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">let students = [
+  { name: &quot;Alice&quot;, grade: 10, gpa: 3.8 },
+  { name: &quot;Bob&quot;, grade: 11, gpa: 3.5 },
+  { name: &quot;Charlie&quot;, grade: 10, gpa: 3.9 }
+];
+
+console.log(&quot;Starting count: &quot; + students.length);
+
+// TODO: Add a new student to the list
+let newStudent = { name: &quot;Diana&quot;, grade: 11, gpa: 3.2 };
+// Use push() to add the student
+
+console.log(&quot;After adding: &quot; + students.length);
+
+// TODO: Remove the first student from the list
+// Use shift() to remove from the beginning
+
+console.log(&quot;After removing first: &quot; + students.length);
+
+// TODO: Display all remaining students
+for (let student of students) {
+  console.log(student.name);
+}</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h3 id="exercise-4-calculate-class-statistics" class="block-heading"><span class="heading-num">1.4.</span> Exercise 4: Calculate Class Statistics<a class="heading-anchor" href="#exercise-4-calculate-class-statistics" aria-label="Copy link to section">#</a></h3>
+<div class="prose"><p>Now use the student data to <strong>calculate statistics</strong> about the class.</p>
+<p><strong>Goal</strong>: Practice working with arrays of objects to extract and compute values.</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Exercise 4: Calculate Class Statistics</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">let students = [
+  { name: &quot;Alice&quot;, grade: 10, gpa: 3.8 },
+  { name: &quot;Bob&quot;, grade: 11, gpa: 3.5 },
+  { name: &quot;Charlie&quot;, grade: 10, gpa: 3.9 },
+  { name: &quot;Diana&quot;, grade: 11, gpa: 3.2 }
+];
+
+// TODO: Find the highest GPA
+let highest = students[0].gpa;
+for (let student of students) {
+  // Compare and update highest
+}
+console.log(&quot;Highest GPA: &quot; + highest);
+
+// TODO: Find the lowest GPA
+let lowest = students[0].gpa;
+// Write your code here
+console.log(&quot;Lowest GPA: &quot; + lowest);
+
+// TODO: Calculate the average GPA
+let total = 0;
+for (let student of students) {
+  // Add each student&#x27;s GPA to total
+}
+let average = total / students.length;
+console.log(&quot;Average GPA: &quot; + average);</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h3 id="exercise-5-search-and-update-students" class="block-heading"><span class="heading-num">1.5.</span> Exercise 5: Search and Update Students<a class="heading-anchor" href="#exercise-5-search-and-update-students" aria-label="Copy link to section">#</a></h3>
+<div class="prose"><p>Combine searching and updating: <strong>find a student and update their information</strong>.</p>
+<p><strong>Goal</strong>: Practice finding specific objects in an array and modifying them.</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Exercise 5: Search and Update Students</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">let students = [
+  { name: &quot;Alice&quot;, grade: 10, gpa: 3.8 },
+  { name: &quot;Bob&quot;, grade: 11, gpa: 3.5 },
+  { name: &quot;Charlie&quot;, grade: 10, gpa: 3.9 },
+  { name: &quot;Diana&quot;, grade: 11, gpa: 3.2 }
+];
+
+// TODO: Create a function that finds a student by name
+function findStudent(name) {
+  for (let student of students) {
+    if (student.name === name) {
+      return student;
+    }
+  }
+  return null;  // Not found
+}
+
+// TODO: Create a function that updates a student&#x27;s GPA
+function updateGPA(name, newGPA) {
+  let student = findStudent(name);
+  if (student) {
+    student.gpa = newGPA;
+    return true;  // Success
+  }
+  return false;  // Student not found
+}
+
+// Test: Update Alice&#x27;s GPA to 3.9
+updateGPA(&quot;Alice&quot;, 3.9);
+
+// Display all students to verify
+for (let student of students) {
+  console.log(student.name + &quot;: &quot; + student.gpa);
+}</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h3 id="challenge-combine-everything" class="block-heading"><span class="heading-num">1.6.</span> Challenge: Combine Everything<a class="heading-anchor" href="#challenge-combine-everything" aria-label="Copy link to section">#</a></h3>
+<div class="prose"><p>Ready for the final challenge? Combine all the skills from exercises 1-5 into one complete system!</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Challenge: Student Manager System</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Create a complete student manager with all operations
+let students = [
+  { name: &quot;Alice&quot;, grade: 10, gpa: 3.8 },
+  { name: &quot;Bob&quot;, grade: 11, gpa: 3.5 },
+  { name: &quot;Charlie&quot;, grade: 10, gpa: 3.9 }
+];
+
+// Function 1: Display all students
+function displayStudents() {
+  console.log(&quot;=== All Students ===&quot;);
+  for (let student of students) {
+    console.log(student.name + &quot; (Grade &quot; + student.grade + &quot;, GPA &quot; + student.gpa + &quot;)&quot;);
+  }
+}
+
+// Function 2: Add a student
+function addStudent(name, grade, gpa) {
+  students.push({ name, grade, gpa });
+  console.log(&quot;Added &quot; + name);
+}
+
+// Function 3: Get average GPA
+function getAverageGPA() {
+  let total = 0;
+  for (let student of students) {
+    total += student.gpa;
+  }
+  return (total / students.length).toFixed(2);
+}
+
+// Function 4: Find top student by GPA
+function getTopStudent() {
+  let top = students[0];
+  for (let student of students) {
+    if (student.gpa &gt; top.gpa) {
+      top = student;
+    }
+  }
+  return top;
+}
+
+// TODO: Use all these functions to manage your students
+displayStudents();
+addStudent(&quot;Diana&quot;, 11, 3.2);
+console.log(&quot;Average GPA: &quot; + getAverageGPA());
+console.log(&quot;Top student: &quot; + getTopStudent().name);
+
+// TODO: Try adding more students and calling the functions!</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<div class="prose"><h2 id="great-job">Great Job! 🎉</h2>
+<p>You&#39;ve completed all exercises! You&#39;ve now practiced <strong>managing collections of data</strong> using:</p>
+<ul>
+<li>Creating arrays of objects</li>
+<li>Looping through data</li>
+<li>Filtering and searching</li>
+<li>Adding and removing items</li>
+<li>Calculating statistics</li>
+<li>Updating values</li>
+</ul>
+<p>These are the core skills you&#39;ll use when working with real data in JavaScript. Practice these patterns and you&#39;ll be ready for anything!</p>
+</div></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../creating-elements/">← Creating &amp; Removing Elements</a>
+  
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="custom-footer-html"><div style="text-align:center; color:#6b7280; font-size:14px;">Learn to code with interactive lessons and challenges</div></div>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnlmml01"></script>
+
+
+
+<script src="../playground.js?v=mnlmml01"></script>
+
+
+
+</body>
+</html>

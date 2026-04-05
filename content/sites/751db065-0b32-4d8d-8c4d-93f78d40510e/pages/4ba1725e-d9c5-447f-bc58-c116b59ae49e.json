@@ -1,0 +1,69 @@
+{
+  "id": "4ba1725e-d9c5-447f-bc58-c116b59ae49e",
+  "title": "Selecting & Manipulating DOM",
+  "slug": "dom-basics",
+  "section": "c919cb2b-6f91-4ffa-80e5-0de6d09be018",
+  "description": "Learn how to select HTML elements and change their content using JavaScript.",
+  "icon": "🎨",
+  "order": 0,
+  "blocks": [
+    {
+      "id": "dom-heading-1",
+      "type": "heading",
+      "level": 2,
+      "text": "What is the DOM?"
+    },
+    {
+      "id": "dom-markdown-1",
+      "type": "markdown",
+      "content": "The **DOM (Document Object Model)** is a representation of your HTML page that JavaScript can access and modify.\n\nThink of it like this:\n- **HTML** = The structure of a web page\n- **CSS** = The styling\n- **JavaScript** = Can change the HTML and CSS while the page is running\n\nWith JavaScript, you can:\n- Select elements from the page\n- Change their text content\n- Change their styles\n- Add or remove elements\n- Respond to user interactions (clicks, typing, etc.)\n\nJavaScript communicates with the web page through a global object called `document`."
+    },
+    {
+      "id": "dom-heading-2",
+      "type": "heading",
+      "level": 2,
+      "text": "Selecting Elements"
+    },
+    {
+      "id": "dom-markdown-2",
+      "type": "markdown",
+      "content": "Before you can change an element, you need to **select** it. Here are the most common methods:\n\n```javascript\n// Select by ID (best for unique elements)\nlet element = document.getElementById(\"myId\");\n\n// Select by class name (can match multiple)\nlet elements = document.getElementsByClassName(\"myClass\");\n\n// Select by tag name\nlet paragraphs = document.getElementsByTagName(\"p\");\n\n// Modern way - select using CSS selectors\nlet element = document.querySelector(\"#myId\");        // By ID\nlet elements = document.querySelectorAll(\".myClass\"); // By class\nlet element = document.querySelector(\"p\");            // By tag\n```\n\n**Pro Tip**: `querySelector` and `querySelectorAll` are more flexible and recommended for modern JavaScript."
+    },
+    {
+      "id": "dom-heading-3",
+      "type": "heading",
+      "level": 2,
+      "text": "Changing Text Content"
+    },
+    {
+      "id": "dom-markdown-3",
+      "type": "markdown",
+      "content": "Once you've selected an element, you can change what it displays:\n\n```javascript\nlet heading = document.querySelector(\"h1\");\n\n// Change the text content\nheading.textContent = \"Welcome to JavaScript!\";\n\n// Or use innerHTML to add HTML tags\nheading.innerHTML = \"<strong>Welcome!</strong>\";\n```\n\n**Difference:**\n- `textContent` - treats everything as plain text\n- `innerHTML` - allows you to include HTML tags\n\nUse `textContent` unless you specifically need HTML tags."
+    },
+    {
+      "id": "dom-playground-1",
+      "type": "playground",
+      "title": "Try Selecting and Changing Elements",
+      "starterCode": "// These examples show how selection would work in a real web page\n// In this environment, we simulate it:\n\n// Select an element (in a real page with HTML)\nlet heading = document.querySelector(\"h1\");\n\n// Try changing its text\nif (heading) {\n  heading.textContent = \"Hello JavaScript!\";\n  console.log(\"Changed heading text\");\n}\n\n// In a real HTML page, you might have:\n// <p id=\"message\">Click me</p>\n// Then you could do:\nlet para = document.getElementById(\"message\");\nif (para) {\n  para.textContent = \"You clicked me!\";\n}\n\nconsole.log(\"DOM manipulation works!\");"
+    },
+    {
+      "id": "dom-heading-4",
+      "type": "heading",
+      "level": 2,
+      "text": "Changing Styles"
+    },
+    {
+      "id": "dom-markdown-4",
+      "type": "markdown",
+      "content": "You can change an element's CSS styles using the `.style` property:\n\n```javascript\nlet box = document.querySelector(\".myBox\");\n\n// Change individual styles\nbox.style.color = \"red\";\nbox.style.backgroundColor = \"yellow\";\nbox.style.fontSize = \"20px\";\nbox.style.borderRadius = \"10px\";\n```\n\n**Important**: CSS property names with hyphens become camelCase in JavaScript:\n- `background-color` → `backgroundColor`\n- `font-size` → `fontSize`\n- `border-radius` → `borderRadius`\n\nThis is because hyphens aren't allowed in JavaScript property names!"
+    },
+    {
+      "id": "dom-playground-2",
+      "type": "playground",
+      "title": "Changing Styles",
+      "starterCode": "// Example: Style manipulation\nlet element = document.querySelector(\"p\");\n\nif (element) {\n  // Change multiple styles\n  element.style.color = \"blue\";\n  element.style.fontSize = \"18px\";\n  element.style.fontWeight = \"bold\";\n  element.style.backgroundColor = \"lightblue\";\n  element.style.padding = \"10px\";\n  \n  console.log(\"Changed styles!\");\n}\n\n// In CSS, we'd write: background-color\n// In JavaScript, we write: backgroundColor (camelCase)\nconsole.log(\"Remember: CSS uses hyphens, JS uses camelCase\");"
+    }
+  ],
+  "createdAt": "2026-04-05T10:30:00.000Z",
+  "updatedAt": "2026-04-05T10:30:00.000Z"
+}

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creating &amp; Removing Elements — Beginner JavaScript</title>
+  <meta name="description" content="Learn how to dynamically create new HTML elements and add them to your page." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=mnlmml01" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">Beginner JavaScript</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Fundamentals</div><a href="../variables-and-data-types/" class="nav-link" title="Variables &amp; Data Types"><span class="nav-link-icon">📦</span><span class="nav-link-text">Variables &amp; Data Types</span></a><a href="../operators-and-expressions/" class="nav-link" title="Operators &amp; Expressions"><span class="nav-link-icon">➕</span><span class="nav-link-text">Operators &amp; Expressions</span></a></div><div class="nav-section"><div class="nav-section-title">Control Flow</div><a href="../if-statements/" class="nav-link" title="If Statements &amp; Control Flow"><span class="nav-link-icon">🎯</span><span class="nav-link-text">If Statements &amp; Control Flow</span></a><a href="../loops/" class="nav-link" title="Loops - Repeating Code"><span class="nav-link-icon">🔁</span><span class="nav-link-text">Loops - Repeating Code</span></a></div><div class="nav-section"><div class="nav-section-title">Functions &amp; Objects</div><a href="../functions/" class="nav-link" title="Functions - Reusable Code"><span class="nav-link-icon">⚙️</span><span class="nav-link-text">Functions - Reusable Code</span></a><a href="../arrays/" class="nav-link" title="Arrays - Working with Lists"><span class="nav-link-icon">📋</span><span class="nav-link-text">Arrays - Working with Lists</span></a><a href="../objects/" class="nav-link" title="Objects - Structured Data"><span class="nav-link-icon">🏗️</span><span class="nav-link-text">Objects - Structured Data</span></a></div><div class="nav-section"><div class="nav-section-title">DOM &amp; Events</div><a href="../dom-basics/" class="nav-link" title="Selecting &amp; Manipulating DOM"><span class="nav-link-icon">🎨</span><span class="nav-link-text">Selecting &amp; Manipulating DOM</span></a><a href="../event-listeners/" class="nav-link" title="Event Listeners &amp; Interactivity"><span class="nav-link-icon">🖱️</span><span class="nav-link-text">Event Listeners &amp; Interactivity</span></a><a href="../creating-elements/" class="nav-link active" title="Creating &amp; Removing Elements"><span class="nav-link-icon">🔧</span><span class="nav-link-text">Creating &amp; Removing Elements</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#creating-new-elements"><span class="toc-num">1.</span> Creating New Elements</a><a class="nav-toc-link nav-toc-level-2" href="#building-dynamic-content"><span class="toc-num">2.</span> Building Dynamic Content</a><a class="nav-toc-link nav-toc-level-2" href="#removing-elements"><span class="toc-num">3.</span> Removing Elements</a></div></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../student-manager-activity/" class="nav-link" title="Build a Student Manager"><span class="nav-link-icon">👨‍🎓</span><span class="nav-link-text">Build a Student Manager</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    <div class="custom-site-header"><h1 style="margin:0; font-size:24px; color:#3b82f6;">📚 Beginner JavaScript</h1></div>
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>DOM &amp; Events</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Creating &amp; Removing Elements</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Creating &amp; Removing Elements</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">DOM &amp; Events</span>
+            <span>⏱ 2 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><h2 id="creating-new-elements" class="block-heading"><span class="heading-num">1.</span> Creating New Elements<a class="heading-anchor" href="#creating-new-elements" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Instead of hardcoding HTML, you can create elements with JavaScript:</p>
+<pre><code class="language-javascript">// Create a new element
+let newDiv = document.createElement(&quot;div&quot;);
+
+// Set its content
+newDiv.textContent = &quot;Hello!&quot;;
+
+// Set attributes and styles
+newDiv.id = &quot;myDiv&quot;;
+newDiv.className = &quot;container&quot;;
+newDiv.style.color = &quot;blue&quot;;
+
+// Add it to the page
+let container = document.querySelector(&quot;#main&quot;);
+container.appendChild(newDiv);
+</code></pre>
+<p><strong>Common methods:</strong></p>
+<ul>
+<li><code>document.createElement(tagName)</code> - Create a new element</li>
+<li><code>element.appendChild(child)</code> - Add element as last child</li>
+<li><code>element.insertBefore(newChild, referenceChild)</code> - Insert before a specific element</li>
+<li><code>element.textContent = &quot;text&quot;</code> - Set the text</li>
+<li><code>element.className = &quot;class&quot;</code> - Set CSS class</li>
+</ul>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Create and Add Elements</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Create a new paragraph element
+let newParagraph = document.createElement(&quot;p&quot;);
+newParagraph.textContent = &quot;This paragraph was created with JavaScript!&quot;;
+newParagraph.style.color = &quot;purple&quot;;
+newParagraph.style.fontSize = &quot;18px&quot;;
+
+// In a real page, we&#x27;d add it like this:
+let body = document.body;
+if (body) {
+  body.appendChild(newParagraph);
+  console.log(&quot;Added paragraph to page&quot;);
+}
+
+// Create a list
+let list = document.createElement(&quot;ul&quot;);
+
+let item1 = document.createElement(&quot;li&quot;);
+item1.textContent = &quot;First item&quot;;
+list.appendChild(item1);
+
+let item2 = document.createElement(&quot;li&quot;);
+item2.textContent = &quot;Second item&quot;;
+list.appendChild(item2);
+
+if (body) {
+  body.appendChild(list);
+  console.log(&quot;Added list to page&quot;);
+}</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h2 id="building-dynamic-content" class="block-heading"><span class="heading-num">2.</span> Building Dynamic Content<a class="heading-anchor" href="#building-dynamic-content" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>A common pattern is to <strong>create elements from data</strong>:</p>
+<pre><code class="language-javascript">let fruits = [&quot;Apple&quot;, &quot;Banana&quot;, &quot;Orange&quot;];
+let list = document.querySelector(&quot;ul&quot;);
+
+for (let fruit of fruits) {
+  let item = document.createElement(&quot;li&quot;);
+  item.textContent = fruit;
+  list.appendChild(item);
+}
+</code></pre>
+<p>This is powerful when combined with:</p>
+<ul>
+<li>Arrays of data</li>
+<li>User input</li>
+<li>API responses</li>
+</ul>
+<p>You can build entire interfaces dynamically!</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Create Elements from Data</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Create a list from an array
+let students = [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Charlie&quot;, &quot;Diana&quot;];
+
+let studentList = document.createElement(&quot;ul&quot;);
+
+for (let student of students) {
+  let listItem = document.createElement(&quot;li&quot;);
+  listItem.textContent = student;
+  listItem.style.padding = &quot;5px&quot;;
+  listItem.style.marginBottom = &quot;5px&quot;;
+  studentList.appendChild(listItem);
+}
+
+// In a real page, add it to the DOM
+let container = document.body;
+if (container) {
+  container.appendChild(studentList);
+  console.log(&quot;Created student list with &quot; + students.length + &quot; items&quot;);
+}
+
+// Create cards from objects
+let products = [
+  { name: &quot;Laptop&quot;, price: 999 },
+  { name: &quot;Mouse&quot;, price: 25 },
+  { name: &quot;Keyboard&quot;, price: 75 }
+];
+
+for (let product of products) {
+  let card = document.createElement(&quot;div&quot;);
+  card.style.border = &quot;1px solid gray&quot;;
+  card.style.padding = &quot;10px&quot;;
+  card.style.margin = &quot;10px&quot;;
+  
+  let title = document.createElement(&quot;h3&quot;);
+  title.textContent = product.name;
+  
+  let price = document.createElement(&quot;p&quot;);
+  price.textContent = &quot;$&quot; + product.price;
+  
+  card.appendChild(title);
+  card.appendChild(price);
+  
+  if (container) {
+    container.appendChild(card);
+  }
+}</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h2 id="removing-elements" class="block-heading"><span class="heading-num">3.</span> Removing Elements<a class="heading-anchor" href="#removing-elements" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>You can also remove elements from the page:</p>
+<pre><code class="language-javascript">let element = document.querySelector(&quot;#oldElement&quot;);
+
+// Remove it from the DOM
+element.remove();
+
+// Or, if you know the parent:
+element.parentElement.removeChild(element);
+</code></pre>
+<p>Use this for:</p>
+<ul>
+<li>Deleting items from a list</li>
+<li>Clearing old content</li>
+<li>Cleaning up when not needed</li>
+</ul>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Remove Elements</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Create some elements
+let container = document.createElement(&quot;div&quot;);
+
+let item1 = document.createElement(&quot;p&quot;);
+item1.textContent = &quot;Item 1&quot;;
+item1.id = &quot;item1&quot;;
+container.appendChild(item1);
+
+let item2 = document.createElement(&quot;p&quot;);
+item2.textContent = &quot;Item 2&quot;;
+item2.id = &quot;item2&quot;;
+container.appendChild(item2);
+
+let item3 = document.createElement(&quot;p&quot;);
+item3.textContent = &quot;Item 3&quot;;
+item3.id = &quot;item3&quot;;
+container.appendChild(item3);
+
+console.log(&quot;Created 3 items&quot;);
+
+// Remove a specific item
+let toRemove = document.querySelector(&quot;#item2&quot;);
+if (toRemove) {
+  toRemove.remove();
+  console.log(&quot;Removed item 2&quot;);
+}
+
+// Clear all children
+function clearAll() {
+  while (container.firstChild) {
+    container.removeChild(container.firstChild);
+  }
+  console.log(&quot;Cleared container&quot;);
+}
+
+// Uncomment to clear:
+// clearAll();</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../event-listeners/">← Event Listeners &amp; Interactivity</a>
+  <a class="pn-btn pn-next" href="../student-manager-activity/">Build a Student Manager →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="custom-footer-html"><div style="text-align:center; color:#6b7280; font-size:14px;">Learn to code with interactive lessons and challenges</div></div>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnlmml01"></script>
+
+
+
+<script src="../playground.js?v=mnlmml01"></script>
+
+
+
+</body>
+</html>

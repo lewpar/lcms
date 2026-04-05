@@ -1,0 +1,75 @@
+{
+  "id": "565674b0-4a08-4793-9175-2e0f486bb78e",
+  "title": "Event Listeners & Interactivity",
+  "slug": "event-listeners",
+  "section": "c919cb2b-6f91-4ffa-80e5-0de6d09be018",
+  "description": "Learn how to respond to user interactions like clicks and keyboard input.",
+  "icon": "🖱️",
+  "order": 1,
+  "blocks": [
+    {
+      "id": "evt-heading-1",
+      "type": "heading",
+      "level": 2,
+      "text": "What are Events?"
+    },
+    {
+      "id": "evt-markdown-1",
+      "type": "markdown",
+      "content": "An **event** is something the user does on a web page, like:\n- Clicking a button\n- Typing in a text field\n- Hovering over an element\n- Pressing a key\n- Scrolling the page\n\nWith **event listeners**, you can detect when these things happen and run code in response.\n\n**Common Events:**\n- `click` - User clicks an element\n- `input` - User types in a text field\n- `keypress` - User presses a key\n- `mouseover` - Mouse moves over element\n- `mouseout` - Mouse leaves element\n- `submit` - Form is submitted"
+    },
+    {
+      "id": "evt-heading-2",
+      "type": "heading",
+      "level": 2,
+      "text": "Adding Event Listeners"
+    },
+    {
+      "id": "evt-markdown-2",
+      "type": "markdown",
+      "content": "Use the `addEventListener()` method to respond to events:\n\n```javascript\nlet button = document.querySelector(\"button\");\n\nbutton.addEventListener(\"click\", function() {\n  console.log(\"Button was clicked!\");\n});\n```\n\nOr with arrow functions (modern way):\n\n```javascript\nlet button = document.querySelector(\"button\");\n\nbutton.addEventListener(\"click\", () => {\n  console.log(\"Button was clicked!\");\n});\n```\n\n**Syntax**: `element.addEventListener(eventType, function)`\n- `eventType` - The event to listen for (as a string, no quotes around function)\n- `function` - The code to run when the event happens"
+    },
+    {
+      "id": "evt-playground-1",
+      "type": "playground",
+      "title": "Simple Click Handler",
+      "starterCode": "// Example: Click event listener\nlet button = document.querySelector(\"button\");\n\nif (button) {\n  button.addEventListener(\"click\", () => {\n    console.log(\"You clicked the button!\");\n  });\n}\n\n// Example: Input event listener\nlet input = document.querySelector(\"input\");\n\nif (input) {\n  input.addEventListener(\"input\", (event) => {\n    console.log(\"User typed: \" + event.target.value);\n  });\n}\n\n// The 'event' parameter contains info about what happened\nconsole.log(\"Event listeners are ready!\");"
+    },
+    {
+      "id": "evt-heading-3",
+      "type": "heading",
+      "level": 2,
+      "text": "The Event Object"
+    },
+    {
+      "id": "evt-markdown-3",
+      "type": "markdown",
+      "content": "When an event happens, JavaScript passes an **event object** to your function. This object contains useful information:\n\n```javascript\nlet button = document.querySelector(\"button\");\n\nbutton.addEventListener(\"click\", (event) => {\n  console.log(event.type);     // \"click\"\n  console.log(event.target);   // The button element\n});\n\nlet input = document.querySelector(\"input\");\n\ninput.addEventListener(\"input\", (event) => {\n  console.log(event.target.value);  // What the user typed\n});\n\nlet form = document.querySelector(\"form\");\n\nform.addEventListener(\"submit\", (event) => {\n  event.preventDefault();  // Stop form from submitting\n  console.log(\"Form prevented from submitting!\");\n});\n```\n\n**Useful properties:**\n- `event.target` - The element that triggered the event\n- `event.type` - The type of event (click, input, etc.)\n- `event.target.value` - The current value (for inputs)\n- `event.preventDefault()` - Stops default behavior"
+    },
+    {
+      "id": "evt-playground-2",
+      "type": "playground",
+      "title": "Using the Event Object",
+      "starterCode": "// Example: Use event object to get the clicked element\nlet boxes = document.querySelectorAll(\".box\");\n\nfor (let box of boxes) {\n  box.addEventListener(\"click\", (event) => {\n    console.log(\"Clicked element:\", event.target);\n    console.log(\"Event type:\", event.type);\n  });\n}\n\n// Example: Get input value\nlet searchInput = document.querySelector(\"#search\");\n\nif (searchInput) {\n  searchInput.addEventListener(\"input\", (event) => {\n    let userInput = event.target.value;\n    console.log(\"User is typing: \" + userInput);\n  });\n}\n\nconsole.log(\"Try clicking elements or typing in the input!\");"
+    },
+    {
+      "id": "evt-heading-4",
+      "type": "heading",
+      "level": 2,
+      "text": "Combining Events and DOM Changes"
+    },
+    {
+      "id": "evt-markdown-4",
+      "type": "markdown",
+      "content": "The real power comes when you **respond to events by changing the DOM**:\n\n```javascript\nlet button = document.querySelector(\"#toggleButton\");\nlet message = document.querySelector(\"#message\");\n\nbutton.addEventListener(\"click\", () => {\n  message.textContent = \"You clicked the button!\";\n  message.style.color = \"green\";\n});\n```\n\nYou can create interactive features:\n- Toggle elements on/off\n- Update text based on user input\n- Change colors/styles on interaction\n- Add/remove elements dynamically"
+    },
+    {
+      "id": "evt-playground-3",
+      "type": "playground",
+      "title": "Interactive Button Example",
+      "starterCode": "// Create an interactive button system\nlet clickCount = 0;\nlet button = document.querySelector(\"button\");\nlet display = document.querySelector(\"#display\");\n\nif (button) {\n  button.addEventListener(\"click\", () => {\n    clickCount++;\n    \n    // Update the display\n    if (display) {\n      display.textContent = \"Clicks: \" + clickCount;\n    }\n    \n    // Change color based on count\n    if (clickCount > 5) {\n      button.style.backgroundColor = \"gold\";\n    } else if (clickCount > 2) {\n      button.style.backgroundColor = \"lightblue\";\n    }\n    \n    console.log(\"Total clicks: \" + clickCount);\n  });\n}\n\nconsole.log(\"Click the button to test!\");"
+    }
+  ],
+  "createdAt": "2026-04-05T10:30:00.000Z",
+  "updatedAt": "2026-04-05T10:30:00.000Z"
+}

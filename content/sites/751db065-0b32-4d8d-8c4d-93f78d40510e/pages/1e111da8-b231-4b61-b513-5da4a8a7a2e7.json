@@ -1,0 +1,64 @@
+{
+  "id": "1e111da8-b231-4b61-b513-5da4a8a7a2e7",
+  "title": "Creating & Removing Elements",
+  "slug": "creating-elements",
+  "section": "c919cb2b-6f91-4ffa-80e5-0de6d09be018",
+  "description": "Learn how to dynamically create new HTML elements and add them to your page.",
+  "icon": "🔧",
+  "order": 2,
+  "blocks": [
+    {
+      "id": "cre-heading-1",
+      "type": "heading",
+      "level": 2,
+      "text": "Creating New Elements"
+    },
+    {
+      "id": "cre-markdown-1",
+      "type": "markdown",
+      "content": "Instead of hardcoding HTML, you can create elements with JavaScript:\n\n```javascript\n// Create a new element\nlet newDiv = document.createElement(\"div\");\n\n// Set its content\nnewDiv.textContent = \"Hello!\";\n\n// Set attributes and styles\nnewDiv.id = \"myDiv\";\nnewDiv.className = \"container\";\nnewDiv.style.color = \"blue\";\n\n// Add it to the page\nlet container = document.querySelector(\"#main\");\ncontainer.appendChild(newDiv);\n```\n\n**Common methods:**\n- `document.createElement(tagName)` - Create a new element\n- `element.appendChild(child)` - Add element as last child\n- `element.insertBefore(newChild, referenceChild)` - Insert before a specific element\n- `element.textContent = \"text\"` - Set the text\n- `element.className = \"class\"` - Set CSS class"
+    },
+    {
+      "id": "cre-playground-1",
+      "type": "playground",
+      "title": "Create and Add Elements",
+      "starterCode": "// Create a new paragraph element\nlet newParagraph = document.createElement(\"p\");\nnewParagraph.textContent = \"This paragraph was created with JavaScript!\";\nnewParagraph.style.color = \"purple\";\nnewParagraph.style.fontSize = \"18px\";\n\n// In a real page, we'd add it like this:\nlet body = document.body;\nif (body) {\n  body.appendChild(newParagraph);\n  console.log(\"Added paragraph to page\");\n}\n\n// Create a list\nlet list = document.createElement(\"ul\");\n\nlet item1 = document.createElement(\"li\");\nitem1.textContent = \"First item\";\nlist.appendChild(item1);\n\nlet item2 = document.createElement(\"li\");\nitem2.textContent = \"Second item\";\nlist.appendChild(item2);\n\nif (body) {\n  body.appendChild(list);\n  console.log(\"Added list to page\");\n}"
+    },
+    {
+      "id": "cre-heading-2",
+      "type": "heading",
+      "level": 2,
+      "text": "Building Dynamic Content"
+    },
+    {
+      "id": "cre-markdown-2",
+      "type": "markdown",
+      "content": "A common pattern is to **create elements from data**:\n\n```javascript\nlet fruits = [\"Apple\", \"Banana\", \"Orange\"];\nlet list = document.querySelector(\"ul\");\n\nfor (let fruit of fruits) {\n  let item = document.createElement(\"li\");\n  item.textContent = fruit;\n  list.appendChild(item);\n}\n```\n\nThis is powerful when combined with:\n- Arrays of data\n- User input\n- API responses\n\nYou can build entire interfaces dynamically!"
+    },
+    {
+      "id": "cre-playground-2",
+      "type": "playground",
+      "title": "Create Elements from Data",
+      "starterCode": "// Create a list from an array\nlet students = [\"Alice\", \"Bob\", \"Charlie\", \"Diana\"];\n\nlet studentList = document.createElement(\"ul\");\n\nfor (let student of students) {\n  let listItem = document.createElement(\"li\");\n  listItem.textContent = student;\n  listItem.style.padding = \"5px\";\n  listItem.style.marginBottom = \"5px\";\n  studentList.appendChild(listItem);\n}\n\n// In a real page, add it to the DOM\nlet container = document.body;\nif (container) {\n  container.appendChild(studentList);\n  console.log(\"Created student list with \" + students.length + \" items\");\n}\n\n// Create cards from objects\nlet products = [\n  { name: \"Laptop\", price: 999 },\n  { name: \"Mouse\", price: 25 },\n  { name: \"Keyboard\", price: 75 }\n];\n\nfor (let product of products) {\n  let card = document.createElement(\"div\");\n  card.style.border = \"1px solid gray\";\n  card.style.padding = \"10px\";\n  card.style.margin = \"10px\";\n  \n  let title = document.createElement(\"h3\");\n  title.textContent = product.name;\n  \n  let price = document.createElement(\"p\");\n  price.textContent = \"$\" + product.price;\n  \n  card.appendChild(title);\n  card.appendChild(price);\n  \n  if (container) {\n    container.appendChild(card);\n  }\n}"
+    },
+    {
+      "id": "cre-heading-3",
+      "type": "heading",
+      "level": 2,
+      "text": "Removing Elements"
+    },
+    {
+      "id": "cre-markdown-3",
+      "type": "markdown",
+      "content": "You can also remove elements from the page:\n\n```javascript\nlet element = document.querySelector(\"#oldElement\");\n\n// Remove it from the DOM\nelement.remove();\n\n// Or, if you know the parent:\nelement.parentElement.removeChild(element);\n```\n\nUse this for:\n- Deleting items from a list\n- Clearing old content\n- Cleaning up when not needed"
+    },
+    {
+      "id": "cre-playground-3",
+      "type": "playground",
+      "title": "Remove Elements",
+      "starterCode": "// Create some elements\nlet container = document.createElement(\"div\");\n\nlet item1 = document.createElement(\"p\");\nitem1.textContent = \"Item 1\";\nitem1.id = \"item1\";\ncontainer.appendChild(item1);\n\nlet item2 = document.createElement(\"p\");\nitem2.textContent = \"Item 2\";\nitem2.id = \"item2\";\ncontainer.appendChild(item2);\n\nlet item3 = document.createElement(\"p\");\nitem3.textContent = \"Item 3\";\nitem3.id = \"item3\";\ncontainer.appendChild(item3);\n\nconsole.log(\"Created 3 items\");\n\n// Remove a specific item\nlet toRemove = document.querySelector(\"#item2\");\nif (toRemove) {\n  toRemove.remove();\n  console.log(\"Removed item 2\");\n}\n\n// Clear all children\nfunction clearAll() {\n  while (container.firstChild) {\n    container.removeChild(container.firstChild);\n  }\n  console.log(\"Cleared container\");\n}\n\n// Uncomment to clear:\n// clearAll();"
+    }
+  ],
+  "createdAt": "2026-04-05T10:30:00.000Z",
+  "updatedAt": "2026-04-05T10:30:00.000Z"
+}

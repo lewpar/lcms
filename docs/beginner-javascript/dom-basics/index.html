@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selecting &amp; Manipulating DOM — Beginner JavaScript</title>
+  <meta name="description" content="Learn how to select HTML elements and change their content using JavaScript." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=mnlmml01" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">Beginner JavaScript</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Fundamentals</div><a href="../variables-and-data-types/" class="nav-link" title="Variables &amp; Data Types"><span class="nav-link-icon">📦</span><span class="nav-link-text">Variables &amp; Data Types</span></a><a href="../operators-and-expressions/" class="nav-link" title="Operators &amp; Expressions"><span class="nav-link-icon">➕</span><span class="nav-link-text">Operators &amp; Expressions</span></a></div><div class="nav-section"><div class="nav-section-title">Control Flow</div><a href="../if-statements/" class="nav-link" title="If Statements &amp; Control Flow"><span class="nav-link-icon">🎯</span><span class="nav-link-text">If Statements &amp; Control Flow</span></a><a href="../loops/" class="nav-link" title="Loops - Repeating Code"><span class="nav-link-icon">🔁</span><span class="nav-link-text">Loops - Repeating Code</span></a></div><div class="nav-section"><div class="nav-section-title">Functions &amp; Objects</div><a href="../functions/" class="nav-link" title="Functions - Reusable Code"><span class="nav-link-icon">⚙️</span><span class="nav-link-text">Functions - Reusable Code</span></a><a href="../arrays/" class="nav-link" title="Arrays - Working with Lists"><span class="nav-link-icon">📋</span><span class="nav-link-text">Arrays - Working with Lists</span></a><a href="../objects/" class="nav-link" title="Objects - Structured Data"><span class="nav-link-icon">🏗️</span><span class="nav-link-text">Objects - Structured Data</span></a></div><div class="nav-section"><div class="nav-section-title">DOM &amp; Events</div><a href="../dom-basics/" class="nav-link active" title="Selecting &amp; Manipulating DOM"><span class="nav-link-icon">🎨</span><span class="nav-link-text">Selecting &amp; Manipulating DOM</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#what-is-the-dom"><span class="toc-num">1.</span> What is the DOM?</a><a class="nav-toc-link nav-toc-level-2" href="#selecting-elements"><span class="toc-num">2.</span> Selecting Elements</a><a class="nav-toc-link nav-toc-level-2" href="#changing-text-content"><span class="toc-num">3.</span> Changing Text Content</a><a class="nav-toc-link nav-toc-level-2" href="#changing-styles"><span class="toc-num">4.</span> Changing Styles</a></div><a href="../event-listeners/" class="nav-link" title="Event Listeners &amp; Interactivity"><span class="nav-link-icon">🖱️</span><span class="nav-link-text">Event Listeners &amp; Interactivity</span></a><a href="../creating-elements/" class="nav-link" title="Creating &amp; Removing Elements"><span class="nav-link-icon">🔧</span><span class="nav-link-text">Creating &amp; Removing Elements</span></a></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../student-manager-activity/" class="nav-link" title="Build a Student Manager"><span class="nav-link-icon">👨‍🎓</span><span class="nav-link-text">Build a Student Manager</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    <div class="custom-site-header"><h1 style="margin:0; font-size:24px; color:#3b82f6;">📚 Beginner JavaScript</h1></div>
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>DOM &amp; Events</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Selecting &amp; Manipulating DOM</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Selecting &amp; Manipulating DOM</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">DOM &amp; Events</span>
+            <span>⏱ 2 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><h2 id="what-is-the-dom" class="block-heading"><span class="heading-num">1.</span> What is the DOM?<a class="heading-anchor" href="#what-is-the-dom" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>The <strong>DOM (Document Object Model)</strong> is a representation of your HTML page that JavaScript can access and modify.</p>
+<p>Think of it like this:</p>
+<ul>
+<li><strong>HTML</strong> = The structure of a web page</li>
+<li><strong>CSS</strong> = The styling</li>
+<li><strong>JavaScript</strong> = Can change the HTML and CSS while the page is running</li>
+</ul>
+<p>With JavaScript, you can:</p>
+<ul>
+<li>Select elements from the page</li>
+<li>Change their text content</li>
+<li>Change their styles</li>
+<li>Add or remove elements</li>
+<li>Respond to user interactions (clicks, typing, etc.)</li>
+</ul>
+<p>JavaScript communicates with the web page through a global object called <code>document</code>.</p>
+</div>
+<h2 id="selecting-elements" class="block-heading"><span class="heading-num">2.</span> Selecting Elements<a class="heading-anchor" href="#selecting-elements" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Before you can change an element, you need to <strong>select</strong> it. Here are the most common methods:</p>
+<pre><code class="language-javascript">// Select by ID (best for unique elements)
+let element = document.getElementById(&quot;myId&quot;);
+
+// Select by class name (can match multiple)
+let elements = document.getElementsByClassName(&quot;myClass&quot;);
+
+// Select by tag name
+let paragraphs = document.getElementsByTagName(&quot;p&quot;);
+
+// Modern way - select using CSS selectors
+let element = document.querySelector(&quot;#myId&quot;);        // By ID
+let elements = document.querySelectorAll(&quot;.myClass&quot;); // By class
+let element = document.querySelector(&quot;p&quot;);            // By tag
+</code></pre>
+<p><strong>Pro Tip</strong>: <code>querySelector</code> and <code>querySelectorAll</code> are more flexible and recommended for modern JavaScript.</p>
+</div>
+<h2 id="changing-text-content" class="block-heading"><span class="heading-num">3.</span> Changing Text Content<a class="heading-anchor" href="#changing-text-content" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Once you&#39;ve selected an element, you can change what it displays:</p>
+<pre><code class="language-javascript">let heading = document.querySelector(&quot;h1&quot;);
+
+// Change the text content
+heading.textContent = &quot;Welcome to JavaScript!&quot;;
+
+// Or use innerHTML to add HTML tags
+heading.innerHTML = &quot;&lt;strong&gt;Welcome!&lt;/strong&gt;&quot;;
+</code></pre>
+<p><strong>Difference:</strong></p>
+<ul>
+<li><code>textContent</code> - treats everything as plain text</li>
+<li><code>innerHTML</code> - allows you to include HTML tags</li>
+</ul>
+<p>Use <code>textContent</code> unless you specifically need HTML tags.</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Try Selecting and Changing Elements</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// These examples show how selection would work in a real web page
+// In this environment, we simulate it:
+
+// Select an element (in a real page with HTML)
+let heading = document.querySelector(&quot;h1&quot;);
+
+// Try changing its text
+if (heading) {
+  heading.textContent = &quot;Hello JavaScript!&quot;;
+  console.log(&quot;Changed heading text&quot;);
+}
+
+// In a real HTML page, you might have:
+// &lt;p id=&quot;message&quot;&gt;Click me&lt;/p&gt;
+// Then you could do:
+let para = document.getElementById(&quot;message&quot;);
+if (para) {
+  para.textContent = &quot;You clicked me!&quot;;
+}
+
+console.log(&quot;DOM manipulation works!&quot;);</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h2 id="changing-styles" class="block-heading"><span class="heading-num">4.</span> Changing Styles<a class="heading-anchor" href="#changing-styles" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>You can change an element&#39;s CSS styles using the <code>.style</code> property:</p>
+<pre><code class="language-javascript">let box = document.querySelector(&quot;.myBox&quot;);
+
+// Change individual styles
+box.style.color = &quot;red&quot;;
+box.style.backgroundColor = &quot;yellow&quot;;
+box.style.fontSize = &quot;20px&quot;;
+box.style.borderRadius = &quot;10px&quot;;
+</code></pre>
+<p><strong>Important</strong>: CSS property names with hyphens become camelCase in JavaScript:</p>
+<ul>
+<li><code>background-color</code> → <code>backgroundColor</code></li>
+<li><code>font-size</code> → <code>fontSize</code></li>
+<li><code>border-radius</code> → <code>borderRadius</code></li>
+</ul>
+<p>This is because hyphens aren&#39;t allowed in JavaScript property names!</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Changing Styles</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Example: Style manipulation
+let element = document.querySelector(&quot;p&quot;);
+
+if (element) {
+  // Change multiple styles
+  element.style.color = &quot;blue&quot;;
+  element.style.fontSize = &quot;18px&quot;;
+  element.style.fontWeight = &quot;bold&quot;;
+  element.style.backgroundColor = &quot;lightblue&quot;;
+  element.style.padding = &quot;10px&quot;;
+  
+  console.log(&quot;Changed styles!&quot;);
+}
+
+// In CSS, we&#x27;d write: background-color
+// In JavaScript, we write: backgroundColor (camelCase)
+console.log(&quot;Remember: CSS uses hyphens, JS uses camelCase&quot;);</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../objects/">← Objects - Structured Data</a>
+  <a class="pn-btn pn-next" href="../event-listeners/">Event Listeners &amp; Interactivity →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="custom-footer-html"><div style="text-align:center; color:#6b7280; font-size:14px;">Learn to code with interactive lessons and challenges</div></div>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnlmml01"></script>
+
+
+
+<script src="../playground.js?v=mnlmml01"></script>
+
+
+
+</body>
+</html>
