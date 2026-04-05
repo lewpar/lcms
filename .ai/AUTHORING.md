@@ -124,6 +124,14 @@ Each section is a sidebar group heading. Pages are assigned to sections by match
 
 **Do not include a `theme` field when authoring a site.** The CMS default theme will be applied automatically, giving a clean purple/dark-navy look. Only include `theme` if the user has explicitly asked for a specific colour scheme.
 
+### `disableNav` — optional
+
+Set `"disableNav": true` to hide the sidebar and top navigation bar entirely in the generated site. This is useful for **single-page sites** that only use the home page and don't need navigation. Omit the field (or set it to `false`) to show the standard navigation.
+
+### `floatingDarkMode` — optional
+
+Set `"floatingDarkMode": true` to add a fixed floating dark/light mode toggle button in the corner of the exported site. This is most useful for **single-page sites** where `disableNav` is enabled, because the top bar that normally contains the dark mode toggle is hidden. Omit the field (or set it to `false`) to disable the floating button.
+
 ---
 
 ## Step 5 — Write page files in `content/sites/<site-uuid>/pages/<page-uuid>.json`

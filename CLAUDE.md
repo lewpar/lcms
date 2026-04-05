@@ -131,6 +131,8 @@ Controls the site title, theme, sections (sidebar groups), header/footer HTML, a
 | `navPages` | ✅ | Array of page UUIDs pinned to the top nav. Use `[]` if none. |
 | `sections` | ✅ | Array of `{ "id": "<uuid>", "name": "Section Name" }` objects. Each is a sidebar group heading. At least one section is required. |
 | `theme` | ❌ | **Omit entirely.** The CMS default theme will be used automatically. Do not generate or include a theme object. |
+| `disableNav` | ❌ | Boolean. If `true`, hides the sidebar and top navigation bar entirely. Useful for single-page sites that only use the home page. Omit or set to `false` to show navigation. |
+| `floatingDarkMode` | ❌ | Boolean. If `true`, adds a fixed floating dark/light mode toggle button in the corner of the exported site. Useful for single-page sites where the top bar (which normally contains the dark mode toggle) is hidden. Omit or set to `false` to disable. |
 | `header` | ❌ | HTML string injected into the site header area. Omit or set to `""` for none. |
 | `footer` | ❌ | HTML string injected into the site footer area. Omit or set to `""` for none. |
 | `home` | ✅ | Object controlling the home page — see home fields table below. |
