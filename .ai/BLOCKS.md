@@ -431,3 +431,20 @@ A rich recipe block combining the recipe name, description, an optional hero ima
 Each item in `items`:
 - **Required:** `id` (UUID v4), `name`
 - **Optional:** `amount` (string, e.g. `"2"`, `"1/2"`), `unit` (string, e.g. `"cups"`, `"tsp"`), `note` (preparation note shown in italics, e.g. `"sifted"`, `"room temperature"`)
+
+---
+
+### `tip`
+A visually distinct tip box with a warm amber theme — different from `callout`. Use it to highlight a helpful tip, shortcut, or piece of advice on any page type.
+
+```json
+{
+  "id": "a1b2c3d4-0022-0000-0000-000000000000",
+  "type": "tip",
+  "title": "Make ahead",
+  "content": "This dish can be prepared up to **24 hours** in advance and stored covered in the fridge."
+}
+```
+
+**Required:** `id`, `type`, `content` (markdown string)  
+**Optional:** `title` — heading displayed in the tip header bar; defaults to `"Tip"`.

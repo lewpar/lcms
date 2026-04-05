@@ -10,6 +10,7 @@ function blockSummary(block) {
     case 'markdown': return block.content?.replace(/^#{1,6}\s+/gm, '').replace(/[*_`~>[\]]/g, '').replace(/\s+/g, ' ').trim().slice(0, 60) || '(empty)';
     case 'heading':  return `H${block.level}: ${block.text || '(empty)'}`;
     case 'callout':  return block.title || block.content?.slice(0, 40) || '(empty)';
+    case 'tip':      return block.title || block.content?.slice(0, 40) || '(empty)';
     case 'quiz': {
       const n = block.questions?.length ?? 0;
       return `${block.title || '(no title)'} — ${n} question${n !== 1 ? 's' : ''}`;
@@ -122,6 +123,21 @@ function CalloutEditor({ block, onChange }) {
       <div className="field">
         <label>Content (markdown supported)</label>
         <textarea rows={4} value={block.content || ''} onChange={e => onChange({ content: e.target.value })} placeholder="Callout content" />
+      </div>
+    </>
+  );
+}
+
+function TipEditor({ block, onChange }) {
+  return (
+    <>
+      <div className="field">
+        <label>Title</label>
+        <input type="text" value={block.title || ''} onChange={e => onChange({ title: e.target.value })} placeholder="Tip" />
+      </div>
+      <div className="field">
+        <label>Content (markdown supported)</label>
+        <textarea rows={4} value={block.content || ''} onChange={e => onChange({ content: e.target.value })} placeholder="Tip content" />
       </div>
     </>
   );
@@ -1273,6 +1289,7 @@ export default function BlockEditor({
           {block.type === 'markdown'   && <MarkdownEditor   block={block} onChange={onChange} />}
           {block.type === 'heading'    && <HeadingEditor    block={block} onChange={onChange} />}
           {block.type === 'callout'    && <CalloutEditor    block={block} onChange={onChange} />}
+          {block.type === 'tip'        && <TipEditor        block={block} onChange={onChange} />}
           {block.type === 'quiz'       && <QuizEditor       block={block} onChange={onChange} addToast={addToast} siteId={siteId} />}
           {block.type === 'code'       && <CodeEditor       block={block} onChange={onChange} />}
           {block.type === 'image'      && <ImageEditor      block={block} onChange={onChange} addToast={addToast} siteId={siteId} />}

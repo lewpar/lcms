@@ -595,6 +595,18 @@ function BlockPreview({ block }) {
       );
     }
 
+    case 'tip': {
+      const title = block.title || 'Tip';
+      return (
+        <div style={{ border: '1px solid #f59e0b', borderRadius: 8, overflow: 'hidden' }}>
+          <div style={{ padding: '8px 14px', background: '#fef3c7', borderBottom: '1px solid #f59e0b' }}>
+            <span style={{ fontWeight: 700, color: '#78350f', fontSize: '0.9em' }}>{title}</span>
+          </div>
+          <div style={{ padding: '10px 14px', background: '#fffbeb', color: '#374151', fontSize: '0.92em' }} dangerouslySetInnerHTML={{ __html: md(block.content) }} />
+        </div>
+      );
+    }
+
     case 'quiz':
       return <QuizPreview block={block} />;
 

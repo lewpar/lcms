@@ -568,6 +568,11 @@ function renderBlock(block) {
       return `<div class="steps-block">${titleHtml}<ol class="steps-list">${stepsHtml}</ol></div>`;
     }
 
+    case 'tip': {
+      const title = block.title || 'Tip';
+      return `<div class="tip-block"><div class="tip-block-header"><span class="tip-block-title">${esc(title)}</span></div><div class="tip-block-body prose">${md(block.content)}</div></div>`;
+    }
+
     case 'divider': return `<hr class="block-divider" />`;
     default:        return '';
   }
@@ -644,7 +649,11 @@ function buildCss(theme) {
 [data-theme="dark"] .callout-red   {background:rgba(239,68,68,0.12)  }[data-theme="dark"] .callout-red    .callout-title{color:#fca5a5}
 [data-theme="dark"] .callout-purple{background:rgba(168,85,247,0.12) }[data-theme="dark"] .callout-purple .callout-title{color:#d8b4fe}
 [data-theme="dark"] .callout-gray  {background:rgba(148,163,184,0.12)}[data-theme="dark"] .callout-gray   .callout-title{color:#cbd5e1}
-[data-theme="dark"] .callout-body  {color:var(--text)}`;
+[data-theme="dark"] .callout-body  {color:var(--text)}
+[data-theme="dark"] .tip-block{border-color:#d97706}
+[data-theme="dark"] .tip-block-header{background:rgba(245,158,11,0.15);border-color:#d97706}
+[data-theme="dark"] .tip-block-title{color:#fcd34d}
+[data-theme="dark"] .tip-block-body{background:rgba(245,158,11,0.08)}`;
 
   return `
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -1021,6 +1030,11 @@ img{max-width:100%;height:auto;display:block}
 .steps-step-content{flex:1;min-width:0}
 .steps-step-title{font-weight:700;color:var(--text);margin-bottom:6px;font-size:.95em}
 .steps-step-body p:first-child{margin-top:0}.steps-step-body p:last-child{margin-bottom:0}
+
+.tip-block{border:1px solid #f59e0b;border-radius:var(--radius);overflow:hidden}
+.tip-block-header{padding:9px 14px;background:#fef3c7;border-bottom:1px solid #f59e0b}
+.tip-block-title{font-weight:700;color:#78350f;font-size:.9em}
+.tip-block-body{padding:12px 16px;background:#fffbeb}.tip-block-body p:first-child{margin-top:0}.tip-block-body p:last-child{margin-bottom:0}
 
 ${darkModeVars}`;
 }

@@ -16,6 +16,7 @@ export const BLOCK_TYPES = [
   { type: 'markdown',          icon: '✏️', label: 'Markdown',          group: 'Content' },
   { type: 'heading',           icon: '𝐇',  label: 'Heading',           group: 'Content' },
   { type: 'callout',           icon: '💡', label: 'Callout',           group: 'Content' },
+  { type: 'tip',               icon: '★',  label: 'Tip',               group: 'Content' },
   { type: 'difficulty',        icon: '⚡', label: 'Difficulty',        group: 'Content' },
   { type: 'divider',           icon: '─',  label: 'Divider',           group: 'Content' },
   { type: 'image',             icon: '🖼️', label: 'Image',             group: 'Media' },
@@ -41,6 +42,7 @@ export function defaultBlock(type) {
     case 'markdown':    return { id, type, content: '' };
     case 'heading':     return { id, type, level: 2, text: '' };
     case 'callout':     return { id, type, title: '', content: '', color: 'blue' };
+    case 'tip':         return { id, type, title: 'Tip', content: '' };
     case 'quiz':        return { id, type, title: '', description: '', questions: [{ id: uuidv4(), question: '', options: ['', ''], correctIndex: 0, explanation: '' }] };
     case 'code':        return { id, type, language: 'plaintext', content: '', caption: '' };
     case 'image':       return { id, type, src: '', alt: '', caption: '' };
