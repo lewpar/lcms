@@ -13,5 +13,10 @@
     "id": "64187c58-1d65-4f6d-8e15-03a0b2af6c7d",
     "name": "Fetching with JavaScript",
     "slug": "fetch-js"
+  },
+  {
+    "id": "8e9598d0-3532-49e6-9616-869cd2b88dc7",
+    "name": "Learn JavaScript for Beginners",
+    "slug": "learn-js"
   }
 ]

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Function Basics — Learn JavaScript for Beginners</title>
+  
+  
+  <link rel="stylesheet" href="../styles.css?v=mnll5jmx" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">Learn JavaScript for Beginners</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Fundamentals</div><a href="../home/" class="nav-link" title="Welcome to Learn JavaScript"><span class="nav-link-text">Welcome to Learn JavaScript</span></a><a href="../what-is-javascript/" class="nav-link" title="What is JavaScript?"><span class="nav-link-text">What is JavaScript?</span></a><a href="../variables-and-assignment/" class="nav-link" title="Variables and Assignment"><span class="nav-link-text">Variables and Assignment</span></a></div><div class="nav-section"><div class="nav-section-title">Data Types</div><a href="../strings/" class="nav-link" title="Strings: Working with Text"><span class="nav-link-text">Strings: Working with Text</span></a><a href="../numbers/" class="nav-link" title="Numbers and Math"><span class="nav-link-text">Numbers and Math</span></a><a href="../booleans/" class="nav-link" title="Booleans: True and False"><span class="nav-link-text">Booleans: True and False</span></a></div><div class="nav-section"><div class="nav-section-title">Operators</div><a href="../arithmetic-operators/" class="nav-link" title="Arithmetic Operators"><span class="nav-link-text">Arithmetic Operators</span></a><a href="../comparison-operators/" class="nav-link" title="Comparison Operators"><span class="nav-link-text">Comparison Operators</span></a><a href="../logical-operators/" class="nav-link" title="Logical Operators"><span class="nav-link-text">Logical Operators</span></a></div><div class="nav-section"><div class="nav-section-title">Conditionals</div><a href="../if-statements/" class="nav-link" title="If Statements"><span class="nav-link-text">If Statements</span></a><a href="../if-else/" class="nav-link" title="If-Else Statements"><span class="nav-link-text">If-Else Statements</span></a><a href="../else-if/" class="nav-link" title="Else If for Multiple Conditions"><span class="nav-link-text">Else If for Multiple Conditions</span></a></div><div class="nav-section"><div class="nav-section-title">Loops</div><a href="../for-loops/" class="nav-link" title="For Loops"><span class="nav-link-text">For Loops</span></a><a href="../while-loops/" class="nav-link" title="While Loops"><span class="nav-link-text">While Loops</span></a><a href="../loop-control/" class="nav-link" title="Loop Control: Break and Continue"><span class="nav-link-text">Loop Control: Break and Continue</span></a></div><div class="nav-section"><div class="nav-section-title">Functions</div><a href="../function-basics/" class="nav-link active" title="Function Basics"><span class="nav-link-text">Function Basics</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-1" href="#function-basics"><span class="toc-num">1.</span> Function Basics</a></div><a href="../parameters-and-return/" class="nav-link" title="Parameters and Return Values"><span class="nav-link-text">Parameters and Return Values</span></a></div><div class="nav-section"><div class="nav-section-title">Arrays</div><a href="../arrays-intro/" class="nav-link" title="Introduction to Arrays"><span class="nav-link-text">Introduction to Arrays</span></a><a href="../array-methods/" class="nav-link" title="Array Methods"><span class="nav-link-text">Array Methods</span></a></div><div class="nav-section"><div class="nav-section-title">Objects</div><a href="../objects-basics/" class="nav-link" title="Objects Basics"><span class="nav-link-text">Objects Basics</span></a></div><div class="nav-section"><div class="nav-section-title">DOM &amp; Interactivity</div><a href="../the-dom/" class="nav-link" title="The DOM"><span class="nav-link-text">The DOM</span></a><a href="../changing-the-dom/" class="nav-link" title="Changing the DOM"><span class="nav-link-text">Changing the DOM</span></a></div><div class="nav-section"><div class="nav-section-title">Practice &amp; Projects</div><a href="../calculator-project/" class="nav-link" title="Project: Build a Calculator"><span class="nav-link-text">Project: Build a Calculator</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>Functions</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Function Basics</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Function Basics</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">Functions</span>
+            <span>⏱ 1 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><h1 id="function-basics" class="block-heading"><span class="heading-num">1.</span> Function Basics<a class="heading-anchor" href="#function-basics" aria-label="Copy link to section">#</a></h1>
+<div class="prose"><p>A <strong>function</strong> is a reusable block of code. Instead of writing the same code over and over, you create it once and use it many times.</p>
+<pre><code class="language-javascript">function greet() {
+  console.log(&#39;Hello!&#39;);
+}
+
+greet();  // Call the function
+</code></pre>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Simple Function</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<div class="prose"><p>Notice that we define the function once with <code>function sayHello() { ... }</code> but call it multiple times with <code>sayHello()</code>.</p>
+<h2 id="function-names">Function Names</h2>
+<ul>
+<li>Use descriptive names</li>
+<li>Start with a verb (what the function does)</li>
+<li>Use camelCase: <code>calculateTotal</code>, <code>printMessage</code>, <code>checkAge</code></li>
+</ul>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Multiple Functions</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<div class="fitb-block" data-answers='[]'>
+  <div class="fitb-header">Fill in the Blanks</div>
+  <div class="fitb-body">
+    <div class="fitb-prompt"><div class="fitb-spacer"></div></div>
+    <div class="fitb-footer">
+      <button class="fitb-check-btn" type="button">Check Answers</button>
+      <span class="fitb-result" hidden></span>
+    </div>
+  </div>
+</div>
+<div class="quiz-block" data-questions='[{"question":"Why use functions?","type":"multiple-choice","options":["To reuse code without writing it again","To make code organize and easier to read","Both of the above"],"correctIndex":2,"explanation":"Functions help you avoid repetition and keep your code organized and maintainable."}]' data-quiz-id="">
+  <div class="quiz-block-header">
+    <span class="quiz-block-header-title">Quiz</span>
+    <span class="quiz-block-header-badge">1 question</span>
+  </div>
+  <div class="qs-start">
+    <h3 class="qs-title">Quiz</h3>
+    <p class="qs-count">1 question</p>
+    <button class="qs-start-btn quiz-btn" type="button">Start Quiz →</button>
+    <div class="qs-resume" hidden>
+      <p class="qs-resume-status"></p>
+      <div class="qs-resume-actions">
+        <button class="qs-continue-btn quiz-btn" type="button">Continue →</button>
+        <button class="qs-restart-btn quiz-btn quiz-btn-outline" type="button">↺ Start Over</button>
+      </div>
+    </div>
+  </div>
+  <div class="qs-question" hidden>
+    <div class="qs-progress-wrap">
+      <div class="qs-progress-bar"><div class="qs-progress-fill"></div></div>
+      <span class="qs-progress-text">1 / 1</span>
+    </div>
+    <div class="qs-q-text"></div>
+    <div class="qs-media" hidden></div>
+    <div class="qs-media-sep" hidden></div>
+    <ul class="qs-options" role="list"></ul>
+    <div class="qs-nav">
+      <button class="qs-submit quiz-btn" type="button" disabled>Submit Answer</button>
+    </div>
+    <div class="qs-feedback" hidden></div>
+    <div class="qs-explanation" hidden></div>
+    <div class="qs-next-nav" hidden>
+      <button class="qs-next quiz-btn quiz-btn-outline" type="button" hidden>Next →</button>
+      <button class="qs-finish quiz-btn quiz-btn-outline" type="button" hidden>See Results →</button>
+    </div>
+  </div>
+  <div class="qs-results" hidden>
+    <p class="qs-results-title">Quiz Complete</p>
+    <div class="qs-score-ring"><div class="qs-score-inner">
+      <div class="qs-score-num"></div><div class="qs-score-lbl">correct</div>
+    </div></div>
+    <div class="qs-score-pct"></div>
+    <div class="qs-review"></div>
+    <button class="qs-retry-btn quiz-btn" type="button">↺ Try Again</button>
+  </div>
+</div></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../loop-control/">← Loop Control: Break and Continue</a>
+  <a class="pn-btn pn-next" href="../parameters-and-return/">Parameters and Return Values →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <span>Generated by LCMS</span><span>5 April 2026</span>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnll5jmx"></script>
+<script src="../quiz.js?v=mnll5jmx"></script>
+
+
+<script src="../playground.js?v=mnll5jmx"></script>
+<script src="../fitb.js?v=mnll5jmx"></script>
+
+
+</body>
+</html>

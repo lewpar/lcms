@@ -1,0 +1,83 @@
+{
+  "section": "7c2a8c32-679f-4b79-aea1-e8d777f9bfa0",
+  "order": 3,
+  "title": "Variables and Assignment",
+  "blocks": [
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Variables and Assignment"
+    },
+    {
+      "type": "markdown",
+      "content": "A **variable** is a container that stores data. Think of it like a labeled box where you can put information.\n\n## Creating Variables\n\nThere are three ways to declare variables in JavaScript:\n\n```javascript\nvar name = 'Alice';      // old way (avoid using this)\nlet age = 25;            // modern way (preferred)\nconst country = 'USA';   // for values that won't change\n```\n\nFor new code, use `let` or `const`. The difference:\n- **let**: Can be changed after creation\n- **const**: Cannot be changed after creation (constant)"
+    },
+    {
+      "type": "callout",
+      "style": "tip",
+      "title": "\ud83d\udca1 Variable Naming Rules",
+      "content": "- Names must start with a letter, underscore (_), or dollar sign ($)\n- Names are case-sensitive: age, Age, and AGE are different\n- Use camelCase: myVariableName (not my_variable_name)\n- Choose descriptive names: use 'studentName' instead of 'x'"
+    },
+    {
+      "type": "playground",
+      "title": "Creating Variables",
+      "code": "let name = 'Alex';\nlet score = 95;\nlet isStudying = true;\n\nconsole.log(name);\nconsole.log(score);\nconsole.log(isStudying);"
+    },
+    {
+      "type": "markdown",
+      "content": "## Changing Variables\n\nYou can update the value of a `let` variable after creating it:"
+    },
+    {
+      "type": "playground",
+      "title": "Updating Variables",
+      "code": "let temperature = 20;\nconsole.log('Temperature:', temperature);\n\ntemperature = 25;  // Update the value\nconsole.log('New temperature:', temperature);"
+    },
+    {
+      "type": "fill-in-the-blank",
+      "instruction": "Create a variable named 'city' with the value 'Boston':",
+      "prefix": "let city = ",
+      "suffix": ";",
+      "correctAnswer": "'Boston'",
+      "explanation": "String values (text) must be wrapped in quotes. Both single quotes (') and double quotes (\") work."
+    },
+    {
+      "type": "quiz",
+      "questions": [
+        {
+          "question": "What is a variable used for?",
+          "type": "multiple-choice",
+          "options": [
+            "To store and organize data",
+            "To run a program",
+            "To display text on the screen"
+          ],
+          "correctIndex": 0,
+          "explanation": "Variables are containers that store data values we want to use in our program."
+        },
+        {
+          "question": "Which is the modern way to create a variable?",
+          "type": "multiple-choice",
+          "options": [
+            "var",
+            "let",
+            "variable"
+          ],
+          "correctIndex": 1,
+          "explanation": "While 'var' still works, 'let' and 'const' are preferred in modern JavaScript."
+        },
+        {
+          "question": "What's the difference between 'let' and 'const'?",
+          "type": "multiple-choice",
+          "options": [
+            "There's no difference",
+            "'let' can be changed, 'const' cannot",
+            "'const' can be changed, 'let' cannot"
+          ],
+          "correctIndex": 1,
+          "explanation": "'let' creates a variable that can be updated. 'const' creates a constant that cannot be changed after creation."
+        }
+      ]
+    }
+  ],
+  "slug": "variables-and-assignment"
+}

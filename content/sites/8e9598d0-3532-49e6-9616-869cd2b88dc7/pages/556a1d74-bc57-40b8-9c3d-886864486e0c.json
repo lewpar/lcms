@@ -1,0 +1,69 @@
+{
+  "section": "422d53e3-529a-4e03-91b4-43a4bca020f4",
+  "order": 3,
+  "title": "Booleans: True and False",
+  "blocks": [
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Booleans: True and False"
+    },
+    {
+      "type": "markdown",
+      "content": "A **boolean** is a data type that can only be one of two values: `true` or `false`. Booleans are used to make decisions in your code.\n\n```javascript\nlet isRaining = true;\nlet isWeekend = false;\nlet hasLicense = true;\n```"
+    },
+    {
+      "type": "markdown",
+      "content": "## Comparison Operators\n\nComparison operators create boolean values:\n\n```javascript\n5 > 3        // true   (greater than)\n5 < 3        // false  (less than)\n5 >= 5       // true   (greater than or equal)\n5 <= 3       // false  (less than or equal)\n5 == 5       // true   (equal to)\n5 != 3       // true   (not equal to)\n```"
+    },
+    {
+      "type": "playground",
+      "title": "Comparison Operators",
+      "code": "let age = 16;\n\nconsole.log(age > 18);      // false\nconsole.log(age < 21);      // true\nconsole.log(age >= 16);     // true\nconsole.log(age == 16);     // true\nconsole.log(age != 18);     // true"
+    },
+    {
+      "type": "markdown",
+      "content": "## Logical Operators\n\n```javascript\ntrue && true    // AND: both must be true \u2192 true\ntrue && false   // AND: both must be true \u2192 false\ntrue || false   // OR: at least one must be true \u2192 true\nfalse || false  // OR: at least one must be true \u2192 false\n!true           // NOT: flips the value \u2192 false\n!false          // NOT: flips the value \u2192 true\n```"
+    },
+    {
+      "type": "playground",
+      "title": "Logical Operators",
+      "code": "let age = 15;\nlet hasLicense = false;\n\nconsole.log(age >= 18 && hasLicense);  // false (both must be true)\nconsole.log(age >= 18 || hasLicense);  // false (at least one must be true)\nconsole.log(!(age >= 18));             // true (flips false to true)"
+    },
+    {
+      "type": "fill-in-the-blank",
+      "instruction": "Create a boolean variable that is false:",
+      "prefix": "let answer = ",
+      "suffix": ";",
+      "correctAnswer": "false",
+      "explanation": "Boolean values are either true or false. No quotes needed!"
+    },
+    {
+      "type": "quiz",
+      "questions": [
+        {
+          "question": "What is the result of 10 > 5?",
+          "type": "multiple-choice",
+          "options": [
+            "true",
+            "false",
+            "5"
+          ],
+          "correctIndex": 0,
+          "explanation": "10 is greater than 5, so the comparison 10 > 5 returns true."
+        },
+        {
+          "question": "What is the result of true && false?",
+          "type": "multiple-choice",
+          "options": [
+            "true",
+            "false"
+          ],
+          "correctIndex": 1,
+          "explanation": "The && (AND) operator requires both sides to be true. Since one side is false, the result is false."
+        }
+      ]
+    }
+  ],
+  "slug": "booleans"
+}

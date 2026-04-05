@@ -1,0 +1,64 @@
+{
+  "section": "70e2d56e-0bd5-47cb-ad91-76dbd38c83de",
+  "order": 2,
+  "title": "Array Methods",
+  "blocks": [
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Array Methods"
+    },
+    {
+      "type": "markdown",
+      "content": "Arrays have built-in methods to help you work with them.\n\n## Common Array Methods\n\n- `.push()` - Add item to the end\n- `.pop()` - Remove item from the end\n- `.shift()` - Remove item from the start\n- `.unshift()` - Add item to the start\n- `.includes()` - Check if array contains item\n- `.indexOf()` - Find position of item\n- `.join()` - Combine items into a string\n- `.reverse()` - Flip the order\n- `.sort()` - Sort items"
+    },
+    {
+      "type": "playground",
+      "title": "Push and Pop",
+      "code": "let cart = ['apple', 'bread', 'milk'];\n\nconsole.log('Initial:', cart);\n\ncart.push('cheese');  // Add to end\nconsole.log('After push:', cart);\n\ncart.pop();  // Remove from end\nconsole.log('After pop:', cart);"
+    },
+    {
+      "type": "playground",
+      "title": "Shift and Unshift",
+      "code": "let queue = ['Alice', 'Bob', 'Charlie'];\n\nconsole.log('Queue:', queue);\n\nqueue.shift();  // Remove first person\nconsole.log('Next person served:', queue[0]);\n\nqueue.unshift('Diana');  // Add person to front\nconsole.log('New queue:', queue);"
+    },
+    {
+      "type": "playground",
+      "title": "Join and Reverse",
+      "code": "let items = ['do', 'a', 'barrel', 'roll'];\n\nconsole.log('Items:', items);\nconsole.log('Joined:', items.join(' '));\n\nitems.reverse();\nconsole.log('Reversed:', items);\nconsole.log('Reversed string:', items.join('-'));"
+    },
+    {
+      "type": "playground",
+      "title": "Includes and IndexOf",
+      "code": "let colors = ['red', 'green', 'blue', 'yellow'];\n\nconsole.log(colors.includes('blue'));     // true\nconsole.log(colors.includes('purple'));   // false\n\nconsole.log(colors.indexOf('green'));     // 1\nconsole.log(colors.indexOf('red'));       // 0"
+    },
+    {
+      "type": "quiz",
+      "questions": [
+        {
+          "question": "What does the push() method do?",
+          "type": "multiple-choice",
+          "options": [
+            "Removes item from end",
+            "Adds item to end",
+            "Finds an item"
+          ],
+          "correctIndex": 1,
+          "explanation": "push() adds a new item to the end of an array."
+        },
+        {
+          "question": "What does join() return?",
+          "type": "multiple-choice",
+          "options": [
+            "An array",
+            "A number",
+            "A string"
+          ],
+          "correctIndex": 2,
+          "explanation": "join() combines all array items into a single string with a separator."
+        }
+      ]
+    }
+  ],
+  "slug": "array-methods"
+}

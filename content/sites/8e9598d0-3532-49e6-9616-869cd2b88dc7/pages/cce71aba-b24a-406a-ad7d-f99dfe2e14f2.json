@@ -1,0 +1,75 @@
+{
+  "section": "70e2d56e-0bd5-47cb-ad91-76dbd38c83de",
+  "order": 1,
+  "title": "Introduction to Arrays",
+  "blocks": [
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Introduction to Arrays"
+    },
+    {
+      "type": "markdown",
+      "content": "An **array** is a list of values. Use arrays when you have multiple related pieces of data.\n\n```javascript\nlet colors = ['red', 'green', 'blue'];\nlet numbers = [10, 20, 30, 40, 50];\nlet mixed = [1, 'hello', true];\n```\n\nArrays use **square brackets** [ ] and separate items with **commas**."
+    },
+    {
+      "type": "playground",
+      "title": "Creating Arrays",
+      "code": "let fruits = ['apple', 'banana', 'orange', 'grape'];\nlet scores = [95, 87, 92, 78, 88];\nlet isComplete = [true, false, true, true];\n\nconsole.log(fruits);\nconsole.log(scores);\nconsole.log(isComplete);"
+    },
+    {
+      "type": "markdown",
+      "content": "## Accessing Array Items\n\nEach item has an **index** (position). Indexes start at 0, not 1!\n\n```javascript\nlet fruits = ['apple', 'banana', 'orange'];\nconsole.log(fruits[0]);  // 'apple' (first item)\nconsole.log(fruits[1]);  // 'banana' (second item)\nconsole.log(fruits[2]);  // 'orange' (third item)\n```"
+    },
+    {
+      "type": "playground",
+      "title": "Array Indexing",
+      "code": "let days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];\n\nconsole.log('First day:', days[0]);\nconsole.log('Third day:', days[2]);\nconsole.log('Fifth day:', days[4]);\n\n// Get the last item\nconsole.log('Last day:', days[days.length - 1]);"
+    },
+    {
+      "type": "markdown",
+      "content": "## Array Length\n\nThe `.length` property tells you how many items are in the array."
+    },
+    {
+      "type": "playground",
+      "title": "Array Length and Loop",
+      "code": "let letters = ['a', 'b', 'c', 'd', 'e'];\n\nconsole.log('Length:', letters.length);  // 5\n\n// Loop through each item\nfor (let i = 0; i < letters.length; i++) {\n  console.log('Item', i, ':', letters[i]);\n}"
+    },
+    {
+      "type": "fill-in-the-blank",
+      "instruction": "Get the second item from an array named 'items':",
+      "prefix": "items[",
+      "suffix": "]",
+      "correctAnswer": "1",
+      "explanation": "Array indexes start at 0, so the second item is at index 1."
+    },
+    {
+      "type": "quiz",
+      "questions": [
+        {
+          "question": "What index is the first item in an array?",
+          "type": "multiple-choice",
+          "options": [
+            "0",
+            "1",
+            "first"
+          ],
+          "correctIndex": 0,
+          "explanation": "Array indexes start at 0. The first item is at index [0]."
+        },
+        {
+          "question": "If an array has 5 items, what is the index of the last item?",
+          "type": "multiple-choice",
+          "options": [
+            "4",
+            "5",
+            "6"
+          ],
+          "correctIndex": 0,
+          "explanation": "With 5 items, indexes are 0, 1, 2, 3, 4. The last item is at index 4."
+        }
+      ]
+    }
+  ],
+  "slug": "arrays-intro"
+}

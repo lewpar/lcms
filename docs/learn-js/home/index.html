@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to Learn JavaScript — Learn JavaScript for Beginners</title>
+  
+  
+  <link rel="stylesheet" href="../styles.css?v=mnll5jmx" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">Learn JavaScript for Beginners</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Fundamentals</div><a href="../home/" class="nav-link active" title="Welcome to Learn JavaScript"><span class="nav-link-text">Welcome to Learn JavaScript</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-1" href="#welcome-to-learn-javascript"><span class="toc-num">1.</span> Welcome to Learn JavaScript! 🚀</a></div><a href="../what-is-javascript/" class="nav-link" title="What is JavaScript?"><span class="nav-link-text">What is JavaScript?</span></a><a href="../variables-and-assignment/" class="nav-link" title="Variables and Assignment"><span class="nav-link-text">Variables and Assignment</span></a></div><div class="nav-section"><div class="nav-section-title">Data Types</div><a href="../strings/" class="nav-link" title="Strings: Working with Text"><span class="nav-link-text">Strings: Working with Text</span></a><a href="../numbers/" class="nav-link" title="Numbers and Math"><span class="nav-link-text">Numbers and Math</span></a><a href="../booleans/" class="nav-link" title="Booleans: True and False"><span class="nav-link-text">Booleans: True and False</span></a></div><div class="nav-section"><div class="nav-section-title">Operators</div><a href="../arithmetic-operators/" class="nav-link" title="Arithmetic Operators"><span class="nav-link-text">Arithmetic Operators</span></a><a href="../comparison-operators/" class="nav-link" title="Comparison Operators"><span class="nav-link-text">Comparison Operators</span></a><a href="../logical-operators/" class="nav-link" title="Logical Operators"><span class="nav-link-text">Logical Operators</span></a></div><div class="nav-section"><div class="nav-section-title">Conditionals</div><a href="../if-statements/" class="nav-link" title="If Statements"><span class="nav-link-text">If Statements</span></a><a href="../if-else/" class="nav-link" title="If-Else Statements"><span class="nav-link-text">If-Else Statements</span></a><a href="../else-if/" class="nav-link" title="Else If for Multiple Conditions"><span class="nav-link-text">Else If for Multiple Conditions</span></a></div><div class="nav-section"><div class="nav-section-title">Loops</div><a href="../for-loops/" class="nav-link" title="For Loops"><span class="nav-link-text">For Loops</span></a><a href="../while-loops/" class="nav-link" title="While Loops"><span class="nav-link-text">While Loops</span></a><a href="../loop-control/" class="nav-link" title="Loop Control: Break and Continue"><span class="nav-link-text">Loop Control: Break and Continue</span></a></div><div class="nav-section"><div class="nav-section-title">Functions</div><a href="../function-basics/" class="nav-link" title="Function Basics"><span class="nav-link-text">Function Basics</span></a><a href="../parameters-and-return/" class="nav-link" title="Parameters and Return Values"><span class="nav-link-text">Parameters and Return Values</span></a></div><div class="nav-section"><div class="nav-section-title">Arrays</div><a href="../arrays-intro/" class="nav-link" title="Introduction to Arrays"><span class="nav-link-text">Introduction to Arrays</span></a><a href="../array-methods/" class="nav-link" title="Array Methods"><span class="nav-link-text">Array Methods</span></a></div><div class="nav-section"><div class="nav-section-title">Objects</div><a href="../objects-basics/" class="nav-link" title="Objects Basics"><span class="nav-link-text">Objects Basics</span></a></div><div class="nav-section"><div class="nav-section-title">DOM &amp; Interactivity</div><a href="../the-dom/" class="nav-link" title="The DOM"><span class="nav-link-text">The DOM</span></a><a href="../changing-the-dom/" class="nav-link" title="Changing the DOM"><span class="nav-link-text">Changing the DOM</span></a></div><div class="nav-section"><div class="nav-section-title">Practice &amp; Projects</div><a href="../calculator-project/" class="nav-link" title="Project: Build a Calculator"><span class="nav-link-text">Project: Build a Calculator</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>Fundamentals</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Welcome to Learn JavaScript</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Welcome to Learn JavaScript</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">Fundamentals</span>
+            <span>⏱ 1 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><h1 id="welcome-to-learn-javascript" class="block-heading"><span class="heading-num">1.</span> Welcome to Learn JavaScript! 🚀<a class="heading-anchor" href="#welcome-to-learn-javascript" aria-label="Copy link to section">#</a></h1>
+<div class="prose"><p>This interactive course will teach you JavaScript from the ground up. Whether you&#39;re brand new to programming or looking to learn your first language, you&#39;re in the right place!</p>
+<h2 id="what-you-39-ll-learn">What You&#39;ll Learn</h2>
+<p>JavaScript is a versatile programming language that powers interactive websites and modern applications. In this course, we&#39;ll cover:</p>
+</div>
+<div class="accordion-block"><div class="acc-item open">
+  <button class="acc-header" type="button" aria-expanded="true">
+    <span>📚 Fundamentals</span><span class="acc-icon">▼</span>
+  </button>
+  <div class="acc-body"><div class="acc-body-inner prose"><p>What is JavaScript and how to write your first program</p>
+</div></div>
+</div>
+<div class="acc-item">
+  <button class="acc-header" type="button" aria-expanded="false">
+    <span>🔢 Data Types</span><span class="acc-icon">▼</span>
+  </button>
+  <div class="acc-body"><div class="acc-body-inner prose"><p>Strings, numbers, booleans, and more</p>
+</div></div>
+</div>
+<div class="acc-item">
+  <button class="acc-header" type="button" aria-expanded="false">
+    <span>➕ Operators</span><span class="acc-icon">▼</span>
+  </button>
+  <div class="acc-body"><div class="acc-body-inner prose"><p>Math, comparisons, and logical operations</p>
+</div></div>
+</div>
+<div class="acc-item">
+  <button class="acc-header" type="button" aria-expanded="false">
+    <span>🎯 Conditionals</span><span class="acc-icon">▼</span>
+  </button>
+  <div class="acc-body"><div class="acc-body-inner prose"><p>Making decisions with if/else statements</p>
+</div></div>
+</div>
+<div class="acc-item">
+  <button class="acc-header" type="button" aria-expanded="false">
+    <span>🔄 Loops</span><span class="acc-icon">▼</span>
+  </button>
+  <div class="acc-body"><div class="acc-body-inner prose"><p>Repeating code with for and while loops</p>
+</div></div>
+</div>
+<div class="acc-item">
+  <button class="acc-header" type="button" aria-expanded="false">
+    <span>🧩 Functions</span><span class="acc-icon">▼</span>
+  </button>
+  <div class="acc-body"><div class="acc-body-inner prose"><p>Creating reusable blocks of code</p>
+</div></div>
+</div>
+<div class="acc-item">
+  <button class="acc-header" type="button" aria-expanded="false">
+    <span>📦 Arrays &amp; Objects</span><span class="acc-icon">▼</span>
+  </button>
+  <div class="acc-body"><div class="acc-body-inner prose"><p>Organizing and storing data</p>
+</div></div>
+</div>
+<div class="acc-item">
+  <button class="acc-header" type="button" aria-expanded="false">
+    <span>🌐 DOM &amp; Interactivity</span><span class="acc-icon">▼</span>
+  </button>
+  <div class="acc-body"><div class="acc-body-inner prose"><p>Making websites interactive</p>
+</div></div>
+</div></div>
+<div class="callout callout-blue"><div class="callout-title">💡 How to Use This Course</div><div class="callout-body"><p>Each lesson includes code examples you can run in your browser. Try modifying the code and see what happens! This is the best way to learn programming.</p>
+</div></div>
+<div class="prose"><h2 id="how-to-learn-programming">How to Learn Programming</h2>
+<ol>
+<li><strong>Read</strong> the explanations and examples</li>
+<li><strong>Try</strong> the code playground - modify it and experiment</li>
+<li><strong>Practice</strong> with the fill-in-the-blank exercises</li>
+<li><strong>Test</strong> yourself with quizzes</li>
+<li><strong>Build</strong> small projects to solidify your knowledge</li>
+</ol>
+<p>Remember: Making mistakes is part of learning! The more you experiment, the faster you&#39;ll learn.</p>
+</div>
+<div class="callout callout-blue"><div class="callout-title">✨ You&#x27;ve Got This!</div><div class="callout-body"><p>Thousands of people have learned JavaScript this way. Take your time, be patient with yourself, and most importantly—have fun!</p>
+</div></div></div>
+        
+<nav class="page-prev-next">
+  <span></span>
+  <a class="pn-btn pn-next" href="../what-is-javascript/">What is JavaScript? →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <span>Generated by LCMS</span><span>5 April 2026</span>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnll5jmx"></script>
+
+<script src="../accordion.js?v=mnll5jmx"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+{
+  "section": "34195d01-db53-4125-b4a6-6540a89e15b9",
+  "order": 1,
+  "title": "For Loops",
+  "blocks": [
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "For Loops"
+    },
+    {
+      "type": "markdown",
+      "content": "A **loop** repeats code multiple times. A **for loop** is perfect when you know how many times to repeat.\n\n```javascript\nfor (let i = 0; i < 5; i++) {\n  // This code repeats 5 times\n  console.log(i);\n}\n```\n\nThe for loop has three parts:\n1. **Initialize** (let i = 0) - Start counting at 0\n2. **Condition** (i < 5) - Keep going while i is less than 5\n3. **Update** (i++) - Add 1 to i each time"
+    },
+    {
+      "type": "playground",
+      "title": "Simple For Loop",
+      "code": "for (let i = 0; i < 5; i++) {\n  console.log('Iteration', i);\n}"
+    },
+    {
+      "type": "playground",
+      "title": "Countdown",
+      "code": "for (let count = 10; count > 0; count--) {\n  console.log(count);\n}\nconsole.log('Blastoff! \ud83d\ude80');"
+    },
+    {
+      "type": "markdown",
+      "content": "Notice that this loop counts **backwards** using `count--` (subtract 1 each time)."
+    },
+    {
+      "type": "playground",
+      "title": "Multiplication Table",
+      "code": "let number = 7;\n\nfor (let i = 1; i <= 10; i++) {\n  let result = number * i;\n  console.log(`${number} \u00d7 ${i} = ${result}`);\n}"
+    },
+    {
+      "type": "fill-in-the-blank",
+      "instruction": "Create a loop that counts from 1 to 3:",
+      "prefix": "for (let i = 1; i <= 3; ",
+      "suffix": ") { console.log(i); }",
+      "correctAnswer": "i++",
+      "explanation": "i++ adds 1 to i each time the loop repeats."
+    },
+    {
+      "type": "quiz",
+      "questions": [
+        {
+          "question": "How many times will this loop run: for (let i = 0; i < 5; i++)?",
+          "type": "multiple-choice",
+          "options": [
+            "4 times",
+            "5 times",
+            "6 times"
+          ],
+          "correctIndex": 1,
+          "explanation": "The loop runs while i < 5, so i goes from 0, 1, 2, 3, 4 - that's 5 times."
+        }
+      ]
+    }
+  ],
+  "slug": "for-loops"
+}

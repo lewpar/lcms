@@ -1,0 +1,66 @@
+{
+  "section": "422d53e3-529a-4e03-91b4-43a4bca020f4",
+  "order": 1,
+  "title": "Strings: Working with Text",
+  "blocks": [
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Strings: Working with Text"
+    },
+    {
+      "type": "markdown",
+      "content": "A **string** is text data. Any text you want to work with in JavaScript is a string.\n\n## Creating Strings\n\nStrings must be wrapped in quotes (either single or double):\n\n```javascript\nlet message = 'Hello, World!';       // single quotes\nlet name = \"Alice\";                  // double quotes\nlet question = `What's your name?`;  // backticks (template literals)\n```"
+    },
+    {
+      "type": "playground",
+      "title": "Working with Strings",
+      "code": "let greeting = 'Hello';\nlet name = 'Maya';\n\nconsole.log(greeting + ', ' + name + '!');\nconsole.log(`${greeting}, ${name}!`);  // template literal"
+    },
+    {
+      "type": "markdown",
+      "content": "## String Methods\n\nStrings have helpful built-in methods:\n\n- `.length` - Get the number of characters\n- `.toUpperCase()` - Convert to UPPERCASE\n- `.toLowerCase()` - Convert to lowercase\n- `.includes('text')` - Check if string contains text\n- `.slice(start, end)` - Get part of the string"
+    },
+    {
+      "type": "playground",
+      "title": "String Methods",
+      "code": "let word = 'JavaScript';\n\nconsole.log(word.length);           // 10\nconsole.log(word.toUpperCase());    // JAVASCRIPT\nconsole.log(word.toLowerCase());    // javascript\nconsole.log(word.includes('Script')); // true\nconsole.log(word.slice(0, 4));      // Java"
+    },
+    {
+      "type": "fill-in-the-blank",
+      "instruction": "Get the length of the string 'Hello':",
+      "prefix": "'Hello'.",
+      "suffix": "",
+      "correctAnswer": "length",
+      "explanation": "The .length property gives us the number of characters in a string."
+    },
+    {
+      "type": "quiz",
+      "questions": [
+        {
+          "question": "How do you create a string in JavaScript?",
+          "type": "multiple-choice",
+          "options": [
+            "With brackets: [text]",
+            "With quotes: 'text' or \"text\"",
+            "With parentheses: (text)"
+          ],
+          "correctIndex": 1,
+          "explanation": "Strings must be wrapped in single quotes ('), double quotes (\"), or backticks (`)."
+        },
+        {
+          "question": "What does 'Hello'.toUpperCase() return?",
+          "type": "multiple-choice",
+          "options": [
+            "'hello'",
+            "'HELLO'",
+            "'Hello'"
+          ],
+          "correctIndex": 1,
+          "explanation": "toUpperCase() converts all characters to uppercase letters."
+        }
+      ]
+    }
+  ],
+  "slug": "strings"
+}

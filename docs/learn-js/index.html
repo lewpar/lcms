@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learn JavaScript for Beginners</title>
+  
+  <link rel="stylesheet" href="styles.css?v=mnll5jmx" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="./">Learn JavaScript for Beginners</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Fundamentals</div><a href="home/" class="nav-link" title="Welcome to Learn JavaScript"><span class="nav-link-text">Welcome to Learn JavaScript</span></a><a href="what-is-javascript/" class="nav-link" title="What is JavaScript?"><span class="nav-link-text">What is JavaScript?</span></a><a href="variables-and-assignment/" class="nav-link" title="Variables and Assignment"><span class="nav-link-text">Variables and Assignment</span></a></div><div class="nav-section"><div class="nav-section-title">Data Types</div><a href="strings/" class="nav-link" title="Strings: Working with Text"><span class="nav-link-text">Strings: Working with Text</span></a><a href="numbers/" class="nav-link" title="Numbers and Math"><span class="nav-link-text">Numbers and Math</span></a><a href="booleans/" class="nav-link" title="Booleans: True and False"><span class="nav-link-text">Booleans: True and False</span></a></div><div class="nav-section"><div class="nav-section-title">Operators</div><a href="arithmetic-operators/" class="nav-link" title="Arithmetic Operators"><span class="nav-link-text">Arithmetic Operators</span></a><a href="comparison-operators/" class="nav-link" title="Comparison Operators"><span class="nav-link-text">Comparison Operators</span></a><a href="logical-operators/" class="nav-link" title="Logical Operators"><span class="nav-link-text">Logical Operators</span></a></div><div class="nav-section"><div class="nav-section-title">Conditionals</div><a href="if-statements/" class="nav-link" title="If Statements"><span class="nav-link-text">If Statements</span></a><a href="if-else/" class="nav-link" title="If-Else Statements"><span class="nav-link-text">If-Else Statements</span></a><a href="else-if/" class="nav-link" title="Else If for Multiple Conditions"><span class="nav-link-text">Else If for Multiple Conditions</span></a></div><div class="nav-section"><div class="nav-section-title">Loops</div><a href="for-loops/" class="nav-link" title="For Loops"><span class="nav-link-text">For Loops</span></a><a href="while-loops/" class="nav-link" title="While Loops"><span class="nav-link-text">While Loops</span></a><a href="loop-control/" class="nav-link" title="Loop Control: Break and Continue"><span class="nav-link-text">Loop Control: Break and Continue</span></a></div><div class="nav-section"><div class="nav-section-title">Functions</div><a href="function-basics/" class="nav-link" title="Function Basics"><span class="nav-link-text">Function Basics</span></a><a href="parameters-and-return/" class="nav-link" title="Parameters and Return Values"><span class="nav-link-text">Parameters and Return Values</span></a></div><div class="nav-section"><div class="nav-section-title">Arrays</div><a href="arrays-intro/" class="nav-link" title="Introduction to Arrays"><span class="nav-link-text">Introduction to Arrays</span></a><a href="array-methods/" class="nav-link" title="Array Methods"><span class="nav-link-text">Array Methods</span></a></div><div class="nav-section"><div class="nav-section-title">Objects</div><a href="objects-basics/" class="nav-link" title="Objects Basics"><span class="nav-link-text">Objects Basics</span></a></div><div class="nav-section"><div class="nav-section-title">DOM &amp; Interactivity</div><a href="the-dom/" class="nav-link" title="The DOM"><span class="nav-link-text">The DOM</span></a><a href="changing-the-dom/" class="nav-link" title="Changing the DOM"><span class="nav-link-text">Changing the DOM</span></a></div><div class="nav-section"><div class="nav-section-title">Practice &amp; Projects</div><a href="calculator-project/" class="nav-link" title="Project: Build a Calculator"><span class="nav-link-text">Project: Build a Calculator</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <span>Home</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="home-hero">
+          <h1>Learn JavaScript for Beginners</h1>
+          
+        </div>
+        
+        <div class="home-page-grid"><div class="section-group"><div class="section-group-title">Fundamentals</div><div class="page-grid">
+<a class="page-card" href="home/">
+  <div class="page-card-section">Fundamentals</div>
+  <div class="page-card-title">Welcome to Learn JavaScript</div>
+  
+</a>
+<a class="page-card" href="what-is-javascript/">
+  <div class="page-card-section">Fundamentals</div>
+  <div class="page-card-title">What is JavaScript?</div>
+  
+</a>
+<a class="page-card" href="variables-and-assignment/">
+  <div class="page-card-section">Fundamentals</div>
+  <div class="page-card-title">Variables and Assignment</div>
+  
+</a></div></div><div class="section-group"><div class="section-group-title">Data Types</div><div class="page-grid">
+<a class="page-card" href="strings/">
+  <div class="page-card-section">Data Types</div>
+  <div class="page-card-title">Strings: Working with Text</div>
+  
+</a>
+<a class="page-card" href="numbers/">
+  <div class="page-card-section">Data Types</div>
+  <div class="page-card-title">Numbers and Math</div>
+  
+</a>
+<a class="page-card" href="booleans/">
+  <div class="page-card-section">Data Types</div>
+  <div class="page-card-title">Booleans: True and False</div>
+  
+</a></div></div><div class="section-group"><div class="section-group-title">Operators</div><div class="page-grid">
+<a class="page-card" href="arithmetic-operators/">
+  <div class="page-card-section">Operators</div>
+  <div class="page-card-title">Arithmetic Operators</div>
+  
+</a>
+<a class="page-card" href="comparison-operators/">
+  <div class="page-card-section">Operators</div>
+  <div class="page-card-title">Comparison Operators</div>
+  
+</a>
+<a class="page-card" href="logical-operators/">
+  <div class="page-card-section">Operators</div>
+  <div class="page-card-title">Logical Operators</div>
+  
+</a></div></div><div class="section-group"><div class="section-group-title">Conditionals</div><div class="page-grid">
+<a class="page-card" href="if-statements/">
+  <div class="page-card-section">Conditionals</div>
+  <div class="page-card-title">If Statements</div>
+  
+</a>
+<a class="page-card" href="if-else/">
+  <div class="page-card-section">Conditionals</div>
+  <div class="page-card-title">If-Else Statements</div>
+  
+</a>
+<a class="page-card" href="else-if/">
+  <div class="page-card-section">Conditionals</div>
+  <div class="page-card-title">Else If for Multiple Conditions</div>
+  
+</a></div></div><div class="section-group"><div class="section-group-title">Loops</div><div class="page-grid">
+<a class="page-card" href="for-loops/">
+  <div class="page-card-section">Loops</div>
+  <div class="page-card-title">For Loops</div>
+  
+</a>
+<a class="page-card" href="while-loops/">
+  <div class="page-card-section">Loops</div>
+  <div class="page-card-title">While Loops</div>
+  
+</a>
+<a class="page-card" href="loop-control/">
+  <div class="page-card-section">Loops</div>
+  <div class="page-card-title">Loop Control: Break and Continue</div>
+  
+</a></div></div><div class="section-group"><div class="section-group-title">Functions</div><div class="page-grid">
+<a class="page-card" href="function-basics/">
+  <div class="page-card-section">Functions</div>
+  <div class="page-card-title">Function Basics</div>
+  
+</a>
+<a class="page-card" href="parameters-and-return/">
+  <div class="page-card-section">Functions</div>
+  <div class="page-card-title">Parameters and Return Values</div>
+  
+</a></div></div><div class="section-group"><div class="section-group-title">Arrays</div><div class="page-grid">
+<a class="page-card" href="arrays-intro/">
+  <div class="page-card-section">Arrays</div>
+  <div class="page-card-title">Introduction to Arrays</div>
+  
+</a>
+<a class="page-card" href="array-methods/">
+  <div class="page-card-section">Arrays</div>
+  <div class="page-card-title">Array Methods</div>
+  
+</a></div></div><div class="section-group"><div class="section-group-title">Objects</div><div class="page-grid">
+<a class="page-card" href="objects-basics/">
+  <div class="page-card-section">Objects</div>
+  <div class="page-card-title">Objects Basics</div>
+  
+</a></div></div><div class="section-group"><div class="section-group-title">DOM &amp; Interactivity</div><div class="page-grid">
+<a class="page-card" href="the-dom/">
+  <div class="page-card-section">DOM &amp; Interactivity</div>
+  <div class="page-card-title">The DOM</div>
+  
+</a>
+<a class="page-card" href="changing-the-dom/">
+  <div class="page-card-section">DOM &amp; Interactivity</div>
+  <div class="page-card-title">Changing the DOM</div>
+  
+</a></div></div><div class="section-group"><div class="section-group-title">Practice &amp; Projects</div><div class="page-grid">
+<a class="page-card" href="calculator-project/">
+  <div class="page-card-section">Practice &amp; Projects</div>
+  <div class="page-card-title">Project: Build a Calculator</div>
+  
+</a></div></div></div>
+        
+      </article>
+    </main>
+    <footer class="site-footer">
+      <span>Generated by LCMS</span><span>5 April 2026</span>
+    </footer>
+  </div>
+</div>
+<script src="nav.js?v=mnll5jmx"></script>
+
+
+
+
+
+
+
+</body>
+</html>

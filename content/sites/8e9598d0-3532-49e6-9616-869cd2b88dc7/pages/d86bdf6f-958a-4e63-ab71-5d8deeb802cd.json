@@ -1,0 +1,69 @@
+{
+  "section": "a68bc47e-2aaa-4246-9b23-70e475d65fc0",
+  "order": 1,
+  "title": "Project: Build a Calculator",
+  "blocks": [
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Practice Project: Build a Calculator"
+    },
+    {
+      "type": "markdown",
+      "content": "Let's put everything you've learned together! In this project, you'll build a simple calculator that can add, subtract, multiply, and divide two numbers.\n\n## Project Goals\n\n\u2705 Create variables to store numbers\n\u2705 Use functions to organize your code\n\u2705 Use conditionals to handle different operations\n\u2705 Practice working with parameters and return values"
+    },
+    {
+      "type": "callout",
+      "style": "info",
+      "title": "\ud83d\udca1 What We're Building",
+      "content": "A calculator function that takes three parameters: two numbers and an operation (+, -, *, /), and returns the result."
+    },
+    {
+      "type": "playground",
+      "title": "Simple Calculator - Try It!",
+      "code": "function calculate(num1, num2, operation) {\n  if (operation === '+') {\n    return num1 + num2;\n  } else if (operation === '-') {\n    return num1 - num2;\n  } else if (operation === '*') {\n    return num1 * num2;\n  } else if (operation === '/') {\n    if (num2 === 0) {\n      return 'Cannot divide by zero!';\n    }\n    return num1 / num2;\n  } else {\n    return 'Invalid operation';\n  }\n}\n\n// Test the calculator\nconsole.log('5 + 3 =', calculate(5, 3, '+'));\nconsole.log('10 - 4 =', calculate(10, 4, '-'));\nconsole.log('6 * 7 =', calculate(6, 7, '*'));\nconsole.log('20 / 4 =', calculate(20, 4, '/'));\nconsole.log('15 / 0 =', calculate(15, 0, '/'));"
+    },
+    {
+      "type": "markdown",
+      "content": "## Challenge Exercises\n\nTry modifying the calculator function for these challenges:\n\n### Challenge 1: Add a power operation\nAdd support for '^' that raises the first number to the power of the second.\n\n### Challenge 2: Add a modulus operation\nAdd support for '%' that returns the remainder.\n\n### Challenge 3: Create a history\nCreate an array that stores previous calculations.\n\n### Challenge 4: Smart division\nAllow the '/' operation but return the result with only 2 decimal places."
+    },
+    {
+      "type": "markdown",
+      "content": "## Solution Ideas\n\n**For Challenge 1 (Power):**\n```javascript\nelse if (operation === '^') {\n  return num1 ** num2;\n}\n```\n\n**For Challenge 2 (Modulus):**\n```javascript\nelse if (operation === '%') {\n  return num1 % num2;\n}\n```\n\n**For Challenge 3 (History):**\nCreate an array outside the function and push results into it each time the function is called.\n\n**For Challenge 4 (Decimal places):**\nUse `Math.round()` to round the result:\n```javascript\nreturn Math.round((num1 / num2) * 100) / 100;\n```"
+    },
+    {
+      "type": "callout",
+      "style": "success",
+      "title": "\ud83c\udf89 Congratulations!",
+      "content": "You've now learned the fundamentals of JavaScript! You can create variables, use loops and conditionals, write functions, work with arrays and objects, and understand the DOM. These are the building blocks of web development. Keep practicing and building projects!"
+    },
+    {
+      "type": "quiz",
+      "questions": [
+        {
+          "question": "What does the calculate function do?",
+          "type": "multiple-choice",
+          "options": [
+            "Performs mathematical operations on two numbers",
+            "Stores calculation history",
+            "Displays results on a website"
+          ],
+          "correctIndex": 0,
+          "explanation": "The calculate function takes two numbers and an operation, then performs the requested calculation and returns the result."
+        },
+        {
+          "question": "What happens if you try to divide by zero?",
+          "type": "multiple-choice",
+          "options": [
+            "JavaScript crashes",
+            "It returns Infinity",
+            "Our function returns 'Cannot divide by zero!'"
+          ],
+          "correctIndex": 2,
+          "explanation": "Our calculator checks for this error condition and returns a helpful error message."
+        }
+      ]
+    }
+  ],
+  "slug": "calculator-project"
+}

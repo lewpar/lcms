@@ -1,0 +1,55 @@
+{
+  "section": "81fe3343-7541-4951-9797-d95da91db268",
+  "order": 1,
+  "title": "Function Basics",
+  "blocks": [
+    {
+      "type": "heading",
+      "level": 1,
+      "text": "Function Basics"
+    },
+    {
+      "type": "markdown",
+      "content": "A **function** is a reusable block of code. Instead of writing the same code over and over, you create it once and use it many times.\n\n```javascript\nfunction greet() {\n  console.log('Hello!');\n}\n\ngreet();  // Call the function\n```"
+    },
+    {
+      "type": "playground",
+      "title": "Simple Function",
+      "code": "function sayHello() {\n  console.log('Hello, World!');\n}\n\nsayHello();  // Call it once\nsayHello();  // Call it again\nsayHello();  // Call it a third time"
+    },
+    {
+      "type": "markdown",
+      "content": "Notice that we define the function once with `function sayHello() { ... }` but call it multiple times with `sayHello()`.\n\n## Function Names\n\n- Use descriptive names\n- Start with a verb (what the function does)\n- Use camelCase: `calculateTotal`, `printMessage`, `checkAge`"
+    },
+    {
+      "type": "playground",
+      "title": "Multiple Functions",
+      "code": "function printStars() {\n  console.log('\u2b50\u2b50\u2b50\u2b50\u2b50');\n}\n\nfunction printGreeting() {\n  console.log('Welcome to my website!');\n}\n\nprintGreeting();\nprintStars();\nprintGreeting();"
+    },
+    {
+      "type": "fill-in-the-blank",
+      "instruction": "Complete the function definition:",
+      "prefix": "function sayGoodbye() {\\n  console.log('Goodbye!');\\n}\\n\\n",
+      "suffix": "();",
+      "correctAnswer": "sayGoodbye",
+      "explanation": "To call a function, use its name followed by parentheses."
+    },
+    {
+      "type": "quiz",
+      "questions": [
+        {
+          "question": "Why use functions?",
+          "type": "multiple-choice",
+          "options": [
+            "To reuse code without writing it again",
+            "To make code organize and easier to read",
+            "Both of the above"
+          ],
+          "correctIndex": 2,
+          "explanation": "Functions help you avoid repetition and keep your code organized and maintainable."
+        }
+      ]
+    }
+  ],
+  "slug": "function-basics"
+}
