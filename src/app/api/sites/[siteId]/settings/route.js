@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
-import { settingsFile, ensureDirs, readSites } from '../../../../../../server/lib/paths.js';
-import { isValidId, sanitiseSettings, safeError } from '../../../../../../server/lib/validate.js';
+import { settingsFile, ensureDirs, readSites } from '../../../../../lib/paths.js';
+import { isValidId, sanitiseSettings, safeError } from '../../../../../lib/validate.js';
 
 const DEFAULT_SETTINGS = { title: 'My Site', navPages: [], sections: [], theme: {} };
 

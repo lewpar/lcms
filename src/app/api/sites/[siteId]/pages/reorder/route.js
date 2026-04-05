@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { pagesDir, readSites } from '../../../../../../../server/lib/paths.js';
-import { isValidId, assertWithinDir, safeError } from '../../../../../../../server/lib/validate.js';
+import { pagesDir, readSites } from '../../../../../../lib/paths.js';
+import { isValidId, assertWithinDir, safeError } from '../../../../../../lib/validate.js';
 
 const MAX_REORDER_IDS = 1000;
 

@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { pagesDir, ensureDirs, isReservedSlug, readSites } from '../../../../../../server/lib/paths.js';
-import { isValidId, assertWithinDir, safeError, sanitisePage } from '../../../../../../server/lib/validate.js';
+import { pagesDir, ensureDirs, isReservedSlug, readSites } from '../../../../../lib/paths.js';
+import { isValidId, assertWithinDir, safeError, sanitisePage } from '../../../../../lib/validate.js';
 
 function safePagePath(siteId, filename) {
   const base = pagesDir(siteId);

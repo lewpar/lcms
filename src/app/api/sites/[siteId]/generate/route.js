@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { execFileSync } from 'child_process';
-import { readSites, ROOT } from '../../../../../../server/lib/paths.js';
-import { isValidId, safeError } from '../../../../../../server/lib/validate.js';
+import { readSites, ROOT } from '../../../../../lib/paths.js';
+import { isValidId, safeError } from '../../../../../lib/validate.js';
 
 function generate(siteId, slug) {
   return execFileSync('node', ['generator/index.js', siteId, slug], {

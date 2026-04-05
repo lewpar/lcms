@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { assetsDir, readSites } from '../../../../../../../server/lib/paths.js';
-import { isValidId, isSafeFilename, assertWithinDir, safeError } from '../../../../../../../server/lib/validate.js';
+import { assetsDir, readSites } from '../../../../../../lib/paths.js';
+import { isValidId, isSafeFilename, assertWithinDir, safeError } from '../../../../../../lib/validate.js';
 
 export async function DELETE(request, { params }) {
   const { siteId, filename } = params;

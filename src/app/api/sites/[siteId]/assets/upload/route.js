@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { assetsDir, ensureDirs, readSites } from '../../../../../../../server/lib/paths.js';
-import { isValidId, safeError } from '../../../../../../../server/lib/validate.js';
+import { assetsDir, ensureDirs, readSites } from '../../../../../../lib/paths.js';
+import { isValidId, safeError } from '../../../../../../lib/validate.js';
 
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif']);
 const MAX_FILE_SIZE = 8 * 1024 * 1024; // 8 MB

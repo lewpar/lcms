@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { assetsDir, readSites } from '../../../../../../server/lib/paths.js';
-import { isValidId, safeError } from '../../../../../../server/lib/validate.js';
+import { assetsDir, readSites } from '../../../../../lib/paths.js';
+import { isValidId, safeError } from '../../../../../lib/validate.js';
 
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif']);
 

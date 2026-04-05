@@ -1,6 +1,6 @@
 import { spawnSync } from 'child_process';
-import { readSites, ROOT } from '../../../../../../../server/lib/paths.js';
-import { isValidId } from '../../../../../../../server/lib/validate.js';
+import { readSites, ROOT } from '../../../../../../lib/paths.js';
+import { isValidId } from '../../../../../../lib/validate.js';
 import { NextResponse } from 'next/server';
 
 export async function POST(request, { params }) {

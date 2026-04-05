@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
-import { CMS_SETTINGS_FILE } from '../../../../../server/lib/paths.js';
-import { safeError } from '../../../../../server/lib/validate.js';
+import { CMS_SETTINGS_FILE } from '../../../../lib/paths.js';
+import { safeError } from '../../../../lib/validate.js';
 
 const DEFAULTS = { baseUrl: '', themes: [] };
 

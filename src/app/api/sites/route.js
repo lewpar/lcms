@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { readSites, writeSites, settingsFile, ensureDirs, slugify, isReservedSlug, DOCS_DIR } from '../../../../server/lib/paths.js';
-import { safeError, MAX_STR } from '../../../../server/lib/validate.js';
+import { readSites, writeSites, settingsFile, ensureDirs, slugify, isReservedSlug, DOCS_DIR } from '../../../lib/paths.js';
+import { safeError, MAX_STR } from '../../../lib/validate.js';
 
 const SLUG_RE = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/;
 

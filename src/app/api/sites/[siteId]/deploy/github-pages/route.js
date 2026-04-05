@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { readSites, DOCS_DIR } from '../../../../../../../server/lib/paths.js';
-import { isValidId, safeError } from '../../../../../../../server/lib/validate.js';
+import { readSites, DOCS_DIR } from '../../../../../../lib/paths.js';
+import { isValidId, safeError } from '../../../../../../lib/validate.js';
 
 export async function DELETE(request, { params }) {
   const { siteId } = params;

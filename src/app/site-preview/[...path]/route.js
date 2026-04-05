@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { OUTPUT_DIR } from '../../../../server/lib/paths.js';
+import { OUTPUT_DIR } from '../../../lib/paths.js';
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',

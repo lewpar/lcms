@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { assetsDir } from '../../../../../server/lib/paths.js';
-import { isValidId, isSafeFilename, assertWithinDir } from '../../../../../server/lib/validate.js';
+import { assetsDir } from '../../../../lib/paths.js';
+import { isValidId, isSafeFilename, assertWithinDir } from '../../../../lib/validate.js';
 
 const MIME_TYPES = {
   '.jpg': 'image/jpeg',

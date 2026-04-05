@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { readSites, writeSites, siteDir, settingsFile, OUTPUT_DIR, DOCS_DIR } from '../../../../../server/lib/paths.js';
-import { isValidId, safeError, MAX_STR } from '../../../../../server/lib/validate.js';
+import { readSites, writeSites, siteDir, settingsFile, OUTPUT_DIR, DOCS_DIR } from '../../../../lib/paths.js';
+import { isValidId, safeError, MAX_STR } from '../../../../lib/validate.js';
 
 const SLUG_RE = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/;
 const RESERVED_SLUGS = new Set([
