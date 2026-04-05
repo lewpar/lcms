@@ -367,3 +367,67 @@ A horizontal rule separating sections of content.
 ```
 
 **Required:** `id`, `type`
+
+---
+
+### `steps`
+A numbered list of steps for any sequential process — recipes, tutorials, deployment guides, etc. Each step has an optional title and a markdown body.
+
+```json
+{
+  "id": "a1b2c3d4-0020-0000-0000-000000000000",
+  "type": "steps",
+  "title": "Method",
+  "items": [
+    {
+      "id": "a1b2c3d4-0020-0001-0000-000000000000",
+      "title": "Bloom the gum arabic",
+      "body": "Combine the gum arabic with 1 cup of filtered water. Stir and let stand for **4 hours** until fully dissolved into a thick, viscous liquid."
+    },
+    {
+      "id": "a1b2c3d4-0020-0002-0000-000000000000",
+      "body": "Pour into molds and allow to set at room temperature for at least 2 hours."
+    }
+  ]
+}
+```
+
+**Required:** `id`, `type`, `items` (array of step objects)  
+**Optional:** `title` — heading above the steps (e.g. `"Method"`, `"Instructions"`, `"How to Deploy"`).
+
+Each item in `items`:
+- **Required:** `id` (UUID v4), `body` (markdown string)
+- **Optional:** `title` (short step heading shown above the body)
+
+---
+
+### `recipe-detail`
+A rich recipe block combining the recipe name, description, an optional hero image, yield/servings, and a formatted ingredient list — all in one block.
+
+```json
+{
+  "id": "a1b2c3d4-0021-0000-0000-000000000000",
+  "type": "recipe-detail",
+  "name": "Classic Jelly Beans",
+  "description": "Homemade jelly beans with a chewy gum arabic center and sugar-polished shell.",
+  "image": {
+    "src": "/assets/site-id/jelly-beans.jpg",
+    "alt": "A pile of colourful homemade jelly beans"
+  },
+  "servings": "Makes approximately 80 jelly beans",
+  "ingredientsTitle": "Ingredients",
+  "items": [
+    { "id": "a1b2c3d4-0021-0001-0000-000000000000", "amount": "2", "unit": "cups", "name": "granulated sugar" },
+    { "id": "a1b2c3d4-0021-0002-0000-000000000000", "amount": "1", "unit": "cup", "name": "gum arabic", "note": "fully bloomed" },
+    { "id": "a1b2c3d4-0021-0003-0000-000000000000", "amount": "1/2", "unit": "tsp", "name": "citric acid" },
+    { "id": "a1b2c3d4-0021-0004-0000-000000000000", "name": "food-grade essential oil", "note": "to taste" }
+  ]
+}
+```
+
+**Required:** `id`, `type`, `items` (array of ingredient objects)  
+**Optional:** `name` — recipe title displayed prominently. `description` — short description shown below the name. `image` — object with `src` (URL or `/assets/…` path) and `alt` (alt text); omit or set `src` to `""` for no image. `servings` — yield or serving size. `ingredientsTitle` — heading for the ingredients list (defaults to `"Ingredients"`).
+
+Each item in `items`:
+- **Required:** `id` (UUID v4), `name`
+- **Optional:** `amount` (string, e.g. `"2"`, `"1/2"`), `unit` (string, e.g. `"cups"`, `"tsp"`), `note` (preparation note shown in italics, e.g. `"sifted"`, `"room temperature"`)

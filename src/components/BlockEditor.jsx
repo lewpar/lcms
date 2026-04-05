@@ -44,6 +44,14 @@ function blockSummary(block) {
       const lbl = block.label || DIFFICULTY_LABELS[Math.max(0, (block.level || 1) - 1)];
       return lbl;
     }
+    case 'steps': {
+      const n = block.items?.length ?? 0;
+      return `${block.title || 'Steps'} — ${n} step${n !== 1 ? 's' : ''}`;
+    }
+    case 'recipe-detail': {
+      const n = block.items?.length ?? 0;
+      return `${block.name || '(untitled recipe)'} — ${n} ingredient${n !== 1 ? 's' : ''}${block.servings ? ` · ${block.servings}` : ''}`;
+    }
     default:            return block.type;
   }
 }
@@ -996,6 +1004,170 @@ function FillInTheBlankEditor({ block, onChange }) {
   );
 }
 
+/* ── Recipe Detail editor ── */
+
+function RecipeDetailEditor({ block, onChange, addToast, siteId }) {
+  const fileRef = useRef();
+  const [imgError, setImgError] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
+  const items = block.items || [];
+  const image = block.image || { src: '', alt: '' };
+
+  const handleFile = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const { url } = await uploadAsset(siteId, file);
+      setImgError(false);
+      onChange({ image: { ...image, src: url } });
+    } catch {
+      addToast('Upload failed', 'error');
+    }
+  };
+
+  const addItem = () =>
+    onChange({ items: [...items, { id: uuidv4(), amount: '', unit: '', name: '', note: '' }] });
+
+  const removeItem = (id) =>
+    onChange({ items: items.filter(i => i.id !== id) });
+
+  const updateItem = (id, field, val) =>
+    onChange({ items: items.map(i => i.id === id ? { ...i, [field]: val } : i) });
+
+  return (
+    <>
+      <div className="field">
+        <label>Recipe name</label>
+        <input type="text" value={block.name || ''} onChange={e => onChange({ name: e.target.value })} placeholder="e.g. Classic Jelly Beans" />
+      </div>
+      <div className="field">
+        <label>Description (optional)</label>
+        <textarea rows={2} value={block.description || ''} onChange={e => onChange({ description: e.target.value })} placeholder="A short description of the recipe…" />
+      </div>
+      <div className="field">
+        <label>Image (optional)</label>
+        <div style={{ display: 'flex', gap: 6 }}>
+          <input
+            type="text"
+            value={image.src || ''}
+            onChange={e => { setImgError(false); onChange({ image: { ...image, src: e.target.value } }); }}
+            placeholder="/assets/photo.jpg or https://…"
+            style={{ flex: 1 }}
+          />
+          <button className="btn btn-secondary btn-sm" onClick={() => fileRef.current.click()}>Upload</button>
+          <button className="btn btn-secondary btn-sm" onClick={() => setShowPicker(true)}>Browse</button>
+          <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFile} />
+        </div>
+        {image.src && !imgError && (
+          <img
+            src={image.src}
+            alt={image.alt || ''}
+            style={{ marginTop: 6, maxWidth: '100%', maxHeight: 140, objectFit: 'cover', borderRadius: 4 }}
+            onError={() => setImgError(true)}
+          />
+        )}
+        {image.src && imgError && (
+          <span style={{ fontSize: 12, color: 'var(--danger)' }}>⚠ Image failed to load.</span>
+        )}
+        {image.src && (
+          <div className="field" style={{ marginTop: 6, marginBottom: 0 }}>
+            <label>Image alt text</label>
+            <input type="text" value={image.alt || ''} onChange={e => onChange({ image: { ...image, alt: e.target.value } })} placeholder="Descriptive alt text" />
+          </div>
+        )}
+        {showPicker && (
+          <MediaManager
+            mode="picker"
+            siteId={siteId}
+            onSelect={({ url }) => { onChange({ image: { ...image, src: url } }); setShowPicker(false); }}
+            onClose={() => setShowPicker(false)}
+            addToast={addToast}
+          />
+        )}
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+        <div className="field">
+          <label>Servings / yield (optional)</label>
+          <input type="text" value={block.servings || ''} onChange={e => onChange({ servings: e.target.value })} placeholder="e.g. Makes 80 jelly beans" />
+        </div>
+        <div className="field">
+          <label>Ingredients heading (optional)</label>
+          <input type="text" value={block.ingredientsTitle || ''} onChange={e => onChange({ ingredientsTitle: e.target.value })} placeholder="Ingredients" />
+        </div>
+      </div>
+      <div className="field">
+        <span className="block-subsection-count">{items.length} Ingredient{items.length !== 1 ? 's' : ''}</span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {items.map((item, i) => (
+            <div key={item.id} style={{ display: 'grid', gridTemplateColumns: '70px 80px 1fr 1fr auto', gap: 6, alignItems: 'center' }}>
+              <input type="text" value={item.amount || ''} onChange={e => updateItem(item.id, 'amount', e.target.value)} placeholder="Amount" title="Amount (e.g. 2, 1/2)" />
+              <input type="text" value={item.unit || ''} onChange={e => updateItem(item.id, 'unit', e.target.value)} placeholder="Unit" title="Unit (e.g. cups, tsp)" />
+              <input type="text" value={item.name || ''} onChange={e => updateItem(item.id, 'name', e.target.value)} placeholder={`Ingredient ${i + 1}`} title="Ingredient name" />
+              <input type="text" value={item.note || ''} onChange={e => updateItem(item.id, 'note', e.target.value)} placeholder="Note (optional)" title="e.g. sifted, room temperature" />
+              {items.length > 1 && (
+                <button className="btn btn-danger btn-icon btn-sm" onClick={() => removeItem(item.id)} title="Remove">✕</button>
+              )}
+            </div>
+          ))}
+        </div>
+        <button className="btn btn-secondary btn-sm" style={{ marginTop: 8, alignSelf: 'flex-start' }} onClick={addItem}>
+          + Add Ingredient
+        </button>
+      </div>
+    </>
+  );
+}
+
+/* ── Steps editor ── */
+
+function StepsEditor({ block, onChange }) {
+  const items = block.items || [];
+
+  const addItem = () =>
+    onChange({ items: [...items, { id: uuidv4(), title: '', body: '' }] });
+
+  const removeItem = (id) =>
+    onChange({ items: items.filter(i => i.id !== id) });
+
+  const updateItem = (id, field, val) =>
+    onChange({ items: items.map(i => i.id === id ? { ...i, [field]: val } : i) });
+
+  return (
+    <>
+      <div className="field">
+        <label>Title (optional)</label>
+        <input type="text" value={block.title || ''} onChange={e => onChange({ title: e.target.value })} placeholder="e.g. Method, Instructions, How to Deploy" />
+      </div>
+      <div className="field">
+        <span className="block-subsection-count">{items.length} Step{items.length !== 1 ? 's' : ''}</span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {items.map((item, i) => (
+            <div key={item.id} style={{ border: '1px solid var(--border)', borderRadius: 6, padding: '10px 12px', background: 'var(--surface)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--primary)' }}>Step {i + 1}</span>
+                {items.length > 1 && (
+                  <button className="btn btn-danger btn-icon btn-sm" onClick={() => removeItem(item.id)} title="Remove step">✕</button>
+                )}
+              </div>
+              <div className="field" style={{ marginBottom: 8 }}>
+                <label>Step title (optional)</label>
+                <input type="text" value={item.title || ''} onChange={e => updateItem(item.id, 'title', e.target.value)} placeholder="e.g. Bloom the gum arabic" />
+              </div>
+              <div className="field" style={{ marginBottom: 0 }}>
+                <label>Body (markdown supported)</label>
+                <textarea rows={3} value={item.body || ''} onChange={e => updateItem(item.id, 'body', e.target.value)} placeholder="Describe this step…" />
+              </div>
+            </div>
+          ))}
+        </div>
+        <button className="btn btn-secondary btn-sm" style={{ marginTop: 8, alignSelf: 'flex-start' }} onClick={addItem}>
+          + Add Step
+        </button>
+      </div>
+    </>
+  );
+}
+
 /* ── Difficulty indicator editor ── */
 
 function DifficultyEditor({ block, onChange }) {
@@ -1115,6 +1287,8 @@ export default function BlockEditor({
           {block.type === 'playground'       && <PlaygroundEditor     block={block} onChange={onChange} />}
           {block.type === 'fill-in-the-blank' && <FillInTheBlankEditor block={block} onChange={onChange} />}
           {block.type === 'difficulty'        && <DifficultyEditor     block={block} onChange={onChange} />}
+          {block.type === 'steps'             && <StepsEditor          block={block} onChange={onChange} />}
+          {block.type === 'recipe-detail'     && <RecipeDetailEditor   block={block} onChange={onChange} addToast={addToast} siteId={siteId} />}
           {block.type === 'divider'    && (
             <p style={{ color: 'var(--text-muted)', fontSize: 12 }}>Horizontal divider — no configuration needed.</p>
           )}

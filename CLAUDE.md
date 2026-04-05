@@ -140,7 +140,7 @@ Controls the site title, theme, sections (sidebar groups), header/footer HTML, a
 
 **Each page file** is named `<page-uuid>.json` and must contain an `"id"` field equal to that UUID. Pages also need: `title`, `slug`, `section` (UUID from site.json), `description`, `icon`, `order`, `createdAt`, `updatedAt`, and `blocks`.
 
-**Blocks** are the content units on a page. Available types: `markdown`, `heading`, `code`, `callout`, `table`, `image`, `video`, `embed`, `playground`, `fill-in-the-blank`, `quiz`, `flashcard`, `accordion`, `case-study`, `page-link`, `hint`, `difficulty`, `divider`. If you need the full schema and examples for each block type, read **[.ai/BLOCKS.md](./.ai/BLOCKS.md)**.
+**Blocks** are the content units on a page. Available types: `markdown`, `heading`, `code`, `callout`, `table`, `image`, `video`, `embed`, `playground`, `fill-in-the-blank`, `quiz`, `flashcard`, `accordion`, `case-study`, `page-link`, `hint`, `difficulty`, `divider`, `steps`, `recipe-detail`. If you need the full schema and examples for each block type, read **[.ai/BLOCKS.md](./.ai/BLOCKS.md)**.
 
 For the complete step-by-step authoring guide including full JSON schemas, theme options, and a worked example, read **[.ai/AUTHORING.md](./.ai/AUTHORING.md)**.
 

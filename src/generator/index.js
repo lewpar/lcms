@@ -523,6 +523,51 @@ function renderBlock(block) {
 </div>`;
     }
 
+    case 'recipe-detail': {
+      const items = block.items || [];
+      const nameHtml = block.name ? `<div class="rd-name">${esc(block.name)}</div>` : '';
+      const descHtml = block.description ? `<div class="rd-description">${esc(block.description)}</div>` : '';
+      const servingsHtml = block.servings ? `<div class="rd-servings">${esc(block.servings)}</div>` : '';
+      let imageHtml = '';
+      if (block.image && block.image.src) {
+        const imgSrc = previewAssetPaths
+          ? esc(block.image.src)
+          : block.image.src.startsWith(ASSETS_URL_PREFIX)
+            ? `../assets/${block.image.src.slice(ASSETS_URL_PREFIX.length)}`
+            : block.image.src.startsWith('/assets/') ? `../assets/${block.image.src.split('/').pop()}` : esc(block.image.src);
+        imageHtml = `<img class="rd-image" src="${imgSrc}" alt="${esc(block.image.alt || '')}" loading="lazy" />`;
+      }
+      const hasHeader = block.name || block.description || (block.image && block.image.src) || block.servings;
+      const headerHtml = hasHeader
+        ? `<div class="rd-header">${imageHtml}<div class="rd-meta">${nameHtml}${descHtml}${servingsHtml}</div></div>`
+        : '';
+      const ingTitle = block.ingredientsTitle || 'Ingredients';
+      const ingTitleHtml = `<div class="rd-ing-title">${esc(ingTitle)}</div>`;
+      const ingItemsHtml = items.map(item => {
+        const amountUnit = [item.amount, item.unit].filter(Boolean).join('\u00a0');
+        const amountHtml = amountUnit ? `<span class="il-amount">${esc(amountUnit)}</span>` : '';
+        const nameIHtml = `<span class="il-name">${esc(item.name || '')}</span>`;
+        const noteHtml = item.note ? `<span class="il-note">${esc(item.note)}</span>` : '';
+        return `<li class="il-item">${amountHtml}${nameIHtml}${noteHtml}</li>`;
+      }).join('\n');
+      return `<div class="recipe-detail">${headerHtml}<div class="rd-ingredients">${ingTitleHtml}<ul class="il-items">${ingItemsHtml}</ul></div></div>`;
+    }
+
+    case 'steps': {
+      const items = block.items || [];
+      if (!items.length) return '';
+      const titleHtml = block.title ? `<div class="steps-header">${esc(block.title)}</div>` : '';
+      const stepsHtml = items.map((item, i) => {
+        const stepTitle = item.title ? `<div class="steps-step-title">${esc(item.title)}</div>` : '';
+        const stepBody = item.body ? `<div class="steps-step-body prose">${md(item.body)}</div>` : '';
+        return `<li class="steps-step">
+  <div class="steps-step-num">${i + 1}</div>
+  <div class="steps-step-content">${stepTitle}${stepBody}</div>
+</li>`;
+      }).join('\n');
+      return `<div class="steps-block">${titleHtml}<ol class="steps-list">${stepsHtml}</ol></div>`;
+    }
+
     case 'divider': return `<hr class="block-divider" />`;
     default:        return '';
   }
@@ -947,6 +992,36 @@ img{max-width:100%;height:auto;display:block}
   .page-grid{grid-template-columns:1fr}
 }
 @media(max-width:900px){.page-main{padding:32px 24px}}
+
+.recipe-detail{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.rd-header{display:flex;gap:0;align-items:stretch}
+.rd-image{width:200px;min-width:200px;height:200px;object-fit:cover;flex-shrink:0;display:block}
+.rd-meta{flex:1;padding:16px 18px;display:flex;flex-direction:column;gap:6px;background:var(--surface)}
+.rd-name{font-weight:800;font-size:1.1em;color:var(--text);line-height:1.3}
+.rd-description{font-size:.88em;color:var(--text-muted);line-height:1.6}
+.rd-servings{font-size:.78em;color:var(--primary);font-weight:600;margin-top:auto;padding-top:4px}
+.rd-ingredients{border-top:1px solid var(--border)}
+.rd-ing-title{padding:8px 18px;background:var(--surface);border-bottom:1px solid var(--border);font-weight:700;font-size:.88em;color:var(--text);text-transform:uppercase;letter-spacing:.04em}
+@media(max-width:600px){.rd-header{flex-direction:column}.rd-image{width:100%;height:180px;min-width:0}}
+.il-items{list-style:none;padding:0;margin:0}
+.il-item{display:flex;align-items:baseline;gap:8px;padding:9px 18px;border-bottom:1px solid var(--border);font-size:.93em}
+.il-item:last-child{border-bottom:none}
+.il-item:nth-child(even){background:var(--surface)}
+.il-amount{font-weight:700;color:var(--primary);min-width:64px;flex-shrink:0;font-variant-numeric:tabular-nums}
+.il-name{flex:1;color:var(--text)}
+.il-note{font-size:.82em;color:var(--text-muted);font-style:italic}
+[data-theme="dark"] .il-item:nth-child(even){background:rgba(255,255,255,.03)}
+
+.steps-block{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.steps-header{padding:10px 18px;background:var(--surface);border-bottom:1px solid var(--border);font-weight:700;font-size:.95em;color:var(--text)}
+.steps-list{list-style:none;padding:0;margin:0}
+.steps-step{display:flex;gap:16px;padding:18px 18px;border-bottom:1px solid var(--border);align-items:flex-start}
+.steps-step:last-child{border-bottom:none}
+.steps-step-num{flex-shrink:0;width:30px;height:30px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85em;margin-top:2px}
+.steps-step-content{flex:1;min-width:0}
+.steps-step-title{font-weight:700;color:var(--text);margin-bottom:6px;font-size:.95em}
+.steps-step-body p:first-child{margin-top:0}.steps-step-body p:last-child{margin-bottom:0}
+
 ${darkModeVars}`;
 }
 

@@ -31,6 +31,8 @@ export const BLOCK_TYPES = [
   { type: 'table',             icon: '⊞',  label: 'Table',             group: 'Structure' },
   { type: 'page-link',         icon: '→',  label: 'Page Link',         group: 'Structure' },
   { type: 'case-study',        icon: '📋', label: 'Case Study',        group: 'Structure' },
+  { type: 'steps',             icon: '🔢', label: 'Steps',             group: 'Structure' },
+  { type: 'recipe-detail',     icon: '🍽️', label: 'Recipe Detail',     group: 'Recipe' },
 ];
 
 export function defaultBlock(type) {
@@ -54,6 +56,8 @@ export function defaultBlock(type) {
     case 'playground':        return { id, type, title: 'Try it yourself', starterCode: '// Write your JavaScript here\nconsole.log(\'Hello, world!\');' };
     case 'fill-in-the-blank': return { id, type, title: '', prompt: '', answers: [], language: 'plaintext' };
     case 'difficulty':        return { id, type, level: 1, label: '' };
+    case 'steps':             return { id, type, title: '', items: [{ id: uuidv4(), title: '', body: '' }] };
+    case 'recipe-detail':     return { id, type, name: '', description: '', image: { src: '', alt: '' }, servings: '', ingredientsTitle: 'Ingredients', items: [{ id: uuidv4(), amount: '', unit: '', name: '', note: '' }] };
     default:                  return { id, type };
   }
 }

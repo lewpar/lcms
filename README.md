@@ -64,6 +64,12 @@ Sites are exported as fully self-contained static sites — no runtime dependenc
 | Table       | Data table with editable headers and rows |
 | Page Link   | Card linking to another page in the site |
 | Case Study  | Structured case study with background and instructions |
+| Steps       | Numbered step-by-step list for any process (recipes, tutorials, guides) |
+
+### Recipe
+| Block         | Description |
+|---------------|-------------|
+| Recipe Detail | Recipe name, description, optional hero image, servings, and a formatted ingredient list |
 
 ## Deployment
 

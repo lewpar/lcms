@@ -88,10 +88,67 @@
       "src": "/assets/16ac6597-5016-4ba6-af3d-23a2cd8ad1a6/c39db195-188d-4766-9913-8493e8d3e67e.png",
       "alt": "",
       "caption": ""
+    },
+    {
+      "id": "ccb9b467-feb7-44f0-ac42-6f23dd8a1ec1",
+      "type": "recipe-detail",
+      "name": "The Abomination",
+      "description": "If you make this then there is something wrong with you.",
+      "image": {
+        "src": "/assets/16ac6597-5016-4ba6-af3d-23a2cd8ad1a6/8411c39d-6de5-40b4-b485-d321cc8a3bdf.gif",
+        "alt": ""
+      },
+      "servings": "Makes 1 abomination",
+      "ingredientsTitle": "Ingredients",
+      "items": [
+        {
+          "id": "23df5953-9a1c-4283-ba94-c2cfea88efed",
+          "amount": "1",
+          "unit": "whole",
+          "name": "Egg",
+          "note": ""
+        },
+        {
+          "id": "69cae13c-edbf-4dc4-b435-d7514858d5b8",
+          "amount": "2",
+          "unit": "tbsp",
+          "name": "Sugar",
+          "note": ""
+        },
+        {
+          "id": "e4f0cac2-a5e8-49f9-929d-da857b198ded",
+          "amount": "1",
+          "unit": "whole",
+          "name": "Block of Tofu",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "dac8e5da-549d-445a-97da-7aa2bfde23cf",
+      "type": "steps",
+      "title": "Instructions",
+      "items": [
+        {
+          "id": "1ff6aa83-33cf-4a34-bc3b-d2abd34d98bf",
+          "title": "Mix ingredients",
+          "body": "Mix the egg and sugar together"
+        },
+        {
+          "id": "34de2b7b-133e-4719-929f-bba593dd1814",
+          "title": "Cover tofu",
+          "body": "Put the mix on top of the tofu"
+        },
+        {
+          "id": "5c6caa6b-04d8-4cb3-b721-676ade5aebde",
+          "title": "Regret it",
+          "body": "What was I making again?"
+        }
+      ]
     }
   ],
   "createdAt": "2026-03-29T06:04:32.177Z",
-  "updatedAt": "2026-04-05T02:13:41.245Z",
+  "updatedAt": "2026-04-05T11:21:18.232Z",
   "icon": "🗂️",
   "order": 3
 }
