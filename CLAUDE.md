@@ -129,7 +129,7 @@ Controls the site title, theme, sections (sidebar groups), header/footer HTML, a
 | `title` | ✅ | Site title shown in the header and browser tab. |
 | `description` | ❌ | Short description of the site (used in meta tags / home page). |
 | `navPages` | ✅ | Array of page UUIDs pinned to the top nav. Use `[]` if none. |
-| `sections` | ✅ | Array of `{ "id": "<uuid>", "name": "Section Name" }` objects. Each is a sidebar group heading. At least one section is required. |
+| `sections` | ✅ | Array of `{ "id": "<uuid>", "name": "Section Name" }` objects. Each is a sidebar group heading. At least one section is required for multi-page sites. For single-page sites, set this to `[]`. |
 | `theme` | ❌ | **Omit entirely.** The CMS default theme will be used automatically. Do not generate or include a theme object. |
 | `disableNav` | ❌ | Boolean. If `true`, hides the sidebar and top navigation bar entirely. Useful for single-page sites that only use the home page. Omit or set to `false` to show navigation. |
 | `floatingDarkMode` | ❌ | Boolean. If `true`, adds a fixed floating dark/light mode toggle button in the corner of the exported site. Useful for single-page sites where the top bar (which normally contains the dark mode toggle) is hidden. Omit or set to `false` to disable. |
@@ -151,6 +151,8 @@ Controls the site title, theme, sections (sidebar groups), header/footer HTML, a
 **Blocks** are the content units on a page. Available types: `markdown`, `heading`, `code`, `callout`, `tip`, `table`, `image`, `video`, `embed`, `iframe`, `playground`, `fill-in-the-blank`, `quiz`, `flashcard`, `accordion`, `case-study`, `page-link`, `hint`, `difficulty`, `divider`, `steps`, `recipe-detail`. If you need the full schema and examples for each block type, read **[.ai/BLOCKS.md](./.ai/BLOCKS.md)**.
 
 For the complete step-by-step authoring guide including full JSON schemas, theme options, and a worked example, read **[.ai/AUTHORING.md](./.ai/AUTHORING.md)**.
+
+> **Single-page sites** — if the user asks for a site with no sidebar and all content on the home page, you **must** set all three of these together: `"disableNav": true`, `"floatingDarkMode": true`, and `"sections": []`. Also create an empty `pages/` directory. Read the "Single-page sites" section of AUTHORING.md before authoring.
 
 ---
 
