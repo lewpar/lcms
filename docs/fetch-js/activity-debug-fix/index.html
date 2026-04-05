@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Activity: Debug &amp; Fix — Fetching with JavaScript</title>
+  <meta name="description" content="Analyse and repair broken fetch code in a series of guided tasks." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=mnlj6s3n" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">Fetching with JavaScript</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Reading</div><a href="../introduction/" class="nav-link" title="Introduction"><span class="nav-link-icon">👋</span><span class="nav-link-text">Introduction</span></a><a href="../json/" class="nav-link" title="JSON"><span class="nav-link-icon">📄</span><span class="nav-link-text">JSON</span></a><a href="../apis/" class="nav-link" title="APIs"><span class="nav-link-icon">🔌</span><span class="nav-link-text">APIs</span></a><a href="../http-responses/" class="nav-link" title="HTTP &amp; Responses"><span class="nav-link-icon">🌐</span><span class="nav-link-text">HTTP &amp; Responses</span></a><a href="../the-fetch-api/" class="nav-link" title="The Fetch API"><span class="nav-link-icon">⚡</span><span class="nav-link-text">The Fetch API</span></a><a href="../handling-errors/" class="nav-link" title="Handling Errors"><span class="nav-link-icon">🛡️</span><span class="nav-link-text">Handling Errors</span></a><a href="../working-with-arrays/" class="nav-link" title="Working with Arrays"><span class="nav-link-icon">📋</span><span class="nav-link-text">Working with Arrays</span></a></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../activity-debug-fix/" class="nav-link active" title="Activity: Debug &amp; Fix"><span class="nav-link-icon">🔧</span><span class="nav-link-text">Activity: Debug &amp; Fix</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#task-1"><span class="toc-num">1.</span> Task 1: Missing await</a><a class="nav-toc-link nav-toc-level-2" href="#task-2"><span class="toc-num">2.</span> Task 2: Wrong Property Name</a><a class="nav-toc-link nav-toc-level-2" href="#task-3"><span class="toc-num">3.</span> Task 3: Broken URL</a></div><a href="../activity-data-viewer/" class="nav-link" title="Activity: Build a Data Viewer"><span class="nav-link-icon">🏗️</span><span class="nav-link-text">Activity: Build a Data Viewer</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>Activities</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Activity: Debug &amp; Fix</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Activity: Debug &amp; Fix</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">Activities</span>
+            <span>⏱ 1 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><div class="callout callout-purple"><div class="callout-title">What to expect</div><div class="callout-body"><p>In this activity you will be given broken fetch code and asked to identify and fix the problem. Read each task carefully before editing the code.</p>
+</div></div>
+<div class="prose"><p>Use the working example below as a reference for all tasks in this activity.</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Working example</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">async function getData() {
+  const response = await fetch(&#x27;https://dummyjson.com/quotes/1&#x27;);
+  const data = await response.json();
+  console.log(data.quote);
+  console.log(data.author);
+}
+
+getData();</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<hr class="block-divider" />
+<h2 id="task-1" class="block-heading"><span class="heading-num">1.</span> Task 1: Missing await<a class="heading-anchor" href="#task-1" aria-label="Copy link to section">#</a></h2>
+<div class="callout callout-blue"><div class="callout-title">Background</div><div class="callout-body"><p>A teammate&#39;s fetch function is printing [object Promise] instead of the actual quote text. They forgot something important.</p>
+</div></div>
+<div class="callout callout-purple"><div class="callout-title">Instructions</div><div class="callout-body"><p>Find and fix the bug so that the quote text is printed correctly.</p>
+</div></div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Task 1</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">async function getData() {
+  const response = await fetch(&#x27;https://dummyjson.com/quotes/2&#x27;);
+  const data = response.json();
+  console.log(data.quote);
+}
+
+getData();</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<div class="hint-block">
+  <div class="hint-header">
+    <span class="hint-title">Hint</span>
+    <span class="hint-reveal-label">Click to reveal</span>
+  </div>
+  <div class="hint-body">
+    <div class="hint-body-inner prose"><p>Look carefully at where the await keywords are used.</p>
+</div>
+    <div class="hint-overlay">Click to reveal</div>
+  </div>
+</div>
+<hr class="block-divider" />
+<h2 id="task-2" class="block-heading"><span class="heading-num">2.</span> Task 2: Wrong Property Name<a class="heading-anchor" href="#task-2" aria-label="Copy link to section">#</a></h2>
+<div class="callout callout-blue"><div class="callout-title">Background</div><div class="callout-body"><p>A co-worker is trying to print the title of product #5 but keeps getting undefined. The API is working fine.</p>
+</div></div>
+<div class="callout callout-purple"><div class="callout-title">Instructions</div><div class="callout-body"><p>Fix the property access so the correct product title is printed.</p>
+</div></div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Task 2</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">async function getData() {
+  const response = await fetch(&#x27;https://dummyjson.com/products/5&#x27;);
+  const data = await response.json();
+  console.log(data.Title);  // should print the product title
+}
+
+getData();</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<div class="hint-block">
+  <div class="hint-header">
+    <span class="hint-title">Hint</span>
+    <span class="hint-reveal-label">Click to reveal</span>
+  </div>
+  <div class="hint-body">
+    <div class="hint-body-inner prose"><p>JSON keys are case-sensitive. Try logging the full data object to see the actual key names.</p>
+</div>
+    <div class="hint-overlay">Click to reveal</div>
+  </div>
+</div>
+<hr class="block-divider" />
+<h2 id="task-3" class="block-heading"><span class="heading-num">3.</span> Task 3: Broken URL<a class="heading-anchor" href="#task-3" aria-label="Copy link to section">#</a></h2>
+<div class="callout callout-blue"><div class="callout-title">Background</div><div class="callout-body"><p>This code should fetch user number 3 but always hits an error. The error handler is correctly in place — the URL just needs to be fixed.</p>
+</div></div>
+<div class="callout callout-purple"><div class="callout-title">Instructions</div><div class="callout-body"><p>Fix the URL so the user&#39;s first and last name are printed.</p>
+</div></div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Task 3</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">async function getData() {
+  try {
+    const response = await fetch(&#x27;https://dummyjson.com/user/3&#x27;);
+    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+    const data = await response.json();
+    console.log(data.firstName, data.lastName);
+  } catch (e) {
+    console.log(&#x27;Error:&#x27;, e.message);
+  }
+}
+
+getData();</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<div class="hint-block">
+  <div class="hint-header">
+    <span class="hint-title">Hint</span>
+    <span class="hint-reveal-label">Click to reveal</span>
+  </div>
+  <div class="hint-body">
+    <div class="hint-body-inner prose"><p>Check the DummyJSON docs — is the endpoint /user or /users?</p>
+</div>
+    <div class="hint-overlay">Click to reveal</div>
+  </div>
+</div></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../working-with-arrays/">← Working with Arrays</a>
+  <a class="pn-btn pn-next" href="../activity-data-viewer/">Activity: Build a Data Viewer →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <span>Generated by LCMS</span><span>5 April 2026</span>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnlj6s3n"></script>
+
+
+
+<script src="../playground.js?v=mnlj6s3n"></script>
+
+<script src="../hint.js?v=mnlj6s3n"></script>
+
+</body>
+</html>

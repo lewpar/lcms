@@ -1,0 +1,143 @@
+{
+  "id": "b5383cc5-36ea-4bcc-a75e-73c3db164b02",
+  "title": "The Fetch API",
+  "slug": "the-fetch-api",
+  "section": "04612e2e-a9f8-4485-9b42-e7cea23f8622",
+  "description": "Write real fetch requests using async and await.",
+  "icon": "⚡",
+  "order": 4,
+  "createdAt": "2026-04-05T08:50:00.000Z",
+  "updatedAt": "2026-04-05T08:50:00.000Z",
+  "blocks": [
+    {
+      "id": "fetch-1",
+      "type": "markdown",
+      "content": "The **Fetch API** is a built-in browser feature that lets JavaScript send HTTP requests. It replaces the older `XMLHttpRequest` API and is now the standard way to communicate with web services.\n\nThe core function is simply `fetch(url)`, which returns a **Promise** — an object representing a result that will arrive in the future."
+    },
+    {
+      "id": "fetch-2",
+      "type": "heading",
+      "level": 2,
+      "text": "Promises, async and await",
+      "id_attr": "promises-async-await"
+    },
+    {
+      "id": "fetch-3",
+      "type": "markdown",
+      "content": "Because fetching data takes time, `fetch` is **asynchronous** — it doesn't block the rest of your code while waiting for the server. A **Promise** represents the eventual result.\n\nThe cleanest way to work with Promises is the `async` / `await` syntax:\n\n- **`async`** before a function means the function can use `await` inside it.\n- **`await`** before a Promise pauses that function until the Promise settles, then returns the resolved value."
+    },
+    {
+      "id": "fetch-4",
+      "type": "code",
+      "language": "javascript",
+      "content": "async function loadQuote() {\n  // 1. Send the request and wait for the response headers\n  const response = await fetch('https://dummyjson.com/quotes/1');\n\n  // 2. Read the response body and parse it as JSON\n  const data = await response.json();\n\n  // 3. Use the data\n  console.log(data.quote);\n  console.log(data.author);\n}\n\nloadQuote();",
+      "caption": "A minimal fetch request broken into three steps"
+    },
+    {
+      "id": "fetch-5",
+      "type": "callout",
+      "title": "Two awaits are needed",
+      "content": "The first await waits for the response headers to arrive. The second await waits for the full response body to be read and parsed as JSON. Both steps are asynchronous.",
+      "color": "blue"
+    },
+    {
+      "id": "fetch-6",
+      "type": "heading",
+      "level": 2,
+      "text": "Try it yourself",
+      "id_attr": "try-it-yourself"
+    },
+    {
+      "id": "fetch-7",
+      "type": "markdown",
+      "content": "Run the code below to fetch a random quote. Then try modifying it to also print `data.author`."
+    },
+    {
+      "id": "fetch-8",
+      "type": "playground",
+      "title": "Fetch a random quote",
+      "starterCode": "async function loadQuote() {\n  const response = await fetch('https://dummyjson.com/quotes/random');\n  const data = await response.json();\n\n  console.log(data.quote);\n}\n\nloadQuote();"
+    },
+    {
+      "id": "fetch-9",
+      "type": "heading",
+      "level": 2,
+      "text": "Accessing Nested Properties",
+      "id_attr": "nested-properties"
+    },
+    {
+      "id": "fetch-10",
+      "type": "markdown",
+      "content": "When `response.json()` parses the body, you get back a plain JavaScript object. You access its values using dot notation — and the property names must **exactly match** the JSON keys."
+    },
+    {
+      "id": "fetch-11",
+      "type": "code",
+      "language": "json",
+      "content": "{\n  \"id\": 1,\n  \"quote\": \"Life is what happens when you're busy making other plans.\",\n  \"author\": \"John Lennon\"\n}",
+      "caption": "JSON returned by the /quotes/1 endpoint"
+    },
+    {
+      "id": "fetch-12",
+      "type": "playground",
+      "title": "Access specific fields",
+      "starterCode": "async function loadQuote() {\n  const response = await fetch('https://dummyjson.com/quotes/1');\n  const data = await response.json();\n\n  // Try changing these to access different fields\n  console.log(data.id);\n  console.log(data.quote);\n  console.log(data.author);\n}\n\nloadQuote();"
+    },
+    {
+      "id": "fetch-13",
+      "type": "callout",
+      "title": "Challenge",
+      "content": "Modify the URL to fetch quote number 42 instead. What quote do you get?",
+      "color": "red"
+    },
+    {
+      "id": "fetch-quiz",
+      "type": "quiz",
+      "title": "The Fetch API Quiz",
+      "description": "Test your understanding of fetch, async, and await.",
+      "questions": [
+        {
+          "id": "fq-1",
+          "question": "What does the async keyword do when placed before a function?",
+          "options": [
+            "Makes the function run faster",
+            "Allows the function to use await and makes it return a Promise",
+            "Sends an HTTP request",
+            "Converts the response to JSON"
+          ],
+          "correctIndex": 1,
+          "explanation": "async allows a function to use await inside it, and automatically wraps the return value in a Promise."
+        },
+        {
+          "id": "fq-2",
+          "question": "Why are two await expressions needed when using fetch?",
+          "options": [
+            "Because fetch always makes two requests",
+            "The first awaits the response headers, the second awaits the response body",
+            "To retry the request if it fails",
+            "One await is for the URL, one is for the method"
+          ],
+          "correctIndex": 1,
+          "explanation": "The first await receives the response headers. The second await (on response.json()) reads and parses the body, which is also asynchronous."
+        },
+        {
+          "id": "fq-3",
+          "question": "Given the JSON below, which expression logs the author's name?",
+          "options": [
+            "data.Author",
+            "data.author",
+            "data[author]",
+            "data.quote.author"
+          ],
+          "correctIndex": 1,
+          "explanation": "JSON keys are case-sensitive. The key is 'author' (lowercase), so data.author is correct.",
+          "media": {
+            "type": "code",
+            "language": "json",
+            "content": "{\n  \"id\": 7,\n  \"quote\": \"Stay hungry, stay foolish.\",\n  \"author\": \"Steve Jobs\"\n}"
+          }
+        }
+      ]
+    }
+  ]
+}

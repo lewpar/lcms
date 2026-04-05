@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction — Fetching with JavaScript</title>
+  <meta name="description" content="An overview of the Fetch API and what this module covers." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=mnlj6s3n" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">Fetching with JavaScript</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Reading</div><a href="../introduction/" class="nav-link active" title="Introduction"><span class="nav-link-icon">👋</span><span class="nav-link-text">Introduction</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#what-you-will-learn"><span class="toc-num">1.</span> What you will learn</a><a class="nav-toc-link nav-toc-level-2" href="#a-quick-taste"><span class="toc-num">2.</span> A quick taste</a></div><a href="../json/" class="nav-link" title="JSON"><span class="nav-link-icon">📄</span><span class="nav-link-text">JSON</span></a><a href="../apis/" class="nav-link" title="APIs"><span class="nav-link-icon">🔌</span><span class="nav-link-text">APIs</span></a><a href="../http-responses/" class="nav-link" title="HTTP &amp; Responses"><span class="nav-link-icon">🌐</span><span class="nav-link-text">HTTP &amp; Responses</span></a><a href="../the-fetch-api/" class="nav-link" title="The Fetch API"><span class="nav-link-icon">⚡</span><span class="nav-link-text">The Fetch API</span></a><a href="../handling-errors/" class="nav-link" title="Handling Errors"><span class="nav-link-icon">🛡️</span><span class="nav-link-text">Handling Errors</span></a><a href="../working-with-arrays/" class="nav-link" title="Working with Arrays"><span class="nav-link-icon">📋</span><span class="nav-link-text">Working with Arrays</span></a></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../activity-debug-fix/" class="nav-link" title="Activity: Debug &amp; Fix"><span class="nav-link-icon">🔧</span><span class="nav-link-text">Activity: Debug &amp; Fix</span></a><a href="../activity-data-viewer/" class="nav-link" title="Activity: Build a Data Viewer"><span class="nav-link-icon">🏗️</span><span class="nav-link-text">Activity: Build a Data Viewer</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>Reading</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Introduction</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Introduction</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">Reading</span>
+            <span>⏱ 2 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><div class="prose"><p>Modern web applications rarely work alone. A weather app pulls live forecasts from a remote server. A social feed loads new posts as you scroll. A shopping cart checks current prices before checkout. All of these rely on the same core skill: <strong>fetching data from the internet using JavaScript</strong>.</p>
+<p>In this module you will learn everything you need to go from zero to writing real <code>fetch</code> requests in the browser.</p>
+</div>
+<h2 id="what-you-will-learn" class="block-heading"><span class="heading-num">1.</span> What you will learn<a class="heading-anchor" href="#what-you-will-learn" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>This module is broken into the following topics:</p>
+<ol>
+<li><strong>JSON</strong> — the data format used by almost every web API</li>
+<li><strong>APIs</strong> — what they are and how the web uses them</li>
+<li><strong>HTTP &amp; Responses</strong> — the request/response cycle and status codes</li>
+<li><strong>The Fetch API</strong> — writing <code>fetch</code> calls with <code>async</code> / <code>await</code></li>
+<li><strong>Handling Errors</strong> — catching network failures and bad responses</li>
+<li><strong>Working with Arrays</strong> — iterating over lists of data from an API</li>
+</ol>
+</div>
+<div class="callout callout-blue"><div class="callout-title">Prerequisites</div><div class="callout-body"><p>You should be comfortable with basic JavaScript — variables, functions, and objects — before starting this module.</p>
+</div></div>
+<h2 id="a-quick-taste" class="block-heading"><span class="heading-num">2.</span> A quick taste<a class="heading-anchor" href="#a-quick-taste" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Below is a complete <code>fetch</code> request. Don&#39;t worry if it looks unfamiliar — by the end of this module every part of it will make sense.</p>
+</div>
+<figure class="code-block"><div class="code-lang">javascript</div><pre><code class="language-javascript">async function getUser() {
+  const response = await fetch(&#x27;https://dummyjson.com/users/1&#x27;);
+  const data = await response.json();
+  console.log(data.firstName, data.lastName);
+}
+
+getUser();</code></pre><figcaption class="code-cap">A fetch request that loads a user from a public API</figcaption></figure></div>
+        
+<nav class="page-prev-next">
+  <span></span>
+  <a class="pn-btn pn-next" href="../json/">JSON →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <span>Generated by LCMS</span><span>5 April 2026</span>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnlj6s3n"></script>
+
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>
+</body>
+</html>

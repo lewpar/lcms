@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JSON — Fetching with JavaScript</title>
+  <meta name="description" content="Understand JSON — the data format that powers web APIs." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=mnlj6s3n" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">Fetching with JavaScript</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Reading</div><a href="../introduction/" class="nav-link" title="Introduction"><span class="nav-link-icon">👋</span><span class="nav-link-text">Introduction</span></a><a href="../json/" class="nav-link active" title="JSON"><span class="nav-link-icon">📄</span><span class="nav-link-text">JSON</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#json-data-types"><span class="toc-num">1.</span> JSON Data Types</a><a class="nav-toc-link nav-toc-level-2" href="#arrays-in-json"><span class="toc-num">2.</span> Arrays in JSON</a><a class="nav-toc-link nav-toc-level-2" href="#nested-objects"><span class="toc-num">3.</span> Nested Objects</a></div><a href="../apis/" class="nav-link" title="APIs"><span class="nav-link-icon">🔌</span><span class="nav-link-text">APIs</span></a><a href="../http-responses/" class="nav-link" title="HTTP &amp; Responses"><span class="nav-link-icon">🌐</span><span class="nav-link-text">HTTP &amp; Responses</span></a><a href="../the-fetch-api/" class="nav-link" title="The Fetch API"><span class="nav-link-icon">⚡</span><span class="nav-link-text">The Fetch API</span></a><a href="../handling-errors/" class="nav-link" title="Handling Errors"><span class="nav-link-icon">🛡️</span><span class="nav-link-text">Handling Errors</span></a><a href="../working-with-arrays/" class="nav-link" title="Working with Arrays"><span class="nav-link-icon">📋</span><span class="nav-link-text">Working with Arrays</span></a></div><div class="nav-section"><div class="nav-section-title">Activities</div><a href="../activity-debug-fix/" class="nav-link" title="Activity: Debug &amp; Fix"><span class="nav-link-icon">🔧</span><span class="nav-link-text">Activity: Debug &amp; Fix</span></a><a href="../activity-data-viewer/" class="nav-link" title="Activity: Build a Data Viewer"><span class="nav-link-icon">🏗️</span><span class="nav-link-text">Activity: Build a Data Viewer</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>Reading</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>JSON</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">JSON</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">Reading</span>
+            <span>⏱ 2 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><div class="prose"><p><strong>JavaScript Object Notation (JSON)</strong> is a lightweight text format used to store and exchange data between systems. It is the standard format returned by almost every web API.</p>
+<p>JSON represents data as <strong>key-value pairs</strong> wrapped in curly braces <code>{}</code>. Keys are always strings, and values can be strings, numbers, booleans, arrays, objects, or <code>null</code>.</p>
+</div>
+<figure class="code-block"><div class="code-lang">json</div><pre><code class="language-json">{
+  &quot;name&quot;: &quot;Alice&quot;,
+  &quot;age&quot;: 30,
+  &quot;isStudent&quot;: false
+}</code></pre><figcaption class="code-cap">A simple JSON object with three key-value pairs</figcaption></figure>
+<h2 id="json-data-types" class="block-heading"><span class="heading-num">1.</span> JSON Data Types<a class="heading-anchor" href="#json-data-types" aria-label="Copy link to section">#</a></h2>
+<div class="table-block"><table><caption>Supported value types in JSON</caption><thead><tr><th>Type</th><th>Example</th><th>Description</th></tr></thead><tbody><tr><td>String</td><td>&quot;hello&quot;</td><td>Text wrapped in double quotes</td></tr><tr><td>Number</td><td>42 or 3.14</td><td>Integer or decimal number</td></tr><tr><td>Boolean</td><td>true or false</td><td>A yes/no value</td></tr><tr><td>Array</td><td>[1, 2, 3]</td><td>An ordered list of values</td></tr><tr><td>Object</td><td>{&quot;x&quot;: 1}</td><td>A nested set of key-value pairs</td></tr><tr><td>Null</td><td>null</td><td>Represents an empty or missing value</td></tr></tbody></table></div>
+<h2 id="arrays-in-json" class="block-heading"><span class="heading-num">2.</span> Arrays in JSON<a class="heading-anchor" href="#arrays-in-json" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>A JSON <strong>array</strong> is an ordered list of values enclosed in square brackets <code>[]</code>. Each item is separated by a comma. Arrays are commonly used when an API returns multiple records — for example, a list of products or a set of search results.</p>
+</div>
+<figure class="code-block"><div class="code-lang">json</div><pre><code class="language-json">[
+  { &quot;id&quot;: 1, &quot;name&quot;: &quot;Alice&quot; },
+  { &quot;id&quot;: 2, &quot;name&quot;: &quot;Bob&quot; },
+  { &quot;id&quot;: 3, &quot;name&quot;: &quot;Charlie&quot; }
+]</code></pre><figcaption class="code-cap">A JSON array containing three user objects</figcaption></figure>
+<h2 id="nested-objects" class="block-heading"><span class="heading-num">3.</span> Nested Objects<a class="heading-anchor" href="#nested-objects" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Objects can contain other objects, allowing you to represent complex, hierarchical data. A value for one key can itself be a <code>{}</code> object with its own key-value pairs.</p>
+</div>
+<figure class="code-block"><div class="code-lang">json</div><pre><code class="language-json">{
+  &quot;user&quot;: {
+    &quot;name&quot;: &quot;Alice&quot;,
+    &quot;address&quot;: {
+      &quot;city&quot;: &quot;Sydney&quot;,
+      &quot;country&quot;: &quot;Australia&quot;
+    }
+  }
+}</code></pre><figcaption class="code-cap">JSON with two levels of nesting</figcaption></figure>
+<div class="callout callout-yellow"><div class="callout-title">JSON vs JavaScript Objects</div><div class="callout-body"><p>JSON looks like a JavaScript object, but there are key differences: JSON keys must always be in double quotes, and JSON cannot contain functions or comments.</p>
+</div></div>
+<div class="quiz-block" data-questions='[{"id":"jq-1","question":"Which symbol wraps a JSON object?","options":["[]","{}","()","\u003c\u003e"],"correctIndex":1,"explanation":"JSON objects are always wrapped in curly braces {}."},{"id":"jq-2","question":"In JSON, keys must always be written as:","options":["Numbers","Single-quoted strings","Double-quoted strings","Unquoted words"],"correctIndex":2,"explanation":"Unlike JavaScript, JSON requires all keys to be double-quoted strings."},{"id":"jq-3","question":"What does the following JSON represent?","options":["A single user object","An array of three user objects","A nested object with three levels","An invalid JSON structure"],"correctIndex":1,"explanation":"Square brackets [] indicate a JSON array. This one contains three objects, each with an id and name property.","media":{"type":"code","language":"json","content":"[\n  { \"id\": 1, \"name\": \"Alice\" },\n  { \"id\": 2, \"name\": \"Bob\" },\n  { \"id\": 3, \"name\": \"Charlie\" }\n]"}},{"id":"jq-4","question":"Which of the following is NOT a valid JSON value type?","options":["String","Number","Function","Boolean"],"correctIndex":2,"explanation":"JSON does not support functions. Valid value types are: string, number, boolean, null, array, and object."}]' data-quiz-id="json-quiz">
+  <div class="quiz-block-header">
+    <span class="quiz-block-header-title">JSON Quiz</span>
+    <span class="quiz-block-header-badge">4 questions</span>
+  </div>
+  <div class="qs-start">
+    <h3 class="qs-title">JSON Quiz</h3>
+    <p class="qs-desc">Check your understanding of JSON structure and data types.</p><p class="qs-count">4 questions</p>
+    <button class="qs-start-btn quiz-btn" type="button">Start Quiz →</button>
+    <div class="qs-resume" hidden>
+      <p class="qs-resume-status"></p>
+      <div class="qs-resume-actions">
+        <button class="qs-continue-btn quiz-btn" type="button">Continue →</button>
+        <button class="qs-restart-btn quiz-btn quiz-btn-outline" type="button">↺ Start Over</button>
+      </div>
+    </div>
+  </div>
+  <div class="qs-question" hidden>
+    <div class="qs-progress-wrap">
+      <div class="qs-progress-bar"><div class="qs-progress-fill"></div></div>
+      <span class="qs-progress-text">1 / 4</span>
+    </div>
+    <div class="qs-q-text"></div>
+    <div class="qs-media" hidden></div>
+    <div class="qs-media-sep" hidden></div>
+    <ul class="qs-options" role="list"></ul>
+    <div class="qs-nav">
+      <button class="qs-submit quiz-btn" type="button" disabled>Submit Answer</button>
+    </div>
+    <div class="qs-feedback" hidden></div>
+    <div class="qs-explanation" hidden></div>
+    <div class="qs-next-nav" hidden>
+      <button class="qs-next quiz-btn quiz-btn-outline" type="button" hidden>Next →</button>
+      <button class="qs-finish quiz-btn quiz-btn-outline" type="button" hidden>See Results →</button>
+    </div>
+  </div>
+  <div class="qs-results" hidden>
+    <p class="qs-results-title">Quiz Complete</p>
+    <div class="qs-score-ring"><div class="qs-score-inner">
+      <div class="qs-score-num"></div><div class="qs-score-lbl">correct</div>
+    </div></div>
+    <div class="qs-score-pct"></div>
+    <div class="qs-review"></div>
+    <button class="qs-retry-btn quiz-btn" type="button">↺ Try Again</button>
+  </div>
+</div></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../introduction/">← Introduction</a>
+  <a class="pn-btn pn-next" href="../apis/">APIs →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <span>Generated by LCMS</span><span>5 April 2026</span>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnlj6s3n"></script>
+<script src="../quiz.js?v=mnlj6s3n"></script>
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script><script>hljs.highlightAll();</script>
+</body>
+</html>

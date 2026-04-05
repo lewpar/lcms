@@ -1,0 +1,56 @@
+{
+  "id": "a898da45-ee9d-432e-b1c9-00312bfa17c1",
+  "title": "Introduction",
+  "slug": "introduction",
+  "section": "04612e2e-a9f8-4485-9b42-e7cea23f8622",
+  "description": "An overview of the Fetch API and what this module covers.",
+  "icon": "👋",
+  "order": 0,
+  "createdAt": "2026-04-05T08:50:00.000Z",
+  "updatedAt": "2026-04-05T08:50:00.000Z",
+  "blocks": [
+    {
+      "id": "intro-1",
+      "type": "markdown",
+      "content": "Modern web applications rarely work alone. A weather app pulls live forecasts from a remote server. A social feed loads new posts as you scroll. A shopping cart checks current prices before checkout. All of these rely on the same core skill: **fetching data from the internet using JavaScript**.\n\nIn this module you will learn everything you need to go from zero to writing real `fetch` requests in the browser."
+    },
+    {
+      "id": "intro-2",
+      "type": "heading",
+      "level": 2,
+      "text": "What you will learn",
+      "id_attr": "what-you-will-learn"
+    },
+    {
+      "id": "intro-3",
+      "type": "markdown",
+      "content": "This module is broken into the following topics:\n\n1. **JSON** — the data format used by almost every web API\n2. **APIs** — what they are and how the web uses them\n3. **HTTP & Responses** — the request/response cycle and status codes\n4. **The Fetch API** — writing `fetch` calls with `async` / `await`\n5. **Handling Errors** — catching network failures and bad responses\n6. **Working with Arrays** — iterating over lists of data from an API"
+    },
+    {
+      "id": "intro-4",
+      "type": "callout",
+      "title": "Prerequisites",
+      "content": "You should be comfortable with basic JavaScript — variables, functions, and objects — before starting this module.",
+      "color": "blue"
+    },
+    {
+      "id": "intro-5",
+      "type": "heading",
+      "level": 2,
+      "text": "A quick taste",
+      "id_attr": "a-quick-taste"
+    },
+    {
+      "id": "intro-6",
+      "type": "markdown",
+      "content": "Below is a complete `fetch` request. Don't worry if it looks unfamiliar — by the end of this module every part of it will make sense."
+    },
+    {
+      "id": "intro-7",
+      "type": "code",
+      "language": "javascript",
+      "content": "async function getUser() {\n  const response = await fetch('https://dummyjson.com/users/1');\n  const data = await response.json();\n  console.log(data.firstName, data.lastName);\n}\n\ngetUser();",
+      "caption": "A fetch request that loads a user from a public API"
+    }
+  ]
+}

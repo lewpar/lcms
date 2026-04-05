@@ -1,0 +1,134 @@
+{
+  "id": "c6f36e1b-373c-4b02-95c7-e78a20f5ea10",
+  "title": "Activity: Build a Data Viewer",
+  "slug": "activity-data-viewer",
+  "section": "6ff3d00e-492c-42e2-8b57-65da04435cec",
+  "description": "Write fetch code from scratch to display data from a public API.",
+  "icon": "🏗️",
+  "order": 1,
+  "createdAt": "2026-04-05T08:50:00.000Z",
+  "updatedAt": "2026-04-05T08:50:00.000Z",
+  "blocks": [
+    {
+      "id": "act2-1",
+      "type": "callout",
+      "title": "What to expect",
+      "content": "In this activity you will write fetch code from scratch (or with minimal starter code) to retrieve and display data from a public API. Each task builds on the previous one.",
+      "color": "purple"
+    },
+    {
+      "id": "act2-divider-0",
+      "type": "divider"
+    },
+    {
+      "id": "act2-2",
+      "type": "heading",
+      "level": 2,
+      "text": "Task 1: Fetch a Single User",
+      "id_attr": "task-1"
+    },
+    {
+      "id": "act2-3",
+      "type": "callout",
+      "title": "Instructions",
+      "content": "Using the DummyJSON API, write a fetch function that retrieves user number 1 and prints their first name, last name, and email to the console.\n\nEndpoint: https://dummyjson.com/users/1",
+      "color": "purple"
+    },
+    {
+      "id": "act2-4",
+      "type": "playground",
+      "title": "Task 1",
+      "starterCode": "async function getUser() {\n  // Write your fetch code here\n\n}\n\ngetUser();"
+    },
+    {
+      "id": "act2-hint-1",
+      "type": "hint",
+      "title": "",
+      "body": "You need two await expressions — one for fetch() and one for response.json(). Then access data.firstName, data.lastName, and data.email."
+    },
+    {
+      "id": "act2-divider-1",
+      "type": "divider"
+    },
+    {
+      "id": "act2-5",
+      "type": "heading",
+      "level": 2,
+      "text": "Task 2: Fetch Multiple Posts",
+      "id_attr": "task-2"
+    },
+    {
+      "id": "act2-6",
+      "type": "callout",
+      "title": "Instructions",
+      "content": "Fetch the first 5 posts from the DummyJSON posts endpoint and print each post's title on a separate line.\n\nEndpoint: https://dummyjson.com/posts?limit=5",
+      "color": "purple"
+    },
+    {
+      "id": "act2-7",
+      "type": "playground",
+      "title": "Task 2",
+      "starterCode": "async function getPosts() {\n  // Write your fetch code here\n  // The posts array lives at data.posts\n\n}\n\ngetPosts();"
+    },
+    {
+      "id": "act2-hint-2",
+      "type": "hint",
+      "title": "",
+      "body": "After parsing the JSON, use data.posts.forEach() to loop over the array and console.log(post.title) for each one."
+    },
+    {
+      "id": "act2-divider-2",
+      "type": "divider"
+    },
+    {
+      "id": "act2-8",
+      "type": "heading",
+      "level": 2,
+      "text": "Task 3: Add Error Handling",
+      "id_attr": "task-3"
+    },
+    {
+      "id": "act2-9",
+      "type": "callout",
+      "title": "Instructions",
+      "content": "Copy your solution from Task 2 into the playground below and wrap it in a try/catch block. Then also add a check for response.ok — if the response is not OK, throw an error with the status code. Test that it works by temporarily using an invalid URL.",
+      "color": "purple"
+    },
+    {
+      "id": "act2-10",
+      "type": "playground",
+      "title": "Task 3",
+      "starterCode": "async function getPosts() {\n  try {\n    // Paste your Task 2 solution here and add error handling\n\n  } catch (e) {\n    console.log('Error:', e.message);\n  }\n}\n\ngetPosts();"
+    },
+    {
+      "id": "act2-hint-3",
+      "type": "hint",
+      "title": "",
+      "body": "After the first await, add: if (!response.ok) throw new Error(`HTTP error: ${response.status}`);"
+    },
+    {
+      "id": "act2-divider-3",
+      "type": "divider"
+    },
+    {
+      "id": "act2-11",
+      "type": "heading",
+      "level": 2,
+      "text": "Extension: Filter by Views",
+      "id_attr": "extension"
+    },
+    {
+      "id": "act2-12",
+      "type": "callout",
+      "title": "Extension task",
+      "content": "Fetch 20 posts from dummyjson.com/posts?limit=20, then use .filter() to keep only posts with more than 1000 views. Print the title and view count of each filtered post.",
+      "color": "yellow"
+    },
+    {
+      "id": "act2-13",
+      "type": "playground",
+      "title": "Extension",
+      "starterCode": "async function getPopularPosts() {\n  // Fetch 20 posts, filter by views > 1000, and print each title + views\n\n}\n\ngetPopularPosts();"
+    }
+  ]
+}

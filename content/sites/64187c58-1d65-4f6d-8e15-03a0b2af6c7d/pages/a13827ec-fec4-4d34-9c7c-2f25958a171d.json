@@ -1,0 +1,149 @@
+{
+  "id": "a13827ec-fec4-4d34-9c7c-2f25958a171d",
+  "title": "HTTP & Responses",
+  "slug": "http-responses",
+  "section": "04612e2e-a9f8-4485-9b42-e7cea23f8622",
+  "description": "Understand the request-response cycle and HTTP status codes.",
+  "icon": "🌐",
+  "order": 3,
+  "createdAt": "2026-04-05T08:50:00.000Z",
+  "updatedAt": "2026-04-05T08:50:00.000Z",
+  "blocks": [
+    {
+      "id": "http-1",
+      "type": "markdown",
+      "content": "Every time your browser asks a server for data, it follows the same pattern: your code sends an **HTTP request**, and the server sends back an **HTTP response**. Understanding this cycle is essential for working with `fetch`."
+    },
+    {
+      "id": "http-2",
+      "type": "heading",
+      "level": 2,
+      "text": "The Request-Response Cycle",
+      "id_attr": "request-response-cycle"
+    },
+    {
+      "id": "http-3",
+      "type": "markdown",
+      "content": "1. Your JavaScript calls `fetch(url)` with the address of the API endpoint.\n2. The browser sends an **HTTP request** to the server at that address.\n3. The server processes the request and sends back an **HTTP response**.\n4. The response contains a **status code** and, usually, a **body** containing JSON data.\n5. Your code reads the status code to check whether the request succeeded, then converts the body to a JavaScript object."
+    },
+    {
+      "id": "http-4",
+      "type": "heading",
+      "level": 2,
+      "text": "HTTP Status Codes",
+      "id_attr": "status-codes"
+    },
+    {
+      "id": "http-5",
+      "type": "markdown",
+      "content": "Every response includes a **status code** — a three-digit number that tells you whether the request succeeded or failed. Codes are grouped by their first digit:"
+    },
+    {
+      "id": "http-6",
+      "type": "table",
+      "caption": "HTTP status code ranges",
+      "headers": ["Range", "Category", "Meaning"],
+      "rows": [
+        ["1xx", "Informational", "Request received, processing continues"],
+        ["2xx", "Success", "Request was received, understood, and accepted"],
+        ["3xx", "Redirection", "Further action is needed to complete the request"],
+        ["4xx", "Client Error", "The request was invalid or cannot be fulfilled"],
+        ["5xx", "Server Error", "The server failed to process a valid request"]
+      ]
+    },
+    {
+      "id": "http-7",
+      "type": "heading",
+      "level": 2,
+      "text": "Common Status Codes",
+      "id_attr": "common-codes"
+    },
+    {
+      "id": "http-8",
+      "type": "table",
+      "caption": "Frequently encountered HTTP status codes",
+      "headers": ["Code", "Name", "What it means"],
+      "rows": [
+        ["200", "OK", "Everything worked — data is in the response body"],
+        ["201", "Created", "A new resource was successfully created"],
+        ["400", "Bad Request", "The request was malformed or missing required data"],
+        ["401", "Unauthorized", "Authentication is required or has failed"],
+        ["403", "Forbidden", "You are authenticated but don't have permission"],
+        ["404", "Not Found", "The requested resource does not exist"],
+        ["500", "Internal Server Error", "Something went wrong on the server"]
+      ]
+    },
+    {
+      "id": "http-9",
+      "type": "heading",
+      "level": 2,
+      "text": "Checking the Status in Code",
+      "id_attr": "checking-status"
+    },
+    {
+      "id": "http-10",
+      "type": "markdown",
+      "content": "The `Response` object returned by `fetch` exposes two useful properties for checking the outcome:\n\n- **`response.status`** — the numeric status code (e.g. `200`, `404`)\n- **`response.ok`** — a boolean that is `true` when the status is in the 200–299 range"
+    },
+    {
+      "id": "http-11",
+      "type": "code",
+      "language": "javascript",
+      "content": "async function loadData() {\n  const response = await fetch('https://dummyjson.com/products/1');\n\n  console.log(response.status); // e.g. 200\n  console.log(response.ok);     // true\n\n  if (response.ok) {\n    const data = await response.json();\n    console.log(data.title);\n  } else {\n    console.log('Request failed:', response.status);\n  }\n}\n\nloadData();",
+      "caption": "Checking response.ok before reading the response body"
+    },
+    {
+      "id": "http-callout",
+      "type": "callout",
+      "title": "Important",
+      "content": "fetch() only throws an error for network failures (e.g. no internet). A 404 or 500 response does NOT throw — you must check response.ok yourself.",
+      "color": "red"
+    },
+    {
+      "id": "http-quiz",
+      "type": "quiz",
+      "title": "HTTP & Responses Quiz",
+      "description": "Test your knowledge of the request-response cycle and status codes.",
+      "questions": [
+        {
+          "id": "hq-1",
+          "question": "What does a 200 status code mean?",
+          "options": [
+            "The resource was not found",
+            "The request was redirected",
+            "The request succeeded",
+            "There was a server error"
+          ],
+          "correctIndex": 2,
+          "explanation": "200 OK means the request was received, understood, and the response contains the requested data."
+        },
+        {
+          "id": "hq-2",
+          "question": "What does response.ok equal when the server returns a 404?",
+          "options": ["true", "false", "null", "undefined"],
+          "correctIndex": 1,
+          "explanation": "response.ok is true only for status codes in the 200–299 range. A 404 returns false."
+        },
+        {
+          "id": "hq-3",
+          "question": "Which status code would you expect when successfully creating a new resource?",
+          "options": ["200", "201", "400", "404"],
+          "correctIndex": 1,
+          "explanation": "201 Created is returned when a POST request successfully creates a new resource on the server."
+        },
+        {
+          "id": "hq-4",
+          "question": "When does fetch() throw an error by itself?",
+          "options": [
+            "When the server returns a 404",
+            "When the server returns a 500",
+            "When the network connection fails entirely",
+            "When response.ok is false"
+          ],
+          "correctIndex": 2,
+          "explanation": "fetch() only rejects its Promise (throws) on network-level failures such as no internet connection. HTTP error codes like 404 or 500 do not cause fetch() to throw."
+        }
+      ]
+    }
+  ]
+}

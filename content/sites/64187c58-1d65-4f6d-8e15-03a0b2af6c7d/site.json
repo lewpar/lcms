@@ -1,0 +1,44 @@
+{
+  "title": "Fetching with JavaScript",
+  "description": "Learn how to use the JavaScript Fetch API to request data from APIs on the web.",
+  "navPages": [],
+  "sections": [
+    {
+      "id": "04612e2e-a9f8-4485-9b42-e7cea23f8622",
+      "name": "Reading"
+    },
+    {
+      "id": "6ff3d00e-492c-42e2-8b57-65da04435cec",
+      "name": "Activities"
+    }
+  ],
+  "theme": {
+    "primary": "#6c63ff",
+    "sidebarBg": "#1e293b",
+    "contentBg": "#ffffff",
+    "textColor": "#1e293b",
+    "darkPrimary": "#7c74ff",
+    "darkSidebarBg": "#131925",
+    "darkContentBg": "#0f172a",
+    "darkTextColor": "#e2e8f0",
+    "radius": 8,
+    "font": "inter",
+    "fontSize": 16,
+    "contentWidth": 800,
+    "sidebarWidth": 240,
+    "showBreadcrumbs": true,
+    "showReadingTime": true
+  },
+  "home": {
+    "heroTitle": "Fetching with JavaScript",
+    "heroSubtitle": "Learn how to request and use data from APIs using the JavaScript Fetch API.",
+    "showPageGrid": true,
+    "blocks": [
+      {
+        "id": "home-block-1",
+        "type": "markdown",
+        "content": "In this module you will learn how web applications communicate with servers to retrieve data. You will start with the fundamentals — what JSON is and how APIs work — then progress to writing real `fetch` requests, handling errors, and working with collections of data.\n\nUse the sidebar to navigate between topics, or browse the pages below to get started."
+      }
+    ]
+  }
+}

@@ -8,5 +8,10 @@
     "id": "b7e24710-ff87-48db-8f31-16d664da02d3",
     "name": "fetchjs",
     "slug": "fetchjs"
+  },
+  {
+    "id": "64187c58-1d65-4f6d-8e15-03a0b2af6c7d",
+    "name": "Fetching with JavaScript",
+    "slug": "fetch-js"
   }
 ]

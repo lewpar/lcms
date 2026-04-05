@@ -1,0 +1,127 @@
+{
+  "id": "c0dba056-8db6-4eef-832b-3cecef10d2ef",
+  "title": "APIs",
+  "slug": "apis",
+  "section": "04612e2e-a9f8-4485-9b42-e7cea23f8622",
+  "description": "What APIs are and how the web uses them to share data.",
+  "icon": "🔌",
+  "order": 2,
+  "createdAt": "2026-04-05T08:50:00.000Z",
+  "updatedAt": "2026-04-05T08:50:00.000Z",
+  "blocks": [
+    {
+      "id": "api-1",
+      "type": "markdown",
+      "content": "An **Application Programming Interface (API)** is a defined way for two pieces of software to communicate. One program makes a **request**, and the other responds with **data** or an action.\n\nOn the web, APIs are used everywhere. When you check the weather, load a map, or log in with Google, your browser is talking to an API behind the scenes."
+    },
+    {
+      "id": "api-2",
+      "type": "heading",
+      "level": 2,
+      "text": "Web APIs",
+      "id_attr": "web-apis"
+    },
+    {
+      "id": "api-3",
+      "type": "markdown",
+      "content": "A **web API** (also called a REST API) communicates over the internet using URLs. You request a specific URL called an **endpoint**, and the server responds with data — almost always in JSON format.\n\nFor example, the public DummyJSON API exposes this endpoint:\n\n```\nhttps://dummyjson.com/users/1\n```\n\nRequesting that URL returns a JSON object containing information about user number 1."
+    },
+    {
+      "id": "api-4",
+      "type": "heading",
+      "level": 2,
+      "text": "HTTP Methods",
+      "id_attr": "http-methods"
+    },
+    {
+      "id": "api-5",
+      "type": "markdown",
+      "content": "Every API request uses an **HTTP method** that describes what kind of action is being performed. The most common methods are:"
+    },
+    {
+      "id": "api-6",
+      "type": "table",
+      "caption": "Common HTTP methods",
+      "headers": ["Method", "Purpose", "Example"],
+      "rows": [
+        ["GET", "Read / retrieve data", "Load a user's profile"],
+        ["POST", "Send / create new data", "Submit a registration form"],
+        ["PUT", "Replace existing data", "Update a user's full profile"],
+        ["PATCH", "Partially update data", "Change just a user's email"],
+        ["DELETE", "Remove data", "Delete a post"]
+      ]
+    },
+    {
+      "id": "api-7",
+      "type": "callout",
+      "title": "In this module we focus on GET",
+      "content": "The fetch() function defaults to a GET request, which is used to read data. You will learn how to send other methods later in your studies.",
+      "color": "blue"
+    },
+    {
+      "id": "api-8",
+      "type": "heading",
+      "level": 2,
+      "text": "Endpoints and Parameters",
+      "id_attr": "endpoints-and-parameters"
+    },
+    {
+      "id": "api-9",
+      "type": "markdown",
+      "content": "An **endpoint** is a specific URL that the API exposes. Different endpoints return different data. Many APIs also accept **query parameters** — extra values appended to the URL after a `?` — to filter or customise the response."
+    },
+    {
+      "id": "api-10",
+      "type": "code",
+      "language": "text",
+      "content": "https://dummyjson.com/products          // all products\nhttps://dummyjson.com/products/5        // product with id 5\nhttps://dummyjson.com/products?limit=3  // only 3 products",
+      "caption": "Three endpoints for the same API, each returning different data"
+    },
+    {
+      "id": "api-quiz",
+      "type": "quiz",
+      "title": "APIs Quiz",
+      "description": "Test your understanding of APIs and HTTP methods.",
+      "questions": [
+        {
+          "id": "aq-1",
+          "question": "What does API stand for?",
+          "options": [
+            "Automated Program Interface",
+            "Application Programming Interface",
+            "Advanced Protocol Integration",
+            "Application Process Input"
+          ],
+          "correctIndex": 1,
+          "explanation": "API stands for Application Programming Interface — a way for software to communicate."
+        },
+        {
+          "id": "aq-2",
+          "question": "Which HTTP method should you use to read data from an API?",
+          "options": ["POST", "DELETE", "GET", "PATCH"],
+          "correctIndex": 2,
+          "explanation": "GET is used to retrieve/read data. It is the default method used by fetch()."
+        },
+        {
+          "id": "aq-3",
+          "question": "In what format do most web APIs return their data?",
+          "options": ["XML", "CSV", "HTML", "JSON"],
+          "correctIndex": 3,
+          "explanation": "The vast majority of modern web APIs return data in JSON format."
+        },
+        {
+          "id": "aq-4",
+          "question": "What is an API endpoint?",
+          "options": [
+            "The error message returned when a request fails",
+            "A specific URL that the API exposes to receive requests",
+            "The JavaScript function used to send requests",
+            "The server that hosts the API"
+          ],
+          "correctIndex": 1,
+          "explanation": "An endpoint is a specific URL path on the API server that accepts requests and returns data."
+        }
+      ]
+    }
+  ]
+}
