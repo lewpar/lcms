@@ -1,0 +1,64 @@
+{
+  "id": "d9ce0a56-09f7-45bd-b114-b131ce58cdc9",
+  "title": "Objects - Structured Data",
+  "slug": "objects",
+  "section": "39bfdd17-76cf-43c2-9bf0-9f55fb870b0d",
+  "description": "Learn how to create and use objects to organize related data together.",
+  "icon": "🏗️",
+  "order": 6,
+  "blocks": [
+    {
+      "id": "obj-heading-1",
+      "type": "heading",
+      "level": 2,
+      "text": "What are Objects?"
+    },
+    {
+      "id": "obj-markdown-1",
+      "type": "markdown",
+      "content": "An **object** is a collection of related data and methods organized as key-value pairs:\n\n```javascript\nlet person = {\n  name: \"Alice\",\n  age: 25,\n  city: \"New York\"\n};\n```\n\nAccess values using dot notation or brackets:\n\n```javascript\nconsole.log(person.name);      // \"Alice\"\nconsole.log(person[\"age\"]);    // 25\n\n// Change values\nperson.age = 26;\nperson.city = \"Boston\";\n\n// Add new properties\nperson.job = \"Developer\";\n```\n\nObjects are great for grouping related information about one thing (a person, product, book, etc.)"
+    },
+    {
+      "id": "obj-playground-1",
+      "type": "playground",
+      "title": "Creating and Using Objects",
+      "starterCode": "// Create an object\nlet student = {\n  name: \"Bob\",\n  grade: 10,\n  gpa: 3.8,\n  school: \"Central High\"\n};\n\n// Access properties\nconsole.log(student.name);\nconsole.log(student[\"grade\"]);\n\n// Modify properties\nstudent.gpa = 3.9;\nconsole.log(student.gpa);\n\n// Add new property\nstudent.club = \"Robotics\";\nconsole.log(student);"
+    },
+    {
+      "id": "obj-heading-2",
+      "type": "heading",
+      "level": 2,
+      "text": "Objects with Methods"
+    },
+    {
+      "id": "obj-markdown-2",
+      "type": "markdown",
+      "content": "Objects can contain functions, called **methods**:\n\n```javascript\nlet calculator = {\n  add: function(a, b) {\n    return a + b;\n  },\n  subtract: function(a, b) {\n    return a - b;\n  }\n};\n\ncalculator.add(5, 3);      // 8\ncalculator.subtract(10, 4); // 6\n```\n\nOr using shorthand (modern JavaScript):\n\n```javascript\nlet calculator = {\n  add(a, b) {\n    return a + b;\n  },\n  subtract(a, b) {\n    return a - b;\n  }\n};\n```"
+    },
+    {
+      "id": "obj-playground-2",
+      "type": "playground",
+      "title": "Objects with Methods",
+      "starterCode": "// Object with methods\nlet car = {\n  brand: \"Toyota\",\n  year: 2020,\n  start: function() {\n    console.log(this.brand + \" is starting!\");\n  },\n  stop: function() {\n    console.log(this.brand + \" stopped.\");\n  },\n  honk: function() {\n    console.log(\"Beep! Beep!\");\n  }\n};\n\n// Call methods\ncar.start();\ncar.honk();\ncar.stop();\n\n// Access properties\nconsole.log(\"Year: \" + car.year);"
+    },
+    {
+      "id": "obj-heading-3",
+      "type": "heading",
+      "level": 2,
+      "text": "Arrays of Objects"
+    },
+    {
+      "id": "obj-markdown-3",
+      "type": "markdown",
+      "content": "Often you'll have an array containing multiple objects:\n\n```javascript\nlet students = [\n  { name: \"Alice\", age: 20, grade: \"A\" },\n  { name: \"Bob\", age: 21, grade: \"B\" },\n  { name: \"Charlie\", age: 20, grade: \"A\" }\n];\n\n// Access items\nconsole.log(students[0].name);  // \"Alice\"\nconsole.log(students[1].age);   // 21\n\n// Loop through\nfor (let student of students) {\n  console.log(student.name + \" has grade \" + student.grade);\n}\n```\n\nThis pattern is very common when working with data!"
+    },
+    {
+      "id": "obj-playground-3",
+      "type": "playground",
+      "title": "Arrays of Objects",
+      "starterCode": "// Array of book objects\nlet books = [\n  { title: \"JavaScript Basics\", author: \"John Doe\", pages: 350 },\n  { title: \"Web Development\", author: \"Jane Smith\", pages: 480 },\n  { title: \"React Guide\", author: \"Bob Johnson\", pages: 420 }\n];\n\n// Access individual book\nconsole.log(books[0].title);\n\n// Loop through all books\nfor (let book of books) {\n  console.log(book.title + \" by \" + book.author);\n}\n\n// Find total pages\nlet totalPages = books.reduce((sum, book) => sum + book.pages, 0);\nconsole.log(\"Total pages: \" + totalPages);"
+    }
+  ],
+  "createdAt": "2026-04-05T10:00:00.000Z",
+  "updatedAt": "2026-04-05T10:00:00.000Z"
+}

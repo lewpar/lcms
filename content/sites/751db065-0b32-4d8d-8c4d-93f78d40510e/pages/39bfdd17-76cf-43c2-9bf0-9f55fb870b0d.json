@@ -1,0 +1,96 @@
+{
+  "id": "39bfdd17-76cf-43c2-9bf0-9f55fb870b0d",
+  "title": "If Statements & Control Flow",
+  "slug": "if-statements",
+  "section": "a8976225-3922-418a-84ff-7815f53b8b39",
+  "description": "Learn how to make decisions in your code with if, else if, and else statements.",
+  "icon": "🎯",
+  "order": 2,
+  "blocks": [
+    {
+      "id": "if-heading-1",
+      "type": "heading",
+      "level": 2,
+      "text": "Making Decisions with If"
+    },
+    {
+      "id": "if-markdown-1",
+      "type": "markdown",
+      "content": "An `if` statement lets your code make decisions based on conditions:\n\n```javascript\nif (condition) {\n  // This code runs if condition is true\n}\n```\n\n**Example:**\n\n```javascript\nlet age = 25;\nif (age >= 18) {\n  console.log(\"You are an adult!\");\n}\n```\n\nThe code inside the braces `{}` only runs if the condition is `true`."
+    },
+    {
+      "id": "if-playground-1",
+      "type": "playground",
+      "title": "Simple If Statement",
+      "starterCode": "let score = 85;\n\nif (score >= 80) {\n  console.log(\"Great job! You got an A!\");\n}\n\n// Try changing the score value\nlet temperature = 30;\nif (temperature > 25) {\n  console.log(\"It's hot outside!\");\n}"
+    },
+    {
+      "id": "if-heading-2",
+      "type": "heading",
+      "level": 2,
+      "text": "If...Else Statements"
+    },
+    {
+      "id": "if-markdown-2",
+      "type": "markdown",
+      "content": "Use `else` to run code when the condition is `false`:\n\n```javascript\nif (condition) {\n  // Runs if condition is true\n} else {\n  // Runs if condition is false\n}\n```\n\n**Example:**\n\n```javascript\nlet number = 5;\nif (number > 10) {\n  console.log(\"Number is greater than 10\");\n} else {\n  console.log(\"Number is 10 or less\");\n}\n```"
+    },
+    {
+      "id": "if-playground-2",
+      "type": "playground",
+      "title": "If...Else Practice",
+      "starterCode": "let age = 15;\n\nif (age >= 18) {\n  console.log(\"You can vote!\");\n} else {\n  console.log(\"You cannot vote yet.\");\n}\n\n// Try with different ages\nlet grade = 72;\nif (grade >= 70) {\n  console.log(\"You passed!\");\n} else {\n  console.log(\"You need to study more.\");\n}"
+    },
+    {
+      "id": "if-heading-3",
+      "type": "heading",
+      "level": 2,
+      "text": "If...Else If...Else"
+    },
+    {
+      "id": "if-markdown-3",
+      "type": "markdown",
+      "content": "Use `else if` to check multiple conditions:\n\n```javascript\nif (condition1) {\n  // Runs if condition1 is true\n} else if (condition2) {\n  // Runs if condition2 is true\n} else {\n  // Runs if all conditions are false\n}\n```\n\n**Example:**\n\n```javascript\nlet score = 85;\nif (score >= 90) {\n  console.log(\"A - Excellent!\");\n} else if (score >= 80) {\n  console.log(\"B - Good!\");\n} else if (score >= 70) {\n  console.log(\"C - Passing\");\n} else {\n  console.log(\"F - Try again\");\n}\n```"
+    },
+    {
+      "id": "if-playground-3",
+      "type": "playground",
+      "title": "Grade Calculator",
+      "starterCode": "let score = 85;\n\nif (score >= 90) {\n  console.log(\"Grade: A\");\n} else if (score >= 80) {\n  console.log(\"Grade: B\");\n} else if (score >= 70) {\n  console.log(\"Grade: C\");\n} else if (score >= 60) {\n  console.log(\"Grade: D\");\n} else {\n  console.log(\"Grade: F\");\n}\n\n// Try different scores!"
+    },
+    {
+      "id": "if-quiz-1",
+      "type": "quiz",
+      "title": "If Statements Quiz",
+      "description": "Test your understanding of if, else if, and else statements.",
+      "questions": [
+        {
+          "id": "q2-1",
+          "question": "What does this code output? let x = 10; if (x > 5) { console.log(\"big\"); } else { console.log(\"small\"); }",
+          "options": [
+            "\"big\"",
+            "\"small\"",
+            "Nothing (error)",
+            "Both \"big\" and \"small\""
+          ],
+          "correctIndex": 0,
+          "explanation": "Since x (10) is greater than 5, the if condition is true, so \"big\" is logged."
+        },
+        {
+          "id": "q2-2",
+          "question": "How many branches can an if statement have?",
+          "options": [
+            "Only if and else (2 branches)",
+            "As many else if statements as needed",
+            "If, one else, and no else if",
+            "Only one branch"
+          ],
+          "correctIndex": 1,
+          "explanation": "You can have one if, any number of else if statements, and an optional else."
+        }
+      ]
+    }
+  ],
+  "createdAt": "2026-04-05T10:00:00.000Z",
+  "updatedAt": "2026-04-05T10:00:00.000Z"
+}

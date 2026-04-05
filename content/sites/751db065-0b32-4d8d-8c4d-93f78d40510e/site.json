@@ -1,0 +1,60 @@
+{
+  "title": "Beginner JavaScript",
+  "description": "Learn JavaScript from the ground up with interactive lessons and hands-on coding exercises.",
+  "navPages": [],
+  "sections": [
+    {
+      "id": "551f7082-3cb8-43ab-850a-a72c4a59d7de",
+      "name": "Fundamentals"
+    },
+    {
+      "id": "a8976225-3922-418a-84ff-7815f53b8b39",
+      "name": "Control Flow"
+    },
+    {
+      "id": "39bfdd17-76cf-43c2-9bf0-9f55fb870b0d",
+      "name": "Functions & Objects"
+    },
+    {
+      "id": "c919cb2b-6f91-4ffa-80e5-0de6d09be018",
+      "name": "DOM & Events"
+    }
+  ],
+  "theme": {
+    "primary": "#3b82f6",
+    "sidebarBg": "#f3f4f6",
+    "contentBg": "#ffffff",
+    "textColor": "#1f2937",
+    "darkPrimary": "#60a5fa",
+    "darkSidebarBg": "#1f2937",
+    "darkContentBg": "#111827",
+    "darkTextColor": "#f3f4f6",
+    "radius": 12,
+    "font": "inter",
+    "fontSize": 16,
+    "contentWidth": 900,
+    "sidebarWidth": 260,
+    "showBreadcrumbs": true,
+    "showReadingTime": true
+  },
+  "header": "<h1 style=\"margin:0; font-size:24px; color:#3b82f6;\">📚 Beginner JavaScript</h1>",
+  "footer": "<div style=\"text-align:center; color:#6b7280; font-size:14px;\">Learn to code with interactive lessons and challenges</div>",
+  "home": {
+    "heroTitle": "Learn JavaScript",
+    "heroSubtitle": "Master the fundamentals of JavaScript programming with interactive lessons, code playgrounds, and quizzes.",
+    "showPageGrid": true,
+    "blocks": [
+      {
+        "id": "8f5ff672-81de-4d95-a91f-28f59fc3f97a",
+        "type": "markdown",
+        "content": "## Welcome to Beginner JavaScript!\n\nThis course is designed to take you from zero to confident JavaScript programmer. You'll learn:\n\n- **Core Language Concepts**: Variables, data types, operators, and control flow\n- **Functions**: How to write reusable code\n- **Objects & Arrays**: Working with complex data structures\n- **DOM Manipulation**: Interacting with web pages\n- **Events & Interactivity**: Building interactive applications\n\nEach lesson includes code playgrounds where you can write and test JavaScript in real-time. Try the example below!"
+      },
+      {
+        "id": "41a9eafc-ed8e-42ab-9e35-aac97b30cdc8",
+        "type": "playground",
+        "title": "Try Your First Program",
+        "starterCode": "// Welcome to JavaScript!\nconsole.log('Hello, World!');\n\n// Try changing the text in the quotes\nconsole.log('My name is...');\n\n// Try doing some math\nconsole.log(5 + 3);"
+      }
+    ]
+  }
+}

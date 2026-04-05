@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arrays - Working with Lists — Beginner JavaScript</title>
+  <meta name="description" content="Learn how to create and manipulate arrays to store collections of values." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=mnlmb4ja" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">Beginner JavaScript</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Fundamentals</div><a href="../variables-and-data-types/" class="nav-link" title="Variables &amp; Data Types"><span class="nav-link-icon">📦</span><span class="nav-link-text">Variables &amp; Data Types</span></a><a href="../operators-and-expressions/" class="nav-link" title="Operators &amp; Expressions"><span class="nav-link-icon">➕</span><span class="nav-link-text">Operators &amp; Expressions</span></a></div><div class="nav-section"><div class="nav-section-title">Control Flow</div><a href="../if-statements/" class="nav-link" title="If Statements &amp; Control Flow"><span class="nav-link-icon">🎯</span><span class="nav-link-text">If Statements &amp; Control Flow</span></a><a href="../loops/" class="nav-link" title="Loops - Repeating Code"><span class="nav-link-icon">🔁</span><span class="nav-link-text">Loops - Repeating Code</span></a></div><div class="nav-section"><div class="nav-section-title">Functions &amp; Objects</div><a href="../functions/" class="nav-link" title="Functions - Reusable Code"><span class="nav-link-icon">⚙️</span><span class="nav-link-text">Functions - Reusable Code</span></a><a href="../arrays/" class="nav-link active" title="Arrays - Working with Lists"><span class="nav-link-icon">📋</span><span class="nav-link-text">Arrays - Working with Lists</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#creating-arrays"><span class="toc-num">1.</span> Creating Arrays</a><a class="nav-toc-link nav-toc-level-2" href="#array-methods"><span class="toc-num">2.</span> Array Methods</a><a class="nav-toc-link nav-toc-level-2" href="#advanced-array-methods"><span class="toc-num">3.</span> Advanced Array Methods</a></div><a href="../objects/" class="nav-link" title="Objects - Structured Data"><span class="nav-link-icon">🏗️</span><span class="nav-link-text">Objects - Structured Data</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    <div class="custom-site-header"><h1 style="margin:0; font-size:24px; color:#3b82f6;">📚 Beginner JavaScript</h1></div>
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>Functions &amp; Objects</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Arrays - Working with Lists</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Arrays - Working with Lists</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">Functions &amp; Objects</span>
+            <span>⏱ 2 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><h2 id="creating-arrays" class="block-heading"><span class="heading-num">1.</span> Creating Arrays<a class="heading-anchor" href="#creating-arrays" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>An <strong>array</strong> is a list of values stored in a single variable. Arrays use square brackets <code>[]</code>:</p>
+<pre><code class="language-javascript">let fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;orange&quot;];
+let numbers = [1, 2, 3, 4, 5];
+let mixed = [&quot;text&quot;, 42, true, null];
+</code></pre>
+<p>Each item in an array has an <strong>index</strong> (position). Indexing starts at 0:</p>
+<pre><code class="language-javascript">let fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;orange&quot;];
+//              0          1           2
+
+console.log(fruits[0]);  // &quot;apple&quot;
+console.log(fruits[1]);  // &quot;banana&quot;
+console.log(fruits[2]);  // &quot;orange&quot;
+</code></pre>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Array Basics</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Create an array
+let colors = [&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;];
+
+// Access items by index
+console.log(colors[0]);
+console.log(colors[1]);
+console.log(colors[2]);
+
+// Find the length
+console.log(colors.length);
+
+// Create your own array
+let numbers = [10, 20, 30, 40];
+console.log(numbers[2]);</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h2 id="array-methods" class="block-heading"><span class="heading-num">2.</span> Array Methods<a class="heading-anchor" href="#array-methods" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Arrays have built-in methods (functions) to manipulate them:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Does what</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.push()</code></td>
+<td>Add to end</td>
+<td><code>arr.push(4)</code></td>
+</tr>
+<tr>
+<td><code>.pop()</code></td>
+<td>Remove from end</td>
+<td><code>arr.pop()</code></td>
+</tr>
+<tr>
+<td><code>.shift()</code></td>
+<td>Remove from start</td>
+<td><code>arr.shift()</code></td>
+</tr>
+<tr>
+<td><code>.unshift()</code></td>
+<td>Add to start</td>
+<td><code>arr.unshift(0)</code></td>
+</tr>
+<tr>
+<td><code>.length</code></td>
+<td>Get size</td>
+<td><code>arr.length</code></td>
+</tr>
+<tr>
+<td><code>.includes()</code></td>
+<td>Check if item exists</td>
+<td><code>arr.includes(3)</code></td>
+</tr>
+<tr>
+<td><code>.indexOf()</code></td>
+<td>Find position</td>
+<td><code>arr.indexOf(3)</code></td>
+</tr>
+<tr>
+<td><code>.join()</code></td>
+<td>Combine to string</td>
+<td><code>arr.join(&quot;, &quot;)</code></td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre><code class="language-javascript">let items = [1, 2, 3];
+items.push(4);        // [1, 2, 3, 4]
+items.pop();          // [1, 2, 3]
+items.unshift(0);     // [0, 1, 2, 3]
+</code></pre>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Array Methods</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">let fruits = [&quot;apple&quot;, &quot;banana&quot;];
+
+// Add items
+fruits.push(&quot;orange&quot;);
+console.log(fruits);  // [&quot;apple&quot;, &quot;banana&quot;, &quot;orange&quot;]
+
+// Add to beginning
+fruits.unshift(&quot;mango&quot;);
+console.log(fruits);
+
+// Check length
+console.log(&quot;Length: &quot; + fruits.length);
+
+// Find index of item
+let index = fruits.indexOf(&quot;banana&quot;);
+console.log(&quot;Banana is at index: &quot; + index);
+
+// Check if includes item
+if (fruits.includes(&quot;apple&quot;)) {
+  console.log(&quot;Array contains apple!&quot;);
+}</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h2 id="advanced-array-methods" class="block-heading"><span class="heading-num">3.</span> Advanced Array Methods<a class="heading-anchor" href="#advanced-array-methods" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Powerful methods for working with arrays:</p>
+<pre><code class="language-javascript">let numbers = [1, 2, 3, 4, 5];
+
+// map() - transform each item
+let doubled = numbers.map(num =&gt; num * 2);
+// [2, 4, 6, 8, 10]
+
+// filter() - keep items that match
+let evens = numbers.filter(num =&gt; num % 2 === 0);
+// [2, 4]
+
+// find() - get first matching item
+let firstEven = numbers.find(num =&gt; num % 2 === 0);
+// 2
+
+// some() - check if ANY item matches
+let hasEven = numbers.some(num =&gt; num % 2 === 0);
+// true
+</code></pre>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Advanced Array Methods</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">let numbers = [1, 2, 3, 4, 5];
+
+// Double each number
+let doubled = numbers.map(num =&gt; num * 2);
+console.log(doubled);  // [2, 4, 6, 8, 10]
+
+// Get only even numbers
+let evens = numbers.filter(num =&gt; num % 2 === 0);
+console.log(evens);    // [2, 4]
+
+// Find first even number
+let first = numbers.find(num =&gt; num % 2 === 0);
+console.log(first);    // 2
+
+// Get sum of all numbers
+let sum = numbers.reduce((total, num) =&gt; total + num, 0);
+console.log(sum);      // 15</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../functions/">← Functions - Reusable Code</a>
+  <a class="pn-btn pn-next" href="../objects/">Objects - Structured Data →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="custom-footer-html"><div style="text-align:center; color:#6b7280; font-size:14px;">Learn to code with interactive lessons and challenges</div></div>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnlmb4ja"></script>
+
+
+
+<script src="../playground.js?v=mnlmb4ja"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Functions - Reusable Code — Beginner JavaScript</title>
+  <meta name="description" content="Learn how to create and use functions to make your code reusable and organized." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=mnlmb4ja" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">Beginner JavaScript</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Fundamentals</div><a href="../variables-and-data-types/" class="nav-link" title="Variables &amp; Data Types"><span class="nav-link-icon">📦</span><span class="nav-link-text">Variables &amp; Data Types</span></a><a href="../operators-and-expressions/" class="nav-link" title="Operators &amp; Expressions"><span class="nav-link-icon">➕</span><span class="nav-link-text">Operators &amp; Expressions</span></a></div><div class="nav-section"><div class="nav-section-title">Control Flow</div><a href="../if-statements/" class="nav-link" title="If Statements &amp; Control Flow"><span class="nav-link-icon">🎯</span><span class="nav-link-text">If Statements &amp; Control Flow</span></a><a href="../loops/" class="nav-link" title="Loops - Repeating Code"><span class="nav-link-icon">🔁</span><span class="nav-link-text">Loops - Repeating Code</span></a></div><div class="nav-section"><div class="nav-section-title">Functions &amp; Objects</div><a href="../functions/" class="nav-link active" title="Functions - Reusable Code"><span class="nav-link-icon">⚙️</span><span class="nav-link-text">Functions - Reusable Code</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#what-are-functions"><span class="toc-num">1.</span> What are Functions?</a><a class="nav-toc-link nav-toc-level-2" href="#parameters-and-arguments"><span class="toc-num">2.</span> Parameters and Arguments</a><a class="nav-toc-link nav-toc-level-2" href="#return-values"><span class="toc-num">3.</span> Return Values</a></div><a href="../arrays/" class="nav-link" title="Arrays - Working with Lists"><span class="nav-link-icon">📋</span><span class="nav-link-text">Arrays - Working with Lists</span></a><a href="../objects/" class="nav-link" title="Objects - Structured Data"><span class="nav-link-icon">🏗️</span><span class="nav-link-text">Objects - Structured Data</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    <div class="custom-site-header"><h1 style="margin:0; font-size:24px; color:#3b82f6;">📚 Beginner JavaScript</h1></div>
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>Functions &amp; Objects</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Functions - Reusable Code</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Functions - Reusable Code</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">Functions &amp; Objects</span>
+            <span>⏱ 2 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><h2 id="what-are-functions" class="block-heading"><span class="heading-num">1.</span> What are Functions?<a class="heading-anchor" href="#what-are-functions" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>A <strong>function</strong> is a reusable block of code that performs a specific task. Instead of writing the same code multiple times, you create a function once and call it whenever you need it.</p>
+<p><strong>Basic syntax:</strong></p>
+<pre><code class="language-javascript">function greet() {
+  console.log(&quot;Hello!&quot;);
+}
+
+// Call the function
+greet();  // Prints: Hello!
+greet();  // Prints: Hello!
+</code></pre>
+<p>Functions help you:</p>
+<ul>
+<li>Avoid repeating code</li>
+<li>Organize your code better</li>
+<li>Make code easier to test and maintain</li>
+</ul>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Your First Function</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Create a simple function
+function sayHello() {
+  console.log(&quot;Hello, JavaScript!&quot;);
+}
+
+// Call it multiple times
+sayHello();
+sayHello();
+sayHello();
+
+// Create your own function
+function goodbye() {
+  console.log(&quot;Goodbye!&quot;);
+}
+
+goodbye();</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h2 id="parameters-and-arguments" class="block-heading"><span class="heading-num">2.</span> Parameters and Arguments<a class="heading-anchor" href="#parameters-and-arguments" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Functions can accept <strong>parameters</strong> (input values) to make them more flexible:</p>
+<pre><code class="language-javascript">function greet(name) {
+  console.log(&quot;Hello, &quot; + name);
+}
+
+greet(&quot;Alice&quot;);  // Prints: Hello, Alice
+greet(&quot;Bob&quot;);    // Prints: Hello, Bob
+</code></pre>
+<p>You can have multiple parameters:</p>
+<pre><code class="language-javascript">function add(a, b) {
+  console.log(a + b);
+}
+
+add(5, 3);  // Prints: 8
+add(10, 20); // Prints: 30
+</code></pre>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Functions with Parameters</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Function with one parameter
+function greet(name) {
+  console.log(&quot;Hello, &quot; + name);
+}
+
+greet(&quot;Sarah&quot;);
+greet(&quot;Michael&quot;);
+
+// Function with multiple parameters
+function add(x, y) {
+  console.log(x + y);
+}
+
+add(5, 10);
+add(100, 50);
+
+// Create your own function with parameters</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h2 id="return-values" class="block-heading"><span class="heading-num">3.</span> Return Values<a class="heading-anchor" href="#return-values" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Functions can <strong>return</strong> values instead of just printing:</p>
+<pre><code class="language-javascript">function multiply(a, b) {
+  return a * b;
+}
+
+let result = multiply(5, 3);
+console.log(result);  // Prints: 15
+</code></pre>
+<p>When you use <code>return</code>, the function stops executing and sends back the value:</p>
+<pre><code class="language-javascript">function checkAge(age) {
+  if (age &gt;= 18) {
+    return &quot;You are an adult&quot;;
+  } else {
+    return &quot;You are a minor&quot;;
+  }
+}
+
+let message = checkAge(25);
+console.log(message);  // Prints: You are an adult
+</code></pre>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Return Values</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Function that returns a value
+function square(n) {
+  return n * n;
+}
+
+let result = square(4);
+console.log(result);  // 16
+
+// Function with multiple returns
+function isEven(num) {
+  if (num % 2 === 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+console.log(isEven(10));  // true
+console.log(isEven(7));   // false
+
+// Function that returns a string
+function getGrade(score) {
+  if (score &gt;= 90) return &quot;A&quot;;
+  if (score &gt;= 80) return &quot;B&quot;;
+  if (score &gt;= 70) return &quot;C&quot;;
+  return &quot;F&quot;;
+}
+
+console.log(getGrade(85));</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../loops/">← Loops - Repeating Code</a>
+  <a class="pn-btn pn-next" href="../arrays/">Arrays - Working with Lists →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="custom-footer-html"><div style="text-align:center; color:#6b7280; font-size:14px;">Learn to code with interactive lessons and challenges</div></div>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnlmb4ja"></script>
+
+
+
+<script src="../playground.js?v=mnlmb4ja"></script>
+
+
+
+</body>
+</html>

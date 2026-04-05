@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Operators &amp; Expressions — Beginner JavaScript</title>
+  <meta name="description" content="Learn how to use operators to perform calculations and comparisons." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=mnlmb4ja" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">Beginner JavaScript</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Fundamentals</div><a href="../variables-and-data-types/" class="nav-link" title="Variables &amp; Data Types"><span class="nav-link-icon">📦</span><span class="nav-link-text">Variables &amp; Data Types</span></a><a href="../operators-and-expressions/" class="nav-link active" title="Operators &amp; Expressions"><span class="nav-link-icon">➕</span><span class="nav-link-text">Operators &amp; Expressions</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#arithmetic-operators"><span class="toc-num">1.</span> Arithmetic Operators</a><a class="nav-toc-link nav-toc-level-2" href="#comparison-operators"><span class="toc-num">2.</span> Comparison Operators</a><a class="nav-toc-link nav-toc-level-2" href="#logical-operators"><span class="toc-num">3.</span> Logical Operators</a></div></div><div class="nav-section"><div class="nav-section-title">Control Flow</div><a href="../if-statements/" class="nav-link" title="If Statements &amp; Control Flow"><span class="nav-link-icon">🎯</span><span class="nav-link-text">If Statements &amp; Control Flow</span></a><a href="../loops/" class="nav-link" title="Loops - Repeating Code"><span class="nav-link-icon">🔁</span><span class="nav-link-text">Loops - Repeating Code</span></a></div><div class="nav-section"><div class="nav-section-title">Functions &amp; Objects</div><a href="../functions/" class="nav-link" title="Functions - Reusable Code"><span class="nav-link-icon">⚙️</span><span class="nav-link-text">Functions - Reusable Code</span></a><a href="../arrays/" class="nav-link" title="Arrays - Working with Lists"><span class="nav-link-icon">📋</span><span class="nav-link-text">Arrays - Working with Lists</span></a><a href="../objects/" class="nav-link" title="Objects - Structured Data"><span class="nav-link-icon">🏗️</span><span class="nav-link-text">Objects - Structured Data</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    <div class="custom-site-header"><h1 style="margin:0; font-size:24px; color:#3b82f6;">📚 Beginner JavaScript</h1></div>
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>Fundamentals</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Operators &amp; Expressions</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Operators &amp; Expressions</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">Fundamentals</span>
+            <span>⏱ 2 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><h2 id="arithmetic-operators" class="block-heading"><span class="heading-num">1.</span> Arithmetic Operators<a class="heading-anchor" href="#arithmetic-operators" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Arithmetic operators perform mathematical calculations:</p>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Name</th>
+<th>Example</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>+</td>
+<td>Addition</td>
+<td><code>10 + 5</code></td>
+<td>15</td>
+</tr>
+<tr>
+<td>-</td>
+<td>Subtraction</td>
+<td><code>10 - 5</code></td>
+<td>5</td>
+</tr>
+<tr>
+<td>*</td>
+<td>Multiplication</td>
+<td><code>10 * 5</code></td>
+<td>50</td>
+</tr>
+<tr>
+<td>/</td>
+<td>Division</td>
+<td><code>10 / 5</code></td>
+<td>2</td>
+</tr>
+<tr>
+<td>%</td>
+<td>Modulo (remainder)</td>
+<td><code>10 % 3</code></td>
+<td>1</td>
+</tr>
+<tr>
+<td>**</td>
+<td>Exponentiation</td>
+<td><code>2 ** 3</code></td>
+<td>8</td>
+</tr>
+</tbody></table>
+<p>You can combine these in expressions: <code>(5 + 3) * 2 = 16</code></p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Arithmetic Practice</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Try different arithmetic operations
+let a = 20;
+let b = 3;
+
+console.log(&quot;Addition: &quot; + (a + b));
+console.log(&quot;Subtraction: &quot; + (a - b));
+console.log(&quot;Multiplication: &quot; + (a * b));
+console.log(&quot;Division: &quot; + (a / b));
+console.log(&quot;Remainder: &quot; + (a % b));
+
+// Try your own calculations!
+console.log(5 + 5 * 2);  // What order does this calculate?</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h2 id="comparison-operators" class="block-heading"><span class="heading-num">2.</span> Comparison Operators<a class="heading-anchor" href="#comparison-operators" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Comparison operators compare two values and return true or false:</p>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>==</td>
+<td>Equal (loose)</td>
+<td><code>5 == &quot;5&quot;</code> returns true</td>
+</tr>
+<tr>
+<td>===</td>
+<td>Equal (strict)</td>
+<td><code>5 === &quot;5&quot;</code> returns false</td>
+</tr>
+<tr>
+<td>!=</td>
+<td>Not equal</td>
+<td><code>5 != 3</code> returns true</td>
+</tr>
+<tr>
+<td>!==</td>
+<td>Not equal (strict)</td>
+<td><code>5 !== &quot;5&quot;</code> returns true</td>
+</tr>
+<tr>
+<td>&gt;</td>
+<td>Greater than</td>
+<td><code>10 &gt; 5</code> returns true</td>
+</tr>
+<tr>
+<td>&lt;</td>
+<td>Less than</td>
+<td><code>3 &lt; 5</code> returns true</td>
+</tr>
+<tr>
+<td>&gt;=</td>
+<td>Greater or equal</td>
+<td><code>5 &gt;= 5</code> returns true</td>
+</tr>
+<tr>
+<td>&lt;=</td>
+<td>Less or equal</td>
+<td><code>3 &lt;= 5</code> returns true</td>
+</tr>
+</tbody></table>
+<p><strong>Pro Tip</strong>: Always use <code>===</code> and <code>!==</code> instead of <code>==</code> and <code>!=</code>!</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Comparison Practice</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Comparisons always return true or false
+console.log(10 &gt; 5);      // true
+console.log(10 &lt; 5);      // false
+console.log(10 === 10);   // true
+console.log(10 === &quot;10&quot;); // false (different types!)
+
+// Try your own comparisons
+let x = 15;
+let y = 20;
+
+console.log(x &lt; y);
+console.log(x === y);</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h2 id="logical-operators" class="block-heading"><span class="heading-num">3.</span> Logical Operators<a class="heading-anchor" href="#logical-operators" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Logical operators combine boolean values:</p>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Name</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&amp;&amp;</td>
+<td>AND</td>
+<td>Both must be true</td>
+<td><code>(5 &gt; 3) &amp;&amp; (3 &gt; 1)</code> = true</td>
+</tr>
+<tr>
+<td>||</td>
+<td>OR</td>
+<td>At least one must be true</td>
+<td><code>(5 &gt; 3) || (1 &gt; 3)</code> = true</td>
+</tr>
+<tr>
+<td>!</td>
+<td>NOT</td>
+<td>Reverses true/false</td>
+<td><code>!(5 &gt; 3)</code> = false</td>
+</tr>
+</tbody></table>
+<p>These are essential for creating complex conditions in your code.</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Logical Operators</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// AND (&amp;&amp;) - both must be true
+console.log(true &amp;&amp; true);    // true
+console.log(true &amp;&amp; false);   // false
+
+// OR (||) - at least one must be true
+console.log(true || false);   // true
+console.log(false || false);  // false
+
+// NOT (!) - reverses the value
+console.log(!true);           // false
+console.log(!false);          // true
+
+// Real examples
+let age = 25;
+let hasLicense = true;
+console.log(age &gt;= 18 &amp;&amp; hasLicense);  // Can drive?</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../variables-and-data-types/">← Variables &amp; Data Types</a>
+  <a class="pn-btn pn-next" href="../if-statements/">If Statements &amp; Control Flow →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="custom-footer-html"><div style="text-align:center; color:#6b7280; font-size:14px;">Learn to code with interactive lessons and challenges</div></div>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnlmb4ja"></script>
+
+
+
+<script src="../playground.js?v=mnlmb4ja"></script>
+
+
+
+</body>
+</html>

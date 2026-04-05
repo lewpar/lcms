@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Variables &amp; Data Types — Beginner JavaScript</title>
+  <meta name="description" content="Learn how to create variables and work with different data types in JavaScript." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=mnlmb4ja" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">Beginner JavaScript</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Fundamentals</div><a href="../variables-and-data-types/" class="nav-link active" title="Variables &amp; Data Types"><span class="nav-link-icon">📦</span><span class="nav-link-text">Variables &amp; Data Types</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#what-are-variables"><span class="toc-num">1.</span> What are Variables?</a><a class="nav-toc-link nav-toc-level-2" href="#data-types"><span class="toc-num">2.</span> Data Types</a><a class="nav-toc-link nav-toc-level-2" href="#working-with-strings"><span class="toc-num">3.</span> Working with Strings</a></div><a href="../operators-and-expressions/" class="nav-link" title="Operators &amp; Expressions"><span class="nav-link-icon">➕</span><span class="nav-link-text">Operators &amp; Expressions</span></a></div><div class="nav-section"><div class="nav-section-title">Control Flow</div><a href="../if-statements/" class="nav-link" title="If Statements &amp; Control Flow"><span class="nav-link-icon">🎯</span><span class="nav-link-text">If Statements &amp; Control Flow</span></a><a href="../loops/" class="nav-link" title="Loops - Repeating Code"><span class="nav-link-icon">🔁</span><span class="nav-link-text">Loops - Repeating Code</span></a></div><div class="nav-section"><div class="nav-section-title">Functions &amp; Objects</div><a href="../functions/" class="nav-link" title="Functions - Reusable Code"><span class="nav-link-icon">⚙️</span><span class="nav-link-text">Functions - Reusable Code</span></a><a href="../arrays/" class="nav-link" title="Arrays - Working with Lists"><span class="nav-link-icon">📋</span><span class="nav-link-text">Arrays - Working with Lists</span></a><a href="../objects/" class="nav-link" title="Objects - Structured Data"><span class="nav-link-icon">🏗️</span><span class="nav-link-text">Objects - Structured Data</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    <div class="custom-site-header"><h1 style="margin:0; font-size:24px; color:#3b82f6;">📚 Beginner JavaScript</h1></div>
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>Fundamentals</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Variables &amp; Data Types</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Variables &amp; Data Types</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">Fundamentals</span>
+            <span>⏱ 2 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><h2 id="what-are-variables" class="block-heading"><span class="heading-num">1.</span> What are Variables?<a class="heading-anchor" href="#what-are-variables" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>A <strong>variable</strong> is a container that stores a value. Think of it like a labeled box where you can put data and retrieve it later.</p>
+<p>In JavaScript, you can create variables using three keywords:</p>
+<ul>
+<li><code>var</code> - old way (avoid in modern code)</li>
+<li><code>let</code> - modern, preferred choice</li>
+<li><code>const</code> - for values that don&#39;t change</li>
+</ul>
+<h2 id="creating-variables">Creating Variables</h2>
+<p>Here&#39;s the basic syntax:</p>
+<pre><code class="language-javascript">let name = &quot;Alice&quot;;
+let age = 25;
+const country = &quot;USA&quot;;
+</code></pre>
+<p>Once you create a variable, you can use it anywhere in your code!</p>
+</div>
+<h2 id="data-types" class="block-heading"><span class="heading-num">2.</span> Data Types<a class="heading-anchor" href="#data-types" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>JavaScript has several built-in data types:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Example</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>String</td>
+<td><code>&quot;Hello&quot;</code> or <code>&#39;World&#39;</code></td>
+<td>Text data, enclosed in quotes</td>
+</tr>
+<tr>
+<td>Number</td>
+<td><code>42</code> or <code>3.14</code></td>
+<td>Integers and decimals</td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td><code>true</code> or <code>false</code></td>
+<td>True/false values</td>
+</tr>
+<tr>
+<td>Array</td>
+<td><code>[1, 2, 3]</code></td>
+<td>List of values</td>
+</tr>
+<tr>
+<td>Object</td>
+<td><code>{name: &quot;Bob&quot;}</code></td>
+<td>Collection of key-value pairs</td>
+</tr>
+<tr>
+<td>null</td>
+<td><code>null</code></td>
+<td>Intentionally empty value</td>
+</tr>
+<tr>
+<td>undefined</td>
+<td><code>undefined</code></td>
+<td>Uninitialized variable</td>
+</tr>
+</tbody></table>
+<p>You can check the type of a value using the <code>typeof</code> operator.</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Try Creating Variables</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Create some variables
+let firstName = &quot;Sarah&quot;;
+let age = 28;
+let isStudent = true;
+
+// Print them to the console
+console.log(firstName);
+console.log(age);
+console.log(isStudent);
+
+// Check their types
+console.log(typeof firstName);
+console.log(typeof age);
+console.log(typeof isStudent);
+
+// TODO: Create your own variable below!</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h2 id="working-with-strings" class="block-heading"><span class="heading-num">3.</span> Working with Strings<a class="heading-anchor" href="#working-with-strings" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Strings are pieces of text. You can combine them, find their length, and transform them:</p>
+<pre><code class="language-javascript">let greeting = &quot;Hello&quot;;
+let name = &quot;World&quot;;
+
+// Combine strings (concatenation)
+let message = greeting + &quot; &quot; + name;
+
+// String methods
+greeting.length;          // 5
+greeting.toUpperCase();   // &quot;HELLO&quot;
+greeting.toLowerCase();   // &quot;hello&quot;
+</code></pre>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">String Practice</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Practice with strings
+let message = &quot;JavaScript is fun!&quot;;
+
+console.log(message);
+console.log(message.length);
+console.log(message.toUpperCase());
+
+// Create your own string and try different methods
+let myString = &quot;hello world&quot;;
+console.log(myString);</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<div class="quiz-block" data-questions='[{"id":"q1-1","question":"Which keyword is preferred for creating variables in modern JavaScript?","options":["var","let","const","Both let and const (depending on if the value changes)"],"correctIndex":3,"explanation":"Both `let` and `const` are preferred. Use `const` by default, and only use `let` if the variable needs to be reassigned."},{"id":"q1-2","question":"What will `typeof 42` return?","options":["\"integer\"","\"number\"","\"int\"","\"42\""],"correctIndex":1,"explanation":"JavaScript doesn\u0027t distinguish between integers and decimals - both are the \"number\" type."},{"id":"q1-3","question":"How do you combine two strings in JavaScript?","options":["Using the + operator","Using the \u0026 operator","Using the + operator or template literals","You cannot combine strings"],"correctIndex":2,"explanation":"You can use the + operator or template literals (backticks) like `${name}`."}]' data-quiz-id="v1-quiz-1">
+  <div class="quiz-block-header">
+    <span class="quiz-block-header-title">Variables &amp; Data Types Quiz</span>
+    <span class="quiz-block-header-badge">3 questions</span>
+  </div>
+  <div class="qs-start">
+    <h3 class="qs-title">Variables &amp; Data Types Quiz</h3>
+    <p class="qs-desc">Test your understanding of variables and data types.</p><p class="qs-count">3 questions</p>
+    <button class="qs-start-btn quiz-btn" type="button">Start Quiz →</button>
+    <div class="qs-resume" hidden>
+      <p class="qs-resume-status"></p>
+      <div class="qs-resume-actions">
+        <button class="qs-continue-btn quiz-btn" type="button">Continue →</button>
+        <button class="qs-restart-btn quiz-btn quiz-btn-outline" type="button">↺ Start Over</button>
+      </div>
+    </div>
+  </div>
+  <div class="qs-question" hidden>
+    <div class="qs-progress-wrap">
+      <div class="qs-progress-bar"><div class="qs-progress-fill"></div></div>
+      <span class="qs-progress-text">1 / 3</span>
+    </div>
+    <div class="qs-q-text"></div>
+    <div class="qs-media" hidden></div>
+    <div class="qs-media-sep" hidden></div>
+    <ul class="qs-options" role="list"></ul>
+    <div class="qs-nav">
+      <button class="qs-submit quiz-btn" type="button" disabled>Submit Answer</button>
+    </div>
+    <div class="qs-feedback" hidden></div>
+    <div class="qs-explanation" hidden></div>
+    <div class="qs-next-nav" hidden>
+      <button class="qs-next quiz-btn quiz-btn-outline" type="button" hidden>Next →</button>
+      <button class="qs-finish quiz-btn quiz-btn-outline" type="button" hidden>See Results →</button>
+    </div>
+  </div>
+  <div class="qs-results" hidden>
+    <p class="qs-results-title">Quiz Complete</p>
+    <div class="qs-score-ring"><div class="qs-score-inner">
+      <div class="qs-score-num"></div><div class="qs-score-lbl">correct</div>
+    </div></div>
+    <div class="qs-score-pct"></div>
+    <div class="qs-review"></div>
+    <button class="qs-retry-btn quiz-btn" type="button">↺ Try Again</button>
+  </div>
+</div></div>
+        
+<nav class="page-prev-next">
+  <span></span>
+  <a class="pn-btn pn-next" href="../operators-and-expressions/">Operators &amp; Expressions →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="custom-footer-html"><div style="text-align:center; color:#6b7280; font-size:14px;">Learn to code with interactive lessons and challenges</div></div>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnlmb4ja"></script>
+<script src="../quiz.js?v=mnlmb4ja"></script>
+
+
+<script src="../playground.js?v=mnlmb4ja"></script>
+
+
+
+</body>
+</html>

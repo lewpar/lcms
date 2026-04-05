@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>If Statements &amp; Control Flow — Beginner JavaScript</title>
+  <meta name="description" content="Learn how to make decisions in your code with if, else if, and else statements." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=mnlmb4ja" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">Beginner JavaScript</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Fundamentals</div><a href="../variables-and-data-types/" class="nav-link" title="Variables &amp; Data Types"><span class="nav-link-icon">📦</span><span class="nav-link-text">Variables &amp; Data Types</span></a><a href="../operators-and-expressions/" class="nav-link" title="Operators &amp; Expressions"><span class="nav-link-icon">➕</span><span class="nav-link-text">Operators &amp; Expressions</span></a></div><div class="nav-section"><div class="nav-section-title">Control Flow</div><a href="../if-statements/" class="nav-link active" title="If Statements &amp; Control Flow"><span class="nav-link-icon">🎯</span><span class="nav-link-text">If Statements &amp; Control Flow</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#making-decisions-with-if"><span class="toc-num">1.</span> Making Decisions with If</a><a class="nav-toc-link nav-toc-level-2" href="#if-else-statements"><span class="toc-num">2.</span> If...Else Statements</a><a class="nav-toc-link nav-toc-level-2" href="#if-else-if-else"><span class="toc-num">3.</span> If...Else If...Else</a></div><a href="../loops/" class="nav-link" title="Loops - Repeating Code"><span class="nav-link-icon">🔁</span><span class="nav-link-text">Loops - Repeating Code</span></a></div><div class="nav-section"><div class="nav-section-title">Functions &amp; Objects</div><a href="../functions/" class="nav-link" title="Functions - Reusable Code"><span class="nav-link-icon">⚙️</span><span class="nav-link-text">Functions - Reusable Code</span></a><a href="../arrays/" class="nav-link" title="Arrays - Working with Lists"><span class="nav-link-icon">📋</span><span class="nav-link-text">Arrays - Working with Lists</span></a><a href="../objects/" class="nav-link" title="Objects - Structured Data"><span class="nav-link-icon">🏗️</span><span class="nav-link-text">Objects - Structured Data</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    <div class="custom-site-header"><h1 style="margin:0; font-size:24px; color:#3b82f6;">📚 Beginner JavaScript</h1></div>
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>Control Flow</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>If Statements &amp; Control Flow</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">If Statements &amp; Control Flow</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">Control Flow</span>
+            <span>⏱ 2 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><h2 id="making-decisions-with-if" class="block-heading"><span class="heading-num">1.</span> Making Decisions with If<a class="heading-anchor" href="#making-decisions-with-if" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>An <code>if</code> statement lets your code make decisions based on conditions:</p>
+<pre><code class="language-javascript">if (condition) {
+  // This code runs if condition is true
+}
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code class="language-javascript">let age = 25;
+if (age &gt;= 18) {
+  console.log(&quot;You are an adult!&quot;);
+}
+</code></pre>
+<p>The code inside the braces <code>{}</code> only runs if the condition is <code>true</code>.</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Simple If Statement</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">let score = 85;
+
+if (score &gt;= 80) {
+  console.log(&quot;Great job! You got an A!&quot;);
+}
+
+// Try changing the score value
+let temperature = 30;
+if (temperature &gt; 25) {
+  console.log(&quot;It&#x27;s hot outside!&quot;);
+}</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h2 id="if-else-statements" class="block-heading"><span class="heading-num">2.</span> If...Else Statements<a class="heading-anchor" href="#if-else-statements" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Use <code>else</code> to run code when the condition is <code>false</code>:</p>
+<pre><code class="language-javascript">if (condition) {
+  // Runs if condition is true
+} else {
+  // Runs if condition is false
+}
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code class="language-javascript">let number = 5;
+if (number &gt; 10) {
+  console.log(&quot;Number is greater than 10&quot;);
+} else {
+  console.log(&quot;Number is 10 or less&quot;);
+}
+</code></pre>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">If...Else Practice</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">let age = 15;
+
+if (age &gt;= 18) {
+  console.log(&quot;You can vote!&quot;);
+} else {
+  console.log(&quot;You cannot vote yet.&quot;);
+}
+
+// Try with different ages
+let grade = 72;
+if (grade &gt;= 70) {
+  console.log(&quot;You passed!&quot;);
+} else {
+  console.log(&quot;You need to study more.&quot;);
+}</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h2 id="if-else-if-else" class="block-heading"><span class="heading-num">3.</span> If...Else If...Else<a class="heading-anchor" href="#if-else-if-else" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Use <code>else if</code> to check multiple conditions:</p>
+<pre><code class="language-javascript">if (condition1) {
+  // Runs if condition1 is true
+} else if (condition2) {
+  // Runs if condition2 is true
+} else {
+  // Runs if all conditions are false
+}
+</code></pre>
+<p><strong>Example:</strong></p>
+<pre><code class="language-javascript">let score = 85;
+if (score &gt;= 90) {
+  console.log(&quot;A - Excellent!&quot;);
+} else if (score &gt;= 80) {
+  console.log(&quot;B - Good!&quot;);
+} else if (score &gt;= 70) {
+  console.log(&quot;C - Passing&quot;);
+} else {
+  console.log(&quot;F - Try again&quot;);
+}
+</code></pre>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Grade Calculator</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">let score = 85;
+
+if (score &gt;= 90) {
+  console.log(&quot;Grade: A&quot;);
+} else if (score &gt;= 80) {
+  console.log(&quot;Grade: B&quot;);
+} else if (score &gt;= 70) {
+  console.log(&quot;Grade: C&quot;);
+} else if (score &gt;= 60) {
+  console.log(&quot;Grade: D&quot;);
+} else {
+  console.log(&quot;Grade: F&quot;);
+}
+
+// Try different scores!</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<div class="quiz-block" data-questions='[{"id":"q2-1","question":"What does this code output? let x = 10; if (x \u003e 5) { console.log(\"big\"); } else { console.log(\"small\"); }","options":["\"big\"","\"small\"","Nothing (error)","Both \"big\" and \"small\""],"correctIndex":0,"explanation":"Since x (10) is greater than 5, the if condition is true, so \"big\" is logged."},{"id":"q2-2","question":"How many branches can an if statement have?","options":["Only if and else (2 branches)","As many else if statements as needed","If, one else, and no else if","Only one branch"],"correctIndex":1,"explanation":"You can have one if, any number of else if statements, and an optional else."}]' data-quiz-id="if-quiz-1">
+  <div class="quiz-block-header">
+    <span class="quiz-block-header-title">If Statements Quiz</span>
+    <span class="quiz-block-header-badge">2 questions</span>
+  </div>
+  <div class="qs-start">
+    <h3 class="qs-title">If Statements Quiz</h3>
+    <p class="qs-desc">Test your understanding of if, else if, and else statements.</p><p class="qs-count">2 questions</p>
+    <button class="qs-start-btn quiz-btn" type="button">Start Quiz →</button>
+    <div class="qs-resume" hidden>
+      <p class="qs-resume-status"></p>
+      <div class="qs-resume-actions">
+        <button class="qs-continue-btn quiz-btn" type="button">Continue →</button>
+        <button class="qs-restart-btn quiz-btn quiz-btn-outline" type="button">↺ Start Over</button>
+      </div>
+    </div>
+  </div>
+  <div class="qs-question" hidden>
+    <div class="qs-progress-wrap">
+      <div class="qs-progress-bar"><div class="qs-progress-fill"></div></div>
+      <span class="qs-progress-text">1 / 2</span>
+    </div>
+    <div class="qs-q-text"></div>
+    <div class="qs-media" hidden></div>
+    <div class="qs-media-sep" hidden></div>
+    <ul class="qs-options" role="list"></ul>
+    <div class="qs-nav">
+      <button class="qs-submit quiz-btn" type="button" disabled>Submit Answer</button>
+    </div>
+    <div class="qs-feedback" hidden></div>
+    <div class="qs-explanation" hidden></div>
+    <div class="qs-next-nav" hidden>
+      <button class="qs-next quiz-btn quiz-btn-outline" type="button" hidden>Next →</button>
+      <button class="qs-finish quiz-btn quiz-btn-outline" type="button" hidden>See Results →</button>
+    </div>
+  </div>
+  <div class="qs-results" hidden>
+    <p class="qs-results-title">Quiz Complete</p>
+    <div class="qs-score-ring"><div class="qs-score-inner">
+      <div class="qs-score-num"></div><div class="qs-score-lbl">correct</div>
+    </div></div>
+    <div class="qs-score-pct"></div>
+    <div class="qs-review"></div>
+    <button class="qs-retry-btn quiz-btn" type="button">↺ Try Again</button>
+  </div>
+</div></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../operators-and-expressions/">← Operators &amp; Expressions</a>
+  <a class="pn-btn pn-next" href="../loops/">Loops - Repeating Code →</a>
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="custom-footer-html"><div style="text-align:center; color:#6b7280; font-size:14px;">Learn to code with interactive lessons and challenges</div></div>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnlmb4ja"></script>
+<script src="../quiz.js?v=mnlmb4ja"></script>
+
+
+<script src="../playground.js?v=mnlmb4ja"></script>
+
+
+
+</body>
+</html>

@@ -10,13 +10,8 @@
     "slug": "fetchjs"
   },
   {
-    "id": "64187c58-1d65-4f6d-8e15-03a0b2af6c7d",
-    "name": "Fetching with JavaScript",
-    "slug": "fetch-js"
-  },
-  {
-    "id": "f14b6b73-6154-476d-afac-c8d9a52ff50b",
-    "name": "JavaScript Fundamentals",
-    "slug": "js-fundamentals"
+    "id": "751db065-0b32-4d8d-8c4d-93f78d40510e",
+    "name": "Beginner JavaScript",
+    "slug": "beginner-javascript"
   }
 ]

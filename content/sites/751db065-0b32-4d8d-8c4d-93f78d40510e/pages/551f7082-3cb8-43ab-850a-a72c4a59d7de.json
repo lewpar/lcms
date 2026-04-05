@@ -1,0 +1,102 @@
+{
+  "id": "551f7082-3cb8-43ab-850a-a72c4a59d7de",
+  "title": "Variables & Data Types",
+  "slug": "variables-and-data-types",
+  "section": "551f7082-3cb8-43ab-850a-a72c4a59d7de",
+  "description": "Learn how to create variables and work with different data types in JavaScript.",
+  "icon": "📦",
+  "order": 0,
+  "blocks": [
+    {
+      "id": "v1-heading-1",
+      "type": "heading",
+      "level": 2,
+      "text": "What are Variables?"
+    },
+    {
+      "id": "v1-markdown-1",
+      "type": "markdown",
+      "content": "A **variable** is a container that stores a value. Think of it like a labeled box where you can put data and retrieve it later.\n\nIn JavaScript, you can create variables using three keywords:\n- `var` - old way (avoid in modern code)\n- `let` - modern, preferred choice\n- `const` - for values that don't change\n\n## Creating Variables\n\nHere's the basic syntax:\n\n```javascript\nlet name = \"Alice\";\nlet age = 25;\nconst country = \"USA\";\n```\n\nOnce you create a variable, you can use it anywhere in your code!"
+    },
+    {
+      "id": "v1-heading-2",
+      "type": "heading",
+      "level": 2,
+      "text": "Data Types"
+    },
+    {
+      "id": "v1-markdown-2",
+      "type": "markdown",
+      "content": "JavaScript has several built-in data types:\n\n| Type | Example | Description |\n|------|---------|-------------|\n| String | `\"Hello\"` or `'World'` | Text data, enclosed in quotes |\n| Number | `42` or `3.14` | Integers and decimals |\n| Boolean | `true` or `false` | True/false values |\n| Array | `[1, 2, 3]` | List of values |\n| Object | `{name: \"Bob\"}` | Collection of key-value pairs |\n| null | `null` | Intentionally empty value |\n| undefined | `undefined` | Uninitialized variable |\n\nYou can check the type of a value using the `typeof` operator."
+    },
+    {
+      "id": "v1-playground-1",
+      "type": "playground",
+      "title": "Try Creating Variables",
+      "starterCode": "// Create some variables\nlet firstName = \"Sarah\";\nlet age = 28;\nlet isStudent = true;\n\n// Print them to the console\nconsole.log(firstName);\nconsole.log(age);\nconsole.log(isStudent);\n\n// Check their types\nconsole.log(typeof firstName);\nconsole.log(typeof age);\nconsole.log(typeof isStudent);\n\n// TODO: Create your own variable below!"
+    },
+    {
+      "id": "v1-heading-3",
+      "type": "heading",
+      "level": 2,
+      "text": "Working with Strings"
+    },
+    {
+      "id": "v1-markdown-3",
+      "type": "markdown",
+      "content": "Strings are pieces of text. You can combine them, find their length, and transform them:\n\n```javascript\nlet greeting = \"Hello\";\nlet name = \"World\";\n\n// Combine strings (concatenation)\nlet message = greeting + \" \" + name;\n\n// String methods\ngreeting.length;          // 5\ngreeting.toUpperCase();   // \"HELLO\"\ngreeting.toLowerCase();   // \"hello\"\n```"
+    },
+    {
+      "id": "v1-playground-2",
+      "type": "playground",
+      "title": "String Practice",
+      "starterCode": "// Practice with strings\nlet message = \"JavaScript is fun!\";\n\nconsole.log(message);\nconsole.log(message.length);\nconsole.log(message.toUpperCase());\n\n// Create your own string and try different methods\nlet myString = \"hello world\";\nconsole.log(myString);"
+    },
+    {
+      "id": "v1-quiz-1",
+      "type": "quiz",
+      "title": "Variables & Data Types Quiz",
+      "description": "Test your understanding of variables and data types.",
+      "questions": [
+        {
+          "id": "q1-1",
+          "question": "Which keyword is preferred for creating variables in modern JavaScript?",
+          "options": [
+            "var",
+            "let",
+            "const",
+            "Both let and const (depending on if the value changes)"
+          ],
+          "correctIndex": 3,
+          "explanation": "Both `let` and `const` are preferred. Use `const` by default, and only use `let` if the variable needs to be reassigned."
+        },
+        {
+          "id": "q1-2",
+          "question": "What will `typeof 42` return?",
+          "options": [
+            "\"integer\"",
+            "\"number\"",
+            "\"int\"",
+            "\"42\""
+          ],
+          "correctIndex": 1,
+          "explanation": "JavaScript doesn't distinguish between integers and decimals - both are the \"number\" type."
+        },
+        {
+          "id": "q1-3",
+          "question": "How do you combine two strings in JavaScript?",
+          "options": [
+            "Using the + operator",
+            "Using the & operator",
+            "Using the + operator or template literals",
+            "You cannot combine strings"
+          ],
+          "correctIndex": 2,
+          "explanation": "You can use the + operator or template literals (backticks) like `${name}`."
+        }
+      ]
+    }
+  ],
+  "createdAt": "2026-04-05T10:00:00.000Z",
+  "updatedAt": "2026-04-05T10:00:00.000Z"
+}

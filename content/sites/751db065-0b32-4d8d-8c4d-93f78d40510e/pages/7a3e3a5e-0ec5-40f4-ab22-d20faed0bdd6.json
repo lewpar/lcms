@@ -1,0 +1,64 @@
+{
+  "id": "7a3e3a5e-0ec5-40f4-ab22-d20faed0bdd6",
+  "title": "Arrays - Working with Lists",
+  "slug": "arrays",
+  "section": "39bfdd17-76cf-43c2-9bf0-9f55fb870b0d",
+  "description": "Learn how to create and manipulate arrays to store collections of values.",
+  "icon": "📋",
+  "order": 5,
+  "blocks": [
+    {
+      "id": "arr-heading-1",
+      "type": "heading",
+      "level": 2,
+      "text": "Creating Arrays"
+    },
+    {
+      "id": "arr-markdown-1",
+      "type": "markdown",
+      "content": "An **array** is a list of values stored in a single variable. Arrays use square brackets `[]`:\n\n```javascript\nlet fruits = [\"apple\", \"banana\", \"orange\"];\nlet numbers = [1, 2, 3, 4, 5];\nlet mixed = [\"text\", 42, true, null];\n```\n\nEach item in an array has an **index** (position). Indexing starts at 0:\n\n```javascript\nlet fruits = [\"apple\", \"banana\", \"orange\"];\n//              0          1           2\n\nconsole.log(fruits[0]);  // \"apple\"\nconsole.log(fruits[1]);  // \"banana\"\nconsole.log(fruits[2]);  // \"orange\"\n```"
+    },
+    {
+      "id": "arr-playground-1",
+      "type": "playground",
+      "title": "Array Basics",
+      "starterCode": "// Create an array\nlet colors = [\"red\", \"green\", \"blue\"];\n\n// Access items by index\nconsole.log(colors[0]);\nconsole.log(colors[1]);\nconsole.log(colors[2]);\n\n// Find the length\nconsole.log(colors.length);\n\n// Create your own array\nlet numbers = [10, 20, 30, 40];\nconsole.log(numbers[2]);"
+    },
+    {
+      "id": "arr-heading-2",
+      "type": "heading",
+      "level": 2,
+      "text": "Array Methods"
+    },
+    {
+      "id": "arr-markdown-2",
+      "type": "markdown",
+      "content": "Arrays have built-in methods (functions) to manipulate them:\n\n| Method | Does what | Example |\n|--------|-----------|----------|\n| `.push()` | Add to end | `arr.push(4)` |\n| `.pop()` | Remove from end | `arr.pop()` |\n| `.shift()` | Remove from start | `arr.shift()` |\n| `.unshift()` | Add to start | `arr.unshift(0)` |\n| `.length` | Get size | `arr.length` |\n| `.includes()` | Check if item exists | `arr.includes(3)` |\n| `.indexOf()` | Find position | `arr.indexOf(3)` |\n| `.join()` | Combine to string | `arr.join(\", \")` |\n\n**Example:**\n\n```javascript\nlet items = [1, 2, 3];\nitems.push(4);        // [1, 2, 3, 4]\nitems.pop();          // [1, 2, 3]\nitems.unshift(0);     // [0, 1, 2, 3]\n```"
+    },
+    {
+      "id": "arr-playground-2",
+      "type": "playground",
+      "title": "Array Methods",
+      "starterCode": "let fruits = [\"apple\", \"banana\"];\n\n// Add items\nfruits.push(\"orange\");\nconsole.log(fruits);  // [\"apple\", \"banana\", \"orange\"]\n\n// Add to beginning\nfruits.unshift(\"mango\");\nconsole.log(fruits);\n\n// Check length\nconsole.log(\"Length: \" + fruits.length);\n\n// Find index of item\nlet index = fruits.indexOf(\"banana\");\nconsole.log(\"Banana is at index: \" + index);\n\n// Check if includes item\nif (fruits.includes(\"apple\")) {\n  console.log(\"Array contains apple!\");\n}"
+    },
+    {
+      "id": "arr-heading-3",
+      "type": "heading",
+      "level": 2,
+      "text": "Advanced Array Methods"
+    },
+    {
+      "id": "arr-markdown-3",
+      "type": "markdown",
+      "content": "Powerful methods for working with arrays:\n\n```javascript\nlet numbers = [1, 2, 3, 4, 5];\n\n// map() - transform each item\nlet doubled = numbers.map(num => num * 2);\n// [2, 4, 6, 8, 10]\n\n// filter() - keep items that match\nlet evens = numbers.filter(num => num % 2 === 0);\n// [2, 4]\n\n// find() - get first matching item\nlet firstEven = numbers.find(num => num % 2 === 0);\n// 2\n\n// some() - check if ANY item matches\nlet hasEven = numbers.some(num => num % 2 === 0);\n// true\n```"
+    },
+    {
+      "id": "arr-playground-3",
+      "type": "playground",
+      "title": "Advanced Array Methods",
+      "starterCode": "let numbers = [1, 2, 3, 4, 5];\n\n// Double each number\nlet doubled = numbers.map(num => num * 2);\nconsole.log(doubled);  // [2, 4, 6, 8, 10]\n\n// Get only even numbers\nlet evens = numbers.filter(num => num % 2 === 0);\nconsole.log(evens);    // [2, 4]\n\n// Find first even number\nlet first = numbers.find(num => num % 2 === 0);\nconsole.log(first);    // 2\n\n// Get sum of all numbers\nlet sum = numbers.reduce((total, num) => total + num, 0);\nconsole.log(sum);      // 15"
+    }
+  ],
+  "createdAt": "2026-04-05T10:00:00.000Z",
+  "updatedAt": "2026-04-05T10:00:00.000Z"
+}

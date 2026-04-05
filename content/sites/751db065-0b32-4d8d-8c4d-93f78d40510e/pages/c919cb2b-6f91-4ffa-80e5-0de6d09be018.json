@@ -1,0 +1,64 @@
+{
+  "id": "c919cb2b-6f91-4ffa-80e5-0de6d09be018",
+  "title": "Loops - Repeating Code",
+  "slug": "loops",
+  "section": "a8976225-3922-418a-84ff-7815f53b8b39",
+  "description": "Learn how to repeat code with for and while loops.",
+  "icon": "🔁",
+  "order": 3,
+  "blocks": [
+    {
+      "id": "loop-heading-1",
+      "type": "heading",
+      "level": 2,
+      "text": "For Loops"
+    },
+    {
+      "id": "loop-markdown-1",
+      "type": "markdown",
+      "content": "A `for` loop repeats code a specific number of times:\n\n```javascript\nfor (let i = 0; i < 5; i++) {\n  console.log(i);\n}\n```\n\nThis will print: 0, 1, 2, 3, 4\n\n**The three parts:**\n1. **Initialization**: `let i = 0` - starts the counter\n2. **Condition**: `i < 5` - continues while this is true\n3. **Increment**: `i++` - adds 1 to i after each loop\n\nThink of it like: \"starting from 0, while i is less than 5, print i and add 1 to it.\""
+    },
+    {
+      "id": "loop-playground-1",
+      "type": "playground",
+      "title": "For Loop Practice",
+      "starterCode": "// Count from 0 to 4\nfor (let i = 0; i < 5; i++) {\n  console.log(i);\n}\n\n// Count by 2s from 0 to 10\nconsole.log(\"Count by 2s:\");\nfor (let i = 0; i <= 10; i += 2) {\n  console.log(i);\n}\n\n// Count backwards from 5 to 1\nconsole.log(\"Countdown:\");\nfor (let i = 5; i >= 1; i--) {\n  console.log(i);\n}"
+    },
+    {
+      "id": "loop-heading-2",
+      "type": "heading",
+      "level": 2,
+      "text": "Looping Through Arrays"
+    },
+    {
+      "id": "loop-markdown-2",
+      "type": "markdown",
+      "content": "Loops are perfect for accessing every item in an array:\n\n```javascript\nlet fruits = [\"apple\", \"banana\", \"orange\"];\n\nfor (let i = 0; i < fruits.length; i++) {\n  console.log(fruits[i]);\n}\n```\n\nOr use a simpler `for...of` loop:\n\n```javascript\nfor (let fruit of fruits) {\n  console.log(fruit);\n}\n```"
+    },
+    {
+      "id": "loop-playground-2",
+      "type": "playground",
+      "title": "Loop Through Arrays",
+      "starterCode": "let colors = [\"red\", \"green\", \"blue\", \"yellow\"];\n\n// Using a traditional for loop\nconsole.log(\"Using for loop:\");\nfor (let i = 0; i < colors.length; i++) {\n  console.log(colors[i]);\n}\n\n// Using a for...of loop (simpler!)\nconsole.log(\"\\nUsing for...of loop:\");\nfor (let color of colors) {\n  console.log(color);\n}\n\n// Try with your own array\nlet numbers = [10, 20, 30, 40];\nfor (let num of numbers) {\n  console.log(num * 2);\n}"
+    },
+    {
+      "id": "loop-heading-3",
+      "type": "heading",
+      "level": 2,
+      "text": "While Loops"
+    },
+    {
+      "id": "loop-markdown-3",
+      "type": "markdown",
+      "content": "A `while` loop repeats as long as a condition is true:\n\n```javascript\nwhile (condition) {\n  // Code to repeat\n  // Don't forget to change the condition!\n}\n```\n\n**Example:**\n\n```javascript\nlet count = 0;\nwhile (count < 5) {\n  console.log(count);\n  count++;\n}\n```\n\n**Important**: Make sure the condition eventually becomes false, or your loop will run forever!"
+    },
+    {
+      "id": "loop-playground-3",
+      "type": "playground",
+      "title": "While Loop Practice",
+      "starterCode": "// Count from 0 to 3 with a while loop\nlet i = 0;\nwhile (i < 4) {\n  console.log(i);\n  i++;\n}\n\n// Countdown from 5\nconsole.log(\"Countdown:\");\nlet count = 5;\nwhile (count > 0) {\n  console.log(count);\n  count--;\n}\n\nconsole.log(\"Blast off!\");"
+    }
+  ],
+  "createdAt": "2026-04-05T10:00:00.000Z",
+  "updatedAt": "2026-04-05T10:00:00.000Z"
+}

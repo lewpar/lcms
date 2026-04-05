@@ -1,0 +1,64 @@
+{
+  "id": "031aaa2b-2a00-4b64-aabd-a09581dc1eaa",
+  "title": "Functions - Reusable Code",
+  "slug": "functions",
+  "section": "39bfdd17-76cf-43c2-9bf0-9f55fb870b0d",
+  "description": "Learn how to create and use functions to make your code reusable and organized.",
+  "icon": "⚙️",
+  "order": 4,
+  "blocks": [
+    {
+      "id": "func-heading-1",
+      "type": "heading",
+      "level": 2,
+      "text": "What are Functions?"
+    },
+    {
+      "id": "func-markdown-1",
+      "type": "markdown",
+      "content": "A **function** is a reusable block of code that performs a specific task. Instead of writing the same code multiple times, you create a function once and call it whenever you need it.\n\n**Basic syntax:**\n\n```javascript\nfunction greet() {\n  console.log(\"Hello!\");\n}\n\n// Call the function\ngreet();  // Prints: Hello!\ngreet();  // Prints: Hello!\n```\n\nFunctions help you:\n- Avoid repeating code\n- Organize your code better\n- Make code easier to test and maintain"
+    },
+    {
+      "id": "func-playground-1",
+      "type": "playground",
+      "title": "Your First Function",
+      "starterCode": "// Create a simple function\nfunction sayHello() {\n  console.log(\"Hello, JavaScript!\");\n}\n\n// Call it multiple times\nsayHello();\nsayHello();\nsayHello();\n\n// Create your own function\nfunction goodbye() {\n  console.log(\"Goodbye!\");\n}\n\ngoodbye();"
+    },
+    {
+      "id": "func-heading-2",
+      "type": "heading",
+      "level": 2,
+      "text": "Parameters and Arguments"
+    },
+    {
+      "id": "func-markdown-2",
+      "type": "markdown",
+      "content": "Functions can accept **parameters** (input values) to make them more flexible:\n\n```javascript\nfunction greet(name) {\n  console.log(\"Hello, \" + name);\n}\n\ngreet(\"Alice\");  // Prints: Hello, Alice\ngreet(\"Bob\");    // Prints: Hello, Bob\n```\n\nYou can have multiple parameters:\n\n```javascript\nfunction add(a, b) {\n  console.log(a + b);\n}\n\nadd(5, 3);  // Prints: 8\nadd(10, 20); // Prints: 30\n```"
+    },
+    {
+      "id": "func-playground-2",
+      "type": "playground",
+      "title": "Functions with Parameters",
+      "starterCode": "// Function with one parameter\nfunction greet(name) {\n  console.log(\"Hello, \" + name);\n}\n\ngreet(\"Sarah\");\ngreet(\"Michael\");\n\n// Function with multiple parameters\nfunction add(x, y) {\n  console.log(x + y);\n}\n\nadd(5, 10);\nadd(100, 50);\n\n// Create your own function with parameters"
+    },
+    {
+      "id": "func-heading-3",
+      "type": "heading",
+      "level": 2,
+      "text": "Return Values"
+    },
+    {
+      "id": "func-markdown-3",
+      "type": "markdown",
+      "content": "Functions can **return** values instead of just printing:\n\n```javascript\nfunction multiply(a, b) {\n  return a * b;\n}\n\nlet result = multiply(5, 3);\nconsole.log(result);  // Prints: 15\n```\n\nWhen you use `return`, the function stops executing and sends back the value:\n\n```javascript\nfunction checkAge(age) {\n  if (age >= 18) {\n    return \"You are an adult\";\n  } else {\n    return \"You are a minor\";\n  }\n}\n\nlet message = checkAge(25);\nconsole.log(message);  // Prints: You are an adult\n```"
+    },
+    {
+      "id": "func-playground-3",
+      "type": "playground",
+      "title": "Return Values",
+      "starterCode": "// Function that returns a value\nfunction square(n) {\n  return n * n;\n}\n\nlet result = square(4);\nconsole.log(result);  // 16\n\n// Function with multiple returns\nfunction isEven(num) {\n  if (num % 2 === 0) {\n    return true;\n  } else {\n    return false;\n  }\n}\n\nconsole.log(isEven(10));  // true\nconsole.log(isEven(7));   // false\n\n// Function that returns a string\nfunction getGrade(score) {\n  if (score >= 90) return \"A\";\n  if (score >= 80) return \"B\";\n  if (score >= 70) return \"C\";\n  return \"F\";\n}\n\nconsole.log(getGrade(85));"
+    }
+  ],
+  "createdAt": "2026-04-05T10:00:00.000Z",
+  "updatedAt": "2026-04-05T10:00:00.000Z"
+}

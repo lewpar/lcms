@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Objects - Structured Data — Beginner JavaScript</title>
+  <meta name="description" content="Learn how to create and use objects to organize related data together." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css?v=mnlmb4ja" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="../">Beginner JavaScript</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Fundamentals</div><a href="../variables-and-data-types/" class="nav-link" title="Variables &amp; Data Types"><span class="nav-link-icon">📦</span><span class="nav-link-text">Variables &amp; Data Types</span></a><a href="../operators-and-expressions/" class="nav-link" title="Operators &amp; Expressions"><span class="nav-link-icon">➕</span><span class="nav-link-text">Operators &amp; Expressions</span></a></div><div class="nav-section"><div class="nav-section-title">Control Flow</div><a href="../if-statements/" class="nav-link" title="If Statements &amp; Control Flow"><span class="nav-link-icon">🎯</span><span class="nav-link-text">If Statements &amp; Control Flow</span></a><a href="../loops/" class="nav-link" title="Loops - Repeating Code"><span class="nav-link-icon">🔁</span><span class="nav-link-text">Loops - Repeating Code</span></a></div><div class="nav-section"><div class="nav-section-title">Functions &amp; Objects</div><a href="../functions/" class="nav-link" title="Functions - Reusable Code"><span class="nav-link-icon">⚙️</span><span class="nav-link-text">Functions - Reusable Code</span></a><a href="../arrays/" class="nav-link" title="Arrays - Working with Lists"><span class="nav-link-icon">📋</span><span class="nav-link-text">Arrays - Working with Lists</span></a><a href="../objects/" class="nav-link active" title="Objects - Structured Data"><span class="nav-link-icon">🏗️</span><span class="nav-link-text">Objects - Structured Data</span></a><div class="nav-toc"><a class="nav-toc-link nav-toc-level-2" href="#what-are-objects"><span class="toc-num">1.</span> What are Objects?</a><a class="nav-toc-link nav-toc-level-2" href="#objects-with-methods"><span class="toc-num">2.</span> Objects with Methods</a><a class="nav-toc-link nav-toc-level-2" href="#arrays-of-objects"><span class="toc-num">3.</span> Arrays of Objects</a></div></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    <div class="custom-site-header"><h1 style="margin:0; font-size:24px; color:#3b82f6;">📚 Beginner JavaScript</h1></div>
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="../">Home</a>
+        <span class="breadcrumb-sep">›</span><span>Functions &amp; Objects</span>
+        <span class="breadcrumb-sep">›</span>
+        <span>Objects - Structured Data</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="page-header">
+          <h1 class="page-title">Objects - Structured Data</h1>
+          <div class="page-meta">
+            <span class="page-meta-tag">Functions &amp; Objects</span>
+            <span>⏱ 2 min read</span>
+          </div>
+        </div>
+        <div class="blocks"><h2 id="what-are-objects" class="block-heading"><span class="heading-num">1.</span> What are Objects?<a class="heading-anchor" href="#what-are-objects" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>An <strong>object</strong> is a collection of related data and methods organized as key-value pairs:</p>
+<pre><code class="language-javascript">let person = {
+  name: &quot;Alice&quot;,
+  age: 25,
+  city: &quot;New York&quot;
+};
+</code></pre>
+<p>Access values using dot notation or brackets:</p>
+<pre><code class="language-javascript">console.log(person.name);      // &quot;Alice&quot;
+console.log(person[&quot;age&quot;]);    // 25
+
+// Change values
+person.age = 26;
+person.city = &quot;Boston&quot;;
+
+// Add new properties
+person.job = &quot;Developer&quot;;
+</code></pre>
+<p>Objects are great for grouping related information about one thing (a person, product, book, etc.)</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Creating and Using Objects</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Create an object
+let student = {
+  name: &quot;Bob&quot;,
+  grade: 10,
+  gpa: 3.8,
+  school: &quot;Central High&quot;
+};
+
+// Access properties
+console.log(student.name);
+console.log(student[&quot;grade&quot;]);
+
+// Modify properties
+student.gpa = 3.9;
+console.log(student.gpa);
+
+// Add new property
+student.club = &quot;Robotics&quot;;
+console.log(student);</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h2 id="objects-with-methods" class="block-heading"><span class="heading-num">2.</span> Objects with Methods<a class="heading-anchor" href="#objects-with-methods" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Objects can contain functions, called <strong>methods</strong>:</p>
+<pre><code class="language-javascript">let calculator = {
+  add: function(a, b) {
+    return a + b;
+  },
+  subtract: function(a, b) {
+    return a - b;
+  }
+};
+
+calculator.add(5, 3);      // 8
+calculator.subtract(10, 4); // 6
+</code></pre>
+<p>Or using shorthand (modern JavaScript):</p>
+<pre><code class="language-javascript">let calculator = {
+  add(a, b) {
+    return a + b;
+  },
+  subtract(a, b) {
+    return a - b;
+  }
+};
+</code></pre>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Objects with Methods</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Object with methods
+let car = {
+  brand: &quot;Toyota&quot;,
+  year: 2020,
+  start: function() {
+    console.log(this.brand + &quot; is starting!&quot;);
+  },
+  stop: function() {
+    console.log(this.brand + &quot; stopped.&quot;);
+  },
+  honk: function() {
+    console.log(&quot;Beep! Beep!&quot;);
+  }
+};
+
+// Call methods
+car.start();
+car.honk();
+car.stop();
+
+// Access properties
+console.log(&quot;Year: &quot; + car.year);</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div>
+<h2 id="arrays-of-objects" class="block-heading"><span class="heading-num">3.</span> Arrays of Objects<a class="heading-anchor" href="#arrays-of-objects" aria-label="Copy link to section">#</a></h2>
+<div class="prose"><p>Often you&#39;ll have an array containing multiple objects:</p>
+<pre><code class="language-javascript">let students = [
+  { name: &quot;Alice&quot;, age: 20, grade: &quot;A&quot; },
+  { name: &quot;Bob&quot;, age: 21, grade: &quot;B&quot; },
+  { name: &quot;Charlie&quot;, age: 20, grade: &quot;A&quot; }
+];
+
+// Access items
+console.log(students[0].name);  // &quot;Alice&quot;
+console.log(students[1].age);   // 21
+
+// Loop through
+for (let student of students) {
+  console.log(student.name + &quot; has grade &quot; + student.grade);
+}
+</code></pre>
+<p>This pattern is very common when working with data!</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Arrays of Objects</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Array of book objects
+let books = [
+  { title: &quot;JavaScript Basics&quot;, author: &quot;John Doe&quot;, pages: 350 },
+  { title: &quot;Web Development&quot;, author: &quot;Jane Smith&quot;, pages: 480 },
+  { title: &quot;React Guide&quot;, author: &quot;Bob Johnson&quot;, pages: 420 }
+];
+
+// Access individual book
+console.log(books[0].title);
+
+// Loop through all books
+for (let book of books) {
+  console.log(book.title + &quot; by &quot; + book.author);
+}
+
+// Find total pages
+let totalPages = books.reduce((sum, book) =&gt; sum + book.pages, 0);
+console.log(&quot;Total pages: &quot; + totalPages);</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div></div>
+        
+<nav class="page-prev-next">
+  <a class="pn-btn pn-prev" href="../arrays/">← Arrays - Working with Lists</a>
+  
+</nav>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="custom-footer-html"><div style="text-align:center; color:#6b7280; font-size:14px;">Learn to code with interactive lessons and challenges</div></div>
+    </footer>
+  </div>
+</div>
+<script src="../nav.js?v=mnlmb4ja"></script>
+
+
+
+<script src="../playground.js?v=mnlmb4ja"></script>
+
+
+
+</body>
+</html>

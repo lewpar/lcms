@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beginner JavaScript</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=mnlmb4ja" />
+  
+</head>
+<body>
+<script>(function(){
+  var stored=null;try{stored=localStorage.getItem('lcms-theme')}catch(e){}
+  var isDark=stored?stored==='dark':false;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  document.addEventListener('DOMContentLoaded',function(){
+    var btn=document.getElementById('darkModeBtn');
+    if(!btn)return;
+    btn.textContent=isDark?'☀':'☽';
+    btn.addEventListener('click',function(){
+      var current=document.documentElement.getAttribute('data-theme');
+      var next=current==='dark'?'light':'dark';
+      document.documentElement.setAttribute('data-theme',next);
+      btn.textContent=next==='dark'?'☀':'☽';
+      try{localStorage.setItem('lcms-theme',next)}catch(e){}
+    });
+  });
+})();</script>
+<script>(function(){document.addEventListener('click',function(e){var a=e.target.closest('.heading-anchor');if(!a)return;e.preventDefault();var url=location.href.split('#')[0]+a.getAttribute('href');navigator.clipboard.writeText(url).then(function(){var t=a.textContent;a.textContent='✓';a.classList.add('copied');setTimeout(function(){a.textContent=t;a.classList.remove('copied')},1500)}).catch(function(){});});})();</script>
+<div class="app-layout">
+  <aside class="site-sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <a class="site-logo" href="./">Beginner JavaScript</a>
+    <button class="dark-mode-btn" id="darkModeBtn" title="Toggle dark mode">☽</button>
+    <button class="sidebar-collapse-btn" id="sidebarCollapse" title="Collapse sidebar" aria-label="Collapse sidebar">&#x2039;</button>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="sidebar-nav" aria-label="Site navigation">
+    <div class="nav-section"><div class="nav-section-title">Fundamentals</div><a href="variables-and-data-types/" class="nav-link" title="Variables &amp; Data Types"><span class="nav-link-icon">📦</span><span class="nav-link-text">Variables &amp; Data Types</span></a><a href="operators-and-expressions/" class="nav-link" title="Operators &amp; Expressions"><span class="nav-link-icon">➕</span><span class="nav-link-text">Operators &amp; Expressions</span></a></div><div class="nav-section"><div class="nav-section-title">Control Flow</div><a href="if-statements/" class="nav-link" title="If Statements &amp; Control Flow"><span class="nav-link-icon">🎯</span><span class="nav-link-text">If Statements &amp; Control Flow</span></a><a href="loops/" class="nav-link" title="Loops - Repeating Code"><span class="nav-link-icon">🔁</span><span class="nav-link-text">Loops - Repeating Code</span></a></div><div class="nav-section"><div class="nav-section-title">Functions &amp; Objects</div><a href="functions/" class="nav-link" title="Functions - Reusable Code"><span class="nav-link-icon">⚙️</span><span class="nav-link-text">Functions - Reusable Code</span></a><a href="arrays/" class="nav-link" title="Arrays - Working with Lists"><span class="nav-link-icon">📋</span><span class="nav-link-text">Arrays - Working with Lists</span></a><a href="objects/" class="nav-link" title="Objects - Structured Data"><span class="nav-link-icon">🏗️</span><span class="nav-link-text">Objects - Structured Data</span></a></div>
+  </nav>
+  <div class="sidebar-footer-note">Learning Content Management System</div>
+</aside>
+  <div class="sidebar-overlay" id="overlay"></div>
+  <div class="content-area">
+    <div class="custom-site-header"><h1 style="margin:0; font-size:24px; color:#3b82f6;">📚 Beginner JavaScript</h1></div>
+    <header class="top-bar">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <span>Home</span>
+      </nav>
+    </header>
+    <main class="page-main">
+      <article class="page-article">
+        <div class="home-hero">
+          <h1>Learn JavaScript</h1>
+          <p>Master the fundamentals of JavaScript programming with interactive lessons, code playgrounds, and quizzes.</p>
+        </div>
+        <div class="blocks"><div class="prose"><h2 id="welcome-to-beginner-javascript">Welcome to Beginner JavaScript!</h2>
+<p>This course is designed to take you from zero to confident JavaScript programmer. You&#39;ll learn:</p>
+<ul>
+<li><strong>Core Language Concepts</strong>: Variables, data types, operators, and control flow</li>
+<li><strong>Functions</strong>: How to write reusable code</li>
+<li><strong>Objects &amp; Arrays</strong>: Working with complex data structures</li>
+<li><strong>DOM Manipulation</strong>: Interacting with web pages</li>
+<li><strong>Events &amp; Interactivity</strong>: Building interactive applications</li>
+</ul>
+<p>Each lesson includes code playgrounds where you can write and test JavaScript in real-time. Try the example below!</p>
+</div>
+<div class="playground-block">
+<div class="pg-header">
+  <span class="pg-header-title">Try Your First Program</span>
+  <button class="pg-run-btn" type="button">&#9654; Run</button>
+  <button class="pg-clear-btn" type="button">&#8855; Clear</button>
+</div>
+<div class="pg-editor-wrap">
+  <div class="pg-gutter"><div class="pg-line-numbers"></div></div>
+  <div class="pg-code-area">
+    <pre class="pg-pre" aria-hidden="true"></pre>
+    <textarea class="pg-textarea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">// Welcome to JavaScript!
+console.log(&#x27;Hello, World!&#x27;);
+
+// Try changing the text in the quotes
+console.log(&#x27;My name is...&#x27;);
+
+// Try doing some math
+console.log(5 + 3);</textarea>
+  </div>
+</div>
+<div class="pg-output-wrap">
+  <div class="pg-output-label">Output</div>
+  <div class="pg-output"></div>
+</div>
+</div></div>
+        <div class="home-page-grid"><div class="section-group"><div class="section-group-title">Fundamentals</div><div class="page-grid">
+<a class="page-card" href="variables-and-data-types/">
+  <div class="page-card-section">Fundamentals</div>
+  <div class="page-card-title">Variables &amp; Data Types</div>
+  <div class="page-card-desc">Learn how to create variables and work with different data types in JavaScript.</div>
+</a>
+<a class="page-card" href="operators-and-expressions/">
+  <div class="page-card-section">Fundamentals</div>
+  <div class="page-card-title">Operators &amp; Expressions</div>
+  <div class="page-card-desc">Learn how to use operators to perform calculations and comparisons.</div>
+</a></div></div><div class="section-group"><div class="section-group-title">Control Flow</div><div class="page-grid">
+<a class="page-card" href="if-statements/">
+  <div class="page-card-section">Control Flow</div>
+  <div class="page-card-title">If Statements &amp; Control Flow</div>
+  <div class="page-card-desc">Learn how to make decisions in your code with if, else if, and else statements.</div>
+</a>
+<a class="page-card" href="loops/">
+  <div class="page-card-section">Control Flow</div>
+  <div class="page-card-title">Loops - Repeating Code</div>
+  <div class="page-card-desc">Learn how to repeat code with for and while loops.</div>
+</a></div></div><div class="section-group"><div class="section-group-title">Functions &amp; Objects</div><div class="page-grid">
+<a class="page-card" href="functions/">
+  <div class="page-card-section">Functions &amp; Objects</div>
+  <div class="page-card-title">Functions - Reusable Code</div>
+  <div class="page-card-desc">Learn how to create and use functions to make your code reusable and organized.</div>
+</a>
+<a class="page-card" href="arrays/">
+  <div class="page-card-section">Functions &amp; Objects</div>
+  <div class="page-card-title">Arrays - Working with Lists</div>
+  <div class="page-card-desc">Learn how to create and manipulate arrays to store collections of values.</div>
+</a>
+<a class="page-card" href="objects/">
+  <div class="page-card-section">Functions &amp; Objects</div>
+  <div class="page-card-title">Objects - Structured Data</div>
+  <div class="page-card-desc">Learn how to create and use objects to organize related data together.</div>
+</a></div></div></div>
+        
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="custom-footer-html"><div style="text-align:center; color:#6b7280; font-size:14px;">Learn to code with interactive lessons and challenges</div></div>
+    </footer>
+  </div>
+</div>
+<script src="nav.js?v=mnlmb4ja"></script>
+
+
+
+<script src="playground.js?v=mnlmb4ja"></script>
+
+
+
+</body>
+</html>
