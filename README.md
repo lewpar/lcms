@@ -11,16 +11,18 @@ A locally-hosted CMS for building and exporting static learning sites as vanilla
 ```bash
 # Install dependencies (first time only)
 npm install
-cd client && npm install && cd ..
+
+# Start the development server
+npm run dev
 ```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 | Script | Description |
 |--------|-------------|
-| `./start-api-dev.sh` | Start the API server on `:3001` |
-| `./start-client-dev.sh` | Start the Vite dev server on `:5173` (HMR) |
-| `./start-prod.sh` | Build the client then start a single production server |
-
-Run `start-api-dev.sh` and `start-client-dev.sh` in separate terminals for development.
+| `npm run dev` | Start the Next.js dev server on `:3000` (hot reload) |
+| `npm run build` | Build for production |
+| `npm run start` | Run the production build |
 
 ## What it does
 
@@ -65,15 +67,7 @@ Sites are exported as fully self-contained static sites — no runtime dependenc
 
 ## Deployment
 
-The **Deploy** button in the sidebar offers two targets.
-
-### Nginx (local server)
-
-Builds the site and copies it to `/var/www/html/<site-slug>/`, making it immediately live via nginx. Requires nginx to be installed and the web root to be writable by your user — see [INSTALL.md](INSTALL.md) for the one-time setup.
-
-The nginx option is greyed out if nginx is not detected on the system.
-
-### GitHub Pages
+The **Deploy** button in the sidebar deploys to GitHub Pages.
 
 Builds the site, copies it to `docs/<site-slug>/`, then runs `git add docs/ && git commit && git push`. A commit message field is shown in the dialog before deploying; if left blank it defaults to `Deploy <site-slug> to GitHub Pages`.
 
@@ -83,34 +77,25 @@ Builds the site, copies it to `docs/<site-slug>/`, then runs `git add docs/ && g
 
 ```
 lcms/
-├── client/       React CMS (Vite)
-├── server/       Express API + static file serving
-├── generator/    Static site generator (Node, outputs HTML/CSS/JS)
-├── content/      Sites, pages, and uploaded assets (source of truth)
-└── output/       Generated static sites (gitignored)
+├── src/
+│   ├── app/          Next.js App Router (pages + API route handlers)
+│   ├── components/   React UI components
+│   ├── generator/    Static site builder (reads content/, writes output/)
+│   └── lib/          Shared server utilities (paths, storage, validation)
+├── content/          Sites, pages, and uploaded assets (source of truth)
+├── docs/             GitHub Pages deployments (committed to git)
+└── output/           Generated static sites (gitignored)
 ```
 
 ## Dependencies
 
-**Server** (`package.json`)
-
 | Package | Purpose |
 |---------|---------|
-| `express` | HTTP server and API routing |
-| `cors` | Cross-origin headers for dev mode |
-| `multer` | Multipart file upload handling (asset uploads) |
-| `marked` | Markdown → HTML in the static site generator |
-| `uuid` | Generating unique IDs for sites, pages, and blocks |
-
-**Client** (`client/package.json`)
-
-| Package | Purpose |
-|---------|---------|
-| `react` / `react-dom` | CMS UI framework |
-| `marked` | Live markdown rendering in the CMS block preview |
+| `next` | App framework — UI bundling and API route handlers |
+| `react` / `react-dom` | CMS UI |
+| `marked` | Markdown → HTML (editor preview and static site generator) |
 | `highlight.js` | Syntax highlighting in the CMS code block preview |
-| `vite` | Dev server with HMR and production bundler |
-| `@vitejs/plugin-react` | Vite plugin for JSX and React Fast Refresh |
+| `uuid` | Generating unique IDs for sites, pages, and blocks |
 
 **Generated sites** (no npm — loaded from CDN only when needed)
 
