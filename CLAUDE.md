@@ -122,30 +122,10 @@ Controls the site title, theme, sections (sidebar groups), header/footer HTML, a
 | `description` | ❌ | Short description of the site (used in meta tags / home page). |
 | `navPages` | ✅ | Array of page UUIDs pinned to the top nav. Use `[]` if none. |
 | `sections` | ✅ | Array of `{ "id": "<uuid>", "name": "Section Name" }` objects. Each is a sidebar group heading. At least one section is required. |
-| `theme` | ✅ | Object — see theme fields table below. |
+| `theme` | ❌ | **Omit entirely.** The CMS default theme will be used automatically. Do not generate or include a theme object. |
 | `header` | ❌ | HTML string injected into the site header area. Omit or set to `""` for none. |
 | `footer` | ❌ | HTML string injected into the site footer area. Omit or set to `""` for none. |
 | `home` | ✅ | Object controlling the home page — see home fields table below. |
-
-**`theme` fields** (all required when `theme` is present):
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `primary` | hex string | Accent/link colour (light mode). |
-| `sidebarBg` | hex string | Sidebar background (light mode). |
-| `contentBg` | hex string | Main content background (light mode). |
-| `textColor` | hex string | Body text colour (light mode). |
-| `darkPrimary` | hex string | Accent/link colour (dark mode). |
-| `darkSidebarBg` | hex string | Sidebar background (dark mode). |
-| `darkContentBg` | hex string | Main content background (dark mode). |
-| `darkTextColor` | hex string | Body text colour (dark mode). |
-| `radius` | number | Border radius in px for cards/buttons. |
-| `font` | string | `"inter"`, `"system"`, `"serif"`, or `"mono"`. |
-| `fontSize` | number | Base font size in px (typically 15–17). |
-| `contentWidth` | number | Max width of content area in px. |
-| `sidebarWidth` | number | Sidebar width in px. |
-| `showBreadcrumbs` | boolean | Show breadcrumb trail above page title. |
-| `showReadingTime` | boolean | Estimate reading time shown in sidebar. |
 
 **`home` fields:**
 

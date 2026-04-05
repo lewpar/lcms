@@ -564,9 +564,9 @@ function buildNavHtml(navItems, currentSlug, toc) {
 // ── CSS ────────────────────────────────────────────────
 
 function buildCss(theme) {
-  const primary      = (theme && theme.primary)        || '#ecba46';
-  const sidebarBg    = (theme && theme.sidebarBg)      || '#111111';
-  const radius       = (theme && theme.radius != null) ? theme.radius : 4;
+  const primary      = (theme && theme.primary)        || '#6c63ff';
+  const sidebarBg    = (theme && theme.sidebarBg)      || '#1e293b';
+  const radius       = (theme && theme.radius != null) ? theme.radius : 8;
   const fontKey      = (theme && theme.font)           || 'inter';
   const fontSize     = (theme && theme.fontSize)       || 16;
   const contentWidth = (theme && theme.contentWidth)   || 800;
@@ -588,10 +588,10 @@ function buildCss(theme) {
   --text:${theme.darkTextColor || theme.darkText || '#e2e8f0'};--text-muted:#94a3b8;
   --bg:${theme.darkContentBg || theme.darkBg || '#0f172a'};
   --surface:${theme.darkSurface || '#1e293b'};--border:${theme.darkBorder || '#334155'};
-  --primary:${theme.darkPrimary || primary};
-  --primary-rgb:${hexToRgb(theme.darkPrimary || primary).join(',')};
-  --primary-light:rgba(${hexToRgb(theme.darkPrimary || primary).join(',')},0.12);
-  --sidebar-bg:${theme.darkSidebarBg || darken(sidebarBg, 0.35)};
+  --primary:${theme.darkPrimary || '#7c74ff'};
+  --primary-rgb:${hexToRgb(theme.darkPrimary || '#7c74ff').join(',')};
+  --primary-light:rgba(${hexToRgb(theme.darkPrimary || '#7c74ff').join(',')},0.12);
+  --sidebar-bg:${theme.darkSidebarBg || '#131925'};
 }
 [data-theme="dark"] .callout-blue  {background:rgba(59,130,246,0.12) }[data-theme="dark"] .callout-blue   .callout-title{color:#93c5fd}
 [data-theme="dark"] .callout-green {background:rgba(34,197,94,0.12)  }[data-theme="dark"] .callout-green  .callout-title{color:#86efac}

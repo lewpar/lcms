@@ -87,7 +87,7 @@ content/sites/e1c9bcd9-ef68-475b-99b8-fa8b799afee7/assets/
 
 ## Step 4 — Write `content/sites/<site-uuid>/site.json`
 
-Controls the site title, description, sections (sidebar groups), navigation, theme, and home page content.
+Controls the site title, description, sections (sidebar groups), navigation, and home page content.
 
 ```json
 {
@@ -98,23 +98,6 @@ Controls the site title, description, sections (sidebar groups), navigation, the
     { "id": "a3f1c2d4-0000-0000-0000-000000000001", "name": "Reading" },
     { "id": "a3f1c2d4-0000-0000-0000-000000000002", "name": "Activities" }
   ],
-  "theme": {
-    "primary": "#6c63ff",
-    "sidebarBg": "#1e293b",
-    "contentBg": "#ffffff",
-    "textColor": "#1e293b",
-    "darkPrimary": "#7c74ff",
-    "darkSidebarBg": "#131925",
-    "darkContentBg": "#0f172a",
-    "darkTextColor": "#e2e8f0",
-    "radius": 8,
-    "font": "inter",
-    "fontSize": 16,
-    "contentWidth": 800,
-    "sidebarWidth": 240,
-    "showBreadcrumbs": true,
-    "showReadingTime": true
-  },
   "home": {
     "heroTitle": "My Course Title",
     "heroSubtitle": "A short subtitle shown on the home page.",
@@ -137,21 +120,9 @@ Each section is a sidebar group heading. Pages are assigned to sections by match
 
 `navPages` can be left as `[]`; the sidebar is built automatically from the pages directory.
 
-### `theme` — key fields
+### `theme` — optional, omit by default
 
-| Field | Description |
-|-------|-------------|
-| `primary` | Accent/link colour (hex) |
-| `sidebarBg` / `darkSidebarBg` | Sidebar background in light/dark mode |
-| `contentBg` / `darkContentBg` | Main content area background |
-| `textColor` / `darkTextColor` | Body text colour |
-| `radius` | Border radius in px for cards/buttons |
-| `font` | `"inter"`, `"system"`, `"serif"`, or `"mono"` |
-| `fontSize` | Base font size in px (typically 15–17) |
-| `contentWidth` | Max width of content area in px |
-| `sidebarWidth` | Sidebar width in px |
-| `showBreadcrumbs` | Show breadcrumb trail above page title |
-| `showReadingTime` | Estimate reading time in sidebar |
+**Do not include a `theme` field when authoring a site.** The CMS default theme will be applied automatically, giving a clean purple/dark-navy look. Only include `theme` if the user has explicitly asked for a specific colour scheme.
 
 ---
 
@@ -209,23 +180,6 @@ A minimal but complete site with two sections and two pages. Replace all UUIDs w
     { "id": "bbbbbbbb-0000-0000-0000-000000000001", "name": "Lessons" },
     { "id": "bbbbbbbb-0000-0000-0000-000000000002", "name": "Activities" }
   ],
-  "theme": {
-    "primary": "#3b82f6",
-    "sidebarBg": "#1e293b",
-    "contentBg": "#ffffff",
-    "textColor": "#1e293b",
-    "darkPrimary": "#60a5fa",
-    "darkSidebarBg": "#0f172a",
-    "darkContentBg": "#1e293b",
-    "darkTextColor": "#e2e8f0",
-    "radius": 6,
-    "font": "inter",
-    "fontSize": 16,
-    "contentWidth": 800,
-    "sidebarWidth": 240,
-    "showBreadcrumbs": true,
-    "showReadingTime": true
-  },
   "home": {
     "heroTitle": "Intro to Python",
     "heroSubtitle": "Learn the fundamentals of Python from scratch.",
