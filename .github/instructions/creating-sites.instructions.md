@@ -12,6 +12,30 @@ When asked to create or author a site, read `.github/AUTHORING.md` for the compl
 
 **Do NOT run `npm run generate` or any generate command.** The user will generate and preview the site themselves via the CMS UI.
 
+## Validate after authoring
+
+**After writing all JSON files for a new or updated site, always run the content validator:**
+
+```
+npm run validate
+```
+
+Or to validate a single site by its UUID:
+
+```
+npm run validate <site-uuid>
+```
+
+The validator checks:
+- JSON syntax is valid
+- All required keys are present in every file
+- No unrecognised keys are present
+- UUID v4 format is correct where required
+- Block schemas match the expected fields for each block type
+- Cross-references are consistent (section IDs, page ID ↔ filename)
+
+Fix every reported error before considering the task done. Do not skip this step.
+
 ## Block types
 
 Available block types: `markdown`, `heading`, `code`, `callout`, `tip`, `table`, `image`, `video`, `embed`, `iframe`, `playground`, `fill-in-the-blank`, `quiz`, `flashcard`, `accordion`, `case-study`, `page-link`, `hint`, `difficulty`, `divider`, `steps`, `recipe-detail`.

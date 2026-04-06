@@ -273,7 +273,7 @@ Each file is one page. **The filename and the `id` field inside must be the same
 | `slug` | URL-safe, lowercase, hyphens only. Must be unique within the site. |
 | `section` | UUID of the section from `site.json`. **Must match a section `id` exactly — copy-paste, don't retype.** |
 | `icon` | An emoji. Optional but recommended. |
-| `order` | Integer. Pages sort ascending by `order` within a section. Start at 0 or 1. |
+| `order` | Integer. Optional. Pages sort ascending by `order` within a section. Start at 0 or 1. Pages without `order` sort last. |
 | `createdAt` / `updatedAt` | ISO 8601 timestamps. Use the current time. |
 | `blocks` | Array of content blocks. For full block type reference see [BLOCKS.md](./BLOCKS.md). |
 
@@ -417,6 +417,8 @@ A minimal but complete site with two sections and two pages. Replace all UUIDs w
 ---
 
 ## Checklist before saving
+
+Run `npm run validate` (or `npm run validate <site-uuid>` for a single site) after writing all files. The validator will catch most of the issues below automatically. Fix every reported error before finishing.
 
 ### UUID integrity (most common source of bugs)
 - [ ] `content/sites.json` entry `id` = `content/sites/<that-id>/` folder name (they must be the same string)

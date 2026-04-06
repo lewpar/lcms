@@ -18,6 +18,7 @@ then generates or deploys fully self-contained static HTML/CSS/JS sites.
 - `npm run build` — production build
 - `npm run start` — run production build
 - `npm run generate` — CLI: `node src/generator/index.js <siteId> <slug>`
+- `npm run validate` — validate all content JSON files; `npm run validate <siteId>` for one site
 
 ## Project structure
 ```
