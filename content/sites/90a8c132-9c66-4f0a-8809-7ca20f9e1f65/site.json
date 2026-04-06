@@ -1,0 +1,29 @@
+{
+  "title": "How to Make Ice Cream",
+  "description": "A practical guide to making delicious homemade ice cream, from basic equipment to classic recipes and troubleshooting tips.",
+  "navPages": [],
+  "sections": [
+    { "id": "10f11db6-9656-405f-8775-33344dd81d8c", "name": "The Basics" },
+    { "id": "54564d89-3af7-4ac5-81a6-535ea4d561f6", "name": "Recipes" },
+    { "id": "875bc527-f9cd-4862-a357-916c88056456", "name": "Tips & Techniques" }
+  ],
+  "home": {
+    "heroTitle": "How to Make Ice Cream",
+    "heroSubtitle": "From your first scoop to your best scoop — everything you need to make great ice cream at home.",
+    "showPageGrid": true,
+    "blocks": [
+      {
+        "id": "e6fd7672-cf82-4e4b-a217-d2f6a90728cd",
+        "type": "markdown",
+        "content": "Making ice cream at home is easier than it looks. Whether you have an ice cream machine or not, this guide covers everything — the equipment, the science, the recipes, and the fixes when things go wrong.\n\nStart in **The Basics** to learn what you need, then head to **Recipes** to start churning."
+      },
+      {
+        "id": "87b95db6-9e8b-4882-9088-a43545c390b0",
+        "type": "callout",
+        "title": "No ice cream machine? No problem.",
+        "content": "The no-churn recipes in the Recipes section use a simple whipped cream method — no special equipment required.",
+        "color": "blue"
+      }
+    ]
+  }
+}

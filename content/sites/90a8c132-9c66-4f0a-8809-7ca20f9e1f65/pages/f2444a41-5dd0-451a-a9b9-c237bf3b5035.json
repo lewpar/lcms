@@ -1,0 +1,74 @@
+{
+  "id": "f2444a41-5dd0-451a-a9b9-c237bf3b5035",
+  "title": "No-Churn Strawberry Ice Cream",
+  "slug": "no-churn-strawberry-ice-cream",
+  "section": "54564d89-3af7-4ac5-81a6-535ea4d561f6",
+  "description": "A vibrant strawberry ice cream made without a machine — just whipped cream, condensed milk, and fresh strawberries.",
+  "icon": "🍓",
+  "order": 2,
+  "createdAt": "2026-04-06T12:00:00.000Z",
+  "updatedAt": "2026-04-06T12:00:00.000Z",
+  "blocks": [
+    {
+      "id": "4c45c1b5-734b-44f9-9675-d2d6bf561829",
+      "type": "callout",
+      "title": "What is no-churn ice cream?",
+      "content": "No-churn ice cream skips the custard base and the machine entirely. Whipped cream provides the air and fat, while sweetened condensed milk acts as the sweetener and helps keep the texture soft and scoopable.",
+      "color": "purple"
+    },
+    {
+      "id": "49a5654e-9b21-441c-89a1-af5094b18347",
+      "type": "recipe-detail",
+      "name": "No-Churn Strawberry Ice Cream",
+      "description": "Bright, fresh, and fruity — this no-churn recipe comes together in 15 minutes and needs no special equipment at all.",
+      "servings": "Makes approximately 900 ml (6 servings)",
+      "ingredientsTitle": "Ingredients",
+      "items": [
+        { "id": "e807fbbb-dfac-4af1-aab4-0e895b40b07d", "amount": "400", "unit": "ml", "name": "double cream (heavy cream)", "note": "cold" },
+        { "id": "0778a483-af9e-447f-a198-c936f4db034f", "amount": "397", "unit": "g", "name": "sweetened condensed milk", "note": "1 standard tin" },
+        { "id": "5f563074-9fec-42b9-ad8a-be69ddbc0bc0", "amount": "300", "unit": "g", "name": "fresh strawberries", "note": "hulled" },
+        { "id": "33142841-0b97-41f1-baca-65a93f9ea962", "amount": "1", "unit": "tbsp", "name": "lemon juice" },
+        { "id": "b6232dfa-0403-41b4-aba6-2190e7fa0820", "amount": "1", "unit": "tsp", "name": "vanilla extract" }
+      ]
+    },
+    {
+      "id": "3071dd2b-a43f-4ff0-b5d8-727d07ba8363",
+      "type": "heading",
+      "level": 2,
+      "text": "Method"
+    },
+    {
+      "id": "77e8493a-0672-4d69-ac57-7181d644a5ee",
+      "type": "steps",
+      "title": "Instructions",
+      "items": [
+        {
+          "id": "696a2234-64c2-447b-a058-9adb1bfc5101",
+          "title": "Prepare the strawberry puree",
+          "body": "Place the hulled strawberries in a blender or food processor with the lemon juice. Blend until smooth. For a smoother ice cream, push the puree through a sieve to remove seeds. Set aside."
+        },
+        {
+          "id": "2b2b6e19-116a-4f8a-bae4-1c068fb32cef",
+          "title": "Whip the cream",
+          "body": "Using a hand mixer or stand mixer, whip the cold double cream to soft peaks. Do not over-whip to stiff peaks — the cream should still be billowy and just hold its shape."
+        },
+        {
+          "id": "b92bbfc1-51b5-4f6e-ac3b-fcd78a60795e",
+          "title": "Fold in the condensed milk and flavourings",
+          "body": "Pour the condensed milk, vanilla extract, and strawberry puree over the whipped cream. Gently fold together with a large spatula until just combined — a few streaks of cream are fine. Avoid over-mixing or you will lose the air."
+        },
+        {
+          "id": "3b3993b1-baa4-4d54-b516-5d026e40d865",
+          "title": "Freeze",
+          "body": "Pour into a freezer-safe container and smooth the top. Press cling film directly onto the surface. Freeze for a minimum of 6 hours, or overnight, until solid."
+        }
+      ]
+    },
+    {
+      "id": "ce877c49-7593-42b1-8261-7bb8e69c8914",
+      "type": "tip",
+      "title": "Swirl in extra pieces",
+      "content": "For a chunkier texture, dice a handful of strawberries and swirl them through the mixture just before freezing. You can also add crumbled biscuits, mini chocolate chips, or a ripple of jam."
+    }
+  ]
+}

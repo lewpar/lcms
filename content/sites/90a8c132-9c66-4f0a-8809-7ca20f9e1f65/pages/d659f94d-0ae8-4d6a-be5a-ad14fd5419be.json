@@ -1,0 +1,112 @@
+{
+  "id": "d659f94d-0ae8-4d6a-be5a-ad14fd5419be",
+  "title": "Tips & Troubleshooting",
+  "slug": "tips-and-troubleshooting",
+  "section": "875bc527-f9cd-4862-a357-916c88056456",
+  "description": "Why is my ice cream icy? Why won't it scoop? Answers to the most common problems, plus pro tips for better results every time.",
+  "icon": "💡",
+  "order": 0,
+  "createdAt": "2026-04-06T12:00:00.000Z",
+  "updatedAt": "2026-04-06T12:00:00.000Z",
+  "blocks": [
+    {
+      "id": "2d38bf19-62a9-4534-98a8-685bc9707fae",
+      "type": "markdown",
+      "content": "Even experienced ice cream makers run into problems. This page covers the most common issues and the simple fixes for them, plus a few techniques that will consistently improve your results."
+    },
+    {
+      "id": "060e4b28-8b90-4f7e-b5d6-9e764a4b5e27",
+      "type": "heading",
+      "level": 2,
+      "text": "Common Problems"
+    },
+    {
+      "id": "d5380840-182e-4c16-8029-14a71d5d097f",
+      "type": "accordion",
+      "items": [
+        {
+          "title": "My ice cream is icy and gritty",
+          "content": "This is almost always caused by large ice crystals forming. The most common reasons:\n\n- **Not enough fat** — use double cream (36%+ fat), not single or whipping cream.\n- **Too much water** — make sure to use whole milk, not skimmed.\n- **Insufficient churning** — the ice cream machine needs enough time to incorporate air and freeze the mixture quickly.\n- **Refreezing after melting** — once ice cream melts, the crystal structure changes. Do not refreeze melted ice cream."
+        },
+        {
+          "title": "My ice cream is too hard to scoop",
+          "content": "Ice cream that sets rock solid is usually caused by:\n\n- **Too little sugar** — sugar lowers the freezing point. Don't reduce it significantly below the recipe.\n- **Too little fat** — again, fat interferes with ice crystal growth and keeps things softer.\n- **Freezer is too cold** — most home ice cream freezes best at around -18°C (0°F). Remove from the freezer 5–10 minutes before serving."
+        },
+        {
+          "title": "My custard scrambled",
+          "content": "Scrambled eggs in the custard happen when the temperature rises too fast or too high.\n\n- Always **temper** the eggs by adding a small amount of hot liquid slowly before combining everything.\n- Cook the custard over **low heat**, never boiling.\n- Use a **thermometer** — pull the custard off the heat at 75–80°C (167–176°F).\n\nIf it does scramble, you can sometimes rescue it by blending and straining thoroughly, but the texture will suffer."
+        },
+        {
+          "title": "My no-churn ice cream has a buttery texture",
+          "content": "Over-whipping the cream before folding in the other ingredients will turn it to butter. Whip only to **soft peaks** — the cream should hold its shape loosely but still look creamy, not stiff or grainy."
+        },
+        {
+          "title": "The flavour seems flat after freezing",
+          "content": "Cold temperatures dull our perception of sweetness and flavour. When testing a warm mixture, it will taste too sweet and intense — that is correct. You can compensate by slightly over-seasoning with vanilla or other flavourings before freezing."
+        }
+      ]
+    },
+    {
+      "id": "21229bcf-d992-485f-b359-0ed352cb7bd2",
+      "type": "heading",
+      "level": 2,
+      "text": "Pro Tips"
+    },
+    {
+      "id": "c7fa6bab-23bb-48af-b32d-a3cdcb9939d8",
+      "type": "markdown",
+      "content": "- **Chill your custard overnight** — the longer the base chills, the more the fat crystallises and the better the final texture after churning.\n- **Pre-freeze your machine bowl** — most home ice cream machines require the bowl to be frozen solid (24 hours) before use. Keep it in the freezer so it's always ready.\n- **Add mix-ins at the last minute** — stir in chocolate chips, fruit, or nuts in the final 2–3 minutes of churning, not at the start.\n- **Cover the surface** — always press cling film directly onto the surface of the ice cream before putting the lid on. This prevents ice crystals and freezer burn.\n- **Use a warmed scoop** — run your ice cream scoop under hot water before scooping for clean, smooth balls."
+      },
+    {
+      "id": "b72c2c9a-9ada-4d0b-8ded-0a5c18b410b8",
+      "type": "flashcard",
+      "title": "Key Terms",
+      "cards": [
+        {
+          "front": "Tempering",
+          "back": "The technique of slowly adding hot liquid to eggs to gradually raise their temperature before combining, preventing them from scrambling."
+        },
+        {
+          "front": "Overrun",
+          "back": "The amount of air churned into ice cream during freezing. More overrun gives a lighter, softer texture. Home machines typically produce 20–50% overrun."
+        },
+        {
+          "front": "Ice crystal formation",
+          "back": "When water in the ice cream mixture freezes into large crystals, producing a gritty texture. Prevented by high fat content, sufficient sugar, and rapid freezing."
+        },
+        {
+          "front": "Creme anglaise",
+          "back": "The cooked custard base used in French-style ice cream — a mixture of egg yolks, sugar, milk, and cream cooked until thickened."
+        },
+        {
+          "front": "No-churn method",
+          "back": "A technique using whipped cream and condensed milk instead of a custard base and ice cream machine. The whipped cream provides air, and the condensed milk keeps the texture soft."
+        }
+      ]
+    },
+    {
+      "id": "30e83a85-72ba-402e-8089-faaf55c7c910",
+      "type": "divider"
+    },
+    {
+      "id": "6f90c288-b6da-4412-ba51-d6bfdad19f8b",
+      "type": "quiz",
+      "title": "Troubleshooting Quiz",
+      "description": "Test what you have learned.",
+      "questions": [
+        {
+          "id": "1f545136-b292-4147-8310-6cd3117962f9",
+          "question": "Your ice cream is coming out rock solid and impossible to scoop straight from the freezer. What is the most likely cause?",
+          "options": [
+            "Too much cream in the recipe",
+            "The ice cream was churned for too long",
+            "Too little sugar or fat in the recipe",
+            "The custard was not strained properly"
+          ],
+          "correctIndex": 2,
+          "explanation": "Sugar lowers the freezing point of the mixture, which keeps ice cream scoopable. Fat also interferes with ice crystal growth. Insufficient amounts of either will result in ice cream that sets rock hard."
+        }
+      ]
+    }
+  ]
+}

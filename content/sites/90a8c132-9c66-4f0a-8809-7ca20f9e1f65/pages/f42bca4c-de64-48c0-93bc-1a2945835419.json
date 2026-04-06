@@ -1,0 +1,104 @@
+{
+  "id": "f42bca4c-de64-48c0-93bc-1a2945835419",
+  "title": "Classic Vanilla Ice Cream",
+  "slug": "classic-vanilla-ice-cream",
+  "section": "54564d89-3af7-4ac5-81a6-535ea4d561f6",
+  "description": "A rich, custard-based vanilla ice cream made with egg yolks and real vanilla. The foundation of every great ice cream collection.",
+  "icon": "🍦",
+  "order": 0,
+  "createdAt": "2026-04-06T12:00:00.000Z",
+  "updatedAt": "2026-04-06T12:00:00.000Z",
+  "blocks": [
+    {
+      "id": "6a012a5d-ea73-43c8-aded-6e897151cac7",
+      "type": "recipe-detail",
+      "name": "Classic Vanilla Ice Cream",
+      "description": "A French-style custard ice cream with a deep vanilla flavour and incredibly smooth, creamy texture. Requires an ice cream machine.",
+      "servings": "Makes approximately 1 litre (6–8 servings)",
+      "ingredientsTitle": "Ingredients",
+      "items": [
+        { "id": "df2992c5-3fc2-4598-b9d7-d8162caeecbf", "amount": "300", "unit": "ml", "name": "double cream (heavy cream)" },
+        { "id": "6cb4683a-9ce2-41c5-b0ea-6206adaf44a0", "amount": "300", "unit": "ml", "name": "whole milk" },
+        { "id": "897a7350-cda6-45a1-be5d-955bc34f964f", "amount": "5", "unit": "", "name": "egg yolks", "note": "large" },
+        { "id": "f213f979-bce1-4cca-804b-53885315dc12", "amount": "150", "unit": "g", "name": "caster sugar" },
+        { "id": "f35d74f5-1160-4561-9c2d-1cb5ccca2676", "amount": "2", "unit": "tsp", "name": "vanilla bean paste", "note": "or the seeds of 1 vanilla pod" },
+        { "id": "fdd18871-ffe2-4cd0-b2d3-5773ba2b2716", "amount": "1", "unit": "pinch", "name": "fine salt" }
+      ]
+    },
+    {
+      "id": "4f1f30d3-7db9-4568-9726-c6cd22a1f09d",
+      "type": "heading",
+      "level": 2,
+      "text": "Method"
+    },
+    {
+      "id": "7d10350a-1874-46bd-afc7-d49cd90cbbe5",
+      "type": "steps",
+      "title": "Instructions",
+      "items": [
+        {
+          "id": "25092e58-75ac-4498-b3ef-4b8b8548bbd2",
+          "title": "Make the custard base",
+          "body": "Pour the milk and cream into a medium saucepan. Add the vanilla bean paste and a pinch of salt. Heat over medium heat until just below simmering — small bubbles should appear at the edges. Do not boil."
+        },
+        {
+          "id": "87d123e1-4bd7-4e63-b83b-2c0dfd6c2319",
+          "title": "Whisk the yolks and sugar",
+          "body": "In a large bowl, whisk the egg yolks and caster sugar together until the mixture is pale and slightly thickened — about 2 minutes."
+        },
+        {
+          "id": "89588bb9-937f-449e-964a-70f92720b750",
+          "title": "Temper the eggs",
+          "body": "Slowly pour about a third of the hot cream mixture into the egg mixture, whisking constantly. This gradually raises the temperature of the eggs without scrambling them. Pour the tempered egg mixture back into the saucepan."
+        },
+        {
+          "id": "0ef80691-811e-4782-9079-a46da273f44d",
+          "title": "Cook until thickened",
+          "body": "Cook over low heat, stirring constantly with a wooden spoon or spatula, until the custard coats the back of the spoon and reaches 75–80°C (167–176°F). Do not let it boil."
+        },
+        {
+          "id": "7c048778-d5a0-40ee-8252-106e215786c2",
+          "title": "Strain and chill",
+          "body": "Pour the custard through a fine mesh sieve into a clean bowl. Cover the surface directly with cling film (plastic wrap) to prevent a skin forming. Refrigerate for at least 4 hours, or overnight."
+        },
+        {
+          "id": "e6c6f528-d91c-4146-99b5-69904fb8c649",
+          "title": "Churn and freeze",
+          "body": "Pour the chilled custard into your ice cream machine and churn according to the manufacturer's instructions — usually 20–30 minutes. Transfer to a freezer-safe container and freeze for at least 2 hours before serving."
+        }
+      ]
+    },
+    {
+      "id": "85c6e7b2-7fe9-4656-bb4a-8201b6b7cb74",
+      "type": "tip",
+      "title": "Soften before serving",
+      "content": "Remove the ice cream from the freezer 5–10 minutes before serving. This allows it to soften slightly, making it much easier to scoop and improving the texture."
+    },
+    {
+      "id": "6bf84496-ab90-4cc4-898a-19787f44c4d4",
+      "type": "callout",
+      "title": "Storage",
+      "content": "Store in an airtight container in the freezer for up to 2 weeks. Press cling film directly onto the surface before sealing to prevent ice crystals forming on top.",
+      "color": "green"
+    },
+    {
+      "id": "546b26dd-a14a-46c5-84c0-cf0c24fdac88",
+      "type": "quiz",
+      "title": "Quick Check",
+      "questions": [
+        {
+          "id": "ad34d1f4-2c2e-419f-9ef7-5ddccf6afd9e",
+          "question": "Why do you temper the eggs when making custard ice cream?",
+          "options": [
+            "To add more air to the mixture",
+            "To gradually raise the egg temperature and prevent scrambling",
+            "To dissolve the sugar more quickly",
+            "To thicken the cream"
+          ],
+          "correctIndex": 1,
+          "explanation": "Adding a small amount of hot liquid to the eggs first gradually raises their temperature. If you add the eggs directly to boiling liquid, they will scramble and ruin the custard."
+        }
+      ]
+    }
+  ]
+}

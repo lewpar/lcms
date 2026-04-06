@@ -1,0 +1,76 @@
+{
+  "id": "7a0046a1-66a7-4382-89d3-f6656211ba80",
+  "title": "Equipment & Ingredients",
+  "slug": "equipment-and-ingredients",
+  "section": "10f11db6-9656-405f-8775-33344dd81d8c",
+  "description": "Everything you need before you start — tools, machines, and the key ingredients that make great ice cream.",
+  "icon": "🧰",
+  "order": 0,
+  "createdAt": "2026-04-06T12:00:00.000Z",
+  "updatedAt": "2026-04-06T12:00:00.000Z",
+  "blocks": [
+    {
+      "id": "98476f60-4e4c-431f-a9bf-d96efc216a1f",
+      "type": "markdown",
+      "content": "You don't need a lot to make good ice cream, but having the right tools and understanding your ingredients will make the process much smoother."
+    },
+    {
+      "id": "3b2400fc-f542-4501-856a-05e79caee16d",
+      "type": "heading",
+      "level": 2,
+      "text": "Equipment You'll Need"
+    },
+    {
+      "id": "2e014cad-d316-4cfc-8aa6-77a2977e6ff5",
+      "type": "table",
+      "headers": ["Item", "Purpose", "Required?"],
+      "rows": [
+        ["Ice cream machine", "Churns and aerates the mixture while freezing it", "For churned recipes"],
+        ["Large mixing bowl", "Mixing the custard or cream base", "Yes"],
+        ["Medium saucepan", "Heating the milk and sugar mixture", "For custard-based recipes"],
+        ["Whisk", "Combining ingredients smoothly", "Yes"],
+        ["Digital thermometer", "Ensuring the custard reaches the right temperature", "Recommended"],
+        ["Fine mesh sieve", "Straining the custard for a smooth texture", "Recommended"],
+        ["Freezer-safe container with lid", "Storing the finished ice cream", "Yes"],
+        ["Hand mixer or stand mixer", "Whipping cream for no-churn recipes", "For no-churn recipes"]
+      ],
+      "caption": "Core equipment for home ice cream making"
+    },
+    {
+      "id": "d0fa2da7-d7cb-4aab-84a9-91057f47f3e3",
+      "type": "heading",
+      "level": 2,
+      "text": "Key Ingredients"
+    },
+    {
+      "id": "37df2918-0cb8-4abf-afd6-992a51b06de3",
+      "type": "markdown",
+      "content": "Ice cream is built on a small number of core ingredients — but the quality and ratios of those ingredients matter a great deal.\n\n- **Double cream (heavy cream)** — The high fat content (36%+) gives ice cream its rich, creamy texture and prevents large ice crystals from forming.\n- **Whole milk** — Adds body and a lighter texture. Skimmed milk will make the ice cream icier.\n- **Egg yolks** — Used in custard-based (French-style) ice cream. They emulsify the mixture and add richness.\n- **Caster sugar (superfine sugar)** — Dissolves easily and lowers the freezing point, keeping the ice cream scoopable.\n- **Flavourings** — Vanilla bean paste, cocoa powder, fruit purees, extracts, and more."
+    },
+    {
+      "id": "7474ee65-f32f-45b9-9517-0361a7185f92",
+      "type": "tip",
+      "title": "Use the fattiest cream you can find",
+      "content": "The fat content of your cream is the single biggest factor in texture. Double cream or heavy whipping cream (36%+ fat) will give you a scoopable, smooth result. Low-fat alternatives produce an icy, hard texture."
+    },
+    {
+      "id": "72b0078c-20b3-455a-8c24-4db0b6234ad8",
+      "type": "quiz",
+      "title": "Quick Check",
+      "questions": [
+        {
+          "id": "93082797-232f-4896-b07e-b0d995a41e32",
+          "question": "What is the main role of egg yolks in a custard-based ice cream?",
+          "options": [
+            "They add sweetness",
+            "They emulsify the mixture and add richness",
+            "They prevent the cream from whipping",
+            "They lower the freezing point"
+          ],
+          "correctIndex": 1,
+          "explanation": "Egg yolks contain lecithin, a natural emulsifier. They bind the fat and water in the mixture together and add a rich, custardy flavour."
+        }
+      ]
+    }
+  ]
+}

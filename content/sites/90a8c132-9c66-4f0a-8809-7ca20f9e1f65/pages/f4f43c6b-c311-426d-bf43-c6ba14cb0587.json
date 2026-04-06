@@ -1,0 +1,73 @@
+{
+  "id": "f4f43c6b-c311-426d-bf43-c6ba14cb0587",
+  "title": "Chocolate Ice Cream",
+  "slug": "chocolate-ice-cream",
+  "section": "54564d89-3af7-4ac5-81a6-535ea4d561f6",
+  "description": "Deep, dark chocolate ice cream using both cocoa powder and melted dark chocolate for maximum flavour.",
+  "icon": "🍫",
+  "order": 1,
+  "createdAt": "2026-04-06T12:00:00.000Z",
+  "updatedAt": "2026-04-06T12:00:00.000Z",
+  "blocks": [
+    {
+      "id": "b15ffc7f-907e-4416-a4db-781fb83c9568",
+      "type": "recipe-detail",
+      "name": "Chocolate Ice Cream",
+      "description": "An intense chocolate ice cream that combines the depth of dark chocolate with the bitterness of cocoa. Requires an ice cream machine.",
+      "servings": "Makes approximately 1 litre (6–8 servings)",
+      "ingredientsTitle": "Ingredients",
+      "items": [
+        { "id": "b9e65d76-b792-46cb-9ee2-4e87c197acb8", "amount": "300", "unit": "ml", "name": "double cream (heavy cream)" },
+        { "id": "8474cee9-468e-4251-aa85-9eeb9de37ded", "amount": "250", "unit": "ml", "name": "whole milk" },
+        { "id": "a3c67bcf-7119-48aa-b8fc-bb2fab56c025", "amount": "100", "unit": "g", "name": "dark chocolate (70%)", "note": "finely chopped" },
+        { "id": "7422e3f7-c055-4fb0-b505-7a27674ce54a", "amount": "30", "unit": "g", "name": "cocoa powder", "note": "unsweetened, sifted" },
+        { "id": "e1611d0f-6150-48f3-8250-529048ce82e1", "amount": "5", "unit": "", "name": "egg yolks", "note": "large" },
+        { "id": "1dab1429-878b-47a0-ac7e-19b78640fdbe", "amount": "130", "unit": "g", "name": "caster sugar" }
+      ]
+    },
+    {
+      "id": "377f4f8c-1c92-44fe-bdf6-42f5b11356dc",
+      "type": "heading",
+      "level": 2,
+      "text": "Method"
+    },
+    {
+      "id": "93517867-6855-4798-b97c-ef62df426e2a",
+      "type": "steps",
+      "title": "Instructions",
+      "items": [
+        {
+          "id": "56175705-c1e7-43c5-a0e9-1deda80e2656",
+          "title": "Melt the chocolate into the milk",
+          "body": "Combine the milk, cream, and sifted cocoa powder in a saucepan. Heat over medium heat, whisking to dissolve the cocoa. When hot, remove from heat and add the chopped dark chocolate. Stir until completely melted and smooth."
+        },
+        {
+          "id": "84e81eb7-11f7-4e74-964d-6a6c29df7839",
+          "title": "Whisk yolks and sugar",
+          "body": "Whisk the egg yolks and caster sugar together in a large bowl until pale and slightly thickened."
+        },
+        {
+          "id": "17f8bb2a-6905-4515-95d3-605e5187dd23",
+          "title": "Temper and cook the custard",
+          "body": "Slowly pour a third of the chocolate mixture into the yolk mixture, whisking constantly. Return everything to the saucepan and cook over low heat, stirring, until the custard thickens enough to coat the back of a spoon (75–80°C / 167–176°F)."
+        },
+        {
+          "id": "26763d80-6dc6-4a58-98e5-8ce58c2c7f77",
+          "title": "Strain and chill",
+          "body": "Strain through a fine mesh sieve into a clean bowl. Cover the surface with cling film and refrigerate for at least 4 hours, or overnight."
+        },
+        {
+          "id": "074f9f74-718e-4550-b6fe-ba615abd3b31",
+          "title": "Churn and freeze",
+          "body": "Churn in your ice cream machine for 20–30 minutes until thick and creamy. Transfer to a freezer-safe container and freeze for at least 2 hours before serving."
+        }
+      ]
+    },
+    {
+      "id": "480da252-7ddc-429e-b382-3c7fd8bc6e3c",
+      "type": "tip",
+      "title": "Use good quality chocolate",
+      "content": "The flavour of the chocolate you use will come through clearly in the finished ice cream. A good 70% dark chocolate with no added vegetable fat will give you a noticeably better result than cheap chocolate."
+    }
+  ]
+}

@@ -13,5 +13,10 @@
     "id": "751db065-0b32-4d8d-8c4d-93f78d40510e",
     "name": "Beginner JavaScript",
     "slug": "beginner-javascript"
+  },
+  {
+    "id": "90a8c132-9c66-4f0a-8809-7ca20f9e1f65",
+    "name": "How to Make Ice Cream",
+    "slug": "how-to-make-ice-cream"
   }
 ]
